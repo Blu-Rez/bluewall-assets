@@ -1,38 +1,69 @@
-castle-wall-kit              FAIL Locator.click: Timeout 30000ms exceeded.
-low-poly-dragon              ok 6 files
-farm-animals-set             FAIL Locator.click: Timeout 30000ms exceeded.
-ual2                         ok 9 files
-farm-buildings               ok 13 files
-animated-animals             ok 7 files
-animated-knight              ok 9 files
-medieval-weapons             ok 24 files
-animated-monsters            ok 4 files
-fantasy-army                 ok 15 files
-pp:horse                     ok 1.1 MB CC0
-pp:horse_white               ok 1.1 MB CC0
-pp:cow                       ok 1.0 MB CC0
-pp:wolf                      ok 1.0 MB CC0
-pp:dragon_um                 ok 0.3 MB CC0
-pp:dragon_um_evolved         ok 0.4 MB CC0
-ph:aerial_grass_rock         ok 5 maps
-ph:grass_path_2              ok 5 maps
-ph:brown_mud_02              ok 5 maps
-ph:mossy_cobblestone         ok 5 maps
-ph:cobblestone_floor_001     ok 4 maps
-ph:castle_brick_01           ok 5 maps
-ph:mossy_rock                ok 5 maps
-ph:rocky_terrain_02          ok 5 maps
-ph:snow_02                   ok 5 maps
-ph:forest_leaves_02          ok 5 maps
-ph:sparse_grass              ok 5 maps
-ph:rock_wall_08              ok 5 maps
-ph:rock_moss_set_01          ok
-ph:namaqualand_cliff_01      ok
-ph:coastal_cliff_04          ok
-ph:boulder_01                ok
-ph:rock_moss_set_02          ok
-kenney-castle-kit            ok 164 files
-ultimate-crops               ok 102 files
+au:mus_market_day_loop       ok 2.6 MB
+au:mus_bards_tale            ok 3.8 MB
+au:mus_kings_feast           ok 5.2 MB
+au:mus_old_tower_inn         ok 2.5 MB
+au:mus_town_theme            ok 1.3 MB
+au:mus_rising_moon           ok 5.4 MB
+au:mus_exploration           ok 9.4 MB
+au:mus_battle                ok 3.2 MB
+au:mus_battle_theme_a        ok 3.3 MB
+au:amb_rain_loops            ok 4 files
+au:amb_rain_window           ok 1.9 MB
+au:amb_rain_storm            ok 6.8 MB
+au:amb_rain_thunder          ok 0.9 MB
+au:amb_rain_heavy            ok 6.3 MB
+au:thunder_1                 ok 0.6 MB
+au:thunder_2                 ok 0.2 MB
+au:thunder_3                 ok 0.5 MB
+au:thunder_4                 ok 0.7 MB
+au:thunder_5                 ok 0.9 MB
+au:thunder_6                 ok 0.6 MB
+au:thunder_7                 ok 1.7 MB
+au:amb_wind_strong           ok 1.6 MB
+au:amb_wind_village          ok 3.6 MB
+au:amb_wind_trees            ok 4.7 MB
+au:amb_storm_inside          ok 4.5 MB
+au:amb_birds_morning         ok 9.8 MB
+au:amb_countryside           ok 2.7 MB
+au:amb_crickets_loop         ok 0.2 MB
+au:amb_night_insects         ok 6.1 MB
+au:owl_1                     ok 1.2 MB
+au:owl_2                     ok 0.3 MB
+au:amb_market                ok 4.8 MB
+au:amb_stream                ok 3.9 MB
+au:amb_brooklet              ok 3.4 MB
+au:amb_fire_loop             ok 10.3 MB
+au:fire_crackle              ok 0.0 MB
+au:watermill                 ok 4.0 MB
+au:creak_door                ok 1.1 MB
+au:bell_church               ok 0.4 MB
+au:bell_4                    ok 2.1 MB
+au:horse_neigh_1             ok 0.1 MB
+au:horse_neigh_2             ok 0.3 MB
+au:horse_trot                ok 0.6 MB
+au:horse_walk                ok 1.9 MB
+au:horse_gallop              ok 0.5 MB
+au:cow_moo                   ok 0.1 MB
+au:sheep_cows                ok 4.8 MB
+au:sheep_baa                 ok 0.0 MB
+au:dog_bark_1                ok 0.1 MB
+au:dog_bark_2                ok 0.2 MB
+au:hens                      ok 0.7 MB
+au:rooster                   ok 0.1 MB
+au:dragon_roar               ok 1.3 MB
+au:creatures_1               ok 80 files
+au:creatures_2               ok 80 files
+au:dragon_flap               ok 0.8 MB
+au:wings_large               ok 3 files
+au:blacksmith                ok 0.1 MB
+au:anvil_1                   ok 1.1 MB
+au:anvil_2                   ok 0.7 MB
+au:swords                    ok 10 files
+au:sword_clash               ok 10 files
+au:sfx100                    ok 100 files
+au:sfx100_2                  ok 100 files
+au:kenney_interface          ok 101 files
+au:kenney_ui                 ok 53 files
+au:kenney_rpg                ok 53 files
+au:kenney_jingles            ok 87 files
 sketchfab                    SKIPPED (no SKETCHFAB_TOKEN)
-fbx->glb                     ok 254, failed 0
-shrink                       size: 168.6 MB -> 168.4 MB
