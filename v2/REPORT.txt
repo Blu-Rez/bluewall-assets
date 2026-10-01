@@ -1,0 +1,38 @@
+castle-wall-kit              FAIL Locator.click: Timeout 30000ms exceeded.
+low-poly-dragon              ok 6 files
+farm-animals-set             FAIL Locator.click: Timeout 30000ms exceeded.
+ual2                         ok 9 files
+farm-buildings               ok 13 files
+animated-animals             ok 7 files
+animated-knight              ok 9 files
+medieval-weapons             ok 24 files
+animated-monsters            ok 4 files
+fantasy-army                 ok 15 files
+pp:horse                     ok 1.1 MB CC0
+pp:horse_white               ok 1.1 MB CC0
+pp:cow                       ok 1.0 MB CC0
+pp:wolf                      ok 1.0 MB CC0
+pp:dragon_um                 ok 0.3 MB CC0
+pp:dragon_um_evolved         ok 0.4 MB CC0
+ph:aerial_grass_rock         ok 5 maps
+ph:grass_path_2              ok 5 maps
+ph:brown_mud_02              ok 5 maps
+ph:mossy_cobblestone         ok 5 maps
+ph:cobblestone_floor_001     ok 4 maps
+ph:castle_brick_01           ok 5 maps
+ph:mossy_rock                ok 5 maps
+ph:rocky_terrain_02          ok 5 maps
+ph:snow_02                   ok 5 maps
+ph:forest_leaves_02          ok 5 maps
+ph:sparse_grass              ok 5 maps
+ph:rock_wall_08              ok 5 maps
+ph:rock_moss_set_01          ok
+ph:namaqualand_cliff_01      ok
+ph:coastal_cliff_04          ok
+ph:boulder_01                ok
+ph:rock_moss_set_02          ok
+kenney-castle-kit            ok 164 files
+ultimate-crops               ok 102 files
+sketchfab                    SKIPPED (no SKETCHFAB_TOKEN)
+fbx->glb                     ok 254, failed 0
+shrink                       size: 168.6 MB -> 168.4 MB
