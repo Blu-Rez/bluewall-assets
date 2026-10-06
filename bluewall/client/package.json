@@ -1,0 +1,7 @@
+{
+  "name": "bluewall-client",
+  "private": true,
+  "description": "Blue Wall mini app — source. Build: ./build.sh (outputs ../web/app/wall.js)",
+  "dependencies": { "three": "0.186.1" },
+  "devDependencies": { "esbuild": "^0.28.2" }
+}

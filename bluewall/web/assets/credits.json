@@ -1,0 +1,513 @@
+{
+ "items": [
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Prowler Dragon Variant Rig",
+   "by": "DM-913",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Troll",
+   "by": "SJunior3d",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Mountain Orge",
+   "by": "SamThePie",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Cyclops Rig",
+   "by": "DM-913",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Tree Monster",
+   "by": "xJiyu",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Werewolf Final",
+   "by": "ZionE",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Gryphon Rigged and Animated",
+   "by": "DreamNoms",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "American Crow V1",
+   "by": "warrenblyth",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "White Eagle Animation Fast Fly",
+   "by": "GremorySaiyan",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Horseman battle Animations",
+   "by": "Mitro123",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Windmill Stylized",
+   "by": "_Alexandr",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Watermill",
+   "by": "Nudluria",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "The Blacksmith's",
+   "by": "Aartee",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Medieval Watchtower House",
+   "by": "Krystian Zem",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Free Pack - Stylized Hay Bale",
+   "by": "DuNguyn Studio",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "General's Tent - Siege Equipment Assets",
+   "by": "Carrigan Raketic",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Trebuchet Rig",
+   "by": "IndianPro Animations",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Stylized Catapult Game Asset",
+   "by": "nico_hartl",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Stylized Cannon | Free Asset | Medieval",
+   "by": "Myjato",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Ballista - Siege Equipment Assets",
+   "by": "Carrigan Raketic",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Battering Ram - Siege Equipment Assets",
+   "by": "Carrigan Raketic",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Siege Tower - Siege Equipment Assets",
+   "by": "Carrigan Raketic",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC0)",
+   "name": "Medieval Village MegaKit · Stylized Nature MegaKit · Fantasy Props MegaKit",
+   "by": "Quaternius",
+   "license": "CC0"
+  },
+  {
+   "group": "Models (CC0)",
+   "name": "Universal Base Characters · Animation Library · Outfits",
+   "by": "Quaternius",
+   "license": "CC0"
+  },
+  {
+   "group": "Models (CC0)",
+   "name": "Animated Animals · Farm Buildings · Ultimate Crops",
+   "by": "Quaternius",
+   "license": "CC0"
+  },
+  {
+   "group": "Models (CC0)",
+   "name": "Medieval Hexagon Pack · Adventurers",
+   "by": "Kay Lousberg (KayKit)",
+   "license": "CC0"
+  },
+  {
+   "group": "Models (CC0)",
+   "name": "Photo-scanned rocks & cliffs, ground textures",
+   "by": "Poly Haven",
+   "license": "CC0"
+  },
+  {
+   "group": "Trees",
+   "name": "EZ-Tree (procedural trees, bark & leaf textures)",
+   "by": "Daniel Greenheck",
+   "license": "MIT"
+  },
+  {
+   "group": "Music (CC0)",
+   "name": "Medieval: Market Day · The Bard's Tale · King's Feast · Rising Moon",
+   "by": "RandomMind",
+   "license": "CC0"
+  },
+  {
+   "group": "Music (CC0)",
+   "name": "Town Theme RPG · Battle Theme A",
+   "by": "cynicmusic",
+   "license": "CC0"
+  },
+  {
+   "group": "Sounds (CC0)",
+   "name": "Rain, thunder, wind, birds, animals, bells, anvil",
+   "by": "BigSoundBank (Joseph Sardin)",
+   "license": "CC0"
+  },
+  {
+   "group": "Sounds (CC0)",
+   "name": "Rain loops · Crickets · Dark Rainy Night · Deep Monster Roar · Dragon Flap · Blacksmith's Hammer",
+   "by": "Ylmir · Wolfgang_ · kindland · trazzz123 · VishwaJai (OpenGameArt)",
+   "license": "CC0"
+  },
+  {
+   "group": "Sounds (CC0)",
+   "name": "UI Audio",
+   "by": "Kenney",
+   "license": "CC0"
+  },
+  {
+   "group": "Engine",
+   "name": "three.js",
+   "by": "three.js authors",
+   "license": "MIT"
+  },
+  {
+   "group": "Fonts",
+   "name": "Libre Baskerville",
+   "by": "Impallari Type (Pablo Impallari, Rodrigo Fuenzalida)",
+   "license": "SIL OFL 1.1"
+  },
+  {
+   "group": "Fonts",
+   "name": "Noto Sans Tai Viet",
+   "by": "Google / Noto Project",
+   "license": "SIL OFL 1.1"
+  },
+  {
+   "group": "Models (CC0)",
+   "name": "Universal Animation Library 2 (shield & sword clips)",
+   "by": "Quaternius",
+   "license": "CC0"
+  },
+  {
+   "group": "Models (CC0)",
+   "name": "LowPoly Medieval Weapons · LowPoly Animated Knight (spear, shields, claymore, helmets)",
+   "by": "Quaternius",
+   "license": "CC0"
+  },
+  {
+   "group": "Models (CC0)",
+   "name": "Universal Base Characters · Modular Character Outfits (shieldmaiden)",
+   "by": "Quaternius",
+   "license": "CC0"
+  },
+  {
+   "group": "Models (CC0)",
+   "name": "Mesh2Motion horse (model, rig, animations)",
+   "by": "Scott Petrovic / Mesh2Motion",
+   "license": "CC0"
+  },
+  {
+   "group": "Models (CC0)",
+   "name": "Horse (Ultimate Animated Animals) — royal war-horse base",
+   "by": "Quaternius",
+   "license": "CC0"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Trebuchet - Siege Equipment Assets",
+   "by": "Carrigan Raketic",
+   "license": "CC-BY 4.0 — sketchfab.com",
+   "files": [
+    "trebuchet2.glb"
+   ]
+  },
+  {
+   "group": "Models (CC0)",
+   "name": "Skeletons Character Pack · Character Animations",
+   "by": "Kay Lousberg (KayKit)",
+   "license": "CC0",
+   "files": [
+    "skel_mage.glb",
+    "skel_staff.glb",
+    "kk_anims.glb"
+   ]
+  },
+  {
+   "group": "Models (CC0)",
+   "name": "LowPoly Medieval Weapons · LowPoly Animated Knight (helmets)",
+   "by": "Quaternius",
+   "license": "CC0",
+   "files": [
+    "spear.glb",
+    "shield_heater.glb",
+    "claymore.glb",
+    "sword_mw.glb",
+    "shield_round2.glb",
+    "hammer_double.glb",
+    "helmet2.glb",
+    "helmet3.glb"
+   ]
+  },
+  {
+   "group": "Models (Quaternius Asset License)",
+   "name": "Bestiary - Dungeon Monsters Kit (Imp, Puglin)",
+   "by": "Quaternius",
+   "license": "Quaternius Asset License v1.0 (free commercial use)",
+   "files": [
+    "imp.glb",
+    "puglin.glb"
+   ],
+   "flag": "NOT CC0 / CC-BY — owner must accept QAL or drop the imp (and the puglin fallback)"
+  },
+  {
+   "group": "Fonts",
+   "name": "Noto Naskh Arabic (tutorial text, the closest free Naskh to Nazanin)",
+   "by": "Google / Noto Project",
+   "license": "SIL OFL 1.1"
+  },
+  {
+   "group": "Models (CC0)",
+   "name": "Dragon Evolved — the green Dragonling (poly.pizza)",
+   "by": "Quaternius",
+   "license": "CC0"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Water Wheel With Cog",
+   "by": "lyamborrel",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "river jetty and boatyard",
+   "by": "floor2727",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Medieval Rowboat",
+   "by": "AnyRPG",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Fish Drying Rack",
+   "by": "rodgercarr13601",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Fishing Supplies Set",
+   "by": "FrodoUndead",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Cartoon butcher market Polygonal",
+   "by": "Tykryk",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Stylized medieval cart with a lamp and hay",
+   "by": "3D_Kod",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Stylized medieval cart with a lamp",
+   "by": "3D_Kod",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Сaravan camel model",
+   "by": "borismamlin",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Mine Cart Emty",
+   "by": "Xillute | Dev",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Mine Cart",
+   "by": "Xillute | Dev",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Gold Nugget",
+   "by": "rivetech",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Gold Nugget [Free Download]",
+   "by": "scrampunk",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Gold Bar pile",
+   "by": "pooiloui2",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Ancient vase",
+   "by": "Eleanie",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Oak Log Pile",
+   "by": "FishyBusiness",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Old barrel",
+   "by": "Reliefy3D",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Wooden Watchtower",
+   "by": "MaX3Dd",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Bear Trap Animation",
+   "by": "Lais.Marques",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Bear Trap",
+   "by": "kirbinator505_",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Keg of Ancient Black Powder (Sea of Thieves)",
+   "by": "CoenBrunyanszki",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Rusted WW2 Landmine",
+   "by": "Skipperino",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Makeshift Crossbow",
+   "by": "thanoidiscominggaming",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Obstacle Set – Spiked Traps & Swing Blades",
+   "by": "Ay23man",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Saw",
+   "by": "Potiko",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Spike Trap",
+   "by": "Helyx Silveira",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Tesla Coil (Old)",
+   "by": "N-GONE",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Wooden Spike Trap",
+   "by": "Ananda Yokesh",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "C-03 Caltrop Grenade",
+   "by": "epavlenko",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Trap_WoodenSpike reject the horse",
+   "by": "john Smith",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Medieval braziers l Lights l Enviroment",
+   "by": "burnedhrum",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Swordtember 2022 Day 17-B: Fire & Stone",
+   "by": "Liberi Arcano",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "New Castle Door",
+   "by": "farooq.smurf",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  },
+  {
+   "group": "Models (CC-BY 4.0)",
+   "name": "Tower ballista",
+   "by": "Sobolev_Maxim",
+   "license": "CC-BY 4.0 — sketchfab.com"
+  }
+ ]
+}

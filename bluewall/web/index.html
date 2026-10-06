@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#050912">
+<title>Blue Wall</title>
+<link rel="preload" href="/pub/cinzel-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/pub/baskerville-700.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:Vazirmatn;src:url(/pub/Vazirmatn-Regular.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(/pub/Vazirmatn-Bold.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(/pub/Vazirmatn-Black.woff2) format("woff2");font-weight:900;font-display:swap}
+@font-face{font-family:"Libre Baskerville";src:url(/pub/baskerville-700.woff2) format("woff2");font-weight:700;font-style:normal;font-display:block}
+@font-face{font-family:"Libre Baskerville";src:url(/pub/baskerville-400.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:Cinzel;src:url(/pub/cinzel-900.woff2) format("woff2");font-weight:900;font-display:block}
+@font-face{font-family:"BW Naskh";src:url(/pub/naskh-400.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"BW Naskh";src:url(/pub/naskh-700.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Noto Sans Tai Viet";src:url(/pub/taiviet.woff2) format("woff2");font-display:swap}
+:root{--bg:#050912;--ink:#dbe8ff;--dim:#7f93b8;--blue:#4aa8ff;--glow:#7cc8ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:Vazirmatn,system-ui,sans-serif;overflow:hidden;overscroll-behavior:none;touch-action:none;user-select:none;-webkit-user-select:none}
+#game{position:fixed;inset:0}
+/* ================= loader: a moonlit night over the Blue Wall (all motion = compositor-only CSS transforms / opacity) ================= */
+#bw-load{position:fixed;inset:0;z-index:1000;overflow:hidden;contain:strict;transition:opacity .7s ease;
+  background:linear-gradient(180deg,#01040b 0%,#030a1b 22%,#081a3b 46%,#123266 62%,#1d4a85 71%,#0d2142 80%,#050b17 90%,#02050b 100%)}
+#bw-load.done{opacity:0;pointer-events:none}
+/* taste alternative B (?look=B or LOOK default): blue hour, an ice-cyan afterglow behind the peaks; same plates, lifted */
+#bw-load.look-b{background:linear-gradient(180deg,#030a1a 0%,#0a1f47 20%,#17407c 32%,#3f78b8 40%,#a9d2f2 46%,#5f93c9 52%,#183a6c 64%,#08142a 82%,#02050b 100%)}
+#bw-load.look-b.land{background:linear-gradient(180deg,#071a3d 0%,#1d4d8c 14%,#8cbfe8 24%,#3d72b0 34%,#0b1d3c 70%,#02050b 100%)}
+.look-b #ld-rays{opacity:.4}.look-b #ld-stars{opacity:.45}.look-b #ld-far{filter:brightness(1.22) saturate(1.1)}.look-b #ld-near{filter:brightness(1.1) saturate(1.06)}.look-b #ld-vig{opacity:.7}
+#bw-load div,#bw-load img,#bw-load svg,#bw-load i{position:absolute;display:block;pointer-events:none;-webkit-user-drag:none}
+#bw-load img{opacity:0;transition:opacity .9s ease}#bw-load img.on{opacity:1}
+.ld-paused,.ld-paused *{animation-play-state:paused!important}
+/* stars: three box-shadow fields twinkling out of phase */
+#ld-stars{left:0;top:0;width:100%;height:62%;overflow:hidden}
+#ld-stars i{left:0;top:0;width:1px;height:1px;border-radius:50%;background:transparent}
+#ld-tws{left:0;top:0;width:100%;height:36%}
+#ld-tws i{width:3px;height:3px;margin:-1.5px 0 0 -1.5px;border-radius:50%;background:radial-gradient(closest-side,#fff,rgba(190,220,255,.7) 45%,rgba(150,200,255,0));opacity:.3;will-change:opacity;animation:ldTwk var(--d) ease-in-out var(--dl) infinite alternate}
+@keyframes ldTwk{from{opacity:.95}to{opacity:.2}}
+@keyframes ldTw{from{opacity:1}to{opacity:.25}}
+/* moon */
+#ld-halo{border-radius:50%;background:radial-gradient(closest-side,rgba(190,215,255,.34),rgba(110,160,240,.16) 32%,rgba(60,110,220,.06) 62%,rgba(30,60,140,0));}
+#ld-moon{border-radius:50%;background:radial-gradient(circle at 36% 34%,#fdfeff 0,#eef4ff 26%,#d3e0f4 58%,#a9bfe0 88%,#93acd6 100%);
+  box-shadow:0 0 6px 1px rgba(235,245,255,.9),0 0 26px 6px rgba(170,205,255,.55),0 0 70px 22px rgba(90,140,240,.25)}
+#ld-moon:after{content:"";position:absolute;inset:0;border-radius:50%;opacity:.5;
+  background:radial-gradient(ellipse 22% 16% at 60% 38%,rgba(110,130,170,.5),rgba(110,130,170,0)),radial-gradient(ellipse 26% 20% at 42% 62%,rgba(110,130,170,.42),rgba(110,130,170,0)),radial-gradient(ellipse 14% 18% at 31% 44%,rgba(120,140,180,.32),rgba(120,140,180,0)),radial-gradient(ellipse 12% 9% at 68% 66%,rgba(120,140,180,.28),rgba(120,140,180,0)),radial-gradient(circle at 30% 28%,rgba(255,255,255,0) 52%,rgba(50,70,120,.38) 100%)}
+@keyframes ldBreath{from{opacity:.82}to{opacity:1}}
+/* god rays falling from the moon toward the wall */
+#ld-rays{width:0;height:0}
+#ld-rays b{left:0;top:0;width:0;height:0;position:absolute}
+#ld-rays i{left:0;top:0;height:var(--h);width:var(--l);margin-top:calc(var(--h) / -2);transform-origin:0 50%;transform:rotate(var(--a));
+  background:linear-gradient(90deg,rgba(170,205,255,0) 0,rgba(170,205,255,var(--o)) 9%,rgba(120,170,255,calc(var(--o) * .45)) 45%,rgba(90,140,255,0) 100%);
+  -webkit-mask-image:linear-gradient(0deg,transparent,#000 42%,#000 58%,transparent);mask-image:linear-gradient(0deg,transparent,#000 42%,#000 58%,transparent)}
+@keyframes ldRay{from{opacity:.35}to{opacity:1}}
+/* cloud & mist strips: a tileable texture sliding sideways forever */
+.ld-strip{left:0;width:calc(100% + var(--tw));background-repeat:repeat-x;background-size:var(--tw) 100%;will-change:transform;animation:ldSlide var(--d) linear infinite}
+@keyframes ldSlide{from{transform:translateX(0)}to{transform:translateX(calc(var(--tw) * -1))}}
+.ld-strip.rev{animation-direction:reverse}
+#ld-cl1,#ld-cl2,#ld-mi1{width:100%;will-change:auto;animation:none}
+/* the world frame: plates + everything pinned onto them (positions in % of the plate) */
+#ld-world{left:0;top:0;transform-origin:0 0}
+#ld-world img{left:0;top:0;width:100%;height:100%}
+#ld-far{}
+#ld-emis{clip-path:ellipse(4% 3% at var(--gx) var(--gy));transition:clip-path .8s ease-out,opacity .9s ease}
+.ld-t{will-change:opacity;animation:ldFl var(--d) ease-in-out var(--dl) infinite alternate;width:var(--s);height:var(--s);margin:calc(var(--s) / -2) 0 0 calc(var(--s) / -2);border-radius:50%;
+  background:radial-gradient(closest-side,rgba(255,236,190,.95),rgba(255,170,80,.55) 22%,rgba(255,120,40,.18) 55%,rgba(255,100,30,0))}
+@keyframes ldFl{0%{opacity:.6}22%{opacity:1}41%{opacity:.74}63%{opacity:.95}80%{opacity:.68}100%{opacity:.9}}
+.ld-em{width:.35em;height:.35em;margin:-.17em 0 0 -.17em;border-radius:50%;background:radial-gradient(closest-side,#fff3c4,#ffb050 50%,rgba(255,120,40,0));opacity:0;will-change:transform,opacity;animation:ldEm var(--d) ease-out var(--dl) infinite}
+@keyframes ldEm{0%{opacity:0;transform:translate(0,0) scale(1)}12%{opacity:1}100%{opacity:0;transform:translate(var(--x),-9em) scale(.4)}}
+.ld-gate{border-radius:50%;background:radial-gradient(closest-side,rgba(255,200,120,.5),rgba(255,140,60,.2) 45%,rgba(255,120,40,0));will-change:opacity;animation:ldBreath 2.8s ease-in-out infinite alternate}
+.ld-fl{transform-origin:0 0;width:var(--w);height:calc(var(--w) * .5)}
+.ld-fl svg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;transform-origin:0 18%;will-change:transform;animation:ldWave var(--d) ease-in-out var(--dl) infinite alternate}
+@keyframes ldWave{0%{transform:skewY(-7deg) scaleX(.9)}50%{transform:skewY(2deg) scaleX(1)}100%{transform:skewY(7deg) scaleX(.94)}}
+#ld-drake{display:none;width:7%;animation:none;opacity:0}
+#ld-drake img{position:relative;width:100%;height:auto;opacity:.8;filter:none}
+@keyframes ldDrake{0%{transform:translate(-30%,0) rotate(8deg) scale(.7);opacity:0}4%{opacity:.85}38%{transform:translate(620%,-140%) rotate(-4deg) scale(.55);opacity:.8}46%{opacity:0;transform:translate(800%,-190%) rotate(-6deg) scale(.5)}100%{opacity:0;transform:translate(800%,-190%) scale(.5)}}
+/* snow: two tiled sheets falling at different speeds, with a slow sway */
+#ld-snow{left:0;top:0;width:100%;height:100%;overflow:hidden}
+#ld-snow i{top:-8px;width:var(--s);height:var(--s);border-radius:50%;background:rgba(225,238,255,var(--o));box-shadow:0 0 calc(var(--s) * 1.8) rgba(190,220,255,.5);will-change:transform;animation:ldFlake var(--d) linear var(--dl) infinite}
+@keyframes ldFlake{from{transform:translate3d(0,0,0)}to{transform:translate3d(var(--dx),var(--fall,880px),0)}}
+#bw-load canvas{position:absolute;display:block;pointer-events:none}
+#ld-sv{left:0;top:0;width:100%;height:100%}
+/* ---- top group: dragon over the crown over the title */
+#ld-top,#ld-bot{left:0;top:0;transform-origin:0 0}
+#ld-dragon{animation:none}
+@keyframes ldDrift{0%{transform:translate(-7px,4px) rotate(-2.2deg)}50%{transform:translate(2px,-3px) rotate(.6deg)}100%{transform:translate(7px,2px) rotate(2.4deg)}}
+#ld-dragon img{left:0;top:0;width:100%;height:100%;clip-path:polygon(0 0,100% 0,100% 47%,57% 47%,57% 100%,43% 100%,43% 47%,0 47%)}
+#ld-crown .ch{border-radius:50%;background:radial-gradient(closest-side,rgba(150,205,255,.42),rgba(80,150,255,.16) 45%,rgba(40,100,230,0));will-change:opacity;animation:ldBreath 4.5s ease-in-out infinite alternate}
+#ld-crown .cr,#ld-spk{left:0;top:0;width:100%;height:100%}
+#ld-crown .cg{left:0;top:0;width:100%;height:100%;overflow:hidden;-webkit-mask:var(--m) center/100% 100% no-repeat;mask:var(--m) center/100% 100% no-repeat}
+#ld-crown .cg i{left:-40%;top:-10%;width:34%;height:120%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(235,248,255,.75) 50%,rgba(255,255,255,0));transform:translateX(0) skewX(-18deg);will-change:transform;animation:ldGlint 5.5s ease-in-out 1.2s infinite}
+@keyframes ldGlint{0%{transform:translateX(0) skewX(-18deg)}38%,100%{transform:translateX(560%) skewX(-18deg)}}
+.ld-sp{width:var(--s);height:var(--s);margin:calc(var(--s) / -2) 0 0 calc(var(--s) / -2);opacity:0;will-change:transform,opacity;animation:ldSpark var(--d) ease-in-out var(--dl) infinite}
+.ld-sp:before,.ld-sp:after{content:"";position:absolute;left:50%;top:50%;border-radius:50%;background:radial-gradient(closest-side,#fff,rgba(190,230,255,.8) 30%,rgba(120,190,255,0))}
+.ld-sp:before{width:100%;height:12%;margin:-6% 0 0 -50%}.ld-sp:after{width:12%;height:100%;margin:-50% 0 0 -6%}
+@keyframes ldSpark{0%,58%,100%{opacity:0;transform:scale(.2) rotate(0)}70%{opacity:1;transform:scale(1) rotate(25deg)}84%{opacity:0;transform:scale(.4) rotate(45deg)}}
+#ld-title{overflow:visible}
+#ld-tsw{overflow:hidden;-webkit-mask:var(--m) center/100% 100% no-repeat;mask:var(--m) center/100% 100% no-repeat}
+#ld-tsw i{left:-30%;top:0;width:18%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.9) 50%,rgba(255,255,255,0));transform:skewX(-18deg);will-change:transform;animation:ldTsw 6.5s ease-in-out 2.4s infinite}
+@keyframes ldTsw{0%{transform:translateX(0) skewX(-18deg)}30%,100%{transform:translateX(900%) skewX(-18deg)}}
+/* ---- bottom group: forged steel progress bar */
+.ld-lab{left:0;right:0;top:0;height:18px;font:900 10.5px/18px Cinzel,serif;letter-spacing:4.2px;color:#9cc9f2;text-shadow:0 0 8px rgba(40,120,255,.7),0 1px 0 #000}
+.ld-lab b{position:absolute;right:0;top:-3px;font:900 17px/22px Cinzel,serif;letter-spacing:.5px;color:#f2fbff;text-shadow:0 0 10px rgba(80,180,255,.95),0 1px 0 #000}#bw-load .ld-lab b i{position:static;display:inline;font-size:11px;font-style:normal;margin-left:1px}
+.ld-frame{left:0;right:0;top:24px;height:16px;border-radius:8px;padding:2px;
+  background:linear-gradient(180deg,#e9f1fb 0,#9fb0c8 22%,#55647d 48%,#2a3446 54%,#6c7d96 78%,#b9c7da 100%);
+  box-shadow:0 0 0 1px rgba(3,8,18,.9),0 2px 6px rgba(0,0,0,.8),0 0 18px rgba(40,130,255,.28)}
+.ld-chan{position:relative!important;width:100%;height:100%;border-radius:6px;overflow:hidden;background:linear-gradient(180deg,#01040c,#071331 70%,#0b1c44);box-shadow:inset 0 2px 4px rgba(0,0,0,.95)}
+.ld-fill{left:0;top:0;bottom:0;width:0;border-radius:6px;transition:width .35s ease-out;
+  background:linear-gradient(180deg,rgba(255,255,255,.55) 0,rgba(255,255,255,0) 45%,rgba(0,10,40,.25) 100%),linear-gradient(90deg,#0a3192 0,#1660e0 45%,#3aa0ff 82%,#bfeaff 100%);
+  box-shadow:0 0 10px rgba(70,170,255,.85)}
+.ld-fill i{left:0;top:0;width:200%;height:100%;background:repeating-linear-gradient(105deg,rgba(255,255,255,0) 0 14px,rgba(220,245,255,.16) 14px 22px);will-change:transform;animation:ldFlow 1.6s linear infinite}
+@keyframes ldFlow{from{transform:translateX(-36px)}to{transform:translateX(0)}}
+.ld-spk{top:32px;left:0;width:44px;height:44px;margin:-22px 0 0 -22px;transition:left .35s ease-out}
+.ld-spk:before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(closest-side,#fff,rgba(170,225,255,.85) 22%,rgba(60,160,255,.25) 55%,rgba(40,120,255,0));animation:ldPulse 1.3s ease-in-out infinite alternate;will-change:transform,opacity}
+.ld-spk:after{content:"";position:absolute;left:0;top:50%;width:100%;height:1.5px;margin-top:-.75px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff,rgba(255,255,255,0))}
+@keyframes ldPulse{from{transform:scale(.7);opacity:.75}to{transform:scale(1);opacity:1}}
+.ld-cap{top:22px;width:22px;height:20px;overflow:visible}.ld-cap.l{left:-15px}.ld-cap.r{right:-15px;transform:scaleX(-1)}
+.ld-tip{left:-20px;right:-20px;top:56px;text-align:center;font:400 12px/1.35 'Libre Baskerville',Georgia,serif;letter-spacing:.9px;color:#a8c4e6;text-shadow:0 1px 0 #000,0 0 10px rgba(0,0,0,.95)}
+#msg{display:none;position:fixed;left:0;right:0;bottom:12%;z-index:1100;text-align:center;padding:0 24px;line-height:1.9;font-size:17px;color:var(--ink);font-weight:700;direction:rtl;text-shadow:0 2px 0 #000,0 0 12px #000}
+#msg.big{display:block}
+
+/* ---- p22b (owner): no crown; a real 3D title (sapphire lacquer, black chrome rim) in a slow turning halo of light; a real steel sword as the bar */
+#ld-hal{pointer-events:none}
+#ld-hal .rays{position:absolute;left:0;top:0;width:100%;height:100%;will-change:transform;animation:ldRot 40s linear infinite}
+#ld-hal .r2{animation:ldRot 64s linear infinite reverse;opacity:.6}
+#ld-hal .glow{position:absolute;left:10%;top:31%;width:80%;height:38%;will-change:opacity,transform;animation:ldBr2 4.2s ease-in-out infinite alternate}
+#ld-hal .ring{position:absolute;left:21%;top:21%;width:58%;height:58%;border-radius:50%;border:1.5px solid rgba(170,215,255,.28);box-shadow:0 0 18px rgba(110,180,255,.35),inset 0 0 18px rgba(110,180,255,.25);opacity:0;will-change:transform,opacity;animation:ldRing 5.5s ease-out infinite}
+#ld-hal .q2{animation-delay:-2.75s}
+@keyframes ldRot{to{transform:rotate(360deg)}}
+@keyframes ldBr2{from{opacity:.55;transform:scale(.94)}to{opacity:1;transform:scale(1.06)}}
+@keyframes ldRing{0%{transform:scale(.45);opacity:0}15%{opacity:.9}100%{transform:scale(1.5);opacity:0}}
+#ld-t3 img{left:0;top:0;width:100%;height:100%;filter:drop-shadow(0 6px 6px rgba(0,0,0,.75)) drop-shadow(0 0 16px rgba(70,150,255,.45))}
+#ld-sub{text-align:center;white-space:nowrap;font:700 11.5px/16px Cinzel,serif;letter-spacing:6px;background:linear-gradient(#ffffff,#c9d6e6 55%,#8ea2bd);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 1px #000) drop-shadow(0 0 6px rgba(80,160,255,.5))}
+#ld-sw{left:0;top:0}
+#ld-sw img{left:0;top:0;width:100%;height:100%;filter:drop-shadow(0 4px 5px rgba(0,0,0,.75))}
+#ld-sw .lit{left:0;top:0;width:100%;height:100%;-webkit-mask:url(/pub/ld_sword_m.webp?v=6) 0 0/100% 100%;mask:url(/pub/ld_sword_m.webp?v=6) 0 0/100% 100%}
+#ld-sw .lit i{top:0;bottom:0;left:22.2%;width:0;background:linear-gradient(90deg,rgba(40,110,255,.07),rgba(70,160,255,.21) 75%,rgba(200,238,255,.42));mix-blend-mode:screen;transition:width .35s ease-out}
+#ld-sw .lit b{left:22.2%;width:0;top:44%;height:12%;background:linear-gradient(90deg,rgba(120,200,255,0),rgba(150,215,255,.30) 80%,rgba(235,250,255,.50));filter:blur(1px);mix-blend-mode:screen;transition:width .35s ease-out}
+#ld-sw .sp{top:50%;left:22.2%;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;background:radial-gradient(#fff,rgba(170,230,255,.7) 18%,rgba(90,180,255,.2) 45%,rgba(60,140,255,0) 70%);transition:left .35s ease-out;will-change:transform,opacity;animation:ldSp 1.6s ease-in-out infinite alternate}
+@keyframes ldSp{from{transform:scale(.8);opacity:.5}to{transform:scale(1.15);opacity:.78}}
+#ld-bot .ld-tip{top:auto;bottom:0}
+@media (prefers-reduced-motion:reduce){#bw-load *{animation-duration:1ms!important;animation-iteration-count:1!important}#bw-load .ld-tg{animation:ldFl 3.5s ease-in-out infinite alternate!important}#bw-load .ld-strip{animation:none!important}#ld-drake{display:none!important}}
+</style>
+</head>
+<body>
+<div id="game"></div>
+<div id="bw-load"></div>
+<div id="msg"></div>
+<script>
+// ===================================== Blue Wall loading screen (visuals only; hooks: bwLoading(p) / bwTip(t) / bwLoadingDone())
+(function () {
+const q = new URLSearchParams(location.search); const P0 = q.has('p') ? +q.get('p') : 0;   // ?p=NN previews a fixed percentage
+const LOOK = q.get('look') || 'A';   // taste switch: 'A' moonlit night (default) | 'B' blue hour (ice-cyan afterglow behind the peaks)
+const RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+const M = /*LD_META*/{"P":{"near":"/pub/ld_P_near.webp?v=2","far":"/pub/ld_P_far.webp","emis":"/pub/ld_P_emis.webp","w":900,"h":990,"hf":0.72,"gate":[0.5,0.6473],"torch":[[0.4587,0.6628,46.4],[0.5413,0.6628,46.4],[0.0685,0.5682,32.5],[0.2017,0.5687,32.7],[0.7527,0.5692,32.5],[0.8861,0.5695,32.5],[0.4475,0.699,47.3],[0.5556,0.6907,47.0],[0.4631,0.721,56.2],[0.592,0.7108,56.2],[0.5155,0.772,69.7],[0.6753,0.7862,69.7],[0.5807,0.8397,91.7],[0.7909,0.835,91.9]],"flag":[[0.3683,0.3734,-1,33.0],[0.6317,0.3789,1,33.0],[0.5,0.3127,1,43.2],[0.3472,0.3566,-1,33.4],[0.2326,0.3469,-1,27.2],[0.6528,0.3552,1,33.4],[0.7674,0.351,1,27.2]],"mist":[0.3,0.6,0.14,0.1],"drake":0.22,"dy":0},"L":{"near":"/pub/ld_L_near.webp?v=2","far":"/pub/ld_L_far.webp","emis":"/pub/ld_L_emis.webp","w":1600,"h":720,"hf":0.9,"gate":[0.5,0.6961],"torch":[[0.4827,0.7119,34.7],[0.5173,0.7119,34.7],[0.3184,0.6154,24.4],[0.3745,0.6159,24.4],[0.1819,0.6155,24.2],[0.2372,0.6163,24.2],[0.0777,0.5893,24.1],[0.6063,0.6164,24.2],[0.6625,0.6168,24.4],[0.7375,0.6179,24.2],[0.793,0.6174,24.2],[0.8878,0.6029,24.1],[0.4788,0.7419,33.9],[0.5224,0.7338,33.9],[0.4859,0.7531,38.3],[0.5352,0.7436,38.3],[0.5055,0.7841,44.4],[0.5625,0.7965,44.4],[0.5258,0.8139,52.3],[0.5931,0.8102,52.3],[0.5263,0.8778,64.0],[0.6085,0.891,64.2],[0.5085,0.9624,82.4],[0.6142,0.966,82.5]],"flag":[[0.4448,0.4155,-1,24.6],[0.5552,0.4211,1,24.6],[0.1562,0.4804,-1,24.2],[0.8438,0.4873,1,24.3],[0.5,0.3381,1,34.6],[0.4319,0.3883,-1,26.4],[0.3792,0.3753,-1,21.8],[0.5681,0.3868,1,26.4],[0.6208,0.3798,1,21.8]],"mist":[0.3,0.6,0.14,0.1],"drake":0.22,"dy":0.05},"crown":{"src":"/pub/ld_crown.webp","w":420,"h":404,"gems":[[0.8572,0.8108,3],[0.947,0.7284,1],[0.0552,0.7284,1],[0.145,0.8108,3],[0.3025,0.8698,1],[0.5011,0.8913,2],[0.6996,0.8698,1],[0.8753,0.6529,2],[0.1268,0.6529,2],[0.5011,0.7533,1],[0.5011,0.0382,3]]}}/*LD_END*/;
+const root = document.getElementById('bw-load');
+const f1 = (x) => (+x).toFixed(1), f2 = (x) => (+x).toFixed(2);
+let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+// ---------------------------------------------------------------- layout tables (design px). P = portrait (390 wide), L = landscape (844 wide)
+const LAY = {
+  P: { tw: 390, th: 380, moon: [112, 82, 31], dragon: [195, 102, 238], t3: [195, 262, 336], sub: 310, hal: 520, bw: 358, bh: 92 },
+  L: { tw: 844, th: 196, moon: [150, 64, 27], dragon: [168, 84, 176], t3: [422, 100, 330], sub: 150, hal: 460, bw: 380, bh: 92 },
+};
+// ---------------------------------------------------------------- pieces
+const starField = (n, w, h, rmin, rmax, cols) => { const a = []; for (let i = 0; i < n; i++) { const r = rmin + Math.pow(rnd(), 2.2) * (rmax - rmin); a.push(`${Math.round(rnd() * w)}px ${Math.round(rnd() * h * (0.25 + 0.75 * rnd()))}px ${f1(r * 1.6)}px ${f1(r * .45)}px ${cols[i % cols.length]}`); } return a.join(','); };
+const lcg = (sd) => () => { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; };
+const flakes = () => { const r = lcg(11); let h = ''; for (let i = 0; i < 34; i++) { const z = 1.2 + r() * 1.6; h += `<i style="left:${f1(r() * 100)}%;--s:${f1(z)}px;--o:${f2(.3 + r() * .35)};--d:${f1(8 + r() * 9)}s;--dl:${f1(-r() * 16)}s;--dx:${Math.round((r() - .5) * 70)}px"></i>`; } return h; };
+const rays = () => { const g = ['', '']; [[24, 900, 70, .10], [38, 1100, 120, .09], [52, 1200, 80, .11], [64, 1000, 150, .07], [78, 900, 60, .08], [45, 1300, 30, .14]].forEach(([a, l, h, o], i) => { g[i % 2] += `<i style="--a:${a}deg;--l:${l}px;--h:${h}px;--o:${o}"></i>`; }); return `<b style="--d:9s;--dl:0s">${g[0]}</b><b style="--d:13s;--dl:-5s">${g[1]}</b>`; };
+// ---------------------------------------------------------------- build
+let H = `<div id="ld-stars"><i class="s1"></i><i class="s2"></i><i class="s3"></i></div>
+<div id="ld-halo"></div><div id="ld-rays">${rays()}</div><div id="ld-moon"></div>
+<div id="ld-cl1" class="ld-strip" style="--tw:1400px;--d:240s;opacity:.6"></div><div id="ld-cl2" class="ld-strip rev" style="--tw:1400px;--d:330s;opacity:.38"></div>
+<div id="ld-world"><img id="ld-far" alt=""><div id="ld-mi1" class="ld-strip" style="--tw:1200px;--d:150s"></div><img id="ld-near" alt="" fetchpriority="high"><img id="ld-emis" alt=""><div id="ld-drake"><img alt=""></div><div id="ld-fx"></div><div id="ld-mi2" class="ld-strip rev" style="--tw:1200px;--d:110s"></div></div>
+<div id="ld-tws"></div><div id="ld-snow">${flakes()}</div>
+<canvas id="ld-sv"></canvas>
+<div id="ld-top"><div id="ld-hal"><canvas class="rays"></canvas><canvas class="rays r2"></canvas><canvas class="glow"></canvas><i class="ring"></i><i class="ring q2"></i></div>
+ <div id="ld-dragon"><img alt=""></div>
+ <div id="ld-t3"><img alt="Blue Wall" fetchpriority="high"></div>
+ <div id="ld-sub">— RISE OF THE KINGDOM —</div>
+</div>
+<div id="ld-bot" class="ebar"><div id="ld-sw"><img alt=""><div class="lit"><i id="ld-fill"></i><b id="ld-fl2"></b></div><div class="sp" id="ld-sk"></div></div>
+ <div class="tip ld-tip" id="bw-tip">Preparing your kingdom…</div></div>`;
+root.innerHTML = H;
+const $ = (id) => document.getElementById(id);
+// the halo of light, drawn once at low resolution (a canvas is a texture layer: 400x400 px instead of a 520 css-px masked layer at 3.3x)
+function drawHal() {
+  const cs = root.querySelectorAll('#ld-hal canvas.rays'), gl = root.querySelector('#ld-hal canvas.glow');
+  try {
+    const n = 400, a = cs[0]; a.width = a.height = n; const g = a.getContext('2d');
+    if (g.createConicGradient) {
+      const cg = g.createConicGradient(-Math.PI / 2, n / 2, n / 2), C = (al) => `rgba(150,205,255,${al})`;
+      for (let k = 0; k < 15; k++) { const b = k * 24; cg.addColorStop(Math.min(1, b / 360), C(0)); cg.addColorStop((b + 9) / 360, C(0)); cg.addColorStop((b + 12) / 360, C(.15)); cg.addColorStop((b + 15) / 360, C(0)); }
+      cg.addColorStop(1, C(0)); g.fillStyle = cg; g.fillRect(0, 0, n, n);
+      g.globalCompositeOperation = 'destination-in'; const m = g.createRadialGradient(n / 2, n / 2, 0, n / 2, n / 2, n / 2);
+      m.addColorStop(0, 'rgba(0,0,0,.95)'); m.addColorStop(.18, 'rgba(0,0,0,.95)'); m.addColorStop(.55, 'rgba(0,0,0,.35)'); m.addColorStop(.78, 'rgba(0,0,0,0)'); m.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = m; g.fillRect(0, 0, n, n);
+      const b2 = cs[1]; b2.width = b2.height = n; b2.getContext('2d').drawImage(a, 0, 0);
+    }
+    gl.width = 200; gl.height = 96; const q = gl.getContext('2d'); q.translate(100, 48); q.scale(100, 48);
+    const rg = q.createRadialGradient(0, 0, 0, 0, 0, 1); rg.addColorStop(0, 'rgba(110,180,255,.42)'); rg.addColorStop(.55, 'rgba(60,130,255,.16)'); rg.addColorStop(1, 'rgba(40,100,255,0)'); q.fillStyle = rg; q.fillRect(-1, -1, 2, 2);
+  } catch (e) {}
+}
+// bottom shade + vignette: one half-resolution canvas (smooth gradients only)
+function paintSV(vw, vh) {
+  const c = $('ld-sv'); if (!c) return; const w = Math.max(2, Math.round(vw / 2)), h = Math.max(2, Math.round(vh / 2));
+  if (c.width === w && c.height === h) return; c.width = w; c.height = h;
+  const g = c.getContext('2d'), y0 = h * .66, sg = g.createLinearGradient(0, y0, 0, h);
+  sg.addColorStop(0, 'rgba(2,5,12,0)'); sg.addColorStop(.45, 'rgba(2,5,12,.55)'); sg.addColorStop(1, 'rgba(1,3,8,.9)'); g.fillStyle = sg; g.fillRect(0, y0, w, h - y0);
+  g.save(); g.translate(w * .5, h * .45); g.scale(w * .85, h * .7); const vg = g.createRadialGradient(0, 0, 0, 0, 0, 1);
+  vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(.55, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,2,8,.62)'); g.fillStyle = vg; g.fillRect(-2, -2, 4, 4); g.restore();
+}
+// a dozen twinkling stars (tiny layers) over the static star field, kept clear of the moon
+function placeTw(vw, vh, mx, my, mr) {
+  const t = $('ld-tws'); if (!t) return; const key = vw + 'x' + vh + ':' + Math.round(mx) + ',' + Math.round(my); if (t.dataset.k === key) return; t.dataset.k = key;
+  const r = lcg(5); let h = '', n = 0, guard = 0;
+  while (n < 12 && guard++ < 80) { const x = r() * vw, y = r() * vh * .34; if (Math.hypot(x - mx, y - my) < mr * 2.4) continue; n++; h += `<i style="left:${f1(x)}px;top:${f1(y)}px;--d:${f1(2 + r() * 3)}s;--dl:${f1(-r() * 4)}s"></i>`; }
+  t.innerHTML = h;
+}
+drawHal();
+if (RM) root.classList.add('ld-rm'); root.classList.add('look-' + LOOK.toLowerCase());
+// stars (static fields; only their opacity animates)
+{ const W = 1400, Hs = 900; const st = root.querySelectorAll('#ld-stars i');
+  st[0].style.boxShadow = starField(70, W, Hs, .5, 1.2, ['rgba(220,235,255,.95)', 'rgba(180,210,255,.8)']);
+  st[1].style.boxShadow = starField(60, W, Hs, .4, 1.0, ['rgba(200,225,255,.85)', 'rgba(255,240,215,.7)']);
+  st[2].style.boxShadow = starField(26, W, Hs, .9, 1.7, ['rgba(235,245,255,1)', 'rgba(170,205,255,.9)']); }
+// images
+const img = (el, src, cb) => { el.onload = () => { el.classList.add('on'); if (cb) cb(); }; el.src = src; };
+const DR = M.dragon || { src: '/pub/ld_dragon.webp?v=2', w: 912, h: 803 };
+root.querySelectorAll('#ld-dragon img,#ld-drake img').forEach((e) => img(e, DR.src));
+const T3 = { src: '/pub/ld_title3.webp?v=3', w: 1000, h: 210 }, SW = { src: '/pub/ld_sword.webp?v=7', w: 1400, h: 300, b0: 0.222, b1: 0.9857 };
+img(root.querySelector('#ld-t3 img'), T3.src); img(root.querySelector('#ld-sw img'), SW.src);
+for (const id of ['ld-cl1', 'ld-cl2']) $(id).style.backgroundImage = 'url(/pub/ld_clouds.webp)';
+for (const id of ['ld-mi1', 'ld-mi2']) $(id).style.backgroundImage = 'url(/pub/ld_mist.webp)';
+// ---------------------------------------------------------------- world (plates) per orientation
+let cur = null, prog = P0;
+const plate = (k) => (LOOK !== 'A' && M[LOOK + k]) || M[k];
+function setWorld(k) {
+  const W = plate(k); if (!W || cur === k) return; cur = k;
+  img($('ld-near'), W.near); img($('ld-far'), W.far); img($('ld-emis'), W.emis);
+  $('ld-world').style.setProperty('--gx', f2(W.gate[0] * 100) + '%'); $('ld-world').style.setProperty('--gy', f2(W.gate[1] * 100) + '%');
+  let s = `<div class="ld-gate" style="left:${f2(W.gate[0] * 100 - 9)}%;top:${f2(W.gate[1] * 100 - 6)}%;width:18%;height:12%"></div>`;
+  const big = W.torch.slice().sort((a, b) => b[2] - a[2]).slice(0, 2);
+  for (const [x, y, sz] of big) for (let i = 0; i < 3; i++) s += `<i class="ld-em" style="left:${f2(x * 100)}%;top:${f2(y * 100)}%;font-size:${f2(sz / 3)}em;--x:${f1((rnd() - .5) * 5)}em;--d:${f2(1.6 + rnd() * 1.6)}s;--dl:${f2(-rnd() * 3)}s"></i>`;
+  W.torch.forEach(([x, y, sz], i) => { s += `<i class="ld-t" style="left:${f2(x * 100)}%;top:${f2(y * 100)}%;--s:${f2(sz)}em;--d:${f2([.9, 1.27, 1.63][i % 3])}s;--dl:${f2(-(i % 3) * .4 - i * .07)}s"></i>`; });
+  for (const [x, y, d, sz] of W.flag) s += `<div class="ld-fl" style="left:${f2(x * 100)}%;top:${f2(y * 100)}%;--w:${f2(sz * .68)}em;transform:scaleX(${d < 0 ? -1 : 1})"><svg viewBox="0 0 40 20" style="--d:${f2(1.1 + rnd() * .8)}s;--dl:${f2(-rnd() * 2)}s"><path d="M0 0C10 1.5 22 2.8 40 5.5C30 7 32 8.6 40 11.5C24 12 12 13 0 15Z" fill="#0d2452" stroke="#5f8fc8" stroke-width=".7" stroke-linejoin="round"/><path d="M0 0C10 1.5 22 2.8 40 5.5L30 7C20 6 10 6 0 6.5Z" fill="#4a7cc4" opacity=".4"/></svg></div>`;
+  $('ld-fx').innerHTML = s;
+  setProgress(prog);
+}
+// ---------------------------------------------------------------- safe areas (Telegram fullscreen header + notch / home bar)
+function insets() {
+  const cs = getComputedStyle(document.documentElement), v = (n) => parseFloat(cs.getPropertyValue(n)) || 0;
+  let t = v('--tg-safe-area-inset-top') + v('--tg-content-safe-area-inset-top'), b = v('--tg-safe-area-inset-bottom') + v('--tg-content-safe-area-inset-bottom');
+  const tg = window.Telegram && window.Telegram.WebApp;
+  try { if (tg && tg.safeAreaInset) { t = Math.max(t, (tg.safeAreaInset.top || 0) + ((tg.contentSafeAreaInset && tg.contentSafeAreaInset.top) || 0)); b = Math.max(b, (tg.safeAreaInset.bottom || 0) + ((tg.contentSafeAreaInset && tg.contentSafeAreaInset.bottom) || 0)); } } catch (e) {}
+  const pr = $('ld-probe'); if (pr) { const r = pr.getBoundingClientRect(); t = Math.max(t, r.top); b = Math.max(b, innerHeight - r.bottom); }
+  return { t, b };
+}
+root.insertAdjacentHTML('beforeend', '<div id="ld-probe" style="position:absolute;left:0;right:0;top:env(safe-area-inset-top,0px);bottom:env(safe-area-inset-bottom,0px);visibility:hidden"></div>');
+const place = (el, x, y, w, h) => { el.style.left = f1(x - w / 2) + 'px'; el.style.top = f1(y - h / 2) + 'px'; el.style.width = f1(w) + 'px'; el.style.height = f1(h) + 'px'; };
+function layout() {
+  if (!root.isConnected) return;
+  const vw = innerWidth || 390, vh = innerHeight || 844, land = vw > vh * 1.12, k = land ? 'L' : 'P', L = LAY[k], ins = insets();
+  root.classList.toggle('land', land);
+  setWorld(k);
+  // plates: bottom-anchored "cover", gate kept near the horizontal centre
+  const W = plate(k);
+  if (W) {
+    const asp = W.w / W.h; let wh = vh * W.hf, ww = wh * asp; if (ww < vw) { ww = vw; wh = ww / asp; }
+    let left = vw / 2 - W.gate[0] * ww; left = Math.min(0, Math.max(vw - ww, left));
+    const wd = $('ld-world'); wd.style.width = f1(ww) + 'px'; wd.style.height = f1(wh) + 'px'; wd.style.transform = `translate(${f1(left)}px,${f1(vh - wh + (W.dy || 0) * wh)}px)`;
+    $('ld-fx').style.cssText = `left:0;top:0;width:100%;height:100%;font-size:${(ww / W.w).toFixed(4)}px`;
+    for (const id of ['ld-mi1', 'ld-mi2']) { const m = $(id), y0 = id === 'ld-mi1' ? W.mist[0] : W.mist[1]; m.style.top = f2(y0 * 100) + '%'; m.style.height = f2((id === 'ld-mi1' ? W.mist[2] : W.mist[3]) * 100) + '%'; m.style.opacity = id === 'ld-mi1' ? .55 : .42; }
+    const dk = $('ld-drake'); dk.style.left = '6%'; dk.style.top = f2(W.drake * 100) + '%';
+  }
+  // UI scale: fit the design column into the space between the insets
+  const avail = vh - ins.t - ins.b;
+  const s = Math.max(.62, Math.min(1.6, land ? Math.min(vw / L.tw, avail / 390) : Math.min(vw / L.tw, avail / 740)));
+  const top = $('ld-top'), bot = $('ld-bot');
+  top.style.width = L.tw + 'px'; top.style.height = L.th + 'px';
+  const ty = ins.t + (land ? 2 : Math.max(0, Math.min(40, (avail - 740 * s) * .35)));
+  top.style.transform = `translate(${f1(vw / 2 - L.tw / 2 * s)}px,${f1(ty)}px) scale(${f2(s)})`;
+  bot.style.width = L.bw + 'px'; bot.style.height = L.bh + 'px';
+  bot.style.transform = `translate(${f1(vw / 2 - L.bw / 2 * s)}px,${f1(vh - ins.b - (L.bh + (land ? 4 : 18)) * s)}px) scale(${f2(s)})`;
+  // children
+  const dr = $('ld-dragon'), dw = L.dragon[2], dh = dw * DR.h / DR.w; place(dr, L.dragon[0], L.dragon[1], dw, dh);
+  const tw3 = L.t3[2], th3 = tw3 * T3.h / T3.w; place($('ld-t3'), L.t3[0], L.t3[1], tw3, th3);
+  place($('ld-hal'), L.t3[0], L.t3[1], L.hal, L.hal);
+  place($('ld-sub'), L.t3[0], L.sub, 320, 16);
+  const sw = $('ld-sw'); sw.style.width = L.bw + 'px'; sw.style.height = f1(L.bw * SW.h / SW.w) + 'px';
+  // moon, halo & rays live in screen space but follow the top group
+  const mx = vw / 2 + (L.moon[0] - L.tw / 2) * s, my = ty + L.moon[1] * s, mr = L.moon[2] * s;
+  place($('ld-moon'), mx, my, mr * 2, mr * 2); place($('ld-halo'), mx, my, mr * 16, mr * 16);
+  $('ld-rays').style.left = f1(mx) + 'px'; $('ld-rays').style.top = f1(my) + 'px';
+  // clouds: one band across the moon, a thinner one lower
+  const c1 = $('ld-cl1'), c2 = $('ld-cl2'); c1.style.top = f1(my - 190 * s) + 'px'; c1.style.height = f1(400 * s) + 'px'; c2.style.top = f1(my + 120 * s) + 'px'; c2.style.height = f1(330 * s) + 'px';
+  paintSV(vw, vh); placeTw(vw, vh, mx, my, mr); $('ld-snow').style.setProperty('--fall', Math.round(vh + 24) + 'px');
+}
+// ---------------------------------------------------------------- progress
+function setProgress(p) {
+  prog = p; const span = (SW.b1 - SW.b0) * 100, w = f2(span * p / 100) + '%';
+  const f = $('ld-fill'); if (f) f.style.width = w; const f2b = $('ld-fl2'); if (f2b) f2b.style.width = w;
+  const k = $('ld-sk'); if (k) k.style.left = f2(SW.b0 * 100 + span * p / 100) + '%';
+  const e = $('ld-emis'); if (e) { const r = 4 + p * 1.25; e.style.clipPath = `ellipse(${f1(r * 1.2)}% ${f1(r)}% at var(--gx) var(--gy))`; }
+}
+addEventListener('resize', layout); layout(); setProgress(P0);
+window.bwTgLayout = () => { try { const tg = window.Telegram && window.Telegram.WebApp; if (tg && tg.onEvent) for (const ev of ['viewportChanged', 'safeAreaChanged', 'contentSafeAreaChanged', 'fullscreenChanged']) tg.onEvent(ev, layout); } catch (e) {} layout(); };
+const vis = () => root.classList.toggle('ld-paused', document.hidden); document.addEventListener('visibilitychange', vis);
+window.bwLoading = (p) => { p = Math.max(0, Math.min(100, Math.round(p))); const e = $('pct'); if (e) e.innerHTML = `${p}<i>%</i>`; setProgress(p); };
+window.bwTip = (t) => { const e = $('bw-tip'); if (e && t) e.textContent = t; };
+window.bwLoadingDone = () => { root.classList.add('done'); removeEventListener('resize', layout); document.removeEventListener('visibilitychange', vis); setTimeout(() => { root.classList.add('ld-paused'); root.remove(); }, 900); };
+setTimeout(() => root.querySelectorAll('img').forEach((e) => e.classList.add('on')), 4000);   // safety: never leave a picture hidden
+document.body.dataset.ready = 1;
+})();
+</script>
+<script src="/tg.js"></script>
+<script>window.bwTgLayout && window.bwTgLayout();</script>
+<script>
+(function () {
+  "use strict";
+  var msg = document.getElementById("msg");
+  function prog(p, tip) { if (window.bwLoading) window.bwLoading(p); if (tip && window.bwTip) window.bwTip(tip); }
+  function say(t, big) { msg.textContent = t; msg.className = big ? "big" : ""; }
+  function stop(t) { say(t, true); var q = document.querySelector(".ebar"); if (q) q.style.display = "none"; var tp = document.getElementById("bw-tip"); if (tp) tp.style.display = "none"; }
+
+  var tg = window.Telegram && window.Telegram.WebApp;
+  try {
+    tg.ready(); tg.expand();
+    if (tg.isVersionAtLeast("7.7")) tg.disableVerticalSwipes();
+    if (tg.isVersionAtLeast("6.1")) { tg.setHeaderColor("#050912"); tg.setBackgroundColor("#050912"); }
+    if (tg.isVersionAtLeast("7.10")) tg.setBottomBarColor("#050912");
+    if (tg.isVersionAtLeast("8.0") && (tg.platform === "android" || tg.platform === "ios")) tg.requestFullscreen();
+  } catch (e) {}
+  var initData = (tg && tg.initData) || "";
+  if (!initData) { stop("🔒 Blue Wall فقط از داخل تلگرام باز می‌شه"); return; }
+  prog(6);
+
+  fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ init_data: initData }) })
+  .then(function (r) { return r.json().then(function (j) { return [r.status, j]; }); })
+  .then(function (res) {
+    var j = res[1];
+    if (!j.ok) {
+      if (j.reason === "locked") stop("🔒 Blue Wall هنوز افتتاح نشده… به‌زودی دروازه‌ها باز می‌شن ⚔️");
+      else if (j.reason === "slow") stop("⏳ یه لحظه صبر کن و دوباره باز کن");
+      else stop("⚠️ ورود تأیید نشد؛ دوباره از تلگرام باز کن");
+      return;
+    }
+    prog(12);
+    return loadBundle(j).then(function () {
+      if (!window.BlueWall || !window.BlueWall.start) throw new Error("no-bundle");
+      return window.BlueWall.start({
+        root: document.getElementById("game"), token: j.token, uid: j.uid, name: j.name, owner: !!j.owner, level: j.level || 0, tg: tg,
+        progress: function (p, t) { prog(60 + p * 0.4, t); },
+        ready: function () { prog(100); setTimeout(function () { if (window.bwLoadingDone) window.bwLoadingDone(); }, 250); }
+      });
+    });
+  })
+  .catch(function (e) {
+    console.error(e);
+    if (e && e.message === "webgl") stop("⚠️ گوشیت از گرافیک سه‌بعدی (WebGL) پشتیبانی نمی‌کنه");
+    else stop("⚠️ اتصال برقرار نشد؛ دوباره امتحان کن");
+  });
+
+  function loadBundle(j) {
+    return fetch("/api/bundle", { headers: { Authorization: "Bearer " + j.token } }).then(function (r) {
+      if (!r.ok) throw new Error("bundle " + r.status);
+      var total = +(r.headers.get("X-Raw-Size") || 0);
+      if (!r.body || !r.body.getReader || !total) return r.text();
+      var rd = r.body.getReader(), got = 0, parts = [];
+      function pump() {
+        return rd.read().then(function (x) {
+          if (x.done) return new Blob(parts).text();
+          parts.push(x.value); got += x.value.length; prog(12 + 48 * Math.min(1, got / total));
+          return pump();
+        });
+      }
+      return pump();
+    }).then(function (code) {
+      return new Promise(function (ok, bad) {
+        var url = URL.createObjectURL(new Blob([code], { type: "text/javascript" }));
+        var s = document.createElement("script");
+        s.onload = function () { URL.revokeObjectURL(url); ok(); };
+        s.onerror = function () { bad(new Error("script")); };
+        s.src = url; document.body.appendChild(s);
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>
+</body>
+</html>

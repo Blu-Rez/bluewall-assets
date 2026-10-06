@@ -1,0 +1,21 @@
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { bakeVillage } from '../src/village.js';
+const q = new URLSearchParams(location.search);
+const r = new THREE.WebGLRenderer({ antialias: true }); r.setSize(innerWidth, innerHeight); r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping;
+r.shadowMap.enabled = true; document.body.appendChild(r.domElement);
+const s = new THREE.Scene(); s.background = new THREE.Color(0x9ab8d8);
+s.add(new THREE.HemisphereLight(0xdde8ff, 0x556644, 1.3));
+const d = new THREE.DirectionalLight(0xfff2dd, 3); d.position.set(-20, 30, 25); d.castShadow = true; d.shadow.mapSize.set(2048, 2048);
+Object.assign(d.shadow.camera, { left: -30, right: 30, top: 30, bottom: -30 }); s.add(d);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshStandardMaterial({ color: 0x6a7a4a })); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; s.add(ground);
+const L = new GLTFLoader(); L.setMeshoptDecoder(MeshoptDecoder);
+L.load('kit/kit_village.glb', (g) => {
+  const houses = JSON.parse(q.get('h') || '[]');
+  const res = bakeVillage(s, g, houses);
+  window.__info = res.meshes.map((m) => m.name + ' ' + m.geometry.index.count / 3);
+  const cam = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.1, 500);
+  const c = JSON.parse(q.get('c') || '[20,14,26,0,3,0]'); cam.position.set(c[0], c[1], c[2]); cam.lookAt(c[3], c[4], c[5]);
+  r.render(s, cam); window.__done = true;
+}, undefined, (e) => { window.__info = ['ERR ' + e.message]; window.__done = true; });
