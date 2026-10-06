@@ -1,0 +1,11 @@
+Model Information:
+* title:	Parameswara Chronicles: Desert Skybox
+* source:	https://sketchfab.com/3d-models/parameswara-chronicles-desert-skybox-01d47c1a57e14f4db023b50cefedc687
+* author:	Dr Helmi Norman (https://sketchfab.com/helmi.norman)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Parameswara Chronicles: Desert Skybox" (https://sketchfab.com/3d-models/parameswara-chronicles-desert-skybox-01d47c1a57e14f4db023b50cefedc687) by Dr Helmi Norman (https://sketchfab.com/helmi.norman) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

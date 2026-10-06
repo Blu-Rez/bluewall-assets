@@ -1,0 +1,11 @@
+Model Information:
+* title:	Stylized Rowboat & Wooden Dock
+* source:	https://sketchfab.com/3d-models/stylized-rowboat-wooden-dock-1617f14206314c27945649e07ffbcf05
+* author:	pixelzedge (https://sketchfab.com/pixelzedge)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Stylized Rowboat & Wooden Dock" (https://sketchfab.com/3d-models/stylized-rowboat-wooden-dock-1617f14206314c27945649e07ffbcf05) by pixelzedge (https://sketchfab.com/pixelzedge) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

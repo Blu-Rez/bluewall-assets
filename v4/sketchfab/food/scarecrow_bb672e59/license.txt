@@ -1,0 +1,11 @@
+Model Information:
+* title:	Scarecrow
+* source:	https://sketchfab.com/3d-models/scarecrow-bb672e5996254111a7d2e93ed01b5e0c
+* author:	Glowbox 3D (https://sketchfab.com/ra3id)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Scarecrow" (https://sketchfab.com/3d-models/scarecrow-bb672e5996254111a7d2e93ed01b5e0c) by Glowbox 3D (https://sketchfab.com/ra3id) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

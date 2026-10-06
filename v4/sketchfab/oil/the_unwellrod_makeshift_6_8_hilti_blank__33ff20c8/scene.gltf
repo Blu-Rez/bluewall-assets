@@ -1,0 +1,1847 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 4100,
+      "max": [
+        21.9591007232666,
+        26.659299850463867,
+        -3.05049991607666
+      ],
+      "min": [
+        12.355799674987793,
+        24.457700729370117,
+        -5.788700103759766
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 49200,
+      "componentType": 5126,
+      "count": 4100,
+      "max": [
+        0.9999694228172302,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -0.999721109867096,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 4100,
+      "max": [
+        52.17110061645508,
+        -0.9610689878463745
+      ],
+      "min": [
+        41.864200592041016,
+        -13.596199989318848
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 5640,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 98400,
+      "componentType": 5126,
+      "count": 17975,
+      "max": [
+        -16.622600555419922,
+        23.830900192260742,
+        -0.08384999632835388
+      ],
+      "min": [
+        -20.31730079650879,
+        15.718500137329102,
+        -3.8541500568389893
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 314100,
+      "componentType": 5126,
+      "count": 17975,
+      "max": [
+        1.0,
+        1.0,
+        0.9988873600959778
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -0.9995973706245422
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 32800,
+      "componentType": 5126,
+      "count": 17975,
+      "max": [
+        38.16379928588867,
+        -10.82800006866455
+      ],
+      "min": [
+        29.77120018005371,
+        -61.172000885009766
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 22560,
+      "componentType": 5125,
+      "count": 21972,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 529800,
+      "componentType": 5126,
+      "count": 9944,
+      "max": [
+        23.678600311279297,
+        23.327600479125977,
+        0.2256219983100891
+      ],
+      "min": [
+        16.27899932861328,
+        21.58139991760254,
+        -4.30217981338501
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 649128,
+      "componentType": 5126,
+      "count": 9944,
+      "max": [
+        0.8493494391441345,
+        0.9999690651893616,
+        0.9909905195236206
+      ],
+      "min": [
+        -0.8493433594703674,
+        -0.9999691843986511,
+        -0.9909926056861877
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 176600,
+      "componentType": 5126,
+      "count": 9944,
+      "max": [
+        6.480519771575928,
+        5.100450038909912
+      ],
+      "min": [
+        5.560500144958496,
+        4.534470081329346
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 256152,
+      "componentType": 5126,
+      "count": 9944,
+      "max": [
+        6.480519771575928,
+        5.100450038909912
+      ],
+      "min": [
+        5.560500144958496,
+        4.534470081329346
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 110448,
+      "componentType": 5125,
+      "count": 24576,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 768456,
+      "componentType": 5126,
+      "count": 2967,
+      "max": [
+        27.223800659179688,
+        21.296499252319336,
+        -0.8970500230789185
+      ],
+      "min": [
+        19.850099563598633,
+        16.594600677490234,
+        -3.0953500270843506
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 804060,
+      "componentType": 5126,
+      "count": 2967,
+      "max": [
+        0.9899536371231079,
+        0.9874691963195801,
+        1.0
+      ],
+      "min": [
+        -0.9874902963638306,
+        -0.9875252842903137,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 335704,
+      "componentType": 5126,
+      "count": 2967,
+      "max": [
+        38.41379928588867,
+        -4.8626298904418945
+      ],
+      "min": [
+        31.571800231933594,
+        -31.137399673461914
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 208752,
+      "componentType": 5125,
+      "count": 4680,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 839664,
+      "componentType": 5126,
+      "count": 2984,
+      "max": [
+        27.73419952392578,
+        17.942100524902344,
+        -0.8970500230789185
+      ],
+      "min": [
+        20.802799224853516,
+        14.41189956665039,
+        -3.094949960708618
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 875472,
+      "componentType": 5126,
+      "count": 2984,
+      "max": [
+        0.9899529218673706,
+        0.9874832034111023,
+        1.0
+      ],
+      "min": [
+        -0.987489640712738,
+        -0.9874873161315918,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 359440,
+      "componentType": 5126,
+      "count": 2984,
+      "max": [
+        58.41389846801758,
+        -36.86259841918945
+      ],
+      "min": [
+        15.592599868774414,
+        -57.13740158081055
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 227472,
+      "componentType": 5125,
+      "count": 4722,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 911280,
+      "componentType": 5126,
+      "count": 11345,
+      "max": [
+        27.952999114990234,
+        28.665700912475586,
+        0.048717398196458817
+      ],
+      "min": [
+        -23.606399536132813,
+        14.69159984588623,
+        -3.986720085144043
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1047420,
+      "componentType": 5126,
+      "count": 11345,
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 383312,
+      "componentType": 5126,
+      "count": 11345,
+      "max": [
+        56.06039810180664,
+        4.143370151519775
+      ],
+      "min": [
+        3.817430019378662,
+        -61.049198150634766
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 246360,
+      "componentType": 5125,
+      "count": 17514,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1183560,
+      "componentType": 5126,
+      "count": 1196,
+      "max": [
+        -22.425600051879883,
+        30.374000549316406,
+        2.983949899673462
+      ],
+      "min": [
+        -33.206199645996094,
+        20.46809959411621,
+        -6.921949863433838
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1197912,
+      "componentType": 5126,
+      "count": 1196,
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 474072,
+      "componentType": 5126,
+      "count": 1196,
+      "max": [
+        2.619119882583618,
+        -16.326200485229492
+      ],
+      "min": [
+        1.3808799982070923,
+        -17.61910057067871
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 316416,
+      "componentType": 5125,
+      "count": 1872,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1212264,
+      "componentType": 5126,
+      "count": 106,
+      "max": [
+        -22.260799407958984,
+        29.49839973449707,
+        2.1110999584198
+      ],
+      "min": [
+        -22.90169906616211,
+        21.340599060058594,
+        -6.046669960021973
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1213536,
+      "componentType": 5126,
+      "count": 106,
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 483640,
+      "componentType": 5126,
+      "count": 106,
+      "max": [
+        34.5098991394043,
+        -24.490100860595703
+      ],
+      "min": [
+        33.4901008605957,
+        -25.509899139404297
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 323904,
+      "componentType": 5125,
+      "count": 288,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1214808,
+      "componentType": 5126,
+      "count": 987,
+      "max": [
+        -21.964000701904297,
+        29.061199188232422,
+        1.6739599704742432
+      ],
+      "min": [
+        -22.61400032043457,
+        21.777700424194336,
+        -5.609519958496094
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1226652,
+      "componentType": 5126,
+      "count": 987,
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 484488,
+      "componentType": 5126,
+      "count": 987,
+      "max": [
+        28.4552001953125,
+        -54.5447998046875
+      ],
+      "min": [
+        27.5447998046875,
+        -55.4552001953125
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 325056,
+      "componentType": 5125,
+      "count": 2592,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1238496,
+      "componentType": 5126,
+      "count": 3790,
+      "max": [
+        25.88800048828125,
+        28.208099365234375,
+        0.255295991897583
+      ],
+      "min": [
+        23.06209945678711,
+        24.70789909362793,
+        -4.3358001708984375
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1283976,
+      "componentType": 5126,
+      "count": 3790,
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 492384,
+      "componentType": 5126,
+      "count": 3790,
+      "max": [
+        34.09260177612305,
+        -44.9807014465332
+      ],
+      "min": [
+        3.9806599617004395,
+        -53.03609848022461
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 335424,
+      "componentType": 5125,
+      "count": 11550,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1329456,
+      "componentType": 5126,
+      "count": 352,
+      "max": [
+        14.943900108337402,
+        26.62820053100586,
+        0.396140992641449
+      ],
+      "min": [
+        13.346400260925293,
+        25.03059959411621,
+        -0.03790559992194176
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1333680,
+      "componentType": 5126,
+      "count": 352,
+      "max": [
+        0.9848883748054504,
+        0.9848717451095581,
+        1.0
+      ],
+      "min": [
+        -0.9848867654800415,
+        -0.9848928451538086,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 522704,
+      "componentType": 5126,
+      "count": 352,
+      "max": [
+        44.09980010986328,
+        -24.90019989013672
+      ],
+      "min": [
+        43.90019989013672,
+        -25.09980010986328
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 381624,
+      "componentType": 5125,
+      "count": 1119,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1337904,
+      "componentType": 5126,
+      "count": 1218,
+      "max": [
+        53.91120147705078,
+        27.73069953918457,
+        -1.6308900117874146
+      ],
+      "min": [
+        21.924100875854492,
+        18.872100830078125,
+        -2.3070099353790283
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1352520,
+      "componentType": 5126,
+      "count": 1218,
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 525520,
+      "componentType": 5126,
+      "count": 1218,
+      "max": [
+        57.99919891357422,
+        -8.446330070495605
+      ],
+      "min": [
+        54.00080108642578,
+        -9.553669929504395
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 386100,
+      "componentType": 5125,
+      "count": 2424,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1367136,
+      "componentType": 5126,
+      "count": 640,
+      "max": [
+        28.697999954223633,
+        24.628700256347656,
+        -1.1650500297546387
+      ],
+      "min": [
+        26.37179946899414,
+        23.02079963684082,
+        -2.7729499340057373
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1374816,
+      "componentType": 5126,
+      "count": 640,
+      "max": [
+        1.0,
+        0.998885989189148,
+        0.9988853335380554
+      ],
+      "min": [
+        -1.0,
+        -0.998884379863739,
+        -0.9988853335380554
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 535264,
+      "componentType": 5126,
+      "count": 640,
+      "max": [
+        62.10049819946289,
+        -40.85459899902344
+      ],
+      "min": [
+        61.89950180053711,
+        -41.14540100097656
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 395796,
+      "componentType": 5125,
+      "count": 756,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1382496,
+      "componentType": 5126,
+      "count": 708,
+      "max": [
+        18.079099655151367,
+        23.57670021057129,
+        -1.5511000156402588
+      ],
+      "min": [
+        14.947600364685059,
+        18.058900833129883,
+        -2.294300079345703
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1390992,
+      "componentType": 5126,
+      "count": 708,
+      "max": [
+        0.9997218251228333,
+        0.9975002408027649,
+        1.0
+      ],
+      "min": [
+        -0.9998766183853149,
+        -0.9988888502120972,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 540384,
+      "componentType": 5126,
+      "count": 708,
+      "max": [
+        12.187399864196777,
+        -46.6510009765625
+      ],
+      "min": [
+        11.812600135803223,
+        -47.3489990234375
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 398820,
+      "componentType": 5125,
+      "count": 1416,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "thanoidiscominggaming (https://sketchfab.com/thanoidiscominggaming)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/the-unwellrod-makeshift-68-hilti-blank-pistol-33ff20c843ee4a13804429453e98e30e",
+      "title": "The Unwellrod (makeshift 6.8 Hilti blank pistol)"
+    },
+    "generator": "Sketchfab-16.8.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 404484,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 546048,
+      "byteOffset": 404484,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1399488,
+      "byteOffset": 950532,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 2350020,
+      "uri": "scene.bin"
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_emissive_strength"
+  ],
+  "images": [
+    {
+      "uri": "textures/Tinker1Mtl_baseColor.jpeg"
+    },
+    {
+      "uri": "textures/Tinker1Mtl_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/BoltTop41Mtl_baseColor.png"
+    },
+    {
+      "uri": "textures/BoltTop41Mtl_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/MainWire1Mtl_baseColor.png"
+    },
+    {
+      "uri": "textures/MainWire1Mtl_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Tinker1Mtl.001_baseColor.png"
+    },
+    {
+      "uri": "textures/Tinker1Mtl.002_baseColor.png"
+    },
+    {
+      "uri": "textures/Tinker1Mtl.002_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/OilFitlerLid1Mtl_baseColor.png"
+    },
+    {
+      "uri": "textures/OilFitlerLid1Mtl_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/OilFitlerLid1Mtl.002_baseColor.png"
+    },
+    {
+      "uri": "textures/BandNail1Mtl_baseColor.jpeg"
+    },
+    {
+      "uri": "textures/BandNail1Mtl_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Union2Mtl_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/BoltTop41Mtl.001_baseColor.png"
+    },
+    {
+      "uri": "textures/BoltTop41Mtl.001_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/BoltTop41Mtl.002_baseColor.jpeg"
+    },
+    {
+      "uri": "textures/BoltTop41Mtl.002_metallicRoughness.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "Tinker1Mtl",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "BoltTop41Mtl",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 2
+        },
+        "metallicRoughnessTexture": {
+          "index": 3
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "MainWire1Mtl",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 4
+        },
+        "metallicRoughnessTexture": {
+          "index": 5
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Tinker1Mtl.001",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 6
+        },
+        "metallicFactor": 0.0
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Tinker1Mtl.002",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 7
+        },
+        "metallicRoughnessTexture": {
+          "index": 8
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Tinker1Mtl.003",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 9
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "OilFitlerLid1Mtl",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 10
+        },
+        "metallicRoughnessTexture": {
+          "index": 11
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "OilFitlerLid1Mtl.001",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 12
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "emissiveFactor": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveTexture": {
+        "index": 13
+      },
+      "extensions": {
+        "KHR_materials_emissive_strength": {
+          "emissiveStrength": 10.0
+        }
+      },
+      "name": "OilFitlerLid1Mtl.002",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 13
+        },
+        "metallicFactor": 0.0
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "BandNail1Mtl",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 14
+        },
+        "metallicRoughnessTexture": {
+          "index": 15
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Union2Mtl",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 14
+        },
+        "metallicRoughnessTexture": {
+          "index": 16
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "BoltTop41Mtl.001",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 17
+        },
+        "metallicRoughnessTexture": {
+          "index": 18
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "BoltTop41Mtl.002",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 19
+        },
+        "metallicFactor": 0.0,
+        "metallicRoughnessTexture": {
+          "index": 20
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Tinker1Mtl.004",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Bolt_Tinker1Mtl_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Bottom boltthing_BoltTop41Mtl_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 5,
+            "POSITION": 4,
+            "TEXCOORD_0": 6
+          },
+          "indices": 7,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Copper Wiring_MainWire1Mtl_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 9,
+            "POSITION": 8,
+            "TEXCOORD_0": 10,
+            "TEXCOORD_1": 11
+          },
+          "indices": 12,
+          "material": 2,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Grip Blue colth_Tinker1Mtl.001_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 14,
+            "POSITION": 13,
+            "TEXCOORD_0": 15
+          },
+          "indices": 16,
+          "material": 3,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Grip yellow tape_Tinker1Mtl.002_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 18,
+            "POSITION": 17,
+            "TEXCOORD_0": 19
+          },
+          "indices": 20,
+          "material": 4,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Gun Base_Tinker1Mtl.003_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 22,
+            "POSITION": 21,
+            "TEXCOORD_0": 23
+          },
+          "indices": 24,
+          "material": 5,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Oil Filter housing_OilFitlerLid1Mtl_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 26,
+            "POSITION": 25,
+            "TEXCOORD_0": 27
+          },
+          "indices": 28,
+          "material": 6,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Oil Fliter Cover Plate_OilFitlerLid1Mtl.001_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 30,
+            "POSITION": 29,
+            "TEXCOORD_0": 31
+          },
+          "indices": 32,
+          "material": 7,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Oil Flither Cover Plate Holes_OilFitlerLid1Mtl.002_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 34,
+            "POSITION": 33,
+            "TEXCOORD_0": 35
+          },
+          "indices": 36,
+          "material": 8,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Screws And bolts_BandNail1Mtl_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 38,
+            "POSITION": 37,
+            "TEXCOORD_0": 39
+          },
+          "indices": 40,
+          "material": 9,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Screws And bolts_Union2Mtl_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 42,
+            "POSITION": 41,
+            "TEXCOORD_0": 43
+          },
+          "indices": 44,
+          "material": 10,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Stock_BoltTop41Mtl.001_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 46,
+            "POSITION": 45,
+            "TEXCOORD_0": 47
+          },
+          "indices": 48,
+          "material": 11,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Stock Rubber Holder_BoltTop41Mtl.002_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 50,
+            "POSITION": 49,
+            "TEXCOORD_0": 51
+          },
+          "indices": 52,
+          "material": 12,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Trigger_Tinker1Mtl.004_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 54,
+            "POSITION": 53,
+            "TEXCOORD_0": 55
+          },
+          "indices": 56,
+          "material": 13,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.009999999776482582,
+        0.0,
+        0.0,
+        -0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "2ec32f5e17ae4eee802a3583f6512554.fbx"
+    },
+    {
+      "children": [
+        3,
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        17,
+        19,
+        21,
+        24,
+        26,
+        28
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        99.99999999999866,
+        1.6292067073209114e-05,
+        0.0,
+        0.0,
+        -1.6292067073209114e-05,
+        99.99999999999866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Bolt"
+    },
+    {
+      "mesh": 0,
+      "name": "Bolt_Tinker1Mtl_0"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        99.99999999999866,
+        1.6292067073209114e-05,
+        0.0,
+        0.0,
+        -1.6292067073209114e-05,
+        99.99999999999866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Bottom boltthing"
+    },
+    {
+      "mesh": 1,
+      "name": "Bottom boltthing_BoltTop41Mtl_0"
+    },
+    {
+      "children": [
+        8
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        99.99999999999866,
+        1.6292067073209114e-05,
+        0.0,
+        0.0,
+        -1.6292067073209114e-05,
+        99.99999999999866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Copper Wiring"
+    },
+    {
+      "mesh": 2,
+      "name": "Copper Wiring_MainWire1Mtl_0"
+    },
+    {
+      "children": [
+        10
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        99.99999999999866,
+        1.6292067073209114e-05,
+        0.0,
+        0.0,
+        -1.6292067073209114e-05,
+        99.99999999999866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Grip Blue colth"
+    },
+    {
+      "mesh": 3,
+      "name": "Grip Blue colth_Tinker1Mtl.001_0"
+    },
+    {
+      "children": [
+        12
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        99.99999999999866,
+        1.6292067073209114e-05,
+        0.0,
+        0.0,
+        -1.6292067073209114e-05,
+        99.99999999999866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Grip yellow tape"
+    },
+    {
+      "mesh": 4,
+      "name": "Grip yellow tape_Tinker1Mtl.002_0"
+    },
+    {
+      "children": [
+        14
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        99.99999999999866,
+        1.6292067073209114e-05,
+        0.0,
+        0.0,
+        -1.6292067073209114e-05,
+        99.99999999999866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Gun Base"
+    },
+    {
+      "mesh": 5,
+      "name": "Gun Base_Tinker1Mtl.003_0"
+    },
+    {
+      "children": [
+        16
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        99.99999999999866,
+        1.6292067073209114e-05,
+        0.0,
+        0.0,
+        -1.6292067073209114e-05,
+        99.99999999999866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Oil Filter housing"
+    },
+    {
+      "mesh": 6,
+      "name": "Oil Filter housing_OilFitlerLid1Mtl_0"
+    },
+    {
+      "children": [
+        18
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        99.99999999999866,
+        1.6292067073209114e-05,
+        0.0,
+        0.0,
+        -1.6292067073209114e-05,
+        99.99999999999866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Oil Fliter Cover Plate"
+    },
+    {
+      "mesh": 7,
+      "name": "Oil Fliter Cover Plate_OilFitlerLid1Mtl.001_0"
+    },
+    {
+      "children": [
+        20
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        99.99999999999866,
+        1.6292067073209114e-05,
+        0.0,
+        0.0,
+        -1.6292067073209114e-05,
+        99.99999999999866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Oil Flither Cover Plate Holes"
+    },
+    {
+      "mesh": 8,
+      "name": "Oil Flither Cover Plate Holes_OilFitlerLid1Mtl.002_0"
+    },
+    {
+      "children": [
+        22,
+        23
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        99.99999999999866,
+        1.6292067073209114e-05,
+        0.0,
+        0.0,
+        -1.6292067073209114e-05,
+        99.99999999999866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Screws And bolts"
+    },
+    {
+      "mesh": 9,
+      "name": "Screws And bolts_BandNail1Mtl_0"
+    },
+    {
+      "mesh": 10,
+      "name": "Screws And bolts_Union2Mtl_0"
+    },
+    {
+      "children": [
+        25
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        99.99999999999866,
+        1.6292067073209114e-05,
+        0.0,
+        0.0,
+        -1.6292067073209114e-05,
+        99.99999999999866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Stock"
+    },
+    {
+      "mesh": 11,
+      "name": "Stock_BoltTop41Mtl.001_0"
+    },
+    {
+      "children": [
+        27
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        99.99999999999866,
+        1.6292067073209114e-05,
+        0.0,
+        0.0,
+        -1.6292067073209114e-05,
+        99.99999999999866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Stock Rubber Holder"
+    },
+    {
+      "mesh": 12,
+      "name": "Stock Rubber Holder_BoltTop41Mtl.002_0"
+    },
+    {
+      "children": [
+        29
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        99.99999999999866,
+        1.6292067073209114e-05,
+        0.0,
+        0.0,
+        -1.6292067073209114e-05,
+        99.99999999999866,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Trigger"
+    },
+    {
+      "mesh": 13,
+      "name": "Trigger_Tinker1Mtl.004_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 33648,
+      "wrapT": 33648
+    },
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    },
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 33648,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    },
+    {
+      "sampler": 0,
+      "source": 4
+    },
+    {
+      "sampler": 1,
+      "source": 5
+    },
+    {
+      "sampler": 1,
+      "source": 6
+    },
+    {
+      "sampler": 0,
+      "source": 7
+    },
+    {
+      "sampler": 1,
+      "source": 8
+    },
+    {
+      "sampler": 2,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 9
+    },
+    {
+      "sampler": 0,
+      "source": 10
+    },
+    {
+      "sampler": 1,
+      "source": 1
+    },
+    {
+      "sampler": 1,
+      "source": 11
+    },
+    {
+      "sampler": 0,
+      "source": 12
+    },
+    {
+      "sampler": 1,
+      "source": 13
+    },
+    {
+      "sampler": 1,
+      "source": 14
+    },
+    {
+      "sampler": 0,
+      "source": 15
+    },
+    {
+      "sampler": 0,
+      "source": 16
+    },
+    {
+      "sampler": 0,
+      "source": 17
+    },
+    {
+      "sampler": 1,
+      "source": 18
+    }
+  ]
+}

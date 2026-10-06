@@ -1,0 +1,11 @@
+Model Information:
+* title:	Low-Poly Axe
+* source:	https://sketchfab.com/3d-models/low-poly-axe-2765bee4c8e74153a59208c30e5a5a08
+* author:	TepidGames (https://sketchfab.com/TepidGames)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Low-Poly Axe" (https://sketchfab.com/3d-models/low-poly-axe-2765bee4c8e74153a59208c30e5a5a08) by TepidGames (https://sketchfab.com/TepidGames) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

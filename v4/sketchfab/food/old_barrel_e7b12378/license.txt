@@ -1,0 +1,11 @@
+Model Information:
+* title:	Old barrel
+* source:	https://sketchfab.com/3d-models/old-barrel-e7b123784dc14a26b25a384400339b7f
+* author:	Reliefy3D (https://sketchfab.com/Krystian.Kulasek)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Old barrel" (https://sketchfab.com/3d-models/old-barrel-e7b123784dc14a26b25a384400339b7f) by Reliefy3D (https://sketchfab.com/Krystian.Kulasek) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Low-Poly castle island
+* source:	https://sketchfab.com/3d-models/low-poly-castle-island-8f70a224d1a846f3b2a4db6ec0eec97f
+* author:	Jacobic (https://sketchfab.com/Jacobic)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Low-Poly castle island" (https://sketchfab.com/3d-models/low-poly-castle-island-8f70a224d1a846f3b2a4db6ec0eec97f) by Jacobic (https://sketchfab.com/Jacobic) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

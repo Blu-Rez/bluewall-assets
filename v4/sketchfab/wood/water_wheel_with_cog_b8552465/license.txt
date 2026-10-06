@@ -1,0 +1,11 @@
+Model Information:
+* title:	Water Wheel With Cog
+* source:	https://sketchfab.com/3d-models/water-wheel-with-cog-b855246572934af19aa062a329c1bcfa
+* author:	lyamborrel (https://sketchfab.com/lyamborrel)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Water Wheel With Cog" (https://sketchfab.com/3d-models/water-wheel-with-cog-b855246572934af19aa062a329c1bcfa) by lyamborrel (https://sketchfab.com/lyamborrel) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

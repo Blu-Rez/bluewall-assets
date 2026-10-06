@@ -1,0 +1,11 @@
+Model Information:
+* title:	Mine Cart
+* source:	https://sketchfab.com/3d-models/mine-cart-2beeab5f44704421bc10cd310db96860
+* author:	Xillute | Dev (https://sketchfab.com/janchristian)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Mine Cart" (https://sketchfab.com/3d-models/mine-cart-2beeab5f44704421bc10cd310db96860) by Xillute | Dev (https://sketchfab.com/janchristian) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

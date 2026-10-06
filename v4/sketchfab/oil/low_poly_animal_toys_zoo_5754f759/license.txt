@@ -1,0 +1,11 @@
+Model Information:
+* title:	Low poly animal toys (Zoo)
+* source:	https://sketchfab.com/3d-models/low-poly-animal-toys-zoo-5754f759d22c44b79e4d8e1292ff01a5
+* author:	SlagPerch 3D (https://sketchfab.com/slagperch3d)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Low poly animal toys (Zoo)" (https://sketchfab.com/3d-models/low-poly-animal-toys-zoo-5754f759d22c44b79e4d8e1292ff01a5) by SlagPerch 3D (https://sketchfab.com/slagperch3d) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

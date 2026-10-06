@@ -1,0 +1,531 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 184,
+      "max": [
+        32.0,
+        234.95928955078125,
+        66.40957641601563
+      ],
+      "min": [
+        24.0,
+        -234.95928955078125,
+        -103.59042358398438
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 2208,
+      "componentType": 5126,
+      "count": 184,
+      "max": [
+        0.9988535642623901,
+        0.9954994916915894,
+        0.0
+      ],
+      "min": [
+        -0.9988535642623901,
+        -0.9954994916915894,
+        0.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 184,
+      "max": [
+        0.8037620186805725,
+        0.9868339896202087
+      ],
+      "min": [
+        0.19568300247192383,
+        0.013814999721944332
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 528,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 4416,
+      "componentType": 5126,
+      "count": 9183,
+      "max": [
+        35.0,
+        268.6455383300781,
+        185.0
+      ],
+      "min": [
+        -35.0,
+        -268.6455383300781,
+        -110.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 114612,
+      "componentType": 5126,
+      "count": 9183,
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 1472,
+      "componentType": 5126,
+      "count": 9183,
+      "max": [
+        0.9990249872207642,
+        0.9996659755706787
+      ],
+      "min": [
+        0.0003260000084992498,
+        0.0009749999735504389
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 2112,
+      "componentType": 5125,
+      "count": 43866,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 224808,
+      "componentType": 5126,
+      "count": 7584,
+      "max": [
+        7.5,
+        80.49541473388672,
+        99.94252014160156
+      ],
+      "min": [
+        -7.5,
+        -80.49541473388672,
+        -99.94252014160156
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 315816,
+      "componentType": 5126,
+      "count": 7584,
+      "max": [
+        1.0,
+        0.9948337078094482,
+        0.9968013763427734
+      ],
+      "min": [
+        -1.0,
+        -0.9948337078094482,
+        -0.9967898726463318
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 74936,
+      "componentType": 5126,
+      "count": 7584,
+      "max": [
+        0.9990249872207642,
+        0.9996709823608398
+      ],
+      "min": [
+        0.00032500000088475645,
+        0.0009749999735504389
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 177576,
+      "componentType": 5125,
+      "count": 39984,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 406824,
+      "componentType": 5126,
+      "count": 9278,
+      "max": [
+        12.5,
+        175.0,
+        110.0
+      ],
+      "min": [
+        -12.5,
+        -175.0,
+        -110.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 518160,
+      "componentType": 5126,
+      "count": 9278,
+      "max": [
+        1.0,
+        0.999910295009613,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -0.999910295009613,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 135608,
+      "componentType": 5126,
+      "count": 9278,
+      "max": [
+        0.9990249872207642,
+        0.9996749758720398
+      ],
+      "min": [
+        0.0003859999997075647,
+        0.0009749999735504389
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 337512,
+      "componentType": 5125,
+      "count": 43464,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 629496,
+      "componentType": 5126,
+      "count": 6243,
+      "max": [
+        36.0,
+        174.0,
+        145.0
+      ],
+      "min": [
+        -36.0,
+        -174.0,
+        -37.72793960571289
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 704412,
+      "componentType": 5126,
+      "count": 6243,
+      "max": [
+        1.0,
+        0.9998503923416138,
+        0.9999839067459106
+      ],
+      "min": [
+        -1.0,
+        -0.9999645948410034,
+        -0.9999839067459106
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 209832,
+      "componentType": 5126,
+      "count": 6243,
+      "max": [
+        0.9990249872207642,
+        0.9996169805526733
+      ],
+      "min": [
+        0.00032500000088475645,
+        0.33398300409317017
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 511368,
+      "componentType": 5125,
+      "count": 32712,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Scarecrow_original (https://sketchfab.com/Scarecrow_original)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/sci-fi-door-high-poly-2e8c613214144d12bce416ce437614d6",
+      "title": "Sci-fi Door (high poly)"
+    },
+    "generator": "Sketchfab-13.37.1",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 642216,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 259776,
+      "byteOffset": 642216,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 779328,
+      "byteOffset": 901992,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 1681320,
+      "uri": "scene.bin"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "material",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.10538052875886533,
+          0.11631226349815842,
+          0.1347365746164536,
+          1.0
+        ],
+        "roughnessFactor": 0.135
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Mat.1",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.3206165176906652,
+          0.3206165176906652,
+          0.3206165176906652,
+          1.0
+        ],
+        "roughnessFactor": 0.2118101693262303
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Mat.2",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.7494345424331753,
+          0.8617178210369971,
+          1.0,
+          1.0
+        ],
+        "roughnessFactor": 0.23009593934000558
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Mat.3",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.013314292935956682,
+          0.013314292935956682,
+          0.013314292935956682,
+          1.0
+        ],
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.6
+      }
+    },
+    {
+      "doubleSided": true,
+      "emissiveFactor": [
+        0.04842734276585574,
+        1.0,
+        1.0
+      ],
+      "name": "Mat.4",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.6
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Object_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 3,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Object_1",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 5,
+            "POSITION": 4,
+            "TEXCOORD_0": 6
+          },
+          "indices": 7,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Object_2",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 9,
+            "POSITION": 8,
+            "TEXCOORD_0": 10
+          },
+          "indices": 11,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Object_3",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 13,
+            "POSITION": 12,
+            "TEXCOORD_0": 14
+          },
+          "indices": 15,
+          "material": 2,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Object_4",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 17,
+            "POSITION": 16,
+            "TEXCOORD_0": 18
+          },
+          "indices": 19,
+          "material": 4,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "name": "Sci-fi door.obj.cleaner.materialmerger.gles"
+    },
+    {
+      "mesh": 0,
+      "name": "Object_2"
+    },
+    {
+      "mesh": 1,
+      "name": "Object_3"
+    },
+    {
+      "mesh": 2,
+      "name": "Object_4"
+    },
+    {
+      "mesh": 3,
+      "name": "Object_5"
+    },
+    {
+      "mesh": 4,
+      "name": "Object_6"
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ]
+}

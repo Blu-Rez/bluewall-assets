@@ -1,0 +1,11 @@
+Model Information:
+* title:	Square Net
+* source:	https://sketchfab.com/3d-models/square-net-b5579a86b60146ad859cd8f8a60aaedd
+* author:	HenryMead (https://sketchfab.com/HenryMead)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Square Net" (https://sketchfab.com/3d-models/square-net-b5579a86b60146ad859cd8f8a60aaedd) by HenryMead (https://sketchfab.com/HenryMead) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

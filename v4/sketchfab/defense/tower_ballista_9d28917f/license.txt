@@ -1,0 +1,11 @@
+Model Information:
+* title:	Tower ballista
+* source:	https://sketchfab.com/3d-models/tower-ballista-9d28917fb9eb4fefabb559aac6ae66ba
+* author:	Sobolev_Maxim (https://sketchfab.com/Sobolev_Maxim)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Tower ballista" (https://sketchfab.com/3d-models/tower-ballista-9d28917fb9eb4fefabb559aac6ae66ba) by Sobolev_Maxim (https://sketchfab.com/Sobolev_Maxim) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

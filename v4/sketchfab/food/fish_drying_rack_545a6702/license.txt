@@ -1,0 +1,11 @@
+Model Information:
+* title:	Fish Drying Rack
+* source:	https://sketchfab.com/3d-models/fish-drying-rack-545a67028e45488cbdad553d9e1e4811
+* author:	rodgercarr13601 (https://sketchfab.com/rodgercarr13601)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Fish Drying Rack" (https://sketchfab.com/3d-models/fish-drying-rack-545a67028e45488cbdad553d9e1e4811) by rodgercarr13601 (https://sketchfab.com/rodgercarr13601) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

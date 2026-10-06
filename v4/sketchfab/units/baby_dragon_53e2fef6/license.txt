@@ -1,0 +1,11 @@
+Model Information:
+* title:	Baby Dragon
+* source:	https://sketchfab.com/3d-models/baby-dragon-53e2fef6b64847c8ac52cd0fbd477cd0
+* author:	Terricks (https://sketchfab.com/talgat.shalabayev)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Baby Dragon" (https://sketchfab.com/3d-models/baby-dragon-53e2fef6b64847c8ac52cd0fbd477cd0) by Terricks (https://sketchfab.com/talgat.shalabayev) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

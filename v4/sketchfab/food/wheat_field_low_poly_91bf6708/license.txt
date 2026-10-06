@@ -1,0 +1,11 @@
+Model Information:
+* title:	Wheat field low poly
+* source:	https://sketchfab.com/3d-models/wheat-field-low-poly-91bf670848e24634813b27948454f371
+* author:	RacKrab (https://sketchfab.com/RacKrab)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Wheat field low poly" (https://sketchfab.com/3d-models/wheat-field-low-poly-91bf670848e24634813b27948454f371) by RacKrab (https://sketchfab.com/RacKrab) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

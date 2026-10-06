@@ -1,0 +1,11 @@
+Model Information:
+* title:	The Unwellrod (makeshift 6.8 Hilti blank pistol)
+* source:	https://sketchfab.com/3d-models/the-unwellrod-makeshift-68-hilti-blank-pistol-33ff20c843ee4a13804429453e98e30e
+* author:	thanoidiscominggaming (https://sketchfab.com/thanoidiscominggaming)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "The Unwellrod (makeshift 6.8 Hilti blank pistol)" (https://sketchfab.com/3d-models/the-unwellrod-makeshift-68-hilti-blank-pistol-33ff20c843ee4a13804429453e98e30e) by thanoidiscominggaming (https://sketchfab.com/thanoidiscominggaming) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

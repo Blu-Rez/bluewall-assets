@@ -1,0 +1,11 @@
+Model Information:
+* title:	Bergua_Truong_Olivier_TP2_Normal
+* source:	https://sketchfab.com/3d-models/bergua-truong-olivier-tp2-normal-af4c48c1dc684c578f85aeb956a4fb0f
+* author:	Olivier Bergua Truong (https://sketchfab.com/olivierberguatruong)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Bergua_Truong_Olivier_TP2_Normal" (https://sketchfab.com/3d-models/bergua-truong-olivier-tp2-normal-af4c48c1dc684c578f85aeb956a4fb0f) by Olivier Bergua Truong (https://sketchfab.com/olivierberguatruong) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

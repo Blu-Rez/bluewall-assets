@@ -1,0 +1,11 @@
+Model Information:
+* title:	Medieval Rowboat
+* source:	https://sketchfab.com/3d-models/medieval-rowboat-6cfb2d70d6d54349bcd63a87c1aa43b0
+* author:	AnyRPG (https://sketchfab.com/anyrpg)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Medieval Rowboat" (https://sketchfab.com/3d-models/medieval-rowboat-6cfb2d70d6d54349bcd63a87c1aa43b0) by AnyRPG (https://sketchfab.com/anyrpg) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
