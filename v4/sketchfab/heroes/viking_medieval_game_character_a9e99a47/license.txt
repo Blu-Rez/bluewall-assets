@@ -1,0 +1,11 @@
+Model Information:
+* title:	Viking/Medieval Game Character
+* source:	https://sketchfab.com/3d-models/vikingmedieval-game-character-a9e99a47d2a24957ab6c08c9e57ad48c
+* author:	CGenesis (https://sketchfab.com/CGenesis)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Viking/Medieval Game Character" (https://sketchfab.com/3d-models/vikingmedieval-game-character-a9e99a47d2a24957ab6c08c9e57ad48c) by CGenesis (https://sketchfab.com/CGenesis) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

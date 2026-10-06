@@ -1,0 +1,11 @@
+Model Information:
+* title:	High Templar Fantasy Greatsword
+* source:	https://sketchfab.com/3d-models/high-templar-fantasy-greatsword-6daa63f4ab654b16877fab3527c0fd4b
+* author:	Joan LP (https://sketchfab.com/joanlahots)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "High Templar Fantasy Greatsword" (https://sketchfab.com/3d-models/high-templar-fantasy-greatsword-6daa63f4ab654b16877fab3527c0fd4b) by Joan LP (https://sketchfab.com/joanlahots) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

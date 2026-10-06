@@ -1,0 +1,11 @@
+Model Information:
+* title:	Devil Pod Water Caltrop
+* source:	https://sketchfab.com/3d-models/devil-pod-water-caltrop-8226400965ff4ad8b784791031c27040
+* author:	RISD Nature Lab (https://sketchfab.com/RISDNaturelab)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Devil Pod Water Caltrop" (https://sketchfab.com/3d-models/devil-pod-water-caltrop-8226400965ff4ad8b784791031c27040) by RISD Nature Lab (https://sketchfab.com/RISDNaturelab) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

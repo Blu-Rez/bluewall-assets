@@ -1,0 +1,11 @@
+Model Information:
+* title:	Lobster
+* source:	https://sketchfab.com/3d-models/lobster-be14763ae7c04368b7de1dd09e42e6ba
+* author:	victorberdugo1 (https://sketchfab.com/victorberdugo1)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Lobster" (https://sketchfab.com/3d-models/lobster-be14763ae7c04368b7de1dd09e42e6ba) by victorberdugo1 (https://sketchfab.com/victorberdugo1) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	C'iix - Lava Warrior
+* source:	https://sketchfab.com/3d-models/ciix-lava-warrior-7246fa9e2f0c4576af1077138e392b15
+* author:	ninhcongnguyen (https://sketchfab.com/ninhcongnguyen)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "C'iix - Lava Warrior" (https://sketchfab.com/3d-models/ciix-lava-warrior-7246fa9e2f0c4576af1077138e392b15) by ninhcongnguyen (https://sketchfab.com/ninhcongnguyen) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

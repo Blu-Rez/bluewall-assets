@@ -1,0 +1,11 @@
+Model Information:
+* title:	SHADOWs MAN
+* source:	https://sketchfab.com/3d-models/shadows-man-3f3944aab3024951ba80c03106bae250
+* author:	NORBERTO-3D (https://sketchfab.com/norberto3d)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "SHADOWs MAN" (https://sketchfab.com/3d-models/shadows-man-3f3944aab3024951ba80c03106bae250) by NORBERTO-3D (https://sketchfab.com/norberto3d) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

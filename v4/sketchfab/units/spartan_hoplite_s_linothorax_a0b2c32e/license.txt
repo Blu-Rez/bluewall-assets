@@ -1,0 +1,11 @@
+Model Information:
+* title:	Spartan Hoplite`s Linothorax
+* source:	https://sketchfab.com/3d-models/spartan-hoplites-linothorax-a0b2c32eb9da4b27b5e7d8f449f7fb5f
+* author:	burning_umbrella (https://sketchfab.com/burningumbrella69)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Spartan Hoplite`s Linothorax" (https://sketchfab.com/3d-models/spartan-hoplites-linothorax-a0b2c32eb9da4b27b5e7d8f449f7fb5f) by burning_umbrella (https://sketchfab.com/burningumbrella69) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

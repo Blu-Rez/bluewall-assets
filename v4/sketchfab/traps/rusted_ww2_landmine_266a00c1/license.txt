@@ -1,0 +1,11 @@
+Model Information:
+* title:	Rusted WW2 Landmine
+* source:	https://sketchfab.com/3d-models/rusted-ww2-landmine-266a00c1653449a78c1fbc8da2ed49df
+* author:	skippier (https://sketchfab.com/skippier)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Rusted WW2 Landmine" (https://sketchfab.com/3d-models/rusted-ww2-landmine-266a00c1653449a78c1fbc8da2ed49df) by skippier (https://sketchfab.com/skippier) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

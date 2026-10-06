@@ -1,0 +1,11 @@
+Model Information:
+* title:	Pikeman's pot
+* source:	https://sketchfab.com/3d-models/pikemans-pot-7affa9a13afb4c668203c7338f86492f
+* author:	ernst52 (https://sketchfab.com/ernst52)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Pikeman's pot" (https://sketchfab.com/3d-models/pikemans-pot-7affa9a13afb4c668203c7338f86492f) by ernst52 (https://sketchfab.com/ernst52) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

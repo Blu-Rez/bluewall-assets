@@ -1,0 +1,11 @@
+Model Information:
+* title:	Stylized viking (rigify rig)
+* source:	https://sketchfab.com/3d-models/stylized-viking-rigify-rig-54757df4c7c34a63a0f48916d33fd2f3
+* author:	SlagPerch 3D (https://sketchfab.com/slagperch3d)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Stylized viking (rigify rig)" (https://sketchfab.com/3d-models/stylized-viking-rigify-rig-54757df4c7c34a63a0f48916d33fd2f3) by SlagPerch 3D (https://sketchfab.com/slagperch3d) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

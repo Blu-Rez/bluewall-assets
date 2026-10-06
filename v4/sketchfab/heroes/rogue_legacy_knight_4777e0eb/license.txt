@@ -1,0 +1,11 @@
+Model Information:
+* title:	Rogue Legacy Knight
+* source:	https://sketchfab.com/3d-models/rogue-legacy-knight-4777e0eb189447538ab3b3d38aa2f21a
+* author:	benee (https://sketchfab.com/benee)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Rogue Legacy Knight" (https://sketchfab.com/3d-models/rogue-legacy-knight-4777e0eb189447538ab3b3d38aa2f21a) by benee (https://sketchfab.com/benee) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

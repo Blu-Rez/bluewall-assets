@@ -1,0 +1,11 @@
+Model Information:
+* title:	Low Poly Dwarf Crossbowman (Rigged)
+* source:	https://sketchfab.com/3d-models/low-poly-dwarf-crossbowman-rigged-c4cfb43ee43b4bca88f16eff355e9bd4
+* author:	Anthony Yanez (https://sketchfab.com/paulyanez)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Low Poly Dwarf Crossbowman (Rigged)" (https://sketchfab.com/3d-models/low-poly-dwarf-crossbowman-rigged-c4cfb43ee43b4bca88f16eff355e9bd4) by Anthony Yanez (https://sketchfab.com/paulyanez) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

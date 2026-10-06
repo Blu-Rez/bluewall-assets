@@ -1,0 +1,11 @@
+Model Information:
+* title:	skylanders trap team lightning rod
+* source:	https://sketchfab.com/3d-models/skylanders-trap-team-lightning-rod-d0a3c8e1dcc04547901ef194ccfd68a8
+* author:	emperor_prime (https://sketchfab.com/primalfrom12)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "skylanders trap team lightning rod" (https://sketchfab.com/3d-models/skylanders-trap-team-lightning-rod-d0a3c8e1dcc04547901ef194ccfd68a8) by emperor_prime (https://sketchfab.com/primalfrom12) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

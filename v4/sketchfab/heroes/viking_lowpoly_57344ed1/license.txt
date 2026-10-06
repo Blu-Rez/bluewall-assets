@@ -1,0 +1,11 @@
+Model Information:
+* title:	Viking (lowpoly)
+* source:	https://sketchfab.com/3d-models/viking-lowpoly-57344ed1b37a4bbdac3b1481f8a85a65
+* author:	SlagPerch 3D (https://sketchfab.com/slagperch3d)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Viking (lowpoly)" (https://sketchfab.com/3d-models/viking-lowpoly-57344ed1b37a4bbdac3b1481f8a85a65) by SlagPerch 3D (https://sketchfab.com/slagperch3d) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

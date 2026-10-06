@@ -1,0 +1,11 @@
+Model Information:
+* title:	Obstacle Set – Spiked Traps & Swing Blades
+* source:	https://sketchfab.com/3d-models/obstacle-set-spiked-traps-swing-blades-f21e3fd32afb4e13977fde21373e9213
+* author:	Ay23man (https://sketchfab.com/ay23man)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Obstacle Set – Spiked Traps & Swing Blades" (https://sketchfab.com/3d-models/obstacle-set-spiked-traps-swing-blades-f21e3fd32afb4e13977fde21373e9213) by Ay23man (https://sketchfab.com/ay23man) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

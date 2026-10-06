@@ -1,0 +1,11 @@
+Model Information:
+* title:	Tesla Coil (Old)
+* source:	https://sketchfab.com/3d-models/tesla-coil-old-5a2c8c1ac0a44efca9500af608af710e
+* author:	N-GONE (https://sketchfab.com/fdfxd2)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Tesla Coil (Old)" (https://sketchfab.com/3d-models/tesla-coil-old-5a2c8c1ac0a44efca9500af608af710e) by N-GONE (https://sketchfab.com/fdfxd2) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

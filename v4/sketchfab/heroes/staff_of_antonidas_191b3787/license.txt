@@ -1,0 +1,11 @@
+Model Information:
+* title:	Staff of Antonidas
+* source:	https://sketchfab.com/3d-models/staff-of-antonidas-191b3787474a4ff594ceb3e47bc4fec9
+* author:	Joqui (https://sketchfab.com/joseorozco84)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Staff of Antonidas" (https://sketchfab.com/3d-models/staff-of-antonidas-191b3787474a4ff594ceb3e47bc4fec9) by Joqui (https://sketchfab.com/joseorozco84) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

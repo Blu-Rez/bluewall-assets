@@ -1,0 +1,11 @@
+Model Information:
+* title:	Low Poly Dark Knight (Mixamo Rigged)
+* source:	https://sketchfab.com/3d-models/low-poly-dark-knight-mixamo-rigged-7f59a7b0e952457c9102cd65fe485f09
+* author:	giorgi.abashidze95 (https://sketchfab.com/giorgi.abashidze95)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Low Poly Dark Knight (Mixamo Rigged)" (https://sketchfab.com/3d-models/low-poly-dark-knight-mixamo-rigged-7f59a7b0e952457c9102cd65fe485f09) by giorgi.abashidze95 (https://sketchfab.com/giorgi.abashidze95) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

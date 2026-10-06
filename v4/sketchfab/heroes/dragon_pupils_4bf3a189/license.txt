@@ -1,0 +1,11 @@
+Model Information:
+* title:	Dragon Pupils
+* source:	https://sketchfab.com/3d-models/dragon-pupils-4bf3a18974c643bbacd741c52277450b
+* author:	Yudha Mfr (https://sketchfab.com/yudhamfr)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Dragon Pupils" (https://sketchfab.com/3d-models/dragon-pupils-4bf3a18974c643bbacd741c52277450b) by Yudha Mfr (https://sketchfab.com/yudhamfr) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

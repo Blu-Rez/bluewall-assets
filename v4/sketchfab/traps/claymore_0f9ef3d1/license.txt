@@ -1,0 +1,11 @@
+Model Information:
+* title:	Claymore
+* source:	https://sketchfab.com/3d-models/claymore-0f9ef3d1c6a04a41847713e17544cc26
+* author:	foxybat (https://sketchfab.com/foxybat)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Claymore" (https://sketchfab.com/3d-models/claymore-0f9ef3d1c6a04a41847713e17544cc26) by foxybat (https://sketchfab.com/foxybat) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

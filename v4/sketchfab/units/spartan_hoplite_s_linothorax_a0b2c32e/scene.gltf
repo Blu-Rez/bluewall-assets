@@ -1,0 +1,880 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 9566,
+      "max": [
+        89.50682830810547,
+        4.874294757843018,
+        86.69493103027344
+      ],
+      "min": [
+        -89.50682830810547,
+        -138.9794158935547,
+        -230.26016235351563
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 114792,
+      "componentType": 5126,
+      "count": 9566,
+      "max": [
+        0.999940812587738,
+        0.9999999403953552,
+        0.9748735427856445
+      ],
+      "min": [
+        -0.999940812587738,
+        -1.0,
+        -0.9748961329460144
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 9566,
+      "max": [
+        1.0,
+        0.9980692267417908,
+        0.9999985098838806,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -0.9980735182762146,
+        -0.9999983906745911,
+        1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 9566,
+      "max": [
+        0.99609375,
+        0.9949169158935547
+      ],
+      "min": [
+        0.00390625,
+        0.00390625
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 76528,
+      "componentType": 5126,
+      "count": 9566,
+      "max": [
+        0.99609375,
+        0.9949169158935547
+      ],
+      "min": [
+        0.00390625,
+        0.00390625
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 153056,
+      "componentType": 5126,
+      "count": 9566,
+      "max": [
+        0.99609375,
+        0.9949169158935547
+      ],
+      "min": [
+        0.00390625,
+        0.00390625
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 51900,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 229584,
+      "componentType": 5126,
+      "count": 9092,
+      "max": [
+        89.68696594238281,
+        5.764762878417969,
+        87.52621459960938
+      ],
+      "min": [
+        -89.68696594238281,
+        -140.3089141845703,
+        -231.1571044921875
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 338688,
+      "componentType": 5126,
+      "count": 9092,
+      "max": [
+        0.998448371887207,
+        0.9999997615814209,
+        0.9927415251731873
+      ],
+      "min": [
+        -0.998448371887207,
+        -1.0,
+        -0.9928277134895325
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 153056,
+      "componentType": 5126,
+      "count": 9092,
+      "max": [
+        1.0,
+        0.9999752044677734,
+        0.9999819993972778,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -0.9999217391014099,
+        -0.9999978542327881,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 229584,
+      "componentType": 5126,
+      "count": 9092,
+      "max": [
+        0.9938507080078125,
+        0.99609375
+      ],
+      "min": [
+        0.00390625,
+        0.00390625
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 302320,
+      "componentType": 5126,
+      "count": 9092,
+      "max": [
+        0.9938507080078125,
+        0.99609375
+      ],
+      "min": [
+        0.00390625,
+        0.00390625
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 375056,
+      "componentType": 5126,
+      "count": 9092,
+      "max": [
+        0.9938507080078125,
+        0.99609375
+      ],
+      "min": [
+        0.00390625,
+        0.00390625
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 207600,
+      "componentType": 5125,
+      "count": 44892,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 447792,
+      "componentType": 5126,
+      "count": 9249,
+      "max": [
+        9.356651306152344,
+        17.293750762939453,
+        11.083610534667969
+      ],
+      "min": [
+        -18.175630569458008,
+        -19.860816955566406,
+        -13.721153259277344
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 558780,
+      "componentType": 5126,
+      "count": 9249,
+      "max": [
+        0.9999818205833435,
+        0.9998445510864258,
+        0.999997615814209
+      ],
+      "min": [
+        -0.9999285936355591,
+        -0.9997435808181763,
+        -0.9999220967292786
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 298528,
+      "componentType": 5126,
+      "count": 9249,
+      "max": [
+        0.9995931386947632,
+        0.9999881386756897,
+        0.9999825358390808,
+        1.0
+      ],
+      "min": [
+        -0.9996705651283264,
+        -0.9999470710754395,
+        -0.9999983906745911,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 447792,
+      "componentType": 5126,
+      "count": 9249,
+      "max": [
+        1.9824873208999634,
+        0.9854357838630676
+      ],
+      "min": [
+        1.014532208442688,
+        0.014564216136932373
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 521784,
+      "componentType": 5126,
+      "count": 9249,
+      "max": [
+        1.9824873208999634,
+        0.9854357838630676
+      ],
+      "min": [
+        1.014532208442688,
+        0.014564216136932373
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 595776,
+      "componentType": 5126,
+      "count": 9249,
+      "max": [
+        1.9824873208999634,
+        0.9854357838630676
+      ],
+      "min": [
+        1.014532208442688,
+        0.014564216136932373
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 387168,
+      "componentType": 5125,
+      "count": 45120,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 669768,
+      "componentType": 5126,
+      "count": 39242,
+      "max": [
+        1354.2236328125,
+        987.8663940429688,
+        895.923583984375
+      ],
+      "min": [
+        -1437.1546630859375,
+        -1009.6834106445313,
+        -903.8244018554688
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1140672,
+      "componentType": 5126,
+      "count": 39242,
+      "max": [
+        1.0,
+        1.0,
+        0.9999839663505554
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -0.9999999403953552
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 446512,
+      "componentType": 5126,
+      "count": 39242,
+      "max": [
+        0.9998863935470581,
+        0.9999999403953552,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -0.9999239444732666,
+        -0.9999998807907104,
+        -1.0,
+        1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 669768,
+      "componentType": 5126,
+      "count": 39242,
+      "max": [
+        0.99609375,
+        0.9830602407455444
+      ],
+      "min": [
+        0.00390625,
+        0.00390625
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 983704,
+      "componentType": 5126,
+      "count": 39242,
+      "max": [
+        0.99609375,
+        0.9830602407455444
+      ],
+      "min": [
+        0.00390625,
+        0.00390625
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 1297640,
+      "componentType": 5126,
+      "count": 39242,
+      "max": [
+        0.99609375,
+        0.9830602407455444
+      ],
+      "min": [
+        0.00390625,
+        0.00390625
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 567648,
+      "componentType": 5125,
+      "count": 165168,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "burning_umbrella (https://sketchfab.com/burningumbrella69)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/spartan-hoplites-linothorax-a0b2c32eb9da4b27b5e7d8f449f7fb5f",
+      "title": "Spartan Hoplite`s Linothorax"
+    },
+    "generator": "Sketchfab-15.30.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 1228320,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1611576,
+      "byteOffset": 1228320,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1611576,
+      "byteOffset": 2839896,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1074384,
+      "byteOffset": 4451472,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 5525856,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/Linothorax_Base_baseColor.png"
+    },
+    {
+      "uri": "textures/Linothorax_Base_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Linothorax_Base_normal.png"
+    },
+    {
+      "uri": "textures/Leather_Belts_Rings_Straps1001_baseColor.png"
+    },
+    {
+      "uri": "textures/Leather_Belts_Rings_Straps1001_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Leather_Belts_Rings_Straps1001_normal.png"
+    },
+    {
+      "uri": "textures/Leather_Belts_Rings_Straps_1002_baseColor.png"
+    },
+    {
+      "uri": "textures/Leather_Belts_Rings_Straps_1002_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Leather_Belts_Rings_Straps_1002_normal.png"
+    },
+    {
+      "uri": "textures/Soldiers_Belt_baseColor.png"
+    },
+    {
+      "uri": "textures/Soldiers_Belt_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Soldiers_Belt_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "Linothorax_Base",
+      "normalTexture": {
+        "index": 2
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Leather_Belts_Rings_Straps1001",
+      "normalTexture": {
+        "index": 5
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 3
+        },
+        "metallicRoughnessTexture": {
+          "index": 4
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Leather_Belts_Rings_Straps_1002",
+      "normalTexture": {
+        "index": 8
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 6
+        },
+        "metallicRoughnessTexture": {
+          "index": 7
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Soldiers_Belt",
+      "normalTexture": {
+        "index": 11
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 9
+        },
+        "metallicRoughnessTexture": {
+          "index": 10
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Athenas Sold Chest Base_Linothorax Base _0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3,
+            "TEXCOORD_1": 4,
+            "TEXCOORD_2": 5
+          },
+          "indices": 6,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Rim Belts.003_Leather Belts Rings Straps1001_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 8,
+            "POSITION": 7,
+            "TANGENT": 9,
+            "TEXCOORD_0": 10,
+            "TEXCOORD_1": 11,
+            "TEXCOORD_2": 12
+          },
+          "indices": 13,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Ring Straps.003_Leather Belts Rings Straps 1002_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 15,
+            "POSITION": 14,
+            "TANGENT": 16,
+            "TEXCOORD_0": 17,
+            "TEXCOORD_1": 18,
+            "TEXCOORD_2": 19
+          },
+          "indices": 20,
+          "material": 2,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Athenas belt Sold_Soldiers Belt_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 22,
+            "POSITION": 21,
+            "TANGENT": 23,
+            "TEXCOORD_0": 24,
+            "TEXCOORD_1": 25,
+            "TEXCOORD_2": 26
+          },
+          "indices": 27,
+          "material": 3,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.009999999776482582,
+        0.0,
+        0.0,
+        -0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Spartan Sold Linothorax.fbx"
+    },
+    {
+      "children": [
+        3,
+        9
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4,
+        5,
+        7
+      ],
+      "matrix": [
+        0.23372703790664673,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -3.807896780799122e-08,
+        0.23372703790664365,
+        0.0,
+        0.0,
+        -0.19328261911868794,
+        -3.148973562144964e-08,
+        0.0,
+        -118.62649536132813,
+        115.73863983154297,
+        13.007147789001465,
+        1.0
+      ],
+      "name": "Athenas Sold Chest Base"
+    },
+    {
+      "mesh": 0,
+      "name": "Athenas Sold Chest Base_Linothorax Base _0"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.9999999999999927,
+        -1.2136749205637871e-07,
+        0.0,
+        0.0,
+        1.2136749205637871e-07,
+        0.9999999999999927,
+        0.0,
+        -3.0517578125e-05,
+        8.872260877978988e-06,
+        0.00011912870832020417,
+        1.0
+      ],
+      "name": "Rim Belts.003"
+    },
+    {
+      "mesh": 1,
+      "name": "Rim Belts.003_Leather Belts Rings Straps1001_0"
+    },
+    {
+      "children": [
+        8
+      ],
+      "matrix": [
+        4.432843208312988,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -8.733226060371245e-07,
+        -5.360415935516286,
+        0.0,
+        0.0,
+        4.43284320831293,
+        -7.222018271358177e-07,
+        0.0,
+        33.80181884765625,
+        -42.835514068603516,
+        -55.1400146484375,
+        1.0
+      ],
+      "name": "Ring Straps.003"
+    },
+    {
+      "mesh": 2,
+      "name": "Ring Straps.003_Leather Belts Rings Straps 1002_0"
+    },
+    {
+      "children": [
+        10
+      ],
+      "matrix": [
+        0.01476193405687809,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -2.4050243256839925e-09,
+        0.014761934056877896,
+        0.0,
+        0.0,
+        -0.014761934056877896,
+        -2.4050243256839925e-09,
+        0.0,
+        -118.5830078125,
+        89.58460235595703,
+        -1.95504629611969,
+        1.0
+      ],
+      "name": "Athenas belt Sold"
+    },
+    {
+      "mesh": 3,
+      "name": "Athenas belt Sold_Soldiers Belt_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    },
+    {
+      "sampler": 0,
+      "source": 4
+    },
+    {
+      "sampler": 0,
+      "source": 5
+    },
+    {
+      "sampler": 0,
+      "source": 6
+    },
+    {
+      "sampler": 0,
+      "source": 7
+    },
+    {
+      "sampler": 0,
+      "source": 8
+    },
+    {
+      "sampler": 0,
+      "source": 9
+    },
+    {
+      "sampler": 0,
+      "source": 10
+    },
+    {
+      "sampler": 0,
+      "source": 11
+    }
+  ]
+}

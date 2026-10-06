@@ -1,0 +1,11 @@
+Model Information:
+* title:	Roman Legionnaire Helmet
+* source:	https://sketchfab.com/3d-models/roman-legionnaire-helmet-608c6fdd20174b7b8c77ac585042664c
+* author:	AlbertoGalindo3D (https://sketchfab.com/AlbertoGalindo3D)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Roman Legionnaire Helmet" (https://sketchfab.com/3d-models/roman-legionnaire-helmet-608c6fdd20174b7b8c77ac585042664c) by AlbertoGalindo3D (https://sketchfab.com/AlbertoGalindo3D) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

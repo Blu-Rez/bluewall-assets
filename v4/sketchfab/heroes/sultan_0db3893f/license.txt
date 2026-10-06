@@ -1,0 +1,11 @@
+Model Information:
+* title:	Sultan
+* source:	https://sketchfab.com/3d-models/sultan-0db3893fc1fb43438461ab2d32bb3c29
+* author:	shreyhaldkar0 (https://sketchfab.com/shreyhaldkar0)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Sultan" (https://sketchfab.com/3d-models/sultan-0db3893fc1fb43438461ab2d32bb3c29) by shreyhaldkar0 (https://sketchfab.com/shreyhaldkar0) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

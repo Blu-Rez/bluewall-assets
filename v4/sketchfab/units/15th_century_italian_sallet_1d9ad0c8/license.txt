@@ -1,0 +1,11 @@
+Model Information:
+* title:	15th century Italian Sallet
+* source:	https://sketchfab.com/3d-models/15th-century-italian-sallet-1d9ad0c80a6945f1bdac705d51fdad11
+* author:	Pratas (https://sketchfab.com/ernst52)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "15th century Italian Sallet" (https://sketchfab.com/3d-models/15th-century-italian-sallet-1d9ad0c80a6945f1bdac705d51fdad11) by Pratas (https://sketchfab.com/ernst52) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

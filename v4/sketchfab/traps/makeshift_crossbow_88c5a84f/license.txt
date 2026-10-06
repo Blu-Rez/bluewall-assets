@@ -1,0 +1,11 @@
+Model Information:
+* title:	Makeshift Crossbow
+* source:	https://sketchfab.com/3d-models/makeshift-crossbow-88c5a84f16094c3abef5a657139e6071
+* author:	thanoidiscominggaming (https://sketchfab.com/thanoidiscominggaming)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Makeshift Crossbow" (https://sketchfab.com/3d-models/makeshift-crossbow-88c5a84f16094c3abef5a657139e6071) by thanoidiscominggaming (https://sketchfab.com/thanoidiscominggaming) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
