@@ -1,0 +1,11 @@
+Model Information:
+* title:	Mega Scene
+* source:	https://sketchfab.com/3d-models/mega-scene-b9909021fc8e467f9e34741db3f389e0
+* author:	VitSh (https://sketchfab.com/VitSh)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Mega Scene" (https://sketchfab.com/3d-models/mega-scene-b9909021fc8e467f9e34741db3f389e0) by VitSh (https://sketchfab.com/VitSh) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

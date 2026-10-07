@@ -1,0 +1,11 @@
+Model Information:
+* title:	Castle Occult Chamber
+* source:	https://sketchfab.com/3d-models/castle-occult-chamber-576a47258ea14e29ad4195597cd2fc84
+* author:	SRFstudio (https://sketchfab.com/SRFstudio)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Castle Occult Chamber" (https://sketchfab.com/3d-models/castle-occult-chamber-576a47258ea14e29ad4195597cd2fc84) by SRFstudio (https://sketchfab.com/SRFstudio) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

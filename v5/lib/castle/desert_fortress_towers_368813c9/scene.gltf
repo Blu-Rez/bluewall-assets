@@ -1,0 +1,605 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 2626,
+      "max": [
+        2.263827323913574,
+        2.2638297080993652,
+        3.208810806274414
+      ],
+      "min": [
+        -2.263827323913574,
+        -2.263824701309204,
+        -0.04074859619140625
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 31512,
+      "componentType": 5126,
+      "count": 2626,
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 2626,
+      "max": [
+        0.999961256980896,
+        0.9994133710861206,
+        0.9999991655349731,
+        1.0
+      ],
+      "min": [
+        -0.9982512593269348,
+        -1.0,
+        -0.9990516901016235,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 2626,
+      "max": [
+        0.9937472939491272,
+        0.9937502145767212
+      ],
+      "min": [
+        0.006184218917042017,
+        0.006186753511428833
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 12750,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 63024,
+      "componentType": 5126,
+      "count": 22227,
+      "max": [
+        3.219221353530884,
+        3.218904495239258,
+        21.708810806274414
+      ],
+      "min": [
+        -3.219071388244629,
+        -3.2188777923583984,
+        -0.0004449289117474109
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 329748,
+      "componentType": 5126,
+      "count": 22227,
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 42016,
+      "componentType": 5126,
+      "count": 22227,
+      "max": [
+        1.0,
+        1.0,
+        0.9999967813491821,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -0.9999977946281433,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 21008,
+      "componentType": 5126,
+      "count": 22227,
+      "max": [
+        0.9946985244750977,
+        0.9950956702232361
+      ],
+      "min": [
+        0.004899593070149422,
+        0.004908084869384766
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 51000,
+      "componentType": 5125,
+      "count": 121824,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 596472,
+      "componentType": 5126,
+      "count": 3444,
+      "max": [
+        1.0239553451538086,
+        1.0201846361160278,
+        10.598078727722168
+      ],
+      "min": [
+        -1.0206944942474365,
+        -1.0246152877807617,
+        -0.0486367903649807
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 637800,
+      "componentType": 5126,
+      "count": 3444,
+      "max": [
+        0.9999691247940063,
+        0.9999892711639404,
+        0.9998582005500793
+      ],
+      "min": [
+        -0.9999561905860901,
+        -1.0,
+        -0.9999878406524658
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 397648,
+      "componentType": 5126,
+      "count": 3444,
+      "max": [
+        0.999497652053833,
+        0.9997791051864624,
+        0.9999994039535522,
+        1.0
+      ],
+      "min": [
+        -0.9996678829193115,
+        -0.998083770275116,
+        -0.9999169111251831,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 198824,
+      "componentType": 5126,
+      "count": 3444,
+      "max": [
+        0.9945481419563293,
+        0.9942802786827087
+      ],
+      "min": [
+        0.005433682352304459,
+        0.005430597346276045
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 538296,
+      "componentType": 5125,
+      "count": 19014,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Nicolai Kilstrup (https://sketchfab.com/nkilstrup)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/desert--fortress--towers-368813c939494eb0b0d63fa634b03589",
+      "title": "Desert_ Fortress_ Towers"
+    },
+    "generator": "Sketchfab-15.5.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 614352,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 226376,
+      "byteOffset": 614352,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 679128,
+      "byteOffset": 840728,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 452752,
+      "byteOffset": 1519856,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 1972608,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/Tower_Dome_01_baseColor.png"
+    },
+    {
+      "uri": "textures/Tower_Dome_01_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Tower_Dome_01_normal.png"
+    },
+    {
+      "uri": "textures/Tower_Medium_01_baseColor.png"
+    },
+    {
+      "uri": "textures/Tower_Medium_01_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Tower_Medium_01_normal.png"
+    },
+    {
+      "uri": "textures/Pillar_Bulb_01_baseColor.png"
+    },
+    {
+      "uri": "textures/Pillar_Bulb_01_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Pillar_Bulb_01_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "Tower_Dome_01",
+      "normalTexture": {
+        "index": 2
+      },
+      "occlusionTexture": {
+        "index": 1
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Tower_Medium_01",
+      "normalTexture": {
+        "index": 5
+      },
+      "occlusionTexture": {
+        "index": 4
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 3
+        },
+        "metallicRoughnessTexture": {
+          "index": 4
+        }
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Pillar_Bulb_01",
+      "normalTexture": {
+        "index": 8
+      },
+      "occlusionTexture": {
+        "index": 7
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 6
+        },
+        "metallicRoughnessTexture": {
+          "index": 7
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "DesertTemple_Tower_Medium_01_Tower_Dome_01_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "DesertTemple_Tower_Medium_01.001_Tower_Medium_01_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TANGENT": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "DesertTemple_Pillar_Bulb_01_Pillar_Bulb_01_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 11,
+            "POSITION": 10,
+            "TANGENT": 12,
+            "TEXCOORD_0": 13
+          },
+          "indices": 14,
+          "material": 2,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.009999999776482582,
+        0.0,
+        0.0,
+        -0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Desert_Fortress_Towers.fbx"
+    },
+    {
+      "children": [
+        3,
+        5,
+        7
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.629206793918314e-05,
+        -99.99999999999868,
+        0.0,
+        0.0,
+        99.99999999999868,
+        -1.629206793918314e-05,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "DesertTemple_Tower_Medium_01"
+    },
+    {
+      "mesh": 0,
+      "name": "DesertTemple_Tower_Medium_01_Tower_Dome_01_0"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.629206793918314e-05,
+        -99.99999999999868,
+        0.0,
+        0.0,
+        99.99999999999868,
+        -1.629206793918314e-05,
+        0.0,
+        800.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "DesertTemple_Tower_Medium_01.001"
+    },
+    {
+      "mesh": 1,
+      "name": "DesertTemple_Tower_Medium_01.001_Tower_Medium_01_0"
+    },
+    {
+      "children": [
+        8
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.0,
+        -1.629206793918314e-05,
+        -99.99999999999868,
+        0.0,
+        0.0,
+        99.99999999999868,
+        -1.629206793918314e-05,
+        0.0,
+        -700.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "DesertTemple_Pillar_Bulb_01"
+    },
+    {
+      "mesh": 2,
+      "name": "DesertTemple_Pillar_Bulb_01_Pillar_Bulb_01_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    },
+    {
+      "sampler": 0,
+      "source": 4
+    },
+    {
+      "sampler": 0,
+      "source": 5
+    },
+    {
+      "sampler": 0,
+      "source": 6
+    },
+    {
+      "sampler": 0,
+      "source": 7
+    },
+    {
+      "sampler": 0,
+      "source": 8
+    }
+  ]
+}

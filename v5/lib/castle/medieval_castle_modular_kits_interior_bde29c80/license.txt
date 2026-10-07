@@ -1,0 +1,11 @@
+Model Information:
+* title:	Medieval castle modular kits (interior)
+* source:	https://sketchfab.com/3d-models/medieval-castle-modular-kits-interior-bde29c804d6247c59d29a2ade11e69bc
+* author:	Pedram Ashoori (https://sketchfab.com/pedramashoori)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Medieval castle modular kits (interior)" (https://sketchfab.com/3d-models/medieval-castle-modular-kits-interior-bde29c804d6247c59d29a2ade11e69bc) by Pedram Ashoori (https://sketchfab.com/pedramashoori) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
