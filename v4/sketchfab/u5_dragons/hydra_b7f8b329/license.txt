@@ -1,0 +1,11 @@
+Model Information:
+* title:	Hydra
+* source:	https://sketchfab.com/3d-models/hydra-b7f8b329f1be4648b5a6925887b87a5e
+* author:	Alexey (https://sketchfab.com/lexazaixa25)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Hydra" (https://sketchfab.com/3d-models/hydra-b7f8b329f1be4648b5a6925887b87a5e) by Alexey (https://sketchfab.com/lexazaixa25) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

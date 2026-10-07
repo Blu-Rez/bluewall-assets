@@ -1,0 +1,11 @@
+Model Information:
+* title:	King ghidorah
+* source:	https://sketchfab.com/3d-models/king-ghidorah-27d1b426f029403898d1a8f74866c383
+* author:	TECHGUY (https://sketchfab.com/tech-2144)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "King ghidorah" (https://sketchfab.com/3d-models/king-ghidorah-27d1b426f029403898d1a8f74866c383) by TECHGUY (https://sketchfab.com/tech-2144) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

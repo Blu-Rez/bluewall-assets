@@ -1,0 +1,11 @@
+Model Information:
+* title:	Ghidorah
+* source:	https://sketchfab.com/3d-models/ghidorah-478a4f826db546d7a681059619112f61
+* author:	CsDani50 (https://sketchfab.com/csonkadani0214)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Ghidorah" (https://sketchfab.com/3d-models/ghidorah-478a4f826db546d7a681059619112f61) by CsDani50 (https://sketchfab.com/csonkadani0214) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

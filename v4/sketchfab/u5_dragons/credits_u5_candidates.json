@@ -1,0 +1,68 @@
+[
+ {
+  "id": "king_ghidorah_27d1b426",
+  "name": "King ghidorah",
+  "author": "TECHGUY",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/27d1b426f029403898d1a8f74866c383",
+  "uid": "27d1b426f029403898d1a8f74866c383",
+  "faces": 25595,
+  "animated": true,
+  "cat": "u5_dragons"
+ },
+ {
+  "id": "king_ghidorah_rig_35fed2b9",
+  "name": "King Ghidorah Rig",
+  "author": "NO DONT EAT ME CASEOH (Ferris wheel)",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/35fed2b9080c4f9483d0613ce2fddf68",
+  "uid": "35fed2b9080c4f9483d0613ce2fddf68",
+  "faces": 25595,
+  "animated": true,
+  "cat": "u5_dragons"
+ },
+ {
+  "id": "hydra_animation_c46f8e83",
+  "name": "HYDRA ANIMATION",
+  "author": "blam",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/c46f8e8309034cd88390542f6325bf4d",
+  "uid": "c46f8e8309034cd88390542f6325bf4d",
+  "faces": 7354,
+  "animated": true,
+  "cat": "u5_dragons"
+ },
+ {
+  "id": "hydra_b7f8b329",
+  "name": "Hydra",
+  "author": "Rex",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/b7f8b329f1be4648b5a6925887b87a5e",
+  "uid": "b7f8b329f1be4648b5a6925887b87a5e",
+  "faces": 8696,
+  "animated": true,
+  "cat": "u5_dragons"
+ },
+ {
+  "id": "animated_hydra_dungeons_dragons_16bee345",
+  "name": "Animated Hydra (Dungeons & Dragons)",
+  "author": "Yanez Designs",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/16bee345cce94a288015cfc38301b20f",
+  "uid": "16bee345cce94a288015cfc38301b20f",
+  "faces": 23526,
+  "animated": true,
+  "cat": "u5_dragons"
+ },
+ {
+  "id": "ghidorah_478a4f82",
+  "name": "Ghidorah",
+  "author": "CsDani50",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/478a4f826db546d7a681059619112f61",
+  "uid": "478a4f826db546d7a681059619112f61",
+  "faces": 2172,
+  "animated": true,
+  "cat": "u5_dragons"
+ }
+]

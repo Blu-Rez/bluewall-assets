@@ -1,0 +1,11 @@
+Model Information:
+* title:	HYDRA ANIMATION
+* source:	https://sketchfab.com/3d-models/hydra-animation-c46f8e8309034cd88390542f6325bf4d
+* author:	hino (https://sketchfab.com/Slava251114)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "HYDRA ANIMATION" (https://sketchfab.com/3d-models/hydra-animation-c46f8e8309034cd88390542f6325bf4d) by hino (https://sketchfab.com/Slava251114) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
