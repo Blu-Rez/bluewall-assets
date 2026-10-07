@@ -1,0 +1,11 @@
+Model Information:
+* title:	Xolotl ~ Weapon Concept
+* source:	https://sketchfab.com/3d-models/xolotl-weapon-concept-b6c122ff7a2642b294af3e2c5267b49f
+* author:	Robin Vandenberghe (https://sketchfab.com/RobinVandenberghe)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Xolotl ~ Weapon Concept" (https://sketchfab.com/3d-models/xolotl-weapon-concept-b6c122ff7a2642b294af3e2c5267b49f) by Robin Vandenberghe (https://sketchfab.com/RobinVandenberghe) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

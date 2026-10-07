@@ -1,0 +1,11 @@
+Model Information:
+* title:	Vegas golden knight test idle free
+* source:	https://sketchfab.com/3d-models/vegas-golden-knight-test-idle-free-1364e2a11a5045e3ba5a10b5b371e202
+* author:	obeyjef (https://sketchfab.com/obeyjef)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Vegas golden knight test idle free" (https://sketchfab.com/3d-models/vegas-golden-knight-test-idle-free-1364e2a11a5045e3ba5a10b5b371e202) by obeyjef (https://sketchfab.com/obeyjef) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Summoner'sWarLC - Archangel (With Animations)
+* source:	https://sketchfab.com/3d-models/summonerswarlc-archangel-with-animations-489a37a1153e46039371a1090c5c8c0c
+* author:	Otherspectre (https://sketchfab.com/Otherspectre)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Summoner'sWarLC - Archangel (With Animations)" (https://sketchfab.com/3d-models/summonerswarlc-archangel-with-animations-489a37a1153e46039371a1090c5c8c0c) by Otherspectre (https://sketchfab.com/Otherspectre) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

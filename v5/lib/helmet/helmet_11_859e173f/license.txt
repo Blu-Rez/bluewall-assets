@@ -1,0 +1,11 @@
+Model Information:
+* title:	Helmet №11
+* source:	https://sketchfab.com/3d-models/helmet-no11-859e173fa35d44ca853a2ef1a3c4e90b
+* author:	ArtLeaving (https://sketchfab.com/aptyphawk22)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Helmet №11" (https://sketchfab.com/3d-models/helmet-no11-859e173fa35d44ca853a2ef1a3c4e90b) by ArtLeaving (https://sketchfab.com/aptyphawk22) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
