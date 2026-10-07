@@ -1,0 +1,463 @@
+{
+  "accessors": [
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 4040,
+      "max": [
+        0.5526313185691833,
+        0.08880683034658432,
+        0.6231768131256104
+      ],
+      "min": [
+        -0.5526314377784729,
+        -0.08880678564310074,
+        -0.5483009815216064
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 48480,
+      "componentType": 5126,
+      "count": 4040,
+      "max": [
+        0.9999821186065674,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -0.9999821186065674,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5126,
+      "count": 4040,
+      "max": [
+        0.9997963309288025,
+        1.0,
+        0.999688446521759,
+        1.0
+      ],
+      "min": [
+        -0.9998185038566589,
+        -1.0,
+        -0.999998927116394,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 4040,
+      "max": [
+        0.9862058162689209,
+        0.992487907409668
+      ],
+      "min": [
+        0.006451040506362915,
+        0.011571556329727173
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5125,
+      "count": 11388,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 4,
+      "max": [
+        176.30059814453125,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        169.2933349609375,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        169.2933349609375,
+        0.0,
+        0.0,
+        0.3632599115371704,
+        0.0,
+        1.0
+      ],
+      "min": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "type": "MAT4"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5123,
+      "count": 4040,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 4,
+      "byteOffset": 64640,
+      "componentType": 5126,
+      "count": 4040,
+      "max": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "min": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "type": "VEC4"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "EllieLovelaceVR (https://sketchfab.com/EllieLovelaceVR)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/studded-punk-collar-a4cb561a34f8467096b4f8cadbb00ebb",
+      "title": "Studded Punk Collar"
+    },
+    "generator": "Sketchfab-12.68.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 32320,
+      "byteStride": 8,
+      "name": "shortBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 45552,
+      "byteOffset": 32320,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 32320,
+      "byteOffset": 77872,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 96960,
+      "byteOffset": 110192,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 129280,
+      "byteOffset": 207152,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 256,
+      "byteOffset": 336432,
+      "name": "floatBufferViews"
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 336688,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/Collar_baseColor.jpeg"
+    },
+    {
+      "uri": "textures/Collar_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/Collar_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "Collar",
+      "normalTexture": {
+        "index": 2
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Collar_Collar_0",
+      "primitives": [
+        {
+          "attributes": {
+            "JOINTS_0": 6,
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3,
+            "WEIGHTS_0": 7
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "9a37059c79e844378a30b125b3691906.fbx"
+    },
+    {
+      "children": [
+        3
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        58.812408447265625,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -9.5817575408984e-06,
+        -58.81240844726485,
+        0.0,
+        0.0,
+        58.81240844726485,
+        -9.5817575408984e-06,
+        0.0,
+        0.0,
+        -21.36419105529785,
+        0.0,
+        1.0
+      ],
+      "name": "Armature"
+    },
+    {
+      "children": [
+        5,
+        7,
+        6
+      ],
+      "name": "Object_4"
+    },
+    {
+      "children": [
+        8
+      ],
+      "name": "_rootJoint"
+    },
+    {
+      "matrix": [
+        3.4326994200471904e-05,
+        -176.30059525778051,
+        0.0,
+        0.0,
+        2.5562585463902294e-05,
+        4.977219286670083e-12,
+        169.2933396742592,
+        0.0,
+        -169.2933396742592,
+        -3.2962631128270956e-05,
+        2.5562585463903263e-05,
+        0.0,
+        0.0,
+        2.7400365070207044e-06,
+        107.32028084235935,
+        1.0
+      ],
+      "name": "Object_6"
+    },
+    {
+      "mesh": 0,
+      "name": "Object_7",
+      "skin": 0
+    },
+    {
+      "children": [
+        9
+      ],
+      "name": "Neck_00",
+      "rotation": [
+        0.7071068286895752,
+        0.0,
+        0.0,
+        0.7071067094802856
+      ]
+    },
+    {
+      "children": [
+        10
+      ],
+      "name": "Head_01",
+      "rotation": [
+        -2.938735877055719e-39,
+        1.1920927533992653e-07,
+        0.0,
+        1.0
+      ],
+      "scale": [
+        1.0,
+        0.9999999403953552,
+        1.0
+      ],
+      "translation": [
+        0.0,
+        1.0,
+        -2.938735877055719e-39
+      ]
+    },
+    {
+      "name": "Head_end_02",
+      "rotation": [
+        -2.938735877055719e-39,
+        -0.0,
+        0.0,
+        1.0
+      ],
+      "translation": [
+        0.0,
+        2.349081039428711,
+        -5.877471754111438e-39
+      ]
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "skins": [
+    {
+      "inverseBindMatrices": 5,
+      "joints": [
+        5,
+        8,
+        9,
+        10
+      ],
+      "skeleton": 5
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ]
+}

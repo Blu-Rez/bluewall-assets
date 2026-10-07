@@ -1,0 +1,369 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 2794,
+      "max": [
+        36.04125213623047,
+        215.947509765625,
+        8.273947715759277
+      ],
+      "min": [
+        -36.04125213623047,
+        0.21113160252571106,
+        -8.273947715759277
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 33528,
+      "componentType": 5126,
+      "count": 2794,
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 2794,
+      "max": [
+        1.9110357761383057,
+        0.9935603141784668
+      ],
+      "min": [
+        0.005338728427886963,
+        0.0073026251047849655
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 9564,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 67056,
+      "componentType": 5126,
+      "count": 56,
+      "max": [
+        39.07836151123047,
+        228.37001037597656,
+        14.966897010803223
+      ],
+      "min": [
+        -41.323543548583984,
+        98.86615753173828,
+        -9.812010765075684
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 67728,
+      "componentType": 5126,
+      "count": 56,
+      "max": [
+        0.27282270789146423,
+        0.13451223075389862,
+        1.0
+      ],
+      "min": [
+        -0.9830032587051392,
+        -0.32612308859825134,
+        -0.9897938370704651
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 22352,
+      "componentType": 5126,
+      "count": 56,
+      "max": [
+        0.9737416505813599,
+        0.9867549538612366
+      ],
+      "min": [
+        0.006107896566390991,
+        0.013245046138763428
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 22800,
+      "componentType": 5126,
+      "count": 56,
+      "max": [
+        0.9737416505813599,
+        0.9867549538612366
+      ],
+      "min": [
+        0.006107896566390991,
+        0.013245046138763428
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 38256,
+      "componentType": 5125,
+      "count": 138,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Joan Tieu (https://sketchfab.com/JoanTieu)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/moonlight-warstaff-weaponcraft-559f3f12440f45738c8524958e199605",
+      "title": "Moonlight Warstaff - Weaponcraft"
+    },
+    "generator": "Sketchfab-12.92.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 38808,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 23248,
+      "byteOffset": 38808,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 68400,
+      "byteOffset": 62056,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 130456,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/M_Staff_baseColor.png"
+    },
+    {
+      "uri": "textures/M_Staff_emissive.png"
+    },
+    {
+      "uri": "textures/M_Effects_baseColor.png"
+    }
+  ],
+  "materials": [
+    {
+      "alphaMode": "BLEND",
+      "doubleSided": true,
+      "emissiveFactor": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveTexture": {
+        "index": 1
+      },
+      "name": "M_Staff",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0.0
+      }
+    },
+    {
+      "alphaMode": "BLEND",
+      "doubleSided": true,
+      "emissiveFactor": [
+        0.06267624898367705,
+        0.1240253868416808,
+        0.5276963484922431
+      ],
+      "name": "M_Effects",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 2
+        },
+        "metallicFactor": 0.0
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "NightElf_MoonStaff_Pose_geo_M_Staff_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "NightElf_MoonStaff_Pose_geo_M_Effects_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 5,
+            "POSITION": 4,
+            "TEXCOORD_0": 6,
+            "TEXCOORD_1": 7
+          },
+          "indices": 8,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.009999999776482582,
+        0.0,
+        0.0,
+        -0.009999999776482582,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "050e64d0b0464cca8679f7d53334e6ea.fbx"
+    },
+    {
+      "children": [
+        3
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4,
+        5
+      ],
+      "matrix": [
+        0.9915432158939476,
+        0.12174619837979267,
+        0.044943455527547735,
+        0.0,
+        -0.11620381805504715,
+        0.9870912159097062,
+        -0.11021617006286959,
+        0.0,
+        -0.057781689869005975,
+        0.10406149457876367,
+        0.992890971689196,
+        0.0,
+        13.482379913330078,
+        1.1739017963409424,
+        12.647875785827637,
+        1.0
+      ],
+      "name": "NightElf_MoonStaff_Pose_geo"
+    },
+    {
+      "mesh": 0,
+      "name": "NightElf_MoonStaff_Pose_geo_M_Staff_0"
+    },
+    {
+      "mesh": 1,
+      "name": "NightElf_MoonStaff_Pose_geo_M_Effects_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ]
+}

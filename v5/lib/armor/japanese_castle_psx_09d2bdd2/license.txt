@@ -1,0 +1,11 @@
+Model Information:
+* title:	Japanese Castle PSX
+* source:	https://sketchfab.com/3d-models/japanese-castle-psx-09d2bdd2904948739acf534180087a97
+* author:	Seifert (https://sketchfab.com/Peter_Seifert)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Japanese Castle PSX" (https://sketchfab.com/3d-models/japanese-castle-psx-09d2bdd2904948739acf534180087a97) by Seifert (https://sketchfab.com/Peter_Seifert) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

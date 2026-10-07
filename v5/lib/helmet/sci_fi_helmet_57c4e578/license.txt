@@ -1,0 +1,11 @@
+Model Information:
+* title:	Sci Fi Helmet
+* source:	https://sketchfab.com/3d-models/sci-fi-helmet-57c4e5784952425bbe95e5975bbff694
+* author:	cenobyte (https://sketchfab.com/cenobyte)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Sci Fi Helmet" (https://sketchfab.com/3d-models/sci-fi-helmet-57c4e5784952425bbe95e5975bbff694) by cenobyte (https://sketchfab.com/cenobyte) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

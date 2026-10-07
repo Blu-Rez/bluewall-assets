@@ -1,0 +1,11 @@
+Model Information:
+* title:	Apollo's shield
+* source:	https://sketchfab.com/3d-models/apollos-shield-114a2f315e734ba1b7f3c3b75fcb34fa
+* author:	rubenve (https://sketchfab.com/rubenve)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Apollo's shield" (https://sketchfab.com/3d-models/apollos-shield-114a2f315e734ba1b7f3c3b75fcb34fa) by rubenve (https://sketchfab.com/rubenve) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

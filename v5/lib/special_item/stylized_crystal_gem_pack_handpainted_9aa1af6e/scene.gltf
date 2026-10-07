@@ -1,0 +1,700 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 1313,
+      "max": [
+        12.991191864013672,
+        2.1947097778320313,
+        3.8226146697998047
+      ],
+      "min": [
+        -17.972118377685547,
+        -3.4241762161254883,
+        -2.772794008255005
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 15756,
+      "componentType": 5126,
+      "count": 1313,
+      "max": [
+        0.9993913769721985,
+        0.993387758731842,
+        0.9611987471580505
+      ],
+      "min": [
+        -0.9974281191825867,
+        -0.9969662427902222,
+        -0.9989451169967651
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 1313,
+      "max": [
+        0.9977030158042908,
+        0.997048020362854
+      ],
+      "min": [
+        0.0019280000124126673,
+        0.0019280000124126673
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 5562,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 31512,
+      "componentType": 5126,
+      "count": 1313,
+      "max": [
+        12.991191864013672,
+        2.1947097778320313,
+        3.8226146697998047
+      ],
+      "min": [
+        -17.972118377685547,
+        -3.4241762161254883,
+        -2.772794008255005
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 47268,
+      "componentType": 5126,
+      "count": 1313,
+      "max": [
+        0.9993913769721985,
+        0.993387758731842,
+        0.9611987471580505
+      ],
+      "min": [
+        -0.9974281191825867,
+        -0.9969662427902222,
+        -0.9989451169967651
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 10504,
+      "componentType": 5126,
+      "count": 1313,
+      "max": [
+        0.9977030158042908,
+        0.997048020362854
+      ],
+      "min": [
+        0.0019280000124126673,
+        0.0019280000124126673
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 22248,
+      "componentType": 5125,
+      "count": 5562,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 63024,
+      "componentType": 5126,
+      "count": 1313,
+      "max": [
+        12.991191864013672,
+        2.1947097778320313,
+        3.8226146697998047
+      ],
+      "min": [
+        -17.972118377685547,
+        -3.4241762161254883,
+        -2.772794008255005
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 78780,
+      "componentType": 5126,
+      "count": 1313,
+      "max": [
+        0.9993913769721985,
+        0.993387758731842,
+        0.9611987471580505
+      ],
+      "min": [
+        -0.9974281191825867,
+        -0.9969662427902222,
+        -0.9989451169967651
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 21008,
+      "componentType": 5126,
+      "count": 1313,
+      "max": [
+        0.9977030158042908,
+        0.997048020362854
+      ],
+      "min": [
+        0.0019280000124126673,
+        0.0019280000124126673
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 44496,
+      "componentType": 5125,
+      "count": 5562,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 94536,
+      "componentType": 5126,
+      "count": 1313,
+      "max": [
+        12.991191864013672,
+        2.1947097778320313,
+        3.8226146697998047
+      ],
+      "min": [
+        -17.972118377685547,
+        -3.4241762161254883,
+        -2.772794008255005
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 110292,
+      "componentType": 5126,
+      "count": 1313,
+      "max": [
+        0.9993913769721985,
+        0.993387758731842,
+        0.9611987471580505
+      ],
+      "min": [
+        -0.9974281191825867,
+        -0.9969662427902222,
+        -0.9989451169967651
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 31512,
+      "componentType": 5126,
+      "count": 1313,
+      "max": [
+        0.9977030158042908,
+        0.997048020362854
+      ],
+      "min": [
+        0.0019280000124126673,
+        0.0019280000124126673
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 66744,
+      "componentType": 5125,
+      "count": 5562,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "ashkan.fancy (https://sketchfab.com/ashkan.fancy)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/stylized-crystal-gem-pack-handpainted-9aa1af6e18b24c99af00e850f9fd2658",
+      "title": "Stylized Crystal Gem pack - Handpainted"
+    },
+    "generator": "Sketchfab-12.67.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 88992,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 42016,
+      "byteOffset": 88992,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 126048,
+      "byteOffset": 131008,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 257056,
+      "uri": "scene.bin"
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_unlit"
+  ],
+  "images": [
+    {
+      "uri": "textures/Material_3_baseColor.png"
+    },
+    {
+      "uri": "textures/Material_1_baseColor.png"
+    },
+    {
+      "uri": "textures/Material_4_baseColor.png"
+    },
+    {
+      "uri": "textures/Material_2_baseColor.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "name": "Material_3",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0.0
+      }
+    },
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "name": "Material_1",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1
+        },
+        "metallicFactor": 0.0
+      }
+    },
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "name": "Material_4",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 2
+        },
+        "metallicFactor": 0.0
+      }
+    },
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_unlit": {}
+      },
+      "name": "Material_2",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 3
+        },
+        "metallicFactor": 0.0
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "gem_Material #3_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "gem004_Material #1_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 5,
+            "POSITION": 4,
+            "TEXCOORD_0": 6
+          },
+          "indices": 7,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "gem005_Material #4_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 9,
+            "POSITION": 8,
+            "TEXCOORD_0": 10
+          },
+          "indices": 11,
+          "material": 2,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "gem006_Material #2_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 13,
+            "POSITION": 12,
+            "TEXCOORD_0": 14
+          },
+          "indices": 15,
+          "material": 3,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        0.02539999969303608,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02539999969303608,
+        0.0,
+        0.0,
+        -0.02539999969303608,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "dd6cf051c3f346fa9b863541d3d172c7.fbx"
+    },
+    {
+      "children": [
+        3,
+        6,
+        9,
+        12
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        7.2087178230285645,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.6006569010304094e-15,
+        -7.2087178230285645,
+        0.0,
+        0.0,
+        7.2087178230285645,
+        1.6006569010304094e-15,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "gem"
+    },
+    {
+      "children": [
+        5
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        -0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        2.647853136062622,
+        1.0
+      ],
+      "name": "Object_4"
+    },
+    {
+      "mesh": 0,
+      "name": "gem_Material #3_0"
+    },
+    {
+      "children": [
+        7
+      ],
+      "matrix": [
+        7.2087178230285645,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.6006569010304094e-15,
+        -7.2087178230285645,
+        0.0,
+        0.0,
+        7.2087178230285645,
+        1.6006569010304094e-15,
+        0.0,
+        257.3495788574219,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "gem004"
+    },
+    {
+      "children": [
+        8
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        -0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        2.647853136062622,
+        1.0
+      ],
+      "name": "Object_7"
+    },
+    {
+      "mesh": 1,
+      "name": "gem004_Material #1_0"
+    },
+    {
+      "children": [
+        10
+      ],
+      "matrix": [
+        7.2087178230285645,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.6006569010304094e-15,
+        -7.2087178230285645,
+        0.0,
+        0.0,
+        7.2087178230285645,
+        1.6006569010304094e-15,
+        0.0,
+        518.46240234375,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "gem005"
+    },
+    {
+      "children": [
+        11
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        -0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        2.647853136062622,
+        1.0
+      ],
+      "name": "Object_10"
+    },
+    {
+      "mesh": 2,
+      "name": "gem005_Material #4_0"
+    },
+    {
+      "children": [
+        13
+      ],
+      "matrix": [
+        7.2087178230285645,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.6006569010304094e-15,
+        -7.2087178230285645,
+        0.0,
+        0.0,
+        7.2087178230285645,
+        1.6006569010304094e-15,
+        0.0,
+        -274.56597900390625,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "gem006"
+    },
+    {
+      "children": [
+        14
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        -0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        2.647853136062622,
+        1.0
+      ],
+      "name": "Object_13"
+    },
+    {
+      "mesh": 3,
+      "name": "gem006_Material #2_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    }
+  ]
+}
