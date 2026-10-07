@@ -1,0 +1,11 @@
+Model Information:
+* title:	Tree Monster
+* source:	https://sketchfab.com/3d-models/tree-monster-1f0078b18e834ddc8bd604238ff75ed3
+* author:	Hello1297 (https://sketchfab.com/zarinakismo)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Tree Monster" (https://sketchfab.com/3d-models/tree-monster-1f0078b18e834ddc8bd604238ff75ed3) by Hello1297 (https://sketchfab.com/zarinakismo) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

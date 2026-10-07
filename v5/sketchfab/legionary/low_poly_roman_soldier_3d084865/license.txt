@@ -1,0 +1,11 @@
+Model Information:
+* title:	Low poly - Roman Soldier
+* source:	https://sketchfab.com/3d-models/low-poly-roman-soldier-3d084865416a4ae0a855e112abb66c1f
+* author:	MariosTzavis (https://sketchfab.com/MariosTzavis)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Low poly - Roman Soldier" (https://sketchfab.com/3d-models/low-poly-roman-soldier-3d084865416a4ae0a855e112abb66c1f) by MariosTzavis (https://sketchfab.com/MariosTzavis) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
