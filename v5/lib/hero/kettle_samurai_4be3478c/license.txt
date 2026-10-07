@@ -1,0 +1,11 @@
+Model Information:
+* title:	kettle_samurai
+* source:	https://sketchfab.com/3d-models/kettle-samurai-4be3478caff84ace8dd5d4b90a2923ff
+* author:	Zluh (https://sketchfab.com/grawehill)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "kettle_samurai" (https://sketchfab.com/3d-models/kettle-samurai-4be3478caff84ace8dd5d4b90a2923ff) by Zluh (https://sketchfab.com/grawehill) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
