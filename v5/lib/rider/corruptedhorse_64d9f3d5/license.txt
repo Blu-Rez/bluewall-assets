@@ -1,0 +1,11 @@
+Model Information:
+* title:	CorruptedHorse
+* source:	https://sketchfab.com/3d-models/corruptedhorse-64d9f3d54b8e471db9b876ed6dfd8c9f
+* author:	joaomoreira28 (https://sketchfab.com/joaomoreira28)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "CorruptedHorse" (https://sketchfab.com/3d-models/corruptedhorse-64d9f3d54b8e471db9b876ed6dfd8c9f) by joaomoreira28 (https://sketchfab.com/joaomoreira28) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

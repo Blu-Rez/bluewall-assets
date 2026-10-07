@@ -1,0 +1,11 @@
+Model Information:
+* title:	Project CENTAUR
+* source:	https://sketchfab.com/3d-models/project-centaur-660495093eed44778e8a062614407ee5
+* author:	mattadams.be (https://sketchfab.com/mattadams.be)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Project CENTAUR" (https://sketchfab.com/3d-models/project-centaur-660495093eed44778e8a062614407ee5) by mattadams.be (https://sketchfab.com/mattadams.be) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
