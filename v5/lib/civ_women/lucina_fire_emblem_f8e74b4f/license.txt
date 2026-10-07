@@ -1,0 +1,11 @@
+Model Information:
+* title:	Lucina (fire emblem)
+* source:	https://sketchfab.com/3d-models/lucina-fire-emblem-f8e74b4f06764c088f22fa10b180b2fd
+* author:	chained_tan (https://sketchfab.com/ch_fren)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Lucina (fire emblem)" (https://sketchfab.com/3d-models/lucina-fire-emblem-f8e74b4f06764c088f22fa10b180b2fd) by chained_tan (https://sketchfab.com/ch_fren) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

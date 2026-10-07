@@ -1,0 +1,11 @@
+Model Information:
+* title:	Princess Bubblegum
+* source:	https://sketchfab.com/3d-models/princess-bubblegum-f7f490ef6120431692fecba76737ad5a
+* author:	Mike Inel (https://sketchfab.com/mikeinel)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Princess Bubblegum" (https://sketchfab.com/3d-models/princess-bubblegum-f7f490ef6120431692fecba76737ad5a) by Mike Inel (https://sketchfab.com/mikeinel) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
