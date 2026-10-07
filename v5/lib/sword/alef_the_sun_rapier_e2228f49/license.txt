@@ -1,0 +1,11 @@
+Model Information:
+* title:	Alef - The Sun Rapier
+* source:	https://sketchfab.com/3d-models/alef-the-sun-rapier-e2228f49bcbf4016b804b9045aece55d
+* author:	Sirolalo (https://sketchfab.com/Sirolalo)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Alef - The Sun Rapier" (https://sketchfab.com/3d-models/alef-the-sun-rapier-e2228f49bcbf4016b804b9045aece55d) by Sirolalo (https://sketchfab.com/Sirolalo) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
