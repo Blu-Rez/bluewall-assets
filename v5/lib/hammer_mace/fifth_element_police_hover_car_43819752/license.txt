@@ -1,0 +1,11 @@
+Model Information:
+* title:	Fifth Element - Police Hover Car
+* source:	https://sketchfab.com/3d-models/fifth-element-police-hover-car-43819752da2e4346a8696f4e8802a1f7
+* author:	Léonard_Doye Alias Leoskateman (https://sketchfab.com/leoskateman)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Fifth Element - Police Hover Car" (https://sketchfab.com/3d-models/fifth-element-police-hover-car-43819752da2e4346a8696f4e8802a1f7) by Léonard_Doye Alias Leoskateman (https://sketchfab.com/leoskateman) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

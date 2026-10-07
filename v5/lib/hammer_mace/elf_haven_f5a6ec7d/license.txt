@@ -1,0 +1,11 @@
+Model Information:
+* title:	Elf Haven
+* source:	https://sketchfab.com/3d-models/elf-haven-f5a6ec7d0bca45df9d18880db68ddb60
+* author:	fangzhangmnm (https://sketchfab.com/fangzhangmnm)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Elf Haven" (https://sketchfab.com/3d-models/elf-haven-f5a6ec7d0bca45df9d18880db68ddb60) by fangzhangmnm (https://sketchfab.com/fangzhangmnm) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

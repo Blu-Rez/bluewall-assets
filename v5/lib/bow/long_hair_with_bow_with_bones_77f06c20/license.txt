@@ -1,0 +1,11 @@
+Model Information:
+* title:	Long Hair With Bow (With Bones)
+* source:	https://sketchfab.com/3d-models/long-hair-with-bow-with-bones-77f06c2005f248f2bb00f7e99350fedb
+* author:	zHairezt (https://sketchfab.com/zHairezt)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Long Hair With Bow (With Bones)" (https://sketchfab.com/3d-models/long-hair-with-bow-with-bones-77f06c2005f248f2bb00f7e99350fedb) by zHairezt (https://sketchfab.com/zHairezt) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

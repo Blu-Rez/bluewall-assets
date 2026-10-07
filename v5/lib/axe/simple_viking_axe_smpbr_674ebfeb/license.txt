@@ -1,0 +1,11 @@
+Model Information:
+* title:	Simple Viking Axe SmPBR
+* source:	https://sketchfab.com/3d-models/simple-viking-axe-smpbr-674ebfeb42254b5cae893a5c1491f4b2
+* author:	Elisey (https://sketchfab.com/dwelfster)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Simple Viking Axe SmPBR" (https://sketchfab.com/3d-models/simple-viking-axe-smpbr-674ebfeb42254b5cae893a5c1491f4b2) by Elisey (https://sketchfab.com/dwelfster) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Harry Potter Desk Diorama
+* source:	https://sketchfab.com/3d-models/harry-potter-desk-diorama-0eb4e39ccfc04445926fb2b51adef579
+* author:	Jordi Kruk (https://sketchfab.com/JordiKruk)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Harry Potter Desk Diorama" (https://sketchfab.com/3d-models/harry-potter-desk-diorama-0eb4e39ccfc04445926fb2b51adef579) by Jordi Kruk (https://sketchfab.com/JordiKruk) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

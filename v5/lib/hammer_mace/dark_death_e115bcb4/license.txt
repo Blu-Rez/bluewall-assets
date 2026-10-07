@@ -1,0 +1,11 @@
+Model Information:
+* title:	DARK DEATH
+* source:	https://sketchfab.com/3d-models/dark-death-e115bcb4290742c9b48119f746236651
+* author:	3DMAN (https://sketchfab.com/3dmanx888)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "DARK DEATH" (https://sketchfab.com/3d-models/dark-death-e115bcb4290742c9b48119f746236651) by 3DMAN (https://sketchfab.com/3dmanx888) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
