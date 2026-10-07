@@ -1,0 +1,11 @@
+Model Information:
+* title:	Goblin Shredder Shield - Animated!
+* source:	https://sketchfab.com/3d-models/goblin-shredder-shield-animated-a1c649875ef44f5cbbd2d2f51a9b3721
+* author:	VideoJames (https://sketchfab.com/fuzion)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Goblin Shredder Shield - Animated!" (https://sketchfab.com/3d-models/goblin-shredder-shield-animated-a1c649875ef44f5cbbd2d2f51a9b3721) by VideoJames (https://sketchfab.com/fuzion) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
