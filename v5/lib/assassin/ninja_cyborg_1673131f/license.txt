@@ -1,0 +1,11 @@
+Model Information:
+* title:	Ninja Cyborg
+* source:	https://sketchfab.com/3d-models/ninja-cyborg-1673131f9e914d60af48d2dd51b85339
+* author:	T-Art (https://sketchfab.com/person-x)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Ninja Cyborg" (https://sketchfab.com/3d-models/ninja-cyborg-1673131f9e914d60af48d2dd51b85339) by T-Art (https://sketchfab.com/person-x) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
