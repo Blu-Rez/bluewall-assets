@@ -1,0 +1,11 @@
+Model Information:
+* title:	Animated Dragon Runs Slow Motion Loop
+* source:	https://sketchfab.com/3d-models/animated-dragon-runs-slow-motion-loop-840128a1f87a41698464a135627797df
+* author:	LasquetiSpice (https://sketchfab.com/LasquetiSpice)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Animated Dragon Runs Slow Motion Loop" (https://sketchfab.com/3d-models/animated-dragon-runs-slow-motion-loop-840128a1f87a41698464a135627797df) by LasquetiSpice (https://sketchfab.com/LasquetiSpice) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
