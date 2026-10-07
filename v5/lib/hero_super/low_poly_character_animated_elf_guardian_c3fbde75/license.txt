@@ -1,0 +1,11 @@
+Model Information:
+* title:	Low poly Character animated - Elf guardian
+* source:	https://sketchfab.com/3d-models/low-poly-character-animated-elf-guardian-c3fbde75977e421bb78e0e7c7fd7a0a3
+* author:	Karthik Naidu (https://sketchfab.com/Karthiknaidu97)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Low poly Character animated - Elf guardian" (https://sketchfab.com/3d-models/low-poly-character-animated-elf-guardian-c3fbde75977e421bb78e0e7c7fd7a0a3) by Karthik Naidu (https://sketchfab.com/Karthiknaidu97) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
