@@ -1,0 +1,11 @@
+Model Information:
+* title:	Agnaktor
+* source:	https://sketchfab.com/3d-models/agnaktor-ea76eb689ca14ff49190cdc42216183d
+* author:	That_Noodle_Guy (https://sketchfab.com/Elfredy)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Agnaktor" (https://sketchfab.com/3d-models/agnaktor-ea76eb689ca14ff49190cdc42216183d) by That_Noodle_Guy (https://sketchfab.com/Elfredy) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
