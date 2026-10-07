@@ -1,0 +1,11 @@
+Model Information:
+* title:	Bastard sword | Lowpoly
+* source:	https://sketchfab.com/3d-models/bastard-sword-lowpoly-0abc58fc45c14959a1762e8283992a62
+* author:	Vlasov Daniil (https://sketchfab.com/dan741vlasov)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Bastard sword | Lowpoly" (https://sketchfab.com/3d-models/bastard-sword-lowpoly-0abc58fc45c14959a1762e8283992a62) by Vlasov Daniil (https://sketchfab.com/dan741vlasov) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

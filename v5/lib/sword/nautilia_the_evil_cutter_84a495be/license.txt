@@ -1,0 +1,11 @@
+Model Information:
+* title:	Nautilia - The Evil Cutter
+* source:	https://sketchfab.com/3d-models/nautilia-the-evil-cutter-84a495be2174490c991937c09909bf16
+* author:	Sirolalo (https://sketchfab.com/Sirolalo)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Nautilia - The Evil Cutter" (https://sketchfab.com/3d-models/nautilia-the-evil-cutter-84a495be2174490c991937c09909bf16) by Sirolalo (https://sketchfab.com/Sirolalo) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

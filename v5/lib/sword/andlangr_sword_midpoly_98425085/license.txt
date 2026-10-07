@@ -1,0 +1,11 @@
+Model Information:
+* title:	Andlangr Sword (midpoly)
+* source:	https://sketchfab.com/3d-models/andlangr-sword-midpoly-984250852a6648faa9a659d7699caf88
+* author:	DeLeon (https://sketchfab.com/dele0n)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Andlangr Sword (midpoly)" (https://sketchfab.com/3d-models/andlangr-sword-midpoly-984250852a6648faa9a659d7699caf88) by DeLeon (https://sketchfab.com/dele0n) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
