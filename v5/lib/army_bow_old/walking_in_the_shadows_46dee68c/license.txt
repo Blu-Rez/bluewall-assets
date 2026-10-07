@@ -1,0 +1,11 @@
+Model Information:
+* title:	walking in the shadows
+* source:	https://sketchfab.com/3d-models/walking-in-the-shadows-46dee68c4bfc481896a3a72daae288c5
+* author:	Fede Borra (https://sketchfab.com/Fedeborra)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "walking in the shadows" (https://sketchfab.com/3d-models/walking-in-the-shadows-46dee68c4bfc481896a3a72daae288c5) by Fede Borra (https://sketchfab.com/Fedeborra) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

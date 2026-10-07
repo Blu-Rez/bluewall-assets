@@ -1,0 +1,11 @@
+Model Information:
+* title:	archer girl
+* source:	https://sketchfab.com/3d-models/archer-girl-373ea6d232e741b781658915b66ecaea
+* author:	Fede Borra (https://sketchfab.com/Fedeborra)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "archer girl" (https://sketchfab.com/3d-models/archer-girl-373ea6d232e741b781658915b66ecaea) by Fede Borra (https://sketchfab.com/Fedeborra) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Pikeman
+* source:	https://sketchfab.com/3d-models/pikeman-672b99e3296249fb830f4996b8937dcc
+* author:	jezusek (https://sketchfab.com/jezusek)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Pikeman" (https://sketchfab.com/3d-models/pikeman-672b99e3296249fb830f4996b8937dcc) by jezusek (https://sketchfab.com/jezusek) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

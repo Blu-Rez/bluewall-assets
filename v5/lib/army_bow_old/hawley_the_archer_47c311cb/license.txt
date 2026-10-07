@@ -1,0 +1,11 @@
+Model Information:
+* title:	Hawley the Archer
+* source:	https://sketchfab.com/3d-models/hawley-the-archer-47c311cb422a47d4a825b6832297607b
+* author:	outcast945 (https://sketchfab.com/outcast945)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Hawley the Archer" (https://sketchfab.com/3d-models/hawley-the-archer-47c311cb422a47d4a825b6832297607b) by outcast945 (https://sketchfab.com/outcast945) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

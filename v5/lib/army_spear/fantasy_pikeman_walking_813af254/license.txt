@@ -1,0 +1,11 @@
+Model Information:
+* title:	Fantasy pikeman walking
+* source:	https://sketchfab.com/3d-models/fantasy-pikeman-walking-813af25453b4417297ca17be2a7349ad
+* author:	Monado (https://sketchfab.com/Monado)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Fantasy pikeman walking" (https://sketchfab.com/3d-models/fantasy-pikeman-walking-813af25453b4417297ca17be2a7349ad) by Monado (https://sketchfab.com/Monado) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
