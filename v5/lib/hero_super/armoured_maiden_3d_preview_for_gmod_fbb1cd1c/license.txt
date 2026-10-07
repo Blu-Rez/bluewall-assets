@@ -1,0 +1,11 @@
+Model Information:
+* title:	Armoured Maiden 3D Preview for Gmod
+* source:	https://sketchfab.com/3d-models/armoured-maiden-3d-preview-for-gmod-fbb1cd1ced12430ba0ee8d67a6d0a7db
+* author:	8sianDude (https://sketchfab.com/haoliu95)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Armoured Maiden 3D Preview for Gmod" (https://sketchfab.com/3d-models/armoured-maiden-3d-preview-for-gmod-fbb1cd1ced12430ba0ee8d67a6d0a7db) by 8sianDude (https://sketchfab.com/haoliu95) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
