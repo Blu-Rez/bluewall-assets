@@ -1,0 +1,11 @@
+Model Information:
+* title:	Footman_old
+* source:	https://sketchfab.com/3d-models/footman-old-9d1fc1a7ce8d49a598b65603643e61cf
+* author:	Northcliffe (https://sketchfab.com/Samson.Northcliffe.Rydenko)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Footman_old" (https://sketchfab.com/3d-models/footman-old-9d1fc1a7ce8d49a598b65603643e61cf) by Northcliffe (https://sketchfab.com/Samson.Northcliffe.Rydenko) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

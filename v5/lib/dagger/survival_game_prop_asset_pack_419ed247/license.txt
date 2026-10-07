@@ -1,0 +1,11 @@
+Model Information:
+* title:	Survival Game Prop/Asset Pack
+* source:	https://sketchfab.com/3d-models/survival-game-propasset-pack-419ed247481e447095305cd99e8f4a63
+* author:	cha (https://sketchfab.com/charlieeoshea)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Survival Game Prop/Asset Pack" (https://sketchfab.com/3d-models/survival-game-propasset-pack-419ed247481e447095305cd99e8f4a63) by cha (https://sketchfab.com/charlieeoshea) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

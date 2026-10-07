@@ -1,0 +1,11 @@
+Model Information:
+* title:	The Fish Particle
+* source:	https://sketchfab.com/3d-models/the-fish-particle-eb214794846949a5a0b1af75fd649aa2
+* author:	Loïc Norgeot (https://sketchfab.com/norgeotloic)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "The Fish Particle" (https://sketchfab.com/3d-models/the-fish-particle-eb214794846949a5a0b1af75fd649aa2) by Loïc Norgeot (https://sketchfab.com/norgeotloic) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

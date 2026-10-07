@@ -1,0 +1,11 @@
+Model Information:
+* title:	Box Aquarium
+* source:	https://sketchfab.com/3d-models/box-aquarium-3e2c1da5770546c89d2a934eb4ef83b9
+* author:	LowPolyBoy (https://sketchfab.com/lowPolyBoy)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Box Aquarium" (https://sketchfab.com/3d-models/box-aquarium-3e2c1da5770546c89d2a934eb4ef83b9) by LowPolyBoy (https://sketchfab.com/lowPolyBoy) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
