@@ -1,0 +1,11 @@
+Model Information:
+* title:	Farmer Dog
+* source:	https://sketchfab.com/3d-models/farmer-dog-d7bfa8ca8bdd4df08562099ea605d1f2
+* author:	AKM (https://sketchfab.com/AKM_Models)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Farmer Dog" (https://sketchfab.com/3d-models/farmer-dog-d7bfa8ca8bdd4df08562099ea605d1f2) by AKM (https://sketchfab.com/AKM_Models) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
