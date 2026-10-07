@@ -1,0 +1,11 @@
+Model Information:
+* title:	Demon Gladiator
+* source:	https://sketchfab.com/3d-models/demon-gladiator-19d26ace220a45448f058ae77dcd6c8b
+* author:	simonemaccari (https://sketchfab.com/simonemaccari)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Demon Gladiator" (https://sketchfab.com/3d-models/demon-gladiator-19d26ace220a45448f058ae77dcd6c8b) by simonemaccari (https://sketchfab.com/simonemaccari) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
