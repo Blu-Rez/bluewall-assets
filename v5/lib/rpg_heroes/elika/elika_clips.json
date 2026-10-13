@@ -1,6 +1,6 @@
 {
  "hero": "elika",
- "source": "Tripo Studio export (v1.0 biped rig, 78 joints): native idle/walk/run/jump; the other 18 clips = Elina's Tripo clips retargeted (world-space rotation delta, hip travel scaled by hip height, ground contact matched)",
+ "source": "Tripo Studio (v1.0 biped, 78 joints), built from the FRONT picture, 4K texture downscaled to 2048; native idle/walk/run/jump; the other 18 clips = Elina's Tripo clips retargeted (world-space rotation delta, hip travel scaled by hip height, ground contact matched). The model came out facing +Z natively and was turned to the common frame before retargeting; final facing +Z.",
  "facing": "+Z",
  "units": "model height 0.979 u, feet on y=0",
  "clips": [
