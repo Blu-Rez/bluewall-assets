@@ -1,6 +1,6 @@
 {
  "name": "Mobina (Blue Wall hero)",
- "source": "Tripo Studio (web), generated from Blue Wall concept art (front-view picture, 4K texture downscaled to 2K); game copy rebuilt by Claude (RP0A)",
+ "source": "Tripo Studio (web), generated from Blue Wall concept art. mobina_game.glb = built from the BACK picture (game / third-person-from-behind default; face is Tripo's guess). mobina_front_game.glb = built from the FRONT picture, 4K texture downscaled to 2K (real face, back is Tripo's guess; for portraits / close-ups). Both are game copies rebuilt by Claude (RP0A): 22 clips, +Z, feet on y=0.",
  "license": "owned by the game; made with the owner's paid Tripo account (owner to confirm plan terms)",
  "tripo_task": null
 }
