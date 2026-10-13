@@ -1,6 +1,6 @@
 {
  "hero": "elina",
- "source": "Tripo Studio export (v1.0 biped rig, 79 joints), 47 clips",
+ "source": "Tripo Studio (v1.0 biped, 78 joints), built from the FRONT picture, 4K texture downscaled to 2048; native idle/walk/run/jump; the other 18 clips = Elina's own Tripo clips from her earlier back-view model (library file elina_all_clips_library.glb, 47 clips, belongs to that older rig) retargeted onto this rig (world-space rotation delta, hip travel scaled by hip height, ground contact matched). The model came out facing +Z natively and was turned to the common frame before retargeting; final facing +Z. Outfit differs from the older back-view Elina (history: commit 996e199).",
  "facing": "+Z",
  "units": "model height 0.979 u, feet on y=0",
  "clips": [
@@ -10,7 +10,8 @@
    "dur_s": 15.33,
    "loop": true,
    "root": "in place (drift removed)",
-   "note": "loop, 15.3 s breathing/weight shift"
+   "note": "loop, 15.3 s breathing/weight shift",
+   "origin": "native Tripo"
   },
   {
    "name": "walk",
@@ -18,7 +19,8 @@
    "dur_s": 2.33,
    "loop": true,
    "root": "in place (drift removed)",
-   "note": "loop; native speed 0.68 height/s (0.66 u/s; a 1.7 m hero = 1.2 m/s)"
+   "note": "loop; native speed 0.68 height/s (0.66 u/s; a 1.7 m hero = 1.2 m/s)",
+   "origin": "native Tripo"
   },
   {
    "name": "run",
@@ -26,7 +28,8 @@
    "dur_s": 1.25,
    "loop": true,
    "root": "in place (drift removed)",
-   "note": "loop (end blended into start 0.4 s); native speed 2.46 u/s (a 1.7 m hero = 4.3 m/s)"
+   "note": "loop (end blended into start 0.4 s); native speed 2.46 u/s (a 1.7 m hero = 4.3 m/s)",
+   "origin": "native Tripo"
   },
   {
    "name": "jump",
@@ -34,7 +37,8 @@
    "dur_s": 0.65,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "one hop cut from the 4-hop Tripo clip: squat → air → land"
+   "note": "one hop cut from the 4-hop Tripo clip: squat → air → land",
+   "origin": "native Tripo"
   },
   {
    "name": "fall",
@@ -42,7 +46,8 @@
    "dur_s": 0.5,
    "loop": true,
    "root": "in place (XZ locked)",
-   "note": "air pose loop (hip height rebased to standing; the game sets the height)"
+   "note": "air pose loop (hip height rebased to standing; the game sets the height)",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "land",
@@ -50,7 +55,8 @@
    "dur_s": 1.15,
    "loop": false,
    "root": "in place (XZ locked)",
-   "note": "touch-down → deep crouch → stand"
+   "note": "touch-down → deep crouch → stand",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "dodge",
@@ -58,7 +64,8 @@
    "dur_s": 1.7,
    "loop": false,
    "root": "in place (XZ locked)",
-   "note": "dive roll cut from Tripo 'dive' (wind-up removed); play at timeScale ~2 for a 0.85 s dodge"
+   "note": "dive roll cut from Tripo 'dive' (wind-up removed); play at timeScale ~2 for a 0.85 s dodge",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "hit",
@@ -66,7 +73,8 @@
    "dur_s": 1.29,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "flinch, 1.3 s"
+   "note": "flinch, 1.3 s",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "death",
@@ -74,7 +82,8 @@
    "dur_s": 4.0,
    "loop": false,
    "root": "as authored (body moves)",
-   "note": "shot → stagger → kneel → fall → lies; clamp on the last frame; root keeps its travel"
+   "note": "shot → stagger → kneel → fall → lies; clamp on the last frame; root keeps its travel",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "knockdown",
@@ -82,7 +91,8 @@
    "dur_s": 3.0,
    "loop": false,
    "root": "as authored (body moves)",
-   "note": "stumble + fall + lies (Tripo 'fall'); root keeps its travel"
+   "note": "stumble + fall + lies (Tripo 'fall'); root keeps its travel",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "punch_a",
@@ -90,7 +100,8 @@
    "dur_s": 2.21,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "punch combo (Tripo box_01)"
+   "note": "punch combo (Tripo box_01)",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "punch_b",
@@ -98,7 +109,8 @@
    "dur_s": 2.79,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "punch combo (Tripo box_02)"
+   "note": "punch combo (Tripo box_02)",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "kick_a",
@@ -106,7 +118,8 @@
    "dur_s": 2.5,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "spinning kick (Tripo front_kick_01, body yaws ~190°)"
+   "note": "spinning kick (Tripo front_kick_01, body yaws ~190°)",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "kick_b",
@@ -114,7 +127,8 @@
    "dur_s": 1.38,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "back kick (Tripo front_kick_02)"
+   "note": "back kick (Tripo front_kick_02)",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "cast",
@@ -122,7 +136,8 @@
    "dur_s": 5.38,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "arm thrust forward, spell (Tripo cast_a_spell)"
+   "note": "arm thrust forward, spell (Tripo cast_a_spell)",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "aim",
@@ -130,7 +145,8 @@
    "dur_s": 1.5,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "arm out, aiming/pointing (Tripo fire); holds"
+   "note": "arm out, aiming/pointing (Tripo fire); holds",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "talk",
@@ -138,7 +154,8 @@
    "dur_s": 4.0,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "nod/agree 4 s"
+   "note": "nod/agree 4 s",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "bow",
@@ -146,7 +163,8 @@
    "dur_s": 6.0,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "bow 6 s"
+   "note": "bow 6 s",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "cry",
@@ -154,7 +172,8 @@
    "dur_s": 7.88,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "cry 7.9 s"
+   "note": "cry 7.9 s",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "look_around",
@@ -162,7 +181,8 @@
    "dur_s": 15.58,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "15.6 s"
+   "note": "15.6 s",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "cheer",
@@ -170,7 +190,8 @@
    "dur_s": 5.0,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "first 5 s of Tripo cheer"
+   "note": "first 5 s of Tripo cheer",
+   "origin": "retargeted from Elina"
   },
   {
    "name": "angry",
@@ -178,7 +199,8 @@
    "dur_s": 3.58,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "arms crossed + stomp (Tripo angry_03)"
+   "note": "arms crossed + stomp (Tripo angry_03)",
+   "origin": "retargeted from Elina"
   }
  ]
 }
