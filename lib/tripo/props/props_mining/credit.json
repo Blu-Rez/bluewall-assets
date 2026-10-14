@@ -1,0 +1,57 @@
+{
+ "name": "props_mining",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 15364,
+ "kb": 318,
+ "objects": [
+  {
+   "name": "winch",
+   "tris": 3500,
+   "size_rel": [
+    0.211,
+    0.273,
+    0.23
+   ]
+  },
+  {
+   "name": "sack",
+   "tris": 2536,
+   "size_rel": [
+    0.113,
+    0.133,
+    0.124
+   ]
+  },
+  {
+   "name": "sacks_pair",
+   "tris": 3500,
+   "size_rel": [
+    0.135,
+    0.158,
+    0.229
+   ]
+  },
+  {
+   "name": "ingots",
+   "tris": 2328,
+   "size_rel": [
+    0.215,
+    0.11,
+    0.2
+   ]
+  },
+  {
+   "name": "cart",
+   "tris": 3500,
+   "size_rel": [
+    0.254,
+    0.237,
+    0.292
+   ]
+  }
+ ],
+ "note": "second generation of the same picture (h04) not used",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

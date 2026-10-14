@@ -1,0 +1,38 @@
+{
+ "name": "oil_tanks_pack",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 7488,
+ "kb": 217,
+ "objects": [
+  {
+   "name": "tank_wood",
+   "tris": 2500,
+   "size_rel": [
+    0.284,
+    0.474,
+    0.251
+   ]
+  },
+  {
+   "name": "tank_copper",
+   "tris": 2488,
+   "size_rel": [
+    0.296,
+    0.434,
+    0.266
+   ]
+  },
+  {
+   "name": "tank_brick",
+   "tris": 2500,
+   "size_rel": [
+    0.343,
+    0.458,
+    0.323
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

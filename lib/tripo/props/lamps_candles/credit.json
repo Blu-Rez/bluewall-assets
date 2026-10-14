@@ -1,0 +1,67 @@
+{
+ "name": "lamps_candles",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#332",
+ "tris": 12762,
+ "kb": 263,
+ "objects": [
+  {
+   "name": "candle_lantern_box",
+   "tris": 2500,
+   "size_rel": [
+    0.149,
+    0.301,
+    0.131
+   ]
+  },
+  {
+   "name": "candlestick_iron",
+   "tris": 1364,
+   "size_rel": [
+    0.113,
+    0.381,
+    0.108
+   ]
+  },
+  {
+   "name": "chandelier_crown",
+   "tris": 2498,
+   "size_rel": [
+    0.313,
+    0.314,
+    0.242
+   ]
+  },
+  {
+   "name": "candelabra_floor",
+   "tris": 2500,
+   "size_rel": [
+    0.101,
+    0.418,
+    0.151
+   ]
+  },
+  {
+   "name": "candelabra_table",
+   "tris": 2064,
+   "size_rel": [
+    0.098,
+    0.271,
+    0.181
+   ]
+  },
+  {
+   "name": "candle_pillar",
+   "tris": 1836,
+   "size_rel": [
+    0.091,
+    0.295,
+    0.092
+   ]
+  }
+ ],
+ "note": "chandelier_crown includes its wall hook arm",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

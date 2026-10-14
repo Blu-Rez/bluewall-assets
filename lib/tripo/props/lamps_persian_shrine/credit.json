@@ -1,0 +1,66 @@
+{
+ "name": "lamps_persian_shrine",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#336",
+ "tris": 14539,
+ "kb": 332,
+ "objects": [
+  {
+   "name": "lamp_dome_brass",
+   "tris": 2482,
+   "size_rel": [
+    0.171,
+    0.328,
+    0.14
+   ]
+  },
+  {
+   "name": "lamp_golden_temple",
+   "tris": 2500,
+   "size_rel": [
+    0.11,
+    0.441,
+    0.124
+   ]
+  },
+  {
+   "name": "atashdan",
+   "tris": 2500,
+   "size_rel": [
+    0.172,
+    0.342,
+    0.231
+   ]
+  },
+  {
+   "name": "lamp_tile_holder",
+   "tris": 2499,
+   "size_rel": [
+    0.109,
+    0.421,
+    0.119
+   ]
+  },
+  {
+   "name": "lamp_mosque_hanging",
+   "tris": 2126,
+   "size_rel": [
+    0.171,
+    0.369,
+    0.137
+   ]
+  },
+  {
+   "name": "lamp_star_bronze",
+   "tris": 2432,
+   "size_rel": [
+    0.16,
+    0.265,
+    0.171
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

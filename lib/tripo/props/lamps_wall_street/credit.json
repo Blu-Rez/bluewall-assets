@@ -1,0 +1,66 @@
+{
+ "name": "lamps_wall_street",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#334",
+ "tris": 14695,
+ "kb": 323,
+ "objects": [
+  {
+   "name": "lamp_pedestal_small",
+   "tris": 2499,
+   "size_rel": [
+    0.092,
+    0.362,
+    0.091
+   ]
+  },
+  {
+   "name": "lamp_gate_hanging",
+   "tris": 2500,
+   "size_rel": [
+    0.158,
+    0.424,
+    0.194
+   ]
+  },
+  {
+   "name": "lamp_stone_pillar",
+   "tris": 2500,
+   "size_rel": [
+    0.137,
+    0.438,
+    0.134
+   ]
+  },
+  {
+   "name": "lamp_post",
+   "tris": 2196,
+   "size_rel": [
+    0.091,
+    0.528,
+    0.089
+   ]
+  },
+  {
+   "name": "lamp_street_arm",
+   "tris": 2500,
+   "size_rel": [
+    0.103,
+    0.483,
+    0.175
+   ]
+  },
+  {
+   "name": "lamp_wall_bracket",
+   "tris": 2500,
+   "size_rel": [
+    0.106,
+    0.364,
+    0.165
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

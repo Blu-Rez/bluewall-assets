@@ -1,0 +1,47 @@
+{
+ "name": "props_camp",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 11995,
+ "kb": 276,
+ "objects": [
+  {
+   "name": "tent",
+   "tris": 2998,
+   "size_rel": [
+    0.466,
+    0.335,
+    0.3
+   ]
+  },
+  {
+   "name": "dummy",
+   "tris": 3000,
+   "size_rel": [
+    0.157,
+    0.422,
+    0.24
+   ]
+  },
+  {
+   "name": "cooking_pot",
+   "tris": 3000,
+   "size_rel": [
+    0.273,
+    0.418,
+    0.266
+   ]
+  },
+  {
+   "name": "anvil",
+   "tris": 2997,
+   "size_rel": [
+    0.197,
+    0.255,
+    0.172
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

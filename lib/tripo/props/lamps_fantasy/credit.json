@@ -1,0 +1,66 @@
+{
+ "name": "lamps_fantasy",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#337",
+ "tris": 14378,
+ "kb": 318,
+ "objects": [
+  {
+   "name": "lamp_glass_jar",
+   "tris": 2497,
+   "size_rel": [
+    0.141,
+    0.409,
+    0.161
+   ]
+  },
+  {
+   "name": "lamp_rune_stone",
+   "tris": 2499,
+   "size_rel": [
+    0.144,
+    0.44,
+    0.143
+   ]
+  },
+  {
+   "name": "lamp_gem_ruby",
+   "tris": 2500,
+   "size_rel": [
+    0.156,
+    0.454,
+    0.152
+   ]
+  },
+  {
+   "name": "lamp_ice_crystal",
+   "tris": 1964,
+   "size_rel": [
+    0.093,
+    0.47,
+    0.114
+   ]
+  },
+  {
+   "name": "lamp_skull",
+   "tris": 2500,
+   "size_rel": [
+    0.191,
+    0.488,
+    0.185
+   ]
+  },
+  {
+   "name": "lamp_staff_crystal",
+   "tris": 2418,
+   "size_rel": [
+    0.106,
+    0.576,
+    0.107
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

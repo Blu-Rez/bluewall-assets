@@ -1,0 +1,66 @@
+{
+ "name": "lamps_hand",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#330",
+ "tris": 14108,
+ "kb": 339,
+ "objects": [
+  {
+   "name": "lamp_hand_storm",
+   "tris": 2479,
+   "size_rel": [
+    0.125,
+    0.367,
+    0.144
+   ]
+  },
+  {
+   "name": "lamp_hand_horn",
+   "tris": 2414,
+   "size_rel": [
+    0.149,
+    0.354,
+    0.142
+   ]
+  },
+  {
+   "name": "lamp_hand_oil",
+   "tris": 1784,
+   "size_rel": [
+    0.109,
+    0.32,
+    0.113
+   ]
+  },
+  {
+   "name": "lamp_hand_cloth",
+   "tris": 2434,
+   "size_rel": [
+    0.197,
+    0.319,
+    0.196
+   ]
+  },
+  {
+   "name": "lamp_hand_cage",
+   "tris": 2500,
+   "size_rel": [
+    0.148,
+    0.345,
+    0.148
+   ]
+  },
+  {
+   "name": "lamp_hand_persian",
+   "tris": 2497,
+   "size_rel": [
+    0.133,
+    0.365,
+    0.116
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

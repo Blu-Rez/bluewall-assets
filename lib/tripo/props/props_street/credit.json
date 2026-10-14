@@ -1,0 +1,66 @@
+{
+ "name": "props_street",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 11208,
+ "kb": 284,
+ "objects": [
+  {
+   "name": "lantern",
+   "tris": 1564,
+   "size_rel": [
+    0.074,
+    0.315,
+    0.143
+   ]
+  },
+  {
+   "name": "trough",
+   "tris": 2500,
+   "size_rel": [
+    0.355,
+    0.204,
+    0.258
+   ]
+  },
+  {
+   "name": "flag",
+   "tris": 1254,
+   "size_rel": [
+    0.25,
+    0.353,
+    0.077
+   ]
+  },
+  {
+   "name": "table_stool",
+   "tris": 2500,
+   "size_rel": [
+    0.334,
+    0.15,
+    0.282
+   ]
+  },
+  {
+   "name": "signpost",
+   "tris": 1424,
+   "size_rel": [
+    0.166,
+    0.329,
+    0.108
+   ]
+  },
+  {
+   "name": "bench",
+   "tris": 1966,
+   "size_rel": [
+    0.337,
+    0.189,
+    0.207
+   ]
+  }
+ ],
+ "note": "trough has water painted in the texture",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

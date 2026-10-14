@@ -1,0 +1,65 @@
+{
+ "name": "props_town",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 15702,
+ "kb": 329,
+ "objects": [
+  {
+   "name": "sacks",
+   "tris": 3000,
+   "size_rel": [
+    0.316,
+    0.209,
+    0.275
+   ]
+  },
+  {
+   "name": "chest",
+   "tris": 2786,
+   "size_rel": [
+    0.187,
+    0.218,
+    0.229
+   ]
+  },
+  {
+   "name": "crates",
+   "tris": 2920,
+   "size_rel": [
+    0.307,
+    0.219,
+    0.297
+   ]
+  },
+  {
+   "name": "wagon",
+   "tris": 3000,
+   "size_rel": [
+    0.319,
+    0.189,
+    0.245
+   ]
+  },
+  {
+   "name": "handcart",
+   "tris": 1850,
+   "size_rel": [
+    0.287,
+    0.175,
+    0.451
+   ]
+  },
+  {
+   "name": "barrels",
+   "tris": 2146,
+   "size_rel": [
+    0.262,
+    0.226,
+    0.275
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

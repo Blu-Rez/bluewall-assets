@@ -1,0 +1,47 @@
+{
+ "name": "oil_pipes_pack",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 7997,
+ "kb": 224,
+ "objects": [
+  {
+   "name": "pump_station",
+   "tris": 1999,
+   "size_rel": [
+    0.186,
+    0.26,
+    0.268
+   ]
+  },
+  {
+   "name": "valve_t",
+   "tris": 2000,
+   "size_rel": [
+    0.154,
+    0.215,
+    0.221
+   ]
+  },
+  {
+   "name": "elbow",
+   "tris": 1998,
+   "size_rel": [
+    0.117,
+    0.21,
+    0.145
+   ]
+  },
+  {
+   "name": "straight",
+   "tris": 2000,
+   "size_rel": [
+    0.152,
+    0.132,
+    0.248
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

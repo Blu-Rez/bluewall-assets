@@ -1,0 +1,47 @@
+{
+ "name": "construction_pack",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 13829,
+ "kb": 332,
+ "objects": [
+  {
+   "name": "materials_pile",
+   "tris": 3358,
+   "size_rel": [
+    0.244,
+    0.143,
+    0.199
+   ]
+  },
+  {
+   "name": "scaffold",
+   "tris": 3473,
+   "size_rel": [
+    0.153,
+    0.259,
+    0.155
+   ]
+  },
+  {
+   "name": "wall_half",
+   "tris": 3499,
+   "size_rel": [
+    0.187,
+    0.257,
+    0.252
+   ]
+  },
+  {
+   "name": "foundation_scaffold",
+   "tris": 3499,
+   "size_rel": [
+    0.212,
+    0.238,
+    0.221
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

@@ -1,0 +1,57 @@
+{
+ "name": "lamps_tower_gate",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#335",
+ "tris": 12286,
+ "kb": 257,
+ "objects": [
+  {
+   "name": "chandelier_hall",
+   "tris": 2500,
+   "size_rel": [
+    0.214,
+    0.292,
+    0.209
+   ]
+  },
+  {
+   "name": "beacon_cauldron",
+   "tris": 2500,
+   "size_rel": [
+    0.185,
+    0.262,
+    0.192
+   ]
+  },
+  {
+   "name": "lantern_watchtower",
+   "tris": 2500,
+   "size_rel": [
+    0.185,
+    0.348,
+    0.171
+   ]
+  },
+  {
+   "name": "lantern_signal",
+   "tris": 2492,
+   "size_rel": [
+    0.214,
+    0.355,
+    0.194
+   ]
+  },
+  {
+   "name": "beacon_basket_pole",
+   "tris": 2294,
+   "size_rel": [
+    0.169,
+    0.402,
+    0.169
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

@@ -1,0 +1,47 @@
+{
+ "name": "market_stalls",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 11986,
+ "kb": 303,
+ "objects": [
+  {
+   "name": "stall_spice",
+   "tris": 2996,
+   "size_rel": [
+    0.226,
+    0.257,
+    0.231
+   ]
+  },
+  {
+   "name": "stall_pottery",
+   "tris": 2997,
+   "size_rel": [
+    0.206,
+    0.261,
+    0.197
+   ]
+  },
+  {
+   "name": "stall_cloth",
+   "tris": 2999,
+   "size_rel": [
+    0.184,
+    0.257,
+    0.237
+   ]
+  },
+  {
+   "name": "stall_produce",
+   "tris": 2994,
+   "size_rel": [
+    0.206,
+    0.253,
+    0.245
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}
