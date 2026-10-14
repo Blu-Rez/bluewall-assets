@@ -8,11 +8,11 @@
 // Nothing is saved anywhere; leaving hero mode puts every knob back.  No new shader programs, no new lights, no new materials.
 export const STEPS = [
   // lvl 0 = the diet itself (always on in hero mode); 1..4 = what the governor adds, in the order the owner's brief gives
-  { dpr: 0.85, k: 0.25, fog: 1.0, upd: 2, sh: 1, box: 56, hideR: 90, hideS: 70, hideH: 160, nobloom: false, label: 'diet' },
-  { dpr: 0.75, k: 0.25, fog: 1.0, upd: 2, sh: 1, box: 56, hideR: 90, hideS: 70, hideH: 160, nobloom: false, norefl: true, label: 'pixel ratio + mirror' },
-  { dpr: 0.75, k: 0.25, fog: 1.0, upd: 2, sh: 5, box: 34, hideR: 90, hideS: 70, hideH: 160, nobloom: true, norefl: true, label: 'shadows' },
-  { dpr: 0.75, k: 0.16, fog: 1.7, upd: 2, sh: 5, box: 34, hideR: 55, hideS: 45, hideH: 110, nobloom: true, norefl: true, label: 'draw radius' },
-  { dpr: 0.75, k: 0.16, fog: 1.7, upd: 4, sh: 1e6, box: 34, hideR: 55, hideS: 25, hideH: 110, nobloom: true, norefl: true, label: 'crowd freeze' },
+  { dpr: 0.85, k: 0.25, fog: 1.0, upd: 2, sh: 1, box: 56, hideR: 90, hideS: 70, hideH: 160, cullR: 150, nobloom: false, label: 'diet' },
+  { dpr: 0.75, k: 0.25, fog: 1.0, upd: 2, sh: 1, box: 56, hideR: 90, hideS: 70, hideH: 160, cullR: 150, nobloom: false, norefl: true, label: 'pixel ratio + mirror' },
+  { dpr: 0.75, k: 0.25, fog: 1.0, upd: 2, sh: 5, box: 34, hideR: 90, hideS: 70, hideH: 160, cullR: 125, nobloom: true, norefl: true, label: 'shadows' },
+  { dpr: 0.75, k: 0.16, fog: 1.7, upd: 2, sh: 5, box: 34, hideR: 55, hideS: 45, hideH: 110, cullR: 95, nobloom: true, norefl: true, label: 'draw radius' },
+  { dpr: 0.75, k: 0.16, fog: 1.7, upd: 4, sh: 1e6, box: 34, hideR: 55, hideS: 25, hideH: 110, cullR: 95, nobloom: true, norefl: true, label: 'crowd freeze' },
 ];
 export const GOV_CFG = { down_ms: 1000 / 30, down_win: 2, up_ms: 1000 / 50, up_win: 8, up_hold_ms: 8000, down_hold_ms: 2000, relock_ms: 20000, lock_ms: 60000, max: STEPS.length - 1 };
 
@@ -59,7 +59,7 @@ export function createDiet(H, S) {
   function collect() {
     st.cand.inst.length = 0; st.cand.skin.length = 0; st.cand.heavy.length = 0;
     scene.traverse((o) => {
-      if (o.userData.rpHero || o.userData.rpKeep) return;
+      if (o.userData.rpHero || o.userData.rpKeep || o.userData.rpCull) return;                      // (RP1C: a pack cull.js has taken over is its business)
       if (o.isInstancedMesh && o.count > 0) {
         if (o.userData.a || (o.instanceMatrix.usage === T.DynamicDrawUsage && !STRUCT.test(pathOf(o)))) st.cand.inst.push(o);
         else if (o.count <= 400 && trisOf(o) >= HEAVY && !STRUCT.test(pathOf(o))) st.cand.heavy.push(o);        // a far STATIC pack that is heavy on its own (the attacker camp: 29 x 8.9k triangles, 300 m from the gate)
@@ -126,5 +126,5 @@ export function createDiet(H, S) {
     if (d) { if (d > 0) st.stepsDown++; else st.stepsUp++; apply(gov.lvl); }
   }
   const info = () => ({ lvl: st.lvl, label: STEPS[st.lvl].label, fps: Math.round(gov.fps), hid: st.nHid, hidS: st.nHidS, down: st.stepsDown, up: st.stepsUp });
-  return { enter, exit, tick, apply, info, gov, STEPS, collect, pass, st };
+  return { enter, exit, tick, apply, info, gov, STEPS, STRUCT, collect, pass, st };
 }
