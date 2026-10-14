@@ -7,6 +7,13 @@ p44 (D1+T1+LD1b+RP1) و p45 (= p44 + P1 محل‌های تولید و آسیاب
 ## ترتیب کارها
 ترتیب کامل همه‌ی چت‌ها و بسته‌ها: **`claude/ORDER.md`** (تصمیم مادر، ۱۴ اکتبر). TR2 الان در جریانه؛ مدل ارتش موازی؛ چت ارتش بعد از TR2-S3 + قبول دسته‌ی ۱ مدل ارتش؛ بعد جنگ، اقتصاد/مردم؛ RPG موازی از TR2-S5؛ آخر QA/انتشار.
 
+## TR2 — حالت (۱۴ اکتبر ۱۵:۳۵)
+S0 رسید و از گیت (`inbox/TR2_S0`) خوندم: فقط سند (نقشه‌ی مدل‌ها، کم‌مونده‌ها، baseline، شیت انتخاب)، کد نداره، پس بسته‌ای نیست. Baseline: 203 programs، 506 draw call و 3.46M مثلث در نمای بالا (نرم‌افزاری، نه گوشی)، noRoute 667. طراحی: قطعات تخریب‌پذیر باید با `aB` داخل Batcher/`bakePieces` بشن، نه InstancedMesh. پیشرفت TR2 ≈ 8٪. بعدی: S1b (جهت/مقیاس/اسلیم)، بعد S2 (tiers.js + لودر + متریال مشترک) → اولین پچ برای p46. جواب‌های برگه‌ی S0: پیش‌فرض‌ها + ۷: ۱۳ (کیپ سنگی ۲، گنبد فیروزه‌ای). کم‌مونده‌ها: `claude/TR2_gaps.md` (با ترتیب خرید) برای TR1.
+
+
+## TR2 — حالت (۱۴ اکتبر ۱۸:۲۵) — S2 ادغام شد
+S1b (جهت/اسلیم ۱۱ مدل + ابزار slim_uv درست‌شده) و S2 (`tiers.js`: سقف لول 30 فعلاً/50 وقتی سرور `max_level` 50 بده، ۹ پوسته؛ `tr2lib.js`: لودر + متریال مشترک + bake سازگار با destruct + لود تنبل پوسته‌ها؛ `web/assets/tr2/swap.json`) رسید و با گیت کامل پاس شد: `GATE_W: ALL OK`, noRoute 667، تست جدید `TR2 TIERS OK` (خطش تو gate_w.sh اضافه شد). تو بازی چیزی عوض نمی‌شه (cap 30 = دقیقاً p45). **kit = p45 + S2** (نصب نشده؛ تو بسته‌ی بعدی p46 می‌ره، وینگلس الان نصب نمی‌کنه). تصمیم: تکسچر 512 برای قلعه/خونه/ساختمون/تولیدی/دفاع/تله/پل/آدم/حیوون، 1K فقط کیپ + تالار شهر + بازار، 256 برای طبیعت/چراغ/پراپ (ابزار `workers/tools/tr2_retex.mjs`؛ دلیل: حافظه‌ی GPU، 1K همه‌ی خونه‌ها ≈ 370 MB). ۱۱ مدل gaps1 تو `lib-tripo` (237 مدل). بعدی: S3 (قلعه)، با `TR2_SPLIT.md` برای شکستن S3/S4/S5/S6 به چند چت. سرور لول 50 (E1 تا 50 + `progress.py`) هنوز نیست؛ بعد از S3/S4 و جواب سؤال‌های E1.
+
 ## Git state
 `kit` = p44 tree + `workers/` (GIT_FLOW, setup_kit.sh, push_result.sh, mother_pull.sh, dev tests, docs, tools) · `lib-tripo` = 226 GLBs + `tools/` · `pkg/p44` · `inbox/_selftest` (leftover; owner may delete in GitHub UI) · `code-p38` (old; delete once old-kit workers are done).
 
@@ -29,3 +36,10 @@ p44 (D1+T1+LD1b+RP1) و p45 (= p44 + P1 محل‌های تولید و آسیاب
 
 ## Not proven (p44)
 Nothing measured on a phone; hero touch controls never touched by a finger; crown icon not re-shot inside the full game; hero-mode programs on the home map 168 (RP1 report). My own run (`p39_progs.py 30`, Q=high, lv 30, p44 tree, gate off) = 203 programs; not compared against a base run (RP1's own gate-off run at Q=low: 166 = 166). Production lots/mills (P1): programs and draw calls not measured by me; its worker's frames are in photos_P1.
+
+## حالت (۱۴ اکتبر ۲۰:۴۰) — RP1B ادغام شد، p46 ساخته شد
+- kit = p45 + TR2-S2 + RP1B (گیت `GATE_W: ALL OK`، noRoute 667؛ `rp1b_test` → `RP1B OK`، خارج از gate_w چون ۱۰ دقیقه طول می‌کشه). سقف تغییر `main.js` در `t1_test` از ۴۰ به ۶۰ خط رفت (۳ هوک RP1B).
+- **p46** (S2 + RP1B، ۲۲ فایل، ۱٫۲ مگ) روی `pkg/p46` هش `c182bdb2…494d`؛ منتظر نصب مالک و بعد `mkpkg.sh --commit p46`.
+- فریم هدف (≤150 call / ≤400k مثلث) نرسید ← **RP1C** (cull.js: تکه‌تکه‌کردن InstancedMesh، سایه‌ی کوچک، ادغام ساختمان‌های ثابت — فقط حالت قهرمان، بدون دست‌زدن به فایل‌های دنیا) + گوی/آیکون سر هر در.
+- مالک: «UI تخمی» ← **UI1** (ظاهر برگه‌ها). «خواهر باید بپره/بشینه/بجنگه» ← **RP0B** (قهرمان‌ها ۲۲ کلیپ دارن؛ نشستن/شمشیر/شنا/بالا رفتن/برداشتن نیست).
+- مالک پرسید چرا خونه‌ها و مپ جدید تو بازی نیست: S2 فقط لودره؛ مدل‌ها با S3 (قلعه) و S4 (شهر+مپ) میان. از چت TR2 `TR2_SPLIT.md` خواسته شد تا S4/S6 موازی بشن. RP3 (زیرین) و RP4 (مبارزه) پرامپتشون آماده؛ مالک باید چت‌ها رو باز کنه.
