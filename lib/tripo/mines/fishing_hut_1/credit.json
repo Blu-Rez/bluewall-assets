@@ -1,0 +1,10 @@
+{
+ "name": "fishing_hut_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (fishing)",
+ "tris": 9201,
+ "kb": 325,
+ "note": "hut on piles, 9.2k tris (above 8k)",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

@@ -1,0 +1,10 @@
+{
+ "name": "lumber_mill_2",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (batch F building)",
+ "tris": 6410,
+ "kb": 275,
+ "note": "open plank shed with saw bench (thin posts)",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

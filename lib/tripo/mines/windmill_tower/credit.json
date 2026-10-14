@@ -1,0 +1,9 @@
+{
+ "name": "windmill_tower",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "windmill2.glb (tower part; sails separate)",
+ "tris": 3999,
+ "kb": 783,
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

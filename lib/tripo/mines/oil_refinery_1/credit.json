@@ -1,0 +1,10 @@
+{
+ "name": "oil_refinery_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 6995,
+ "kb": 257,
+ "note": "alembic distillery hall",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

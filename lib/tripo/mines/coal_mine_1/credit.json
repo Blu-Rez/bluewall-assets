@@ -1,0 +1,10 @@
+{
+ "name": "coal_mine_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 5991,
+ "kb": 243,
+ "note": "open-pit coal mine",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

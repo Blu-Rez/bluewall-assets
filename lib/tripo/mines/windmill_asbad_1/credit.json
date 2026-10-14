@@ -1,0 +1,10 @@
+{
+ "name": "windmill_asbad_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "windmill.glb",
+ "tris": 4954,
+ "kb": 201,
+ "note": "within budget (4954 vs 8000): Persian asbad windmill: long row of mudbrick chambers with tall slits, reed sails, buttresses; slimmed from 17356 tris with UV-aware simplify",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

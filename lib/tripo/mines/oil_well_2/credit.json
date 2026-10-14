@@ -1,0 +1,10 @@
+{
+ "name": "oil_well_2",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 6000,
+ "kb": 235,
+ "note": "oil field with channel and basin",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

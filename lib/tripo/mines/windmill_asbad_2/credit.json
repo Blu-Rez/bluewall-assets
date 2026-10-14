@@ -1,0 +1,10 @@
+{
+ "name": "windmill_asbad_2",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "windmill2.glb (alternative design)",
+ "tris": 4988,
+ "kb": 189,
+ "note": "Persian wind tower style",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

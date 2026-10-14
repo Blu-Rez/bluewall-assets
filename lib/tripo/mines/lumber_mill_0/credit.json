@@ -1,0 +1,10 @@
+{
+ "name": "lumber_mill_0",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (batch F building)",
+ "tris": 6623,
+ "kb": 266,
+ "note": "water-wheel sawmill (alt generation of the same picture: zip file \"wooden sawmill (1)\")",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

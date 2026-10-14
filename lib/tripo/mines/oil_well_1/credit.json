@@ -1,0 +1,10 @@
+{
+ "name": "oil_well_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 4988,
+ "kb": 199,
+ "note": "steampunk pump jack",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

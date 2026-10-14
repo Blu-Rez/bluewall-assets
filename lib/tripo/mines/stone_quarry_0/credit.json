@@ -1,0 +1,10 @@
+{
+ "name": "stone_quarry_0",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (batch F building)",
+ "tris": 7490,
+ "kb": 265,
+ "note": "stone pit with crane; lumpy source, 7.5k tris",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

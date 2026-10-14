@@ -1,0 +1,9 @@
+{
+ "name": "iron_mine_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (batch F building)",
+ "tris": 5996,
+ "kb": 205,
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

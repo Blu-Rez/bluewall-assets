@@ -1,0 +1,10 @@
+{
+ "name": "coal_mine_0",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 5989,
+ "kb": 219,
+ "note": "tunnel mouth with carts",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

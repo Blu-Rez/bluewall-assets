@@ -1,0 +1,10 @@
+{
+ "name": "fishing_hut_2",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (fishing)",
+ "tris": 6960,
+ "kb": 273,
+ "note": "fish-drying house + jetty, 7k tris",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

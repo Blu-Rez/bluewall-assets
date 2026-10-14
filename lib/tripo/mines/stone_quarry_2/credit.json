@@ -1,0 +1,10 @@
+{
+ "name": "stone_quarry_2",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (batch F building)",
+ "tris": 5358,
+ "kb": 250,
+ "note": "marble quarry with gantry crane",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

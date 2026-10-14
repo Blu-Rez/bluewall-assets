@@ -1,0 +1,10 @@
+{
+ "name": "rice_paddy_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (rice paddy)",
+ "tris": 2982,
+ "kb": 173,
+ "note": "flooded paddy",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}
