@@ -1,0 +1,2773 @@
+{
+ "convention": "ry = degrees about +Y (three.js rotation.y, counter-clockwise from above) that brings the model FRONT to +Z; walls/gates: length axis Z becomes X. Packs: node pivots are base-centre, no yaw.",
+ "models": {
+  "animal_calf": {
+   "cat": "animals",
+   "tris": 5000,
+   "size": [
+    0.335,
+    0.727,
+    0.981
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_camel": {
+   "cat": "animals",
+   "tris": 6000,
+   "size": [
+    0.249,
+    0.721,
+    0.981
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_cow": {
+   "cat": "animals",
+   "tris": 5996,
+   "size": [
+    0.501,
+    0.583,
+    0.979
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_dog": {
+   "cat": "animals",
+   "tris": 4998,
+   "size": [
+    0.334,
+    0.677,
+    0.979
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_donkey": {
+   "cat": "animals",
+   "tris": 4998,
+   "size": [
+    0.252,
+    0.79,
+    0.979
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_horse_black": {
+   "cat": "animals",
+   "tris": 5000,
+   "size": [
+    0.204,
+    0.735,
+    0.976
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_horse_brown": {
+   "cat": "animals",
+   "tris": 4999,
+   "size": [
+    0.206,
+    0.728,
+    0.978
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_horse_white": {
+   "cat": "animals",
+   "tris": 5000,
+   "size": [
+    0.212,
+    0.74,
+    0.978
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_lamb": {
+   "cat": "animals",
+   "tris": 4000,
+   "size": [
+    0.381,
+    0.823,
+    0.982
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_pig": {
+   "cat": "animals",
+   "tris": 4500,
+   "size": [
+    0.358,
+    0.488,
+    0.98
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_sheep": {
+   "cat": "animals",
+   "tris": 5000,
+   "size": [
+    0.355,
+    0.687,
+    0.98
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_wolf": {
+   "cat": "animals",
+   "tris": 5000,
+   "size": [
+    0.28,
+    0.616,
+    0.979
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "birds": {
+   "cat": "animals",
+   "tris": 8997,
+   "size": [
+    0.707,
+    0.315,
+    0.357
+   ],
+   "seen": false,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "poultry_fish_pack": {
+   "cat": "animals",
+   "tris": 12512,
+   "size": [
+    0.94,
+    0.317,
+    0.35
+   ],
+   "seen": false,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "bridge_moat": {
+   "cat": "bridges",
+   "tris": 5989,
+   "size": [
+    0.856,
+    0.822,
+    0.982
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "drawbridge ramp on +X; passage along X; towers side by side along Z"
+  },
+  "bridge_stone_0": {
+   "cat": "bridges",
+   "tris": 5000,
+   "size": [
+    0.379,
+    0.339,
+    0.981
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "span along Z, symmetric"
+  },
+  "bridge_stone_1": {
+   "cat": "bridges",
+   "tris": 5000,
+   "size": [
+    0.331,
+    0.246,
+    0.978
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "span along Z, symmetric"
+  },
+  "water_gate": {
+   "cat": "bridges",
+   "tris": 5986,
+   "size": [
+    0.522,
+    0.841,
+    0.979
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "portcullis passage along X"
+  },
+  "castle_gate_diamond_black": {
+   "cat": "castle",
+   "tris": 5998,
+   "size": [
+    0.321,
+    0.592,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_diamond_blue": {
+   "cat": "castle",
+   "tris": 5993,
+   "size": [
+    0.337,
+    0.593,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_diamond_green": {
+   "cat": "castle",
+   "tris": 5999,
+   "size": [
+    0.34,
+    0.578,
+    0.981
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_diamond_ice": {
+   "cat": "castle",
+   "tris": 5995,
+   "size": [
+    0.358,
+    0.597,
+    0.981
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_diamond_red": {
+   "cat": "castle",
+   "tris": 5998,
+   "size": [
+    0.339,
+    0.592,
+    0.985
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_gold": {
+   "cat": "castle",
+   "tris": 5992,
+   "size": [
+    0.312,
+    0.583,
+    0.982
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_iron": {
+   "cat": "castle",
+   "tris": 5992,
+   "size": [
+    0.339,
+    0.578,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_stone": {
+   "cat": "castle",
+   "tris": 5996,
+   "size": [
+    0.337,
+    0.578,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_wood": {
+   "cat": "castle",
+   "tris": 6000,
+   "size": [
+    0.336,
+    0.595,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_keep_stone_1": {
+   "cat": "castle",
+   "tris": 18175,
+   "size": [
+    0.733,
+    0.772,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door/iwan on +X"
+  },
+  "castle_keep_stone_2": {
+   "cat": "castle",
+   "tris": 17946,
+   "size": [
+    0.813,
+    0.862,
+    0.981
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door/iwan on +X; D7 = keep_2 at all levels"
+  },
+  "castle_tower_medium_diamond_black": {
+   "cat": "castle",
+   "tris": 5000,
+   "size": [
+    0.553,
+    0.981,
+    0.555
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_diamond_blue": {
+   "cat": "castle",
+   "tris": 4999,
+   "size": [
+    0.564,
+    0.98,
+    0.568
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_diamond_green": {
+   "cat": "castle",
+   "tris": 4999,
+   "size": [
+    0.549,
+    0.981,
+    0.567
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_diamond_ice": {
+   "cat": "castle",
+   "tris": 4998,
+   "size": [
+    0.563,
+    0.98,
+    0.562
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_diamond_red": {
+   "cat": "castle",
+   "tris": 4998,
+   "size": [
+    0.552,
+    0.98,
+    0.553
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_gold": {
+   "cat": "castle",
+   "tris": 4999,
+   "size": [
+    0.555,
+    0.979,
+    0.563
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_iron": {
+   "cat": "castle",
+   "tris": 4967,
+   "size": [
+    0.568,
+    0.981,
+    0.576
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_stone": {
+   "cat": "castle",
+   "tris": 4998,
+   "size": [
+    0.567,
+    0.981,
+    0.568
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_wood": {
+   "cat": "castle",
+   "tris": 4996,
+   "size": [
+    0.575,
+    0.979,
+    0.581
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_diamond_black": {
+   "cat": "castle",
+   "tris": 3999,
+   "size": [
+    0.776,
+    0.978,
+    0.759
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_diamond_blue": {
+   "cat": "castle",
+   "tris": 4000,
+   "size": [
+    0.819,
+    0.979,
+    0.748
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_diamond_green": {
+   "cat": "castle",
+   "tris": 4000,
+   "size": [
+    0.779,
+    0.978,
+    0.744
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_diamond_ice": {
+   "cat": "castle",
+   "tris": 3998,
+   "size": [
+    0.775,
+    0.979,
+    0.742
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_diamond_red": {
+   "cat": "castle",
+   "tris": 3996,
+   "size": [
+    0.783,
+    0.978,
+    0.75
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_gold": {
+   "cat": "castle",
+   "tris": 3999,
+   "size": [
+    0.791,
+    0.978,
+    0.744
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_iron": {
+   "cat": "castle",
+   "tris": 3999,
+   "size": [
+    0.795,
+    0.977,
+    0.768
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_stone": {
+   "cat": "castle",
+   "tris": 3999,
+   "size": [
+    0.773,
+    0.978,
+    0.74
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_wood": {
+   "cat": "castle",
+   "tris": 4000,
+   "size": [
+    0.805,
+    0.98,
+    0.764
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_stone_1": {
+   "cat": "castle",
+   "tris": 5999,
+   "size": [
+    0.512,
+    0.983,
+    0.536
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "legacy (not in the 9 tiers): probably unused"
+  },
+  "castle_tower_stone_2": {
+   "cat": "castle",
+   "tris": 6000,
+   "size": [
+    0.493,
+    0.981,
+    0.527
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "legacy (not in the 9 tiers): probably unused"
+  },
+  "castle_tower_tall_diamond_black": {
+   "cat": "castle",
+   "tris": 6000,
+   "size": [
+    0.308,
+    0.981,
+    0.31
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_diamond_blue": {
+   "cat": "castle",
+   "tris": 6000,
+   "size": [
+    0.311,
+    0.982,
+    0.311
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_diamond_green": {
+   "cat": "castle",
+   "tris": 5999,
+   "size": [
+    0.3,
+    0.978,
+    0.3
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_diamond_ice": {
+   "cat": "castle",
+   "tris": 5994,
+   "size": [
+    0.306,
+    0.98,
+    0.307
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_diamond_red": {
+   "cat": "castle",
+   "tris": 5997,
+   "size": [
+    0.311,
+    0.976,
+    0.31
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_gold": {
+   "cat": "castle",
+   "tris": 5999,
+   "size": [
+    0.307,
+    0.978,
+    0.311
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_iron": {
+   "cat": "castle",
+   "tris": 5959,
+   "size": [
+    0.311,
+    0.978,
+    0.312
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_stone": {
+   "cat": "castle",
+   "tris": 5999,
+   "size": [
+    0.308,
+    0.983,
+    0.312
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_wood": {
+   "cat": "castle",
+   "tris": 5998,
+   "size": [
+    0.311,
+    0.975,
+    0.312
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_wall_diamond_black": {
+   "cat": "castle",
+   "tris": 1999,
+   "size": [
+    0.125,
+    0.764,
+    0.976
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3"
+  },
+  "castle_wall_diamond_blue": {
+   "cat": "castle",
+   "tris": 1999,
+   "size": [
+    0.263,
+    0.694,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3"
+  },
+  "castle_wall_diamond_green": {
+   "cat": "castle",
+   "tris": 2144,
+   "size": [
+    0.133,
+    0.708,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3",
+   "ship": "castle/castle_wall_diamond_green/castle_wall_diamond_green.glb"
+  },
+  "castle_wall_diamond_ice": {
+   "cat": "castle",
+   "tris": 2000,
+   "size": [
+    0.188,
+    0.739,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3"
+  },
+  "castle_wall_diamond_red": {
+   "cat": "castle",
+   "tris": 2000,
+   "size": [
+    0.208,
+    0.707,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3"
+  },
+  "castle_wall_gold": {
+   "cat": "castle",
+   "tris": 2000,
+   "size": [
+    0.165,
+    0.613,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3"
+  },
+  "castle_wall_iron": {
+   "cat": "castle",
+   "tris": 2358,
+   "size": [
+    0.206,
+    0.655,
+    0.973
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3",
+   "ship": "castle/castle_wall_iron/castle_wall_iron.glb"
+  },
+  "castle_wall_stone": {
+   "cat": "castle",
+   "tris": 1999,
+   "size": [
+    0.2,
+    0.526,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3"
+  },
+  "castle_wall_stone_b": {
+   "cat": "castle",
+   "tris": 2000,
+   "size": [
+    0.177,
+    0.647,
+    0.979
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3"
+  },
+  "castle_wall_wood": {
+   "cat": "castle",
+   "tris": 3432,
+   "size": [
+    0.225,
+    0.742,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3",
+   "ship": "castle/castle_wall_wood/castle_wall_wood.glb"
+  },
+  "armory_0": {
+   "cat": "civic",
+   "tris": 8329,
+   "size": [
+    0.827,
+    0.963,
+    0.972
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "armory_1": {
+   "cat": "civic",
+   "tris": 6349,
+   "size": [
+    0.967,
+    0.407,
+    0.518
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "ambiguous: arcade on both long sides, doors on the short ends"
+  },
+  "bakery": {
+   "cat": "civic",
+   "tris": 7992,
+   "size": [
+    0.799,
+    0.77,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "barn_0": {
+   "cat": "civic",
+   "tris": 4998,
+   "size": [
+    0.631,
+    0.29,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "barn_1": {
+   "cat": "civic",
+   "tris": 5853,
+   "size": [
+    0.979,
+    0.717,
+    0.83
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "ambiguous: long timber facade ±Z, gable ends ±X"
+  },
+  "brewhouse": {
+   "cat": "civic",
+   "tris": 8808,
+   "size": [
+    0.727,
+    0.843,
+    0.954
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "ship": "civic/brewhouse/brewhouse.glb"
+  },
+  "butcher": {
+   "cat": "civic",
+   "tris": 7985,
+   "size": [
+    0.881,
+    0.771,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "camp_0": {
+   "cat": "civic",
+   "tris": 5992,
+   "size": [
+    0.979,
+    0.457,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "diorama tile, near-symmetric"
+  },
+  "camp_1": {
+   "cat": "civic",
+   "tris": 5985,
+   "size": [
+    0.98,
+    0.597,
+    0.962
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "diorama tile (banner side)"
+  },
+  "cannon_house_0": {
+   "cat": "civic",
+   "tris": 5997,
+   "size": [
+    0.825,
+    0.829,
+    0.972
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "cannon_house_1": {
+   "cat": "civic",
+   "tris": 5994,
+   "size": [
+    0.56,
+    0.466,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "civic_hall_0": {
+   "cat": "civic",
+   "tris": 3994,
+   "size": [
+    0.978,
+    0.734,
+    0.658
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "ship": "civic/civic_hall_0/civic_hall_0.glb"
+  },
+  "civic_hall_1": {
+   "cat": "civic",
+   "tris": 3996,
+   "size": [
+    0.744,
+    0.761,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "ship": "civic/civic_hall_1/civic_hall_1.glb"
+  },
+  "clock_tower": {
+   "cat": "civic",
+   "tris": 5455,
+   "size": [
+    0.246,
+    0.958,
+    0.233
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "clock on all four faces"
+  },
+  "coop_0": {
+   "cat": "civic",
+   "tris": 3998,
+   "size": [
+    0.98,
+    0.712,
+    0.694
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "coop_1": {
+   "cat": "civic",
+   "tris": 4000,
+   "size": [
+    0.979,
+    0.908,
+    0.956
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "granary_0": {
+   "cat": "civic",
+   "tris": 4993,
+   "size": [
+    0.979,
+    0.663,
+    0.65
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "granary_1": {
+   "cat": "civic",
+   "tris": 4993,
+   "size": [
+    0.982,
+    0.593,
+    0.936
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "jetty": {
+   "cat": "civic",
+   "tris": 6088,
+   "size": [
+    0.973,
+    0.342,
+    0.282
+   ],
+   "seen": true,
+   "front": "?",
+   "ry": 0,
+   "note": "runs along Z; shore end must be decided in S4b"
+  },
+  "jeweller": {
+   "cat": "civic",
+   "tris": 7982,
+   "size": [
+    0.871,
+    0.978,
+    0.772
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "market_hall": {
+   "cat": "civic",
+   "tris": 10318,
+   "size": [
+    0.977,
+    0.287,
+    0.395
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "long arcaded face; open ends on ±X",
+   "ship": "civic/market_hall/market_hall.glb"
+  },
+  "mint": {
+   "cat": "civic",
+   "tris": 7999,
+   "size": [
+    0.893,
+    0.828,
+    0.96
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "shrine_0": {
+   "cat": "civic",
+   "tris": 5998,
+   "size": [
+    0.79,
+    0.983,
+    0.71
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "shrine_1": {
+   "cat": "civic",
+   "tris": 6000,
+   "size": [
+    0.83,
+    0.979,
+    0.841
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "open arches on all four sides"
+  },
+  "silo": {
+   "cat": "civic",
+   "tris": 4998,
+   "size": [
+    0.863,
+    0.979,
+    0.713
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "smokehouse": {
+   "cat": "civic",
+   "tris": 6996,
+   "size": [
+    0.629,
+    0.981,
+    0.731
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "stable_0": {
+   "cat": "civic",
+   "tris": 4996,
+   "size": [
+    0.979,
+    0.491,
+    0.74
+   ],
+   "seen": true,
+   "front": "-Z",
+   "ry": 180,
+   "note": "open stalls face -Z, plain back +Z"
+  },
+  "stable_1": {
+   "cat": "civic",
+   "tris": 4997,
+   "size": [
+    0.977,
+    0.307,
+    0.859
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "U-shaped courtyard: check open side in S4a"
+  },
+  "tavern_0": {
+   "cat": "civic",
+   "tris": 12514,
+   "size": [
+    0.809,
+    0.941,
+    0.95
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "ship": "civic/tavern_0/tavern_0.glb"
+  },
+  "tavern_1": {
+   "cat": "civic",
+   "tris": 12759,
+   "size": [
+    0.859,
+    0.937,
+    0.976
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "ship": "civic/tavern_1/tavern_1.glb"
+  },
+  "treasury_0": {
+   "cat": "civic",
+   "tris": 5997,
+   "size": [
+    0.976,
+    0.909,
+    0.892
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "treasury_1": {
+   "cat": "civic",
+   "tris": 5995,
+   "size": [
+    0.915,
+    0.777,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "watermill": {
+   "cat": "civic",
+   "tris": 7995,
+   "size": [
+    0.976,
+    0.747,
+    0.83
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "wheel on -Z side: re-yaw by the water side in S4b"
+  },
+  "well_abanbar": {
+   "cat": "civic",
+   "tris": 5999,
+   "size": [
+    0.977,
+    0.469,
+    0.817
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "well_qanat": {
+   "cat": "civic",
+   "tris": 3992,
+   "size": [
+    0.9,
+    0.754,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "windlass; near-symmetric"
+  },
+  "well_stone": {
+   "cat": "civic",
+   "tris": 3994,
+   "size": [
+    0.765,
+    0.98,
+    0.918
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "symmetric along X"
+  },
+  "def_ballista": {
+   "cat": "defense",
+   "tris": 4994,
+   "size": [
+    0.986,
+    0.657,
+    0.844
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "check the aiming side in S6 (weapon on a wall-top platform)"
+  },
+  "def_catapult": {
+   "cat": "defense",
+   "tris": 4987,
+   "size": [
+    0.975,
+    0.649,
+    0.732
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "check the aiming side in S6 (weapon on a wall-top platform)"
+  },
+  "def_firepot": {
+   "cat": "defense",
+   "tris": 2998,
+   "size": [
+    0.983,
+    0.549,
+    0.661
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "check the aiming side in S6 (weapon on a wall-top platform)"
+  },
+  "def_oil": {
+   "cat": "defense",
+   "tris": 3000,
+   "size": [
+    0.979,
+    0.757,
+    0.855
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "check the aiming side in S6 (weapon on a wall-top platform)"
+  },
+  "def_scorpion": {
+   "cat": "defense",
+   "tris": 3499,
+   "size": [
+    0.883,
+    0.733,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "check the aiming side in S6 (weapon on a wall-top platform)"
+  },
+  "def_tesla": {
+   "cat": "defense",
+   "tris": 4999,
+   "size": [
+    0.873,
+    0.971,
+    0.872
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0
+  },
+  "house_cottage_0": {
+   "cat": "houses",
+   "tris": 5000,
+   "size": [
+    0.823,
+    0.725,
+    0.981
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_cottage_1": {
+   "cat": "houses",
+   "tris": 5000,
+   "size": [
+    0.98,
+    0.895,
+    0.714
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_cottage_2": {
+   "cat": "houses",
+   "tris": 4999,
+   "size": [
+    0.914,
+    0.803,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_craftsman_0": {
+   "cat": "houses",
+   "tris": 6473,
+   "size": [
+    0.767,
+    0.978,
+    0.854
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_craftsman_0_alt": {
+   "cat": "houses",
+   "tris": 9778,
+   "size": [
+    0.932,
+    0.937,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_craftsman_1": {
+   "cat": "houses",
+   "tris": 7748,
+   "size": [
+    0.968,
+    0.9,
+    0.913
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_craftsman_1_alt": {
+   "cat": "houses",
+   "tris": 9973,
+   "size": [
+    0.616,
+    0.956,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_craftsman_2": {
+   "cat": "houses",
+   "tris": 7410,
+   "size": [
+    0.976,
+    0.968,
+    0.967
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_craftsman_2_alt": {
+   "cat": "houses",
+   "tris": 7943,
+   "size": [
+    0.636,
+    0.836,
+    0.939
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_generic_a": {
+   "cat": "houses",
+   "tris": 3000,
+   "size": [
+    0.961,
+    0.741,
+    0.686
+   ],
+   "seen": true,
+   "front": "-Z",
+   "ry": 180
+  },
+  "house_generic_b": {
+   "cat": "houses",
+   "tris": 3935,
+   "size": [
+    0.976,
+    0.921,
+    0.872
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_generic_c": {
+   "cat": "houses",
+   "tris": 4232,
+   "size": [
+    0.923,
+    0.785,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_generic_d": {
+   "cat": "houses",
+   "tris": 3000,
+   "size": [
+    0.539,
+    0.492,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_merchant_0": {
+   "cat": "houses",
+   "tris": 5000,
+   "size": [
+    0.76,
+    0.927,
+    0.593
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_merchant_1": {
+   "cat": "houses",
+   "tris": 4988,
+   "size": [
+    0.715,
+    0.978,
+    0.924
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_merchant_2": {
+   "cat": "houses",
+   "tris": 4998,
+   "size": [
+    0.958,
+    0.884,
+    0.918
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_noble_0": {
+   "cat": "houses",
+   "tris": 5996,
+   "size": [
+    0.406,
+    0.721,
+    0.979
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_noble_1": {
+   "cat": "houses",
+   "tris": 5995,
+   "size": [
+    0.482,
+    0.559,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_noble_2": {
+   "cat": "houses",
+   "tris": 5981,
+   "size": [
+    0.799,
+    0.817,
+    0.979
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "coal_mine_0": {
+   "cat": "mines",
+   "tris": 5989,
+   "size": [
+    0.982,
+    0.503,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "coal_mine_1": {
+   "cat": "mines",
+   "tris": 5991,
+   "size": [
+    0.899,
+    0.742,
+    0.979
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "dia_mine_black": {
+   "cat": "mines",
+   "tris": 4993,
+   "size": [
+    0.936,
+    0.757,
+    0.976
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "dia_mine_blue": {
+   "cat": "mines",
+   "tris": 4998,
+   "size": [
+    0.947,
+    0.772,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "dia_mine_green": {
+   "cat": "mines",
+   "tris": 4999,
+   "size": [
+    0.925,
+    0.754,
+    0.979
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "dia_mine_ice": {
+   "cat": "mines",
+   "tris": 4998,
+   "size": [
+    0.958,
+    0.781,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "dia_mine_red": {
+   "cat": "mines",
+   "tris": 4993,
+   "size": [
+    0.969,
+    0.781,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "farm_field_1": {
+   "cat": "mines",
+   "tris": 4061,
+   "size": [
+    0.97,
+    0.306,
+    0.881
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "no front"
+  },
+  "farm_field_2": {
+   "cat": "mines",
+   "tris": 3808,
+   "size": [
+    0.976,
+    0.304,
+    0.846
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "no front"
+  },
+  "fishing_hut_1": {
+   "cat": "mines",
+   "tris": 9201,
+   "size": [
+    0.552,
+    0.607,
+    0.956
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "door on +Z, boat/dock on +X",
+   "ship": "mines/fishing_hut_1/fishing_hut_1.glb"
+  },
+  "fishing_hut_2": {
+   "cat": "mines",
+   "tris": 6960,
+   "size": [
+    0.974,
+    0.392,
+    0.582
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "ambiguous: open pavilion long face"
+  },
+  "gem_mine_turquoise": {
+   "cat": "mines",
+   "tris": 6000,
+   "size": [
+    0.927,
+    0.752,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "iron_mine_0": {
+   "cat": "mines",
+   "tris": 5995,
+   "size": [
+    0.979,
+    0.518,
+    0.91
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "iron_mine_1": {
+   "cat": "mines",
+   "tris": 5996,
+   "size": [
+    0.828,
+    0.773,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "iron_mine_2": {
+   "cat": "mines",
+   "tris": 6000,
+   "size": [
+    0.979,
+    0.741,
+    0.928
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "lumber_mill_0": {
+   "cat": "mines",
+   "tris": 6623,
+   "size": [
+    0.969,
+    0.68,
+    0.922
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "lumber_mill_1": {
+   "cat": "mines",
+   "tris": 5992,
+   "size": [
+    0.973,
+    0.498,
+    0.952
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "lumber_mill_2": {
+   "cat": "mines",
+   "tris": 6410,
+   "size": [
+    0.974,
+    0.283,
+    0.612
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "oil_refinery_0": {
+   "cat": "mines",
+   "tris": 7992,
+   "size": [
+    0.52,
+    0.85,
+    0.966
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "oil_refinery_1": {
+   "cat": "mines",
+   "tris": 6995,
+   "size": [
+    0.644,
+    0.697,
+    0.983
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "oil_well_0": {
+   "cat": "mines",
+   "tris": 5981,
+   "size": [
+    0.884,
+    0.739,
+    0.982
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "no front"
+  },
+  "oil_well_1": {
+   "cat": "mines",
+   "tris": 4988,
+   "size": [
+    0.399,
+    0.708,
+    0.966
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "no front"
+  },
+  "oil_well_2": {
+   "cat": "mines",
+   "tris": 6000,
+   "size": [
+    0.98,
+    0.533,
+    0.787
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "no front"
+  },
+  "rice_paddy_1": {
+   "cat": "mines",
+   "tris": 2982,
+   "size": [
+    0.978,
+    0.229,
+    0.903
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "no front"
+  },
+  "rice_paddy_2": {
+   "cat": "mines",
+   "tris": 3769,
+   "size": [
+    0.973,
+    0.269,
+    0.953
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "no front"
+  },
+  "stone_quarry_0": {
+   "cat": "mines",
+   "tris": 7490,
+   "size": [
+    0.971,
+    0.676,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "stone_quarry_1": {
+   "cat": "mines",
+   "tris": 5000,
+   "size": [
+    0.968,
+    0.657,
+    0.973
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "stone_quarry_2": {
+   "cat": "mines",
+   "tris": 5358,
+   "size": [
+    0.88,
+    0.654,
+    0.964
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "windmill_asbad_1": {
+   "cat": "mines",
+   "tris": 4954,
+   "size": [
+    0.355,
+    0.52,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "windmill_asbad_2": {
+   "cat": "mines",
+   "tris": 4988,
+   "size": [
+    0.47,
+    0.978,
+    0.512
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "windmill_tower": {
+   "cat": "mines",
+   "tris": 3999,
+   "size": [
+    0.693,
+    0.983,
+    0.548
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "ship": "mines/windmill_tower/windmill_tower.glb"
+  },
+  "bushes": {
+   "cat": "nature",
+   "tris": 6069,
+   "size": [
+    1.003,
+    0.208,
+    0.216
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "cliffs": {
+   "cat": "nature",
+   "tris": 6998,
+   "size": [
+    0.915,
+    0.654,
+    0.568
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "crops": {
+   "cat": "nature",
+   "tris": 9102,
+   "size": [
+    1.738,
+    0.29,
+    0.318
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "flowers": {
+   "cat": "nature",
+   "tris": 8590,
+   "size": [
+    1.675,
+    0.303,
+    0.282
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "grass": {
+   "cat": "nature",
+   "tris": 3826,
+   "size": [
+    0.725,
+    0.862,
+    0.648
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "ground_cover": {
+   "cat": "nature",
+   "tris": 10288,
+   "size": [
+    2.018,
+    0.31,
+    0.334
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "plants_desert": {
+   "cat": "nature",
+   "tris": 5506,
+   "size": [
+    0.958,
+    0.26,
+    0.276
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "rocks_boulder": {
+   "cat": "nature",
+   "tris": 6000,
+   "size": [
+    1.105,
+    0.245,
+    0.249
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "rocks_ore": {
+   "cat": "nature",
+   "tris": 6000,
+   "size": [
+    1.193,
+    0.28,
+    0.251
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "rocks_sandstone": {
+   "cat": "nature",
+   "tris": 6000,
+   "size": [
+    1.143,
+    0.44,
+    0.282
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "rocks_small": {
+   "cat": "nature",
+   "tris": 5998,
+   "size": [
+    2.1,
+    0.221,
+    0.331
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "trees_broadleaf": {
+   "cat": "nature",
+   "tris": 7990,
+   "size": [
+    1.133,
+    0.38,
+    0.31
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "trees_conifer": {
+   "cat": "nature",
+   "tris": 7127,
+   "size": [
+    1.088,
+    0.538,
+    0.328
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "trees_orchard": {
+   "cat": "nature",
+   "tris": 7984,
+   "size": [
+    0.798,
+    0.401,
+    0.284
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "trees_season": {
+   "cat": "nature",
+   "tris": 7998,
+   "size": [
+    1.058,
+    0.333,
+    0.252
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "trees_special": {
+   "cat": "nature",
+   "tris": 9368,
+   "size": [
+    1.108,
+    0.374,
+    0.253
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "villager_boy": {
+   "cat": "people",
+   "tris": 3000,
+   "size": [
+    1.268,
+    2,
+    0.438
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "villager_girl": {
+   "cat": "people",
+   "tris": 3000,
+   "size": [
+    1.246,
+    2,
+    0.475
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "villager_littlegirl": {
+   "cat": "people",
+   "tris": 2998,
+   "size": [
+    1.24,
+    2,
+    0.513
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "villager_man": {
+   "cat": "people",
+   "tris": 3000,
+   "size": [
+    1.211,
+    2,
+    0.485
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "villager_oldman": {
+   "cat": "people",
+   "tris": 3000,
+   "size": [
+    1.221,
+    2,
+    0.437
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "villager_oldwoman": {
+   "cat": "people",
+   "tris": 3000,
+   "size": [
+    1.288,
+    2,
+    0.493
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "villager_woman": {
+   "cat": "people",
+   "tris": 2998,
+   "size": [
+    1.206,
+    2,
+    0.435
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "villager_youngman": {
+   "cat": "people",
+   "tris": 3000,
+   "size": [
+    1.175,
+    2,
+    0.407
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "construction_pack": {
+   "cat": "props",
+   "tris": 13829,
+   "size": [
+    0.976,
+    0.259,
+    0.252
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_candles": {
+   "cat": "props",
+   "tris": 12762,
+   "size": [
+    1.165,
+    0.418,
+    0.242
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_fantasy": {
+   "cat": "props",
+   "tris": 14378,
+   "size": [
+    1.131,
+    0.576,
+    0.185
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_hand": {
+   "cat": "props",
+   "tris": 14108,
+   "size": [
+    1.162,
+    0.367,
+    0.196
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_house_oil": {
+   "cat": "props",
+   "tris": 14552,
+   "size": [
+    1.029,
+    0.326,
+    0.213
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_persian_shrine": {
+   "cat": "props",
+   "tris": 14539,
+   "size": [
+    1.192,
+    0.441,
+    0.231
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_torches_braziers": {
+   "cat": "props",
+   "tris": 13793,
+   "size": [
+    1.262,
+    0.494,
+    0.219
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_tower_gate": {
+   "cat": "props",
+   "tris": 12286,
+   "size": [
+    1.207,
+    0.402,
+    0.209
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_wall_street": {
+   "cat": "props",
+   "tris": 14695,
+   "size": [
+    0.986,
+    0.528,
+    0.194
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "market_stalls": {
+   "cat": "props",
+   "tris": 11986,
+   "size": [
+    1.002,
+    0.261,
+    0.245
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "oil_pipes_pack": {
+   "cat": "props",
+   "tris": 7997,
+   "size": [
+    0.789,
+    0.26,
+    0.268
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "oil_tanks_pack": {
+   "cat": "props",
+   "tris": 7488,
+   "size": [
+    1.043,
+    0.474,
+    0.323
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "props_camp": {
+   "cat": "props",
+   "tris": 11995,
+   "size": [
+    1.273,
+    0.422,
+    0.3
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "props_mining": {
+   "cat": "props",
+   "tris": 15364,
+   "size": [
+    1.168,
+    0.273,
+    0.292
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "props_street": {
+   "cat": "props",
+   "tris": 11208,
+   "size": [
+    1.816,
+    0.353,
+    0.282
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "props_town": {
+   "cat": "props",
+   "tris": 15702,
+   "size": [
+    1.977,
+    0.226,
+    0.451
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "trap_spike_pit": {
+   "cat": "traps",
+   "tris": 3000,
+   "size": [
+    0.969,
+    0.499,
+    0.98
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "traps_blast": {
+   "cat": "traps",
+   "tris": 11508,
+   "size": [
+    1.007,
+    0.296,
+    0.3
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "traps_floor2": {
+   "cat": "traps",
+   "tris": 9000,
+   "size": [
+    1.018,
+    0.134,
+    0.314
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "traps_mech": {
+   "cat": "traps",
+   "tris": 12650,
+   "size": [
+    1.033,
+    0.355,
+    0.344
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "soldier_a": {
+   "cat": "units",
+   "tris": 3000,
+   "size": [
+    1.163,
+    2,
+    0.53
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "soldier_b": {
+   "cat": "units",
+   "tris": 3000,
+   "size": [
+    1.14,
+    2,
+    0.484
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_arrows_quivers": {
+   "cat": "weapons",
+   "tris": 7458,
+   "size": [
+    0.847,
+    0.615,
+    0.169
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_axes_double": {
+   "cat": "weapons",
+   "tris": 8994,
+   "size": [
+    0.549,
+    0.638,
+    0.218
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_axes_single": {
+   "cat": "weapons",
+   "tris": 10402,
+   "size": [
+    0.59,
+    0.6,
+    0.155
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_bows": {
+   "cat": "weapons",
+   "tris": 9434,
+   "size": [
+    1.123,
+    0.667,
+    0.194
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_daggers_1": {
+   "cat": "weapons",
+   "tris": 10800,
+   "size": [
+    0.692,
+    0.613,
+    0.139
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_daggers_2": {
+   "cat": "weapons",
+   "tris": 10798,
+   "size": [
+    0.761,
+    0.601,
+    0.144
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_exotic": {
+   "cat": "weapons",
+   "tris": 8961,
+   "size": [
+    0.837,
+    0.568,
+    0.164
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_hammers_big": {
+   "cat": "weapons",
+   "tris": 9000,
+   "size": [
+    0.843,
+    0.624,
+    0.181
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_hammers_maces": {
+   "cat": "weapons",
+   "tris": 10799,
+   "size": [
+    0.936,
+    0.562,
+    0.169
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_polearms": {
+   "cat": "weapons",
+   "tris": 10783,
+   "size": [
+    0.577,
+    0.744,
+    0.167
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_shields": {
+   "cat": "weapons",
+   "tris": 10718,
+   "size": [
+    0.825,
+    0.368,
+    0.259
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_spears": {
+   "cat": "weapons",
+   "tris": 10595,
+   "size": [
+    0.606,
+    0.725,
+    0.153
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_staffs_basic": {
+   "cat": "weapons",
+   "tris": 10800,
+   "size": [
+    0.591,
+    0.716,
+    0.128
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_staffs_magic": {
+   "cat": "weapons",
+   "tris": 10621,
+   "size": [
+    0.865,
+    0.68,
+    0.146
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_swords_long": {
+   "cat": "weapons",
+   "tris": 10797,
+   "size": [
+    0.602,
+    0.701,
+    0.157
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_swords_medium": {
+   "cat": "weapons",
+   "tris": 10800,
+   "size": [
+    0.665,
+    0.697,
+    0.151
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_swords_short": {
+   "cat": "weapons",
+   "tris": 10794,
+   "size": [
+    0.62,
+    0.611,
+    0.15
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_swords_tiers_a": {
+   "cat": "weapons",
+   "tris": 7200,
+   "size": [
+    0.458,
+    0.699,
+    0.182
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_swords_tiers_b": {
+   "cat": "weapons",
+   "tris": 9000,
+   "size": [
+    0.617,
+    0.653,
+    0.165
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_swords_xlong": {
+   "cat": "weapons",
+   "tris": 8998,
+   "size": [
+    0.551,
+    0.742,
+    0.182
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  }
+ }
+}
