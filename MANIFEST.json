@@ -37,15 +37,15 @@
  {
   "category": "castle",
   "key": "castle_wall_wood",
-  "tris": 3432,
-  "kb": 289,
+  "tris": 1996,
+  "kb": 255,
   "note": "wall tier: wood (3.4k tris)"
  },
  {
   "category": "castle",
   "key": "castle_wall_iron",
-  "tris": 2358,
-  "kb": 212,
+  "tris": 2000,
+  "kb": 200,
   "note": "wall tier: iron"
  },
  {
@@ -65,8 +65,8 @@
  {
   "category": "castle",
   "key": "castle_wall_diamond_green",
-  "tris": 2144,
-  "kb": 253,
+  "tris": 1996,
+  "kb": 241,
   "note": "wall tier: diamond green (crenels slightly wavy)"
  },
  {
@@ -185,21 +185,21 @@
   "category": "civic",
   "key": "civic_hall_0",
   "tris": 3994,
-  "kb": 824,
+  "kb": 312,
   "note": ""
  },
  {
   "category": "civic",
   "key": "civic_hall_1",
   "tris": 3996,
-  "kb": 677,
+  "kb": 265,
   "note": ""
  },
  {
   "category": "mines",
   "key": "windmill_tower",
   "tris": 3999,
-  "kb": 783,
+  "kb": 297,
   "note": ""
  },
  {
@@ -282,8 +282,8 @@
  {
   "category": "mines",
   "key": "fishing_hut_1",
-  "tris": 9201,
-  "kb": 325,
+  "tris": 7927,
+  "kb": 298,
   "note": "hut on piles, 9.2k tris (above 8k)"
  },
  {
@@ -1080,29 +1080,29 @@
  {
   "category": "civic",
   "key": "market_hall",
-  "tris": 10318,
-  "kb": 320,
+  "tris": 7794,
+  "kb": 273,
   "note": "over budget (10.3k): simplifier cannot go lower without damage"
  },
  {
   "category": "civic",
   "key": "tavern_0",
-  "tris": 12514,
-  "kb": 352,
+  "tris": 7708,
+  "kb": 259,
   "note": "over budget (12.5k): base gets lumpy below this; two generations of the same picture (tavern_1)"
  },
  {
   "category": "civic",
   "key": "tavern_1",
-  "tris": 12759,
-  "kb": 352,
+  "tris": 7685,
+  "kb": 253,
   "note": "over budget (12.8k); alt generation of tavern_0"
  },
  {
   "category": "civic",
   "key": "brewhouse",
-  "tris": 8808,
-  "kb": 302,
+  "tris": 7934,
+  "kb": 282,
   "note": "8.8k, slightly over"
  },
  {

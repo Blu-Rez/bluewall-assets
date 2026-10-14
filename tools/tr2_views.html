@@ -1,0 +1,44 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#222">
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
+<canvas id=out></canvas>
+<script type=module>
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+const q = new URLSearchParams(location.search), list = await (await fetch(q.get('list'))).json();
+const TW = +q.get('tw') || 220, TH = +q.get('th') || 190, LAB = 18;
+const VIEWS = q.get('views') ? q.get('views').split(',').map(Number) : [0, 90, 180, 270];
+const NAMES = {0:'+Z', 90:'+X', 180:'-Z', 270:'-X'};
+const cv = document.getElementById('out'); cv.width = TW * VIEWS.length; cv.height = TH * list.length;
+const c2 = cv.getContext('2d'); c2.fillStyle = '#1b2230'; c2.fillRect(0, 0, cv.width, cv.height); c2.font = '12px sans-serif';
+const R = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true }); R.setSize(TW, TH - LAB); R.outputColorSpace = THREE.SRGBColorSpace; R.toneMapping = THREE.ACESFilmicToneMapping;
+const sc = new THREE.Scene(); sc.background = new THREE.Color(0x9aa9bc);
+sc.add(new THREE.HemisphereLight(0xffffff, 0x556070, 1.8));
+const dl = new THREE.DirectionalLight(0xfff2dd, 2.4); sc.add(dl);
+const cam = new THREE.PerspectiveCamera(32, TW / (TH - LAB), 0.01, 1e5), ld = new GLTFLoader(); ld.setMeshoptDecoder(MeshoptDecoder);
+const KC = {}; window.__info = [];
+for (let i = 0; i < list.length; i++) {
+  const it = list[i]; let info = { n: it.n, label: it.label };
+  try {
+    const g = KC[it.url] || (KC[it.url] = await Promise.race([ld.loadAsync(it.url), new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 60000))]));
+    let o;
+    if (it.nodes && it.nodes.length) { o = new THREE.Group(); g.scene.updateMatrixWorld(true); for (const nm of it.nodes) { const s = g.scene.getObjectByName(nm); if (!s) throw new Error('no node ' + nm); const c = s.clone(true); c.position.set(0, 0, 0); c.rotation.set(0, 0, 0); c.scale.set(1, 1, 1); o.add(c); } }
+    else o = g.scene;
+    if (it.pose !== undefined && g.animations.length) { const mx = new THREE.AnimationMixer(o); mx.clipAction(g.animations[0]).play(); mx.setTime(it.pose); }
+    const w = new THREE.Group(); w.add(o); if (it.ry) w.rotation.y = it.ry * Math.PI / 180; sc.add(w); w.updateMatrixWorld(true);
+    const b = new THREE.Box3().setFromObject(w), sz = b.getSize(new THREE.Vector3()), ct = b.getCenter(new THREE.Vector3()), rad = Math.max(sz.x, sz.y, sz.z) * 0.5 * 1.05 + 1e-6;
+    info.size = [sz.x, sz.y, sz.z].map(v => +v.toFixed(3)); info.ymin = +b.min.y.toFixed(3);
+    for (let v = 0; v < VIEWS.length; v++) {
+      const a = VIEWS[v] * Math.PI / 180, el = 22 * Math.PI / 180, d = rad / Math.sin(cam.fov * Math.PI / 360) * 1.05;
+      cam.position.set(ct.x + Math.sin(a) * Math.cos(el) * d, ct.y + Math.sin(el) * d, ct.z + Math.cos(a) * Math.cos(el) * d); cam.lookAt(ct);
+      dl.position.copy(cam.position).add(new THREE.Vector3(2, 4, 1).multiplyScalar(rad));
+      R.render(sc, cam);
+      c2.drawImage(R.domElement, v * TW, i * TH + LAB);
+      c2.fillStyle = '#fff'; c2.fillText((v === 0 ? it.n + ' ' + (it.label || '') + ' | ' : '') + 'cam ' + NAMES[VIEWS[v]], v * TW + 4, i * TH + 13);
+    }
+    sc.remove(w);
+  } catch (e) { info.err = String(e).slice(0, 150); c2.fillStyle = '#f66'; c2.fillText(it.n + ' ERR ' + info.err, 4, i * TH + 13); }
+  window.__info.push(info);
+}
+window.__done = true;
+</script>
