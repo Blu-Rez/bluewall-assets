@@ -1,0 +1,33 @@
+# report_RP4 — Round 1 (14 Oct 2026, kit = p47 installed + RP0B merged, 626a7d5)
+
+**RP4 R1 = combat core in new files + hook diff to apply after RP1B. Review like any patch: every proof frame at full size, `bash dev/rp4_test.sh` → `RP4 OK (63 checks)`, `GATE_W: ALL OK`, only NEW files changed (`web/assets/rpg/combat.js`, `web/assets/rpg/combat/*`, `dev/rp4_*`), `rpg.js` is NOT in the patch — its 12 changed lines are the separate `rpg_hooks_RP4.patch` (9 added lines, every one marked `// RP4:`; 43 lines of diff at 1 line of context; `git apply --check` passes on the clean kit that already contains RP1B).** No Tripo credit, no server / castle / town / battle / economy / `pkg/` / `dev/gate*.sh` / `web/app/*` touched.
+
+## What it is
+A Genshin/CoD-style hero-combat engine for Elina in new lazy ES modules: pure fixed-step sim (`combat.js`, Node-tested), presentation (`combat/fx.js`: ONE additive ribbon for slash trail + telegraph wedges + flame crescents + rings, ONE pooled Points mesh of 96 sparks, DOM damage digits, hit-stop, camera shake, the sword on `R_Hand`), DOM HUD (`combat/hud.js`: HP/stamina arcs around the element emblem, target bar, lock marker, combo pips, attack / 2 skills / lock buttons with cooldown rings, red edge arrows — icons and digits only), placeholder enemies (`combat/foes.js`: the game's own legionary / werewolf / troll, test-only), data tables `ELEMENTS`, `SISTERS` (Elina complete, five stubs), `KINDS`. Entry: `attach(under, hero, opts)` → `{pre, post, frame, key, press, setQuality, spawnTest, setEnabled, stats, dispose}`. Design + all numbers: `RP4_design.md`; the owner's 3-minute page: `RP4_judge_3min.md`.
+
+## Since the first draft (two owner messages while I worked)
+1. **21:11 «the player watches the fight from BEHIND, build it properly»** → fight framing of the host camera (up 0.3 / back 0.6 / sideways only if she is not already left of centre, dropped at pillars), **red edge arrows for attackers outside the frame**, lock-on yaw assist, proofs shot with the host's own behind-camera (D 3.6, 0.55 m shoulder, fov 50, pitch 0.2) and in the real game at 390×844.
+2. **21:14 RP0B merged (33 clips)** → `git pull` of `kit`, **the combat clip table is now built from the real clips of `elina.glb`** (`slash_a 0.43 · slash_b 0.53 · slash_c 0.70 · heavy 0.93 · block`); my own retargeted `clips_sword.glb` is deleted; a test checks the table against the file; the sword stays parented to `R_Hand` and was checked on all four clips from behind and from the side. Hook re-written against the post-RP1B `rpg.js` (the old one no longer applied).
+Also: HUD offsets now use the host's TOP/BOT (Telegram safe areas, HOTFIX47), the lock button moved below the host's gate button, particle size is clamped near the camera, `setQuality` now counts 0 = full … 3 = lowest as asked (it was inverted).
+
+## Proven (frames I looked at, full size — `photos_RP4.tar.gz`)
+- `dev/rp4_test.sh` → **RP4 OK (63 checks)**: element triangles, combo timings / chain / cancel windows, i-frames, perfect dodge, lock-on switching, hit-stop, heavy second sweep, 6-enemy cap, deterministic replay (same seed → same hash), sim cost 8–16 µs/tick, and the clip table against the real GLB.
+- `GATE_W: ALL OK` (client gate, with the hook applied and hero mode off).
+- Boot bytes **+0**: `grep combat client/src` = 0 hits; `wall.js` is 2,742,778 B with and without the RP4 files (the sha differs between ANY two builds because `build.sh` stamps `date +%s`). Programs with hero mode off: unchanged (nothing is built before `attach()`; dev arena 3 programs → 6 after attach).
+- Frames: the 4-hit combo = the four real clips × 6 poses, from behind and from the side, sword in the hand, trail visible (`clipsC_behind_sheet`, `clipsC_side_sheet`) · the sword sheet the owner was asked about (`sword_sheet.png`) · `behind_framing` (host camera as is / with fight framing) · `behind_alerts` (arrows) · `lock_strip` (lock from behind with 2 enemies; camera yaw 0.25 → 0.3425 vs target 0.3430; double-tap = next target) · `dodge_strip` (i-frames 0.04–0.34 on/off) · `hit_strip` + the printed hit-stop table (hit tick 11: hero frozen 4 ticks = 55 ms nominal, foe 3 ticks) · `tele_strip` (0.6 s telegraph and the strike) · `death_strip` · `hurt_strip` (hit + knock-down) · `skills_strip` (flame wave, ember burst, cooldown rings) · `portrait_390` · **real game**: `game_combo_strip`, `g2_tele_0` (hero mode → underworld, rebuilt kit incl. RP1B, hooks applied: lock marker, target bar, digits, telegraph, edge arrows, sword in hand, 3 enemies fight back and die).
+- Budget (dev arena, software GL; table in `RP4_design.md` §7): own FX = 3 draw calls / ~2.3k tris / 3 programs; **6 beasts fighting: +10 calls, +17.9k tris, +4 programs** (limits ≤ +10 / ≤ +60k / ≤ +4); JS 0.26–0.8 ms/frame; no per-frame allocation. `setQuality(0..3)` measured: 63 / 45 / 27 / 0 live particles after a fight burst, trail off at 3.
+
+## Not proven (honest)
+Real phone fps and the FEEL of every timing (the owner measures: `RP4_judge_3min.md` lists the 6 knobs) · foot sliding (clips are in place; lunge distances tuned by eye) · enemy variety (3 placeholder kinds) · camera framing in a very narrow tunnel (only a pillar / edge check) · fingers do not wrap the hilt · curved-sword blade orientation (the library sword is straight) · the real game was driven at ~7 sim ticks/s in software GL, so timing there is not a measure of anything.
+
+## Not done
+`block` (clip exists, no guard state yet — proposal for R2) · the other five sisters (stubs only) · swap-sister · rewards / server / enemy variety (by the brief). **Budget miss:** with the placeholder soldier (10 meshes) and brute (7 meshes) 2+2+2 enemies cost +40 calls / +9 programs; the real RP6 enemies must be ≤ 1–2 meshes.
+
+## Needs (mother)
+1. Apply `rpg_hooks_RP4.patch` to the kit's `rpg.js` (Round 2: «kit now contains RP1B» is true as of 626a7d5, so it applies now).
+2. Confirm the **direction of the element triangles** with the book (`BEATS` in combat.js, `A→B` = A beats B; read from the RTL chain) and supply the **7 harmony pairs** (`HARMONY = []`).
+3. RP1B's quality governor should call `S.cmb && S.cmb.setQuality(step)` (0 full … 3 lowest) — one line in `rpg_diet.js`'s caller, not in my diff.
+4. Owner decisions: sword = **#1 `sword_med_arming`** (default, he never answered the sheet; told him); the `block` guard button is a proposal.
+
+## Shared-file edits
+None in the patch. (`web/app/wall.js` shows as modified in the working tree — that is `rb.sh` rebuilding the bundle, excluded by `mkpatch.sh`, not mine.) `dev/rp4_dev.bundle.js` (1.9 MB, built by `dev/rp4_dev_build.sh`) is not shipped.
