@@ -1,0 +1,10 @@
+{
+ "name": "bridge_moat",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 5989,
+ "kb": 233,
+ "note": "drawbridge between two towers",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

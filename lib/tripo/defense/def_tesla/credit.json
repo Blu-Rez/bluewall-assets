@@ -1,0 +1,9 @@
+{
+ "name": "def_tesla",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (wall-mounted defence)",
+ "tris": 4999,
+ "kb": 211,
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

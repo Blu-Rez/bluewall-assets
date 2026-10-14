@@ -1,0 +1,10 @@
+{
+ "name": "bridge_stone_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 5000,
+ "kb": 183,
+ "note": "three arches with turquoise band",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

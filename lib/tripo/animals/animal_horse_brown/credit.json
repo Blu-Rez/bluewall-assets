@@ -1,0 +1,10 @@
+{
+ "name": "animal_horse_brown",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new species or existing rigged animal in the game (this one is static)",
+ "tris": 4999,
+ "kb": 164,
+ "note": "chestnut/brown horse, static unrigged (#200 edit)",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

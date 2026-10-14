@@ -1,0 +1,39 @@
+{
+ "name": "traps_floor2",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 9000,
+ "kb": 241,
+ "objects": [
+  {
+   "name": "caltrops",
+   "tris": 3000,
+   "size_rel": [
+    0.298,
+    0.123,
+    0.275
+   ]
+  },
+  {
+   "name": "spiked_board",
+   "tris": 3000,
+   "size_rel": [
+    0.29,
+    0.13,
+    0.308
+   ]
+  },
+  {
+   "name": "bear_trap",
+   "tris": 3000,
+   "size_rel": [
+    0.31,
+    0.134,
+    0.314
+   ]
+  }
+ ],
+ "note": "retry of traps_floor; this time 3 separate objects",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

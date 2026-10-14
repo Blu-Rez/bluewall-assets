@@ -1,0 +1,47 @@
+{
+ "name": "traps_blast",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 11508,
+ "kb": 264,
+ "objects": [
+  {
+   "name": "net",
+   "tris": 2611,
+   "size_rel": [
+    0.1,
+    0.296,
+    0.238
+   ]
+  },
+  {
+   "name": "firepit",
+   "tris": 3499,
+   "size_rel": [
+    0.315,
+    0.132,
+    0.3
+   ]
+  },
+  {
+   "name": "landmine",
+   "tris": 3500,
+   "size_rel": [
+    0.249,
+    0.139,
+    0.255
+   ]
+  },
+  {
+   "name": "powder_barrel",
+   "tris": 1898,
+   "size_rel": [
+    0.162,
+    0.275,
+    0.163
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

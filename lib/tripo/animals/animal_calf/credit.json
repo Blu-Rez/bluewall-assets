@@ -1,0 +1,10 @@
+{
+ "name": "animal_calf",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "existing rigged animal in the game (this one is static)",
+ "tris": 5000,
+ "kb": 128,
+ "note": "static, unrigged",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

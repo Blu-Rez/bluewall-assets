@@ -1,0 +1,39 @@
+{
+ "name": "birds",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 8997,
+ "kb": 219,
+ "objects": [
+  {
+   "name": "dove",
+   "tris": 2999,
+   "size_rel": [
+    0.167,
+    0.279,
+    0.278
+   ]
+  },
+  {
+   "name": "crow",
+   "tris": 3000,
+   "size_rel": [
+    0.206,
+    0.283,
+    0.34
+   ]
+  },
+  {
+   "name": "eagle",
+   "tris": 2998,
+   "size_rel": [
+    0.213,
+    0.315,
+    0.357
+   ]
+  }
+ ],
+ "note": "flying poses with spread wings, static",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

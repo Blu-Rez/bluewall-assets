@@ -1,0 +1,22 @@
+{
+ "name": "soldier_b",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "existing soldier model",
+ "tris": 3000,
+ "kb": 294,
+ "note": "soldier, mail armour, beard",
+ "rig": {
+  "type": "Tripo Biped",
+  "joints": 78,
+  "joint_names": "Tripo style (BoneRoot, Hip, Pelvis, L_Thigh, L_Calf, L_Foot, Waist, Spine01, ...), not mixamorig",
+  "clips": [
+   "walk (2.33s, 57 keyframes, 234 channels)"
+  ],
+  "missing_clips": [
+   "idle",
+   "run"
+  ]
+ },
+ "status": "candidate: facing/scale/pivot and clip retarget not yet done (round 4); skinning checked after simplify: walk pose at 0.6s renders clean"
+}

@@ -1,0 +1,10 @@
+{
+ "name": "water_gate",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 5986,
+ "kb": 222,
+ "note": "gate with grille and steps",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

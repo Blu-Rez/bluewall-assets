@@ -1,0 +1,47 @@
+{
+ "name": "traps_mech",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 12650,
+ "kb": 300,
+ "objects": [
+  {
+   "name": "crossbow",
+   "tris": 2338,
+   "size_rel": [
+    0.312,
+    0.193,
+    0.32
+   ]
+  },
+  {
+   "name": "spiked_log",
+   "tris": 3499,
+   "size_rel": [
+    0.151,
+    0.293,
+    0.344
+   ]
+  },
+  {
+   "name": "spiked_ball",
+   "tris": 3499,
+   "size_rel": [
+    0.296,
+    0.335,
+    0.182
+   ]
+  },
+  {
+   "name": "saw",
+   "tris": 3314,
+   "size_rel": [
+    0.095,
+    0.355,
+    0.237
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

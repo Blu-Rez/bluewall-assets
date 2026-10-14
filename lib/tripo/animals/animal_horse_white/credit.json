@@ -1,0 +1,10 @@
+{
+ "name": "animal_horse_white",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new species or existing rigged animal in the game (this one is static)",
+ "tris": 5000,
+ "kb": 117,
+ "note": "white horse, static unrigged (#200)",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

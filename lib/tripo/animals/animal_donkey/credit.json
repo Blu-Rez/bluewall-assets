@@ -1,0 +1,10 @@
+{
+ "name": "animal_donkey",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new species or existing rigged animal in the game (this one is static)",
+ "tris": 4998,
+ "kb": 153,
+ "note": "static, unrigged",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

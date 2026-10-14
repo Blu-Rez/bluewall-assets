@@ -1,0 +1,9 @@
+{
+ "name": "def_oil",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (wall-mounted defence)",
+ "tris": 3000,
+ "kb": 144,
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

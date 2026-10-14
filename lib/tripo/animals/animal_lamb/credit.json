@@ -1,0 +1,10 @@
+{
+ "name": "animal_lamb",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "existing rigged animal in the game (this one is static)",
+ "tris": 4000,
+ "kb": 149,
+ "note": "static, unrigged",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

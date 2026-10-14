@@ -1,0 +1,10 @@
+{
+ "name": "animal_dog",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "existing rigged animal in the game (this one is static)",
+ "tris": 4998,
+ "kb": 144,
+ "note": "static, unrigged",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

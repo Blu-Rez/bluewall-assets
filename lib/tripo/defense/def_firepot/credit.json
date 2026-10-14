@@ -1,0 +1,9 @@
+{
+ "name": "def_firepot",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (wall-mounted defence)",
+ "tris": 2998,
+ "kb": 164,
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

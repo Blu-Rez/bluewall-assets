@@ -1,0 +1,66 @@
+{
+ "name": "poultry_fish_pack",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 12512,
+ "kb": 287,
+ "objects": [
+  {
+   "name": "fish_small",
+   "tris": 956,
+   "size_rel": [
+    0.055,
+    0.098,
+    0.265
+   ]
+  },
+  {
+   "name": "chick",
+   "tris": 1784,
+   "size_rel": [
+    0.119,
+    0.16,
+    0.137
+   ]
+  },
+  {
+   "name": "trout",
+   "tris": 2364,
+   "size_rel": [
+    0.068,
+    0.137,
+    0.35
+   ]
+  },
+  {
+   "name": "rooster",
+   "tris": 2498,
+   "size_rel": [
+    0.142,
+    0.317,
+    0.285
+   ]
+  },
+  {
+   "name": "carp",
+   "tris": 2412,
+   "size_rel": [
+    0.103,
+    0.168,
+    0.303
+   ]
+  },
+  {
+   "name": "hen",
+   "tris": 2498,
+   "size_rel": [
+    0.154,
+    0.285,
+    0.261
+   ]
+  }
+ ],
+ "note": "static, unrigged",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

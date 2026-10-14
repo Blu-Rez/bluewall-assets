@@ -1,0 +1,21 @@
+{
+ "name": "trap_spike_pit",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 3000,
+ "kb": 97,
+ "objects": [
+  {
+   "name": "spike_pit",
+   "tris": 3000,
+   "size_rel": [
+    0.969,
+    0.499,
+    0.98
+   ]
+  }
+ ],
+ "note": "single object (pack picture gave 1 object); retry = traps_floor2 in pics11",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}
