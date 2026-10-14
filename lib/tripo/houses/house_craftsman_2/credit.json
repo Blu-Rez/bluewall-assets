@@ -1,0 +1,10 @@
+{
+ "name": "house_craftsman_2",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "kit_homes.glb craftsman house",
+ "tris": 7410,
+ "kb": 266,
+ "note": "within budget (7410 vs 8000): potter house/workshop: arched opening with clay pots, cedar balcony, blue tiled roof; slimmed from 16981 tris with UV-aware simplify",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

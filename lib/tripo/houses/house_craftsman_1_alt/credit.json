@@ -1,0 +1,10 @@
+{
+ "name": "house_craftsman_1_alt",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "kit_homes.glb craftsman house",
+ "tris": 9973,
+ "kb": 391,
+ "note": "over budget (9973 vs 8000 budget): medieval stone house; redo with Face Limit ~6000 in Tripo would fix it | older version (Tripo v1); the new redo took the main name",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

@@ -1,0 +1,10 @@
+{
+ "name": "house_craftsman_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "kit_homes.glb craftsman house",
+ "tris": 7748,
+ "kb": 274,
+ "note": "within budget (7748 vs 8000): blacksmith house/forge: grey-blue stone ground floor, brick chimney, cedar balcony, blue tiled hip roof; slimmed from 17750 tris with UV-aware simplify (plain simplify stuck at 8.8k); a few small dark nicks on the lower stone wall",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

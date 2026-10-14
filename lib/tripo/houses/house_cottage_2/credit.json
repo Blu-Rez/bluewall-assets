@@ -1,0 +1,9 @@
+{
+ "name": "house_cottage_2",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "kit_homes.glb (12 planned houses)",
+ "tris": 4999,
+ "kb": 285,
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

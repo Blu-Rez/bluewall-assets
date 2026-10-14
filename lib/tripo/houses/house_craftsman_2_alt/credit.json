@@ -1,0 +1,10 @@
+{
+ "name": "house_craftsman_2_alt",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "kit_homes.glb craftsman house",
+ "tris": 7943,
+ "kb": 329,
+ "note": "within budget (7943 vs 8000): pottery workshop; texture a bit blotchy | older version (Tripo v1); the new redo took the main name",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

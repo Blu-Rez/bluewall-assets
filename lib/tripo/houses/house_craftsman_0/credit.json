@@ -1,0 +1,10 @@
+{
+ "name": "house_craftsman_0",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "kit_homes.glb craftsman house",
+ "tris": 6473,
+ "kb": 244,
+ "note": "within budget (6473 vs 8000): workshop house: open arched ground-floor bay with a work counter, cedar balcony, hanging sign, blue tiled roof; slimmed from 17741 tris with UV-aware simplify",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

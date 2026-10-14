@@ -1,0 +1,10 @@
+{
+ "name": "house_generic_c",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "kit_village modules via bakeVillage (generic houses)",
+ "tris": 4232,
+ "kb": 248,
+ "note": "stairs slightly messy",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}
