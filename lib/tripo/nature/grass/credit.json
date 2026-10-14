@@ -1,0 +1,21 @@
+{
+ "name": "grass",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 3826,
+ "kb": 150,
+ "objects": [
+  {
+   "name": "grass_golden",
+   "tris": 3826,
+   "size_rel": [
+    0.725,
+    0.862,
+    0.648
+   ]
+  }
+ ],
+ "note": "one clump only (pack picture gave 1 object); sloppy-simplified 3.8k tris",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

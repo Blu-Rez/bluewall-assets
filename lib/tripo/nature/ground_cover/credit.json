@@ -1,0 +1,66 @@
+{
+ "name": "ground_cover",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 10288,
+ "kb": 283,
+ "objects": [
+  {
+   "name": "mushroom_brown",
+   "tris": 886,
+   "size_rel": [
+    0.238,
+    0.228,
+    0.256
+   ]
+  },
+  {
+   "name": "reed",
+   "tris": 1793,
+   "size_rel": [
+    0.327,
+    0.31,
+    0.245
+   ]
+  },
+  {
+   "name": "clover",
+   "tris": 1797,
+   "size_rel": [
+    0.276,
+    0.209,
+    0.312
+   ]
+  },
+  {
+   "name": "grass_tall",
+   "tris": 2391,
+   "size_rel": [
+    0.358,
+    0.289,
+    0.334
+   ]
+  },
+  {
+   "name": "fern",
+   "tris": 1795,
+   "size_rel": [
+    0.275,
+    0.239,
+    0.286
+   ]
+  },
+  {
+   "name": "mushroom_red",
+   "tris": 1626,
+   "size_rel": [
+    0.243,
+    0.26,
+    0.235
+   ]
+  }
+ ],
+ "note": "grass_tall is sloppy-simplified (2.4k)",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

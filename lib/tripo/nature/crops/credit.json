@@ -1,0 +1,65 @@
+{
+ "name": "crops",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 9102,
+ "kb": 330,
+ "objects": [
+  {
+   "name": "pumpkins",
+   "tris": 1470,
+   "size_rel": [
+    0.324,
+    0.235,
+    0.298
+   ]
+  },
+  {
+   "name": "wheat_sheaf",
+   "tris": 2014,
+   "size_rel": [
+    0.195,
+    0.261,
+    0.195
+   ]
+  },
+  {
+   "name": "hay_bale",
+   "tris": 1149,
+   "size_rel": [
+    0.265,
+    0.24,
+    0.283
+   ]
+  },
+  {
+   "name": "cabbage",
+   "tris": 1498,
+   "size_rel": [
+    0.24,
+    0.217,
+    0.318
+   ]
+  },
+  {
+   "name": "corn",
+   "tris": 1476,
+   "size_rel": [
+    0.198,
+    0.29,
+    0.297
+   ]
+  },
+  {
+   "name": "carrots",
+   "tris": 1495,
+   "size_rel": [
+    0.216,
+    0.212,
+    0.274
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

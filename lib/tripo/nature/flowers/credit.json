@@ -1,0 +1,66 @@
+{
+ "name": "flowers",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 8590,
+ "kb": 322,
+ "objects": [
+  {
+   "name": "lavender",
+   "tris": 1882,
+   "size_rel": [
+    0.241,
+    0.266,
+    0.25
+   ]
+  },
+  {
+   "name": "crocus",
+   "tris": 1200,
+   "size_rel": [
+    0.206,
+    0.232,
+    0.243
+   ]
+  },
+  {
+   "name": "tulip",
+   "tris": 1200,
+   "size_rel": [
+    0.246,
+    0.303,
+    0.282
+   ]
+  },
+  {
+   "name": "daisy",
+   "tris": 2032,
+   "size_rel": [
+    0.251,
+    0.251,
+    0.252
+   ]
+  },
+  {
+   "name": "poppy",
+   "tris": 1200,
+   "size_rel": [
+    0.231,
+    0.259,
+    0.259
+   ]
+  },
+  {
+   "name": "narcissus",
+   "tris": 1114,
+   "size_rel": [
+    0.225,
+    0.459,
+    0.218
+   ]
+  }
+ ],
+ "note": "poppy has loose petals; one floating petal removed",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

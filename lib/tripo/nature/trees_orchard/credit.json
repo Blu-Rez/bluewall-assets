@@ -1,0 +1,47 @@
+{
+ "name": "trees_orchard",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 7984,
+ "kb": 298,
+ "objects": [
+  {
+   "name": "olive",
+   "tris": 2000,
+   "size_rel": [
+    0.259,
+    0.295,
+    0.284
+   ]
+  },
+  {
+   "name": "pomegranate",
+   "tris": 2000,
+   "size_rel": [
+    0.209,
+    0.272,
+    0.226
+   ]
+  },
+  {
+   "name": "date_palm_young",
+   "tris": 1998,
+   "size_rel": [
+    0.075,
+    0.193,
+    0.198
+   ]
+  },
+  {
+   "name": "date_palm",
+   "tris": 1986,
+   "size_rel": [
+    0.075,
+    0.401,
+    0.265
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

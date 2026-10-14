@@ -1,0 +1,29 @@
+{
+ "name": "cliffs",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 6998,
+ "kb": 188,
+ "objects": [
+  {
+   "name": "spire",
+   "tris": 3498,
+   "size_rel": [
+    0.315,
+    0.589,
+    0.28
+   ]
+  },
+  {
+   "name": "cliff",
+   "tris": 3500,
+   "size_rel": [
+    0.54,
+    0.654,
+    0.568
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

@@ -1,0 +1,48 @@
+{
+ "name": "trees_special",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 9368,
+ "kb": 243,
+ "objects": [
+  {
+   "name": "birch",
+   "tris": 2000,
+   "size_rel": [
+    0.182,
+    0.37,
+    0.192
+   ]
+  },
+  {
+   "name": "almond",
+   "tris": 1994,
+   "size_rel": [
+    0.255,
+    0.325,
+    0.228
+   ]
+  },
+  {
+   "name": "tamarisk",
+   "tris": 2000,
+   "size_rel": [
+    0.242,
+    0.321,
+    0.253
+   ]
+  },
+  {
+   "name": "willow",
+   "tris": 3374,
+   "size_rel": [
+    0.249,
+    0.374,
+    0.253
+   ]
+  }
+ ],
+ "note": "willow is sloppy-simplified (3.4k tris, texture smeared); tamarisk/almond colours look alike",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

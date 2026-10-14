@@ -1,0 +1,47 @@
+{
+ "name": "trees_season",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 7998,
+ "kb": 319,
+ "objects": [
+  {
+   "name": "apple",
+   "tris": 1998,
+   "size_rel": [
+    0.267,
+    0.31,
+    0.248
+   ]
+  },
+  {
+   "name": "fir_snow",
+   "tris": 2000,
+   "size_rel": [
+    0.223,
+    0.333,
+    0.21
+   ]
+  },
+  {
+   "name": "dead_tree",
+   "tris": 2000,
+   "size_rel": [
+    0.152,
+    0.329,
+    0.252
+   ]
+  },
+  {
+   "name": "maple_autumn",
+   "tris": 2000,
+   "size_rel": [
+    0.236,
+    0.311,
+    0.228
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

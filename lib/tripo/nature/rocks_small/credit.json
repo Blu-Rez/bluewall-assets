@@ -1,0 +1,65 @@
+{
+ "name": "rocks_small",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 5998,
+ "kb": 220,
+ "objects": [
+  {
+   "name": "flat",
+   "tris": 1000,
+   "size_rel": [
+    0.342,
+    0.085,
+    0.331
+   ]
+  },
+  {
+   "name": "speckled",
+   "tris": 1000,
+   "size_rel": [
+    0.275,
+    0.191,
+    0.272
+   ]
+  },
+  {
+   "name": "angular",
+   "tris": 1000,
+   "size_rel": [
+    0.282,
+    0.22,
+    0.254
+   ]
+  },
+  {
+   "name": "mossy",
+   "tris": 998,
+   "size_rel": [
+    0.305,
+    0.19,
+    0.27
+   ]
+  },
+  {
+   "name": "round",
+   "tris": 1000,
+   "size_rel": [
+    0.301,
+    0.22,
+    0.285
+   ]
+  },
+  {
+   "name": "split",
+   "tris": 1000,
+   "size_rel": [
+    0.295,
+    0.191,
+    0.253
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

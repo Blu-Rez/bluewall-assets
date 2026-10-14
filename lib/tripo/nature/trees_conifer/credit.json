@@ -1,0 +1,47 @@
+{
+ "name": "trees_conifer",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 7127,
+ "kb": 283,
+ "objects": [
+  {
+   "name": "cedar",
+   "tris": 2588,
+   "size_rel": [
+    0.343,
+    0.428,
+    0.328
+   ]
+  },
+  {
+   "name": "cypress",
+   "tris": 542,
+   "size_rel": [
+    0.088,
+    0.538,
+    0.09
+   ]
+  },
+  {
+   "name": "spruce",
+   "tris": 2000,
+   "size_rel": [
+    0.263,
+    0.433,
+    0.25
+   ]
+  },
+  {
+   "name": "pine",
+   "tris": 1997,
+   "size_rel": [
+    0.214,
+    0.479,
+    0.232
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}

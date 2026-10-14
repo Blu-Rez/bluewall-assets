@@ -1,0 +1,47 @@
+{
+ "name": "rocks_boulder",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "tris": 6000,
+ "kb": 232,
+ "objects": [
+  {
+   "name": "slab",
+   "tris": 1500,
+   "size_rel": [
+    0.216,
+    0.21,
+    0.249
+   ]
+  },
+  {
+   "name": "slate",
+   "tris": 1500,
+   "size_rel": [
+    0.263,
+    0.245,
+    0.223
+   ]
+  },
+  {
+   "name": "mossy",
+   "tris": 1500,
+   "size_rel": [
+    0.216,
+    0.215,
+    0.226
+   ]
+  },
+  {
+   "name": "granite",
+   "tris": 1500,
+   "size_rel": [
+    0.229,
+    0.237,
+    0.219
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack, absolute scale comes later"
+}
