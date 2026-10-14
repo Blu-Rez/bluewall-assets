@@ -6,7 +6,7 @@
 // A site is rebuilt only when its level changes; everything is placed from the site's x, z, ry so the layout editor (p40) can move a site and call rebuild().
 import * as THREE from 'three';
 import { bakePieces } from './village.js';
-import { sites, pieces, counts, wsLevel, tierOf, countAt, WS_KINDS } from './worksites.js';
+import { sites, pieces, counts, wsLevel, tierOf, countAt, WS_KINDS, inClip } from './worksites.js';
 import { rng } from './noise.js';
 import * as C1 from './c1_kinds.js';                                   // C1 (water family): kinds, smoke points, MINOR bucket
 import { PROC_C1 } from './c1_proc.js';                                // C1: nets, sluice boxes, smoke stack, drying sheds, fish baskets
@@ -50,10 +50,11 @@ function frame(site, hf) {
 
 // a soup with local-frame primitives for one site
 function maker(site, hf) {
-  const F = frame(site, hf), S = new Soup(), Gl = new Soup(), Oil = new Soup();
+  const F = frame(site, hf), S = new Soup(), Gl = new Soup(), Oil = new Soup(), okc = (lx, lz) => inClip(site.clip, lx, lz);      // P1: a town lot draws only what stands inside its rectangle (site.clip, local frame)
   const P3 = (lx, ly, lz) => { const [x, z] = F.W(lx, lz); return [x, ly, z]; };
   // oriented box: centre (lx, lz), bottom y (absolute above the pad), size, rotation about y (local)
   const box = (T, lx, lz, y, sx, sy, sz, ry, k) => {
+    if (!okc(lx, lz)) return;
     const c = Math.cos(ry), s = Math.sin(ry);
     const q = (u, v) => P3(lx + u * c + v * s, y, lz - u * s + v * c);
     const lo = [[-sx / 2, -sz / 2], [sx / 2, -sz / 2], [sx / 2, sz / 2], [-sx / 2, sz / 2]].map(([u, v]) => { const [a, , b] = q(u, v); return [a, F.y0 + y, b]; });
@@ -63,6 +64,7 @@ function maker(site, hf) {
     T.quad(hi[0], hi[1], hi[2], hi[3], sh(1.1));
   };
   const cyl = (T, lx, lz, y, r, h, seg, k, rt = r) => {
+    if (!okc(lx, lz)) return;
     const ring = (rr, yy) => Array.from({ length: seg }, (_, i) => { const a = (i / seg) * 6.283; return P3(lx + Math.cos(a) * rr, F.y0 + yy, lz + Math.sin(a) * rr); });
     const a = ring(r, y), b = ring(rt, y + h);
     for (let i = 0; i < seg; i++) { const j = (i + 1) % seg; T.quad(a[i], a[j], b[j], b[i], new THREE.Color(k.r * (0.82 + 0.18 * Math.cos(i / seg * 6.283)), k.g * (0.82 + 0.18 * Math.cos(i / seg * 6.283)), k.b * (0.82 + 0.18 * Math.cos(i / seg * 6.283)))); }
@@ -70,6 +72,7 @@ function maker(site, hf) {
   };
   // ground-hugging disc / strip (every vertex follows the terrain)
   const disc = (T, lx, lz, r, k, lift = 0.14, seg = 18, rings = 3) => {
+    if (!okc(lx, lz)) return;
     const V = (rr, i) => { const a = (i / seg) * 6.283, [x, z] = F.W(lx + Math.cos(a) * rr, lz + Math.sin(a) * rr); return [x, hf(x, z) + lift, z]; };
     const [cx, cz] = F.W(lx, lz), C0 = [cx, hf(cx, cz) + lift, cz];
     for (let g = 0; g < rings; g++) for (let i = 0; i < seg; i++) {
@@ -78,6 +81,7 @@ function maker(site, hf) {
     }
   };
   const gquad = (T, lx0, lz0, lx1, lz1, k, lift = 0.12, nx = 3, nz = 3) => {   // terrain-following rectangle (x0..x1, z0..z1), local axes
+    if (!okc((lx0 + lx1) / 2, (lz0 + lz1) / 2)) return;
     const V = (u, v) => { const [x, z] = F.W(lx0 + (lx1 - lx0) * u, lz0 + (lz1 - lz0) * v); return [x, hf(x, z) + lift, z]; };
     for (let i = 0; i < nx; i++) for (let j = 0; j < nz; j++) T.quad(V(i / nx, j / nz), V((i + 1) / nx, j / nz), V((i + 1) / nx, (j + 1) / nz), V(i / nx, (j + 1) / nz), k);
   };
@@ -213,7 +217,7 @@ function mergeKits(ws, extras) {
 const isC3 = (n) => n.startsWith('c3_'), isC4 = (n) => n.startsWith('c4_');
 const smallMain = (n) => MINOR.test(n) || C1.MINOR.test(n) || C2_MINOR.test(n);
 export const WS_NEAR = 170, WS_FAR = 620;     // m from the camera: small props appear inside WS_NEAR, whole sites vanish beyond WS_FAR
-export function buildWorksites(scene, gltf0, hf, { shadows = false, castle = 30, kitC1 = null, kitC2 = null, kitC3 = null, kitC4 = null, smokeList = null } = {}) {
+export function buildWorksites(scene, gltf0, hf, { shadows = false, castle = 30, kitC1 = null, kitC2 = null, kitC3 = null, kitC4 = null, smokeList = null, tids = null } = {}) {
   const kit = mergeKits(gltf0, [kitC1, kitC2]);
   const group = new THREE.Group(); group.name = 'worksites'; scene.add(group);
   const state = new Map();                         // site id -> { lv, g }
@@ -226,11 +230,11 @@ export function buildWorksites(scene, gltf0, hf, { shadows = false, castle = 30,
     const g = new THREE.Group(); g.name = 'ws:' + site.id; if (c4a) c4a.set(site.id, []);
     for (let i = flames.length - 1; i >= 0; i--) if (flames[i].site === site.id) flames.splice(i, 1);
     if (lv > 0) {
-      const c = Math.cos(site.ry), s = Math.sin(site.ry), list = [], l3 = [], l4 = [];
+      const c = Math.cos(site.ry), s = Math.sin(site.ry), list = [], l3 = [], l4 = [], bid = (tids && tids.get(site.id)) || 0;      // P1: a town lot's pieces belong to the battle target of its block (destruct.js)
       for (const p of pieces(site, lv)) {
         const wx = site.x + p.x * c + p.z * s, wz = site.z - p.x * s + p.z * c;
         m4.compose(v.set(wx, hf(wx, wz) - 0.04, wz), q.setFromAxisAngle(up, site.ry + p.ry), sc.set(p.s, p.s, p.s));
-        (isC3(p.n) ? l3 : isC4(p.n) ? l4 : list).push({ name: p.n, matrix: m4.clone() });      // 'c3_*' come from kit_c3.glb, 'c4_*' from kit_c4.glb (skipped silently while a kit is not loaded), the rest from kit_ws (+ C1 / C2)
+        (isC3(p.n) ? l3 : isC4(p.n) ? l4 : list).push({ name: p.n, matrix: m4.clone(), bid });      // 'c3_*' come from kit_c3.glb, 'c4_*' from kit_c4.glb (skipped silently while a kit is not loaded), the rest from kit_ws (+ C1 / C2)
       }
       // two bakes: the BIG things (buildings, fences, boats, camels, rock faces) are seen from far; the small props (barrels, carts, tools, racks) only from near by (update())
       let minor = null; if (list.length || l3.length || l4.length) { minor = new THREE.Group(); minor.name = 'minor'; g.add(minor); g.userData.minor = minor; }
@@ -246,13 +250,13 @@ export function buildWorksites(scene, gltf0, hf, { shadows = false, castle = 30,
         bakePieces(g, kitC4, l4.filter((o) => !C4MINOR.test(o.name)), { shadows, tag: 'ws:' + site.id + ':c4' });
         bakePieces(minor, kitC4, l4.filter((o) => C4MINOR.test(o.name)), { shadows: false, tag: 'ws:' + site.id + ':c4m' });
       }
-      if (c4a) c4a.set(site.id, c4movers(site.kind, lv, site).map((m) => { const wx = site.x + m.x * c + m.z * s, wz = site.z - m.x * s + m.z * c; return { n: m.n, x: wx, y: hf(wx, wz) - 0.04, z: wz, yaw: site.ry + m.ry, s: m.s, spin: m.spin }; }));
+      if (c4a) c4a.set(site.id, c4movers(site.kind, lv, site).filter((m) => inClip(site.clip, m.x, m.z)).map((m) => { const wx = site.x + m.x * c + m.z * s, wz = site.z - m.x * s + m.z * c; return { n: m.n, x: wx, y: hf(wx, wz) - 0.04, z: wz, yaw: site.ry + m.ry, s: m.s, spin: m.spin }; }));
       const M = maker(site, hf), R = rng(((site.x * 31) ^ (site.z * 17)) >>> 0 || 5);
       (PROC[site.kind] || (() => {}))(M, lv, R); (PROC_C1[site.kind] || (() => {}))(M, lv, R, site); (C4PROC[site.kind] || (() => {}))(M, lv, R, site);
       // smoke + flame points (site-local -> world): every chimney becomes a world.js smoker record, every flame a point in `flames`
       const sm = [], W = (f) => [site.x + f.x * c + f.z * s, site.z - f.x * s + f.z * c];
-      const smoke = (f, heavy) => { const [wx, wz] = W(f), r = { x: wx, y: hf(wx, wz) + f.y, z: wz, heavy: !!heavy, acc: Math.random(), off: false }; smokers.push(r); sm.push(r); };
-      const flame = (f, size, colr) => { const [wx, wz] = W(f); flames.push({ x: wx, y: hf(wx, wz) + (f.y || 0), z: wz, size: size || 1.6, col: colr || [1, 0.55, 0.18], site: site.id }); };
+      const smoke = (f, heavy) => { if (!inClip(site.clip, f.x, f.z)) return; const [wx, wz] = W(f), r = { x: wx, y: hf(wx, wz) + f.y, z: wz, heavy: !!heavy, acc: Math.random(), off: false }; smokers.push(r); sm.push(r); };
+      const flame = (f, size, colr) => { if (!inClip(site.clip, f.x, f.z)) return; const [wx, wz] = W(f); flames.push({ x: wx, y: hf(wx, wz) + (f.y || 0), z: wz, size: size || 1.6, col: colr || [1, 0.55, 0.18], site: site.id }); };
       for (const f of C1.smokers(site.kind, lv)) smoke(f, f.heavy);
       for (const f of C2_FX(site.kind, lv)) { if (f.k === 'smoke') smoke(f, f.heavy); else flame(f, 1.8, [1, 0.55, 0.18]); }
       { const fx = c3fx(site.kind, lv); for (const f of fx.flames) flame(f, f.size, f.col); for (const f of fx.smoke) smoke(f, false); }

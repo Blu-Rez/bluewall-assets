@@ -153,8 +153,10 @@ export function buildBuildings(ctx) {
   // ------------------------------------------------ windmill, grain fields, fences, hay (outside)
   {
     const { x, z } = L.WINDMILL, y0 = height(x, z) - 0.2;
-    ctx.liveWindmill(x, y0, z, 0.85, 13);
-    ctx.pick({ x, z, y0, y1: y0 + 20, r: 6 }, 'windmill');
+    if (!(L.SITES || []).some((q) => q.id === 'mill_wind1')) {          // P1: on the night map the legacy windmill is RETIRED: the wind mill site `mill_wind1` (layout.js WS_SITES) stands on its spot (worksites -> wsbuild, tap box `ws:mill_wind1`); the day map has no worksites and keeps it
+      ctx.liveWindmill(x, y0, z, 0.85, 13);
+      ctx.pick({ x, z, y0, y1: y0 + 20, r: 6 }, 'windmill');
+    }
     for (const F of L.FARMS) {
       const c = Math.cos(F.rot), s = Math.sin(F.rot);
       const Fp = (lx, lz) => [F.x + lx * c + lz * s, F.z - lx * s + lz * c];

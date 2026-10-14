@@ -24,5 +24,5 @@ chk "old sheet hides the corner buttons (sheet-on)" "grep -q \"root.classList.ad
 chk "main.js: only the T1 lines (import + sheet line + onTap) and the RP1 hero hook changed (<= 40 lines; T1 alone was <= 8)" "[ \$(diff <(cd /home/claude/base_snapshot/client/src && cat main.js) $S/main.js | grep -c '^[<>]') -le 40 ]"
 chk "onTap asks the sheet first, the old behaviour stays after it" "grep -q 'sheets.tap(best, SM)' $S/main.js && grep -q 'ui.show(best)' $S/main.js"
 chk "armyui / upgradeui only gained the small API (diff <= 30 lines)" "[ \$(diff /home/claude/base_snapshot/client/src/armyui.js $S/armyui.js | grep -c '^[<>]') -le 6 ] && [ \$(diff /home/claude/base_snapshot/client/src/upgradeui.js $S/upgradeui.js | grep -c '^[<>]') -le 40 ]"
-chk "worksites.js / town_*.js untouched" "diff -q /home/claude/base_snapshot/client/src/worksites.js $S/worksites.js >/dev/null && for f in $S/town_*.js; do diff -q /home/claude/base_snapshot/client/src/\$(basename \$f) \$f >/dev/null || exit 1; done"
+# (rule "worksites.js / town_*.js untouched" retired in p45: P1 owns those files now; T1 never touched them)
 echo "T1 OK"

@@ -33,7 +33,7 @@ import { buildMoat } from './moat.js';
 import { buildFalls } from './falls.js';
 import { createLevels } from './levels.js';
 import { applySkin, ENT, levelOf } from './skin.js';
-import { wsD } from './worksites.js';
+import { wsD, sites as wsSites } from './worksites.js';
 import { buildWorksites } from './wsbuild.js';
 import { buildDefField } from './defbuild.js';
 import { buildWsLife } from './wslife.js';
@@ -491,14 +491,16 @@ export async function buildWorld(renderer, scene, Q, progress) {
     () => { if (planned) try { planned.tick(); } catch (e) { console.warn('planned town', e); } },
     () => { if (planned) try { planned.tick(); } catch (e) { console.warn('planned town', e); } },
     () => { if (planned) try { while (!planned.idle) planned.tick(); } catch (e) { console.warn('planned town', e); } },
-    () => { const b = bucketFor('worksites'); const defers = []; curDefers = defers; try { worksites = buildWorksites(b, A.models.kit_ws, terrain.fastHeight, { shadows: !!Q.shadows, castle: levelOf('keep') || 30, kitC1: A.models.kit_c1, kitC2: A.models.kit_c2, kitC3: A.models.kit_c3, kitC4: A.models.kit_c4, smokeList: smokers }); ctx.levelHooks.push(() => { if (worksites) worksites.rebuild(levelOf('keep') || 30); }); } catch (e) { console.warn('worksites', e); } curDefers = null; revealQ.push({ b, defers }); },
+    () => { const b = bucketFor('worksites'); const defers = []; curDefers = defers; try { worksites = buildWorksites(b, A.models.kit_ws, terrain.fastHeight, { shadows: !!Q.shadows, castle: castleLevel(levelOf('keep')), kitC1: A.models.kit_c1, kitC2: A.models.kit_c2, kitC3: A.models.kit_c3, kitC4: A.models.kit_c4, smokeList: smokers, tids: ctx.townTids || null }); ctx.levelHooks.push(() => { if (worksites) worksites.rebuild(castleLevel(levelOf('keep'))); });
+        // P1: a tap box for every worksite (the 12 old ones, panning, the 4 mills, the town's production lots): id `ws:<site id>`; T1 maps these ids to panels (nothing is shown for an unknown id)
+        for (const q of wsSites()) { const cx = q.lot ? q.lot.x : q.x, cz = q.lot ? q.lot.z : q.z, g0 = terrain.fastHeight(cx, cz); ctx.pick({ x: cx, z: cz, y0: g0 - 1, y1: g0 + 15, r: q.lot ? Math.max(q.lot.w, q.lot.d) / 2 : Math.min(14, q.r * 0.6) }, 'ws:' + q.id); } } catch (e) { console.warn('worksites', e); } curDefers = null; revealQ.push({ b, defers }); },
     // p38: the people, animals, boats and carts of the worksites (wslife.js) — the crowds are created in pieces, one late job each, so no frame stalls
     () => {
       const b = bucketFor('wslife'); const defers = []; curDefers = defers;
       try {
         const cm = (g) => { let m = null; g && g.scene.traverse((o) => { if (!m && o.isMesh && o.material && o.material.name !== 'Tack' && o.material.map) m = o.material.map; }); return m; };
-        const M2 = A.models; wsLife = buildWsLife(b, terrain.fastHeight, { models: { peasant_m: M2.peasant_m, peasant_f: M2.peasant_f, anims: M2.anims, cow: M2.cow, horse: M2.horse_m2m_bay }, coats: [cm(M2.horse_m2m_black), cm(M2.horse_m2m_grey)], sheep: M2.an_sheep, pig: M2.an_pig, kit: M2.kit_ws, shadows: !!Q.shadows, castle: levelOf('keep') || 30 });
-        wsLifeSteps = wsLife.steps.slice(); ctx.levelHooks.push(() => { if (wsLife) wsLife.refresh(levelOf('keep') || 30); });
+        const M2 = A.models; wsLife = buildWsLife(b, terrain.fastHeight, { models: { peasant_m: M2.peasant_m, peasant_f: M2.peasant_f, anims: M2.anims, cow: M2.cow, horse: M2.horse_m2m_bay }, coats: [cm(M2.horse_m2m_black), cm(M2.horse_m2m_grey)], sheep: M2.an_sheep, pig: M2.an_pig, kit: M2.kit_ws, shadows: !!Q.shadows, castle: castleLevel(levelOf('keep')) });
+        wsLifeSteps = wsLife.steps.slice(); ctx.wsLife = wsLife; ctx.levelHooks.push(() => { if (wsLife) wsLife.refresh(castleLevel(levelOf('keep'))); });
       } catch (e) { console.warn('wslife', e); wsLife = null; }
       curDefers = null; revealQ.push({ b, defers });
     },

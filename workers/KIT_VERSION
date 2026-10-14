@@ -1,4 +1,5 @@
-kit = p44 (built 14 Oct 2026, NOT installed on the server yet; the server runs p43).
-Merged on top of p43: D1 (one death effect) + T1 (building sheets) + LD1b (loading sword) + RP1 (owner hero mode) + server.py: /assets/*.js served as JavaScript (RP1 needs it).
-Gate: GATE_W: ALL OK (noRoute 622). workers/pkg/deployed.sha256 = server state after p43.
-Next in the mother's queue: P1 (production lots + mills) -> kit p45.
+kit = p45 (built 14 Oct 2026, NOT installed on the server yet; the server runs p43; package branches pkg/p44 and pkg/p45 — p45 contains p44).
+Merged on top of p43: D1 (one death effect) + T1 (building sheets) + LD1b (loading sword) + RP1 (owner hero mode) + P1 (production lots + mills: 10 new worksite kinds on the map, 5 outer sites, town lots) + server.py: /assets/*.js served as JavaScript (RP1 needs it).
+Gate: GATE_W: ALL OK (noRoute 667, limit 700 — every patch that adds targets/solids must be measured). New tests in dev/: p1_test (needs dev/p1_kitext.json, made by dev/p1_kitext.mjs from the kit GLBs).
+T1 rule "worksites.js / town_*.js untouched" retired (P1 owns them). workers/pkg/deployed.sha256 = server state after p43.
+Next in the mother's queue: TR2 stage patches (one at a time, as they arrive in inbox/TR2_*), then the army chat.

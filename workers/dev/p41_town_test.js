@@ -114,6 +114,6 @@ say(onT.length === 0, `no lot on a mountain stream (${lay.streams.map((s) => s.i
 {
   const s1 = JSON.stringify(homePieces('cottage', 30, hashId('cottage_00'))), s2 = JSON.stringify(homePieces('cottage', 30, hashId('cottage_00')));
   say(s1 === s2 && hashId('cottage_00') !== hashId('cottage_01'), 'a lot keeps its look: the same id gives the same seed gives the same pieces');
-  say(planLots().length === P.list.filter((p) => p.role === 'H' || p.role === 'C').length, `planLots(): ${planLots().length} reserved lots (homes + civic; the production lots stay free until they are wired)`);
+  say(planLots().length === P.list.filter((p) => p.role === 'H' || p.role === 'C' || (p.role === 'P' && p.kind !== 'jeweler')).length, `planLots(): ${planLots().length} reserved lots (homes + civic + the production lots, P1; the jeweler lot has no model and stays free)`);
 }
 console.log(fails ? `P41 FAILED (${fails})` : 'P41 OK'); process.exit(fails ? 1 : 0);

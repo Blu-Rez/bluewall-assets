@@ -186,6 +186,15 @@ export const WS_SITES = [
   { id: 'slaughter', kind: 'slaughter', x: -75.8, z: 264.3, ry: -2.417, r: 18, link: [-130.8, 202.2] },
   { id: 'fishery_lake', kind: 'fishery', x: -123.3, z: 280.0, ry: -2.304, r: 22, link: [-130.8, 202.2], water: [-160.8, 246.2] },
   { id: 'fishery_river', kind: 'fishery', x: 189.3, z: -169.3, ry: 0.686, r: 22, link: [173.2, -159.5], water: [205.1, -150.0] },
+  // P1 (7 Oct 2026, the owner's order «یه آسیاب آبی و یه آسیاب بادی، یا دو تا از هر کدوم»): the processing kinds that stand OUTSIDE the walls — gold panning on the north-east river bank, 2 water mills on the
+  // shore (the A2 stream W / the river W of the town, `nopad`: they keep the natural bank so the water stays where it is), 2 wind mills (wind1 = the old windmill's spot: the legacy L.WINDMILL is retired and this one
+  // stands there; wind2 on the hill south of the second field patch).  Found offline (dev/p1_scan.mjs); the nine other kinds stand on B1's production lots in the town (town_plan.js prodSites()).
+  // `unlock` overrides the kind's level (wind1 stands from level 1: the windmill was always there).  The water point of a mill is 15 m in front of it (local +z).
+  { id: 'panning', kind: 'panning', x: 269.5, z: -160.6, ry: -2.773, r: 22, link: [192.8, -127.5], water: [260.5, -183.9] },
+  { id: 'mill_water1', kind: 'mill', variant: 'water', x: -106.0, z: -178.0, ry: 2.620, r: 16, link: [-108.3, -195.3], water: [-98.5, -191.0], nopad: true },
+  { id: 'mill_water2', kind: 'mill', variant: 'water', x: -166.0, z: 140.0, ry: 2.360, r: 16, link: [-157.4, 132.8], water: [-155.4, 129.4], nopad: true },
+  { id: 'mill_wind1', kind: 'mill', variant: 'wind', x: 295.4, z: 42.6, ry: 2.550, r: 22, link: [220.7, 5.6], unlock: 1 },
+  { id: 'mill_wind2', kind: 'mill', variant: 'wind', x: 180.0, z: 315.0, ry: 3.142, r: 22, link: [130.2, 231.5] },
 ];
 function xz([x, z]) { return { x, z }; }
 const S = 46, T3 = S / 3;
@@ -237,7 +246,7 @@ export function setMap(m) {
   FARMS = [FIELDS, FIELDS2].filter(Boolean);
   // p38: worksites — each stands on a level pad (flat inside 0.9 r (0.72 r at the fisheries), blended into the hills over 16 m); the pad's height is the natural ground at the site's middle
   PADS = []; SITES = MAP === 'night' && TOWN ? WS_SITES : [];
-  for (const w of SITES) PADS.push({ x: w.x, z: w.z, r: w.r * (w.water ? 0.72 : 0.9), b: 16, h: null });     // (the fisheries keep their banks: the water lies at the pad's edge)
+  for (const w of SITES) if (!w.nopad) PADS.push({ x: w.x, z: w.z, r: w.r * (w.water ? 0.72 : 0.9), b: 16, h: null });      // (P1: `nopad` = the water mills keep the natural bank)     // (the fisheries keep their banks: the water lies at the pad's edge)
   PAD_DIRTY = PADS.length > 0;                  // (the pad heights are measured on the first height() call: setMap runs before the helpers below exist)
   const gateOf = (poly, i) => {
     const mm = segMid(poly, i), n = segNormalOut(poly, i), a = poly[i], b = poly[(i + 1) % poly.length];

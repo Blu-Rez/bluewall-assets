@@ -10,7 +10,7 @@ export function staticSolids() {
   const out = [];
   if (L.FIELDS) { out.push([L.FIELDS.x + L.FIELDS.w / 2 + 18, L.FIELDS.z + 4, 11], [L.FIELDS.x + L.FIELDS.w / 2 + 10, L.FIELDS.z - 14, 6]); }
   try { for (const H of hamlets()) for (const h of H.houses) out.push([h.x, h.z, Math.max(h.w, h.d) * 0.62 + 1.4]); } catch (e) { /* no hamlets on this map */ }
-  if (L.WINDMILL) out.push([L.WINDMILL.x, L.WINDMILL.z, 9]);
+  if (L.WINDMILL && !(L.SITES || []).some((q) => q.id === 'mill_wind1')) out.push([L.WINDMILL.x, L.WINDMILL.z, 9]);      // (P1: on the night map the wind mill site stands there and brings its own solids)
   try { for (const w of wsSolids()) out.push(w); } catch (e) { /* no worksites on this map */ }          // p38: the lumber mill, the mines, the barns, the huts… of the worksites
   try { for (const w of defSolids(30)) out.push(w); } catch (e) { /* no defence field on this map */ }     // p38: the watchtowers, the ballista outposts, the braziers, the fire stones
   try { for (const w of townSolids(30)) out.push(w); } catch (e) { /* no town plan on this map */ }                  // p41: the civic buildings of the plan (the market hall and stalls, the town hall, the inns, the chapel, the wells; never on a street)

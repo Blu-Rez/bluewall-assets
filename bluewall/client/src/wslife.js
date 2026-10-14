@@ -14,7 +14,7 @@ import { peasantHeadProp } from './peasanthead.js';
 import { mergeSkinned } from './creature.js';
 import { axeProp, AXE_GRIP } from './gear_axe.js';
 import { crowdShadows, cowPatch, coatPatch, smoothSkinned, measure, prepHorse, scaleK } from './pas_life.js';
-import { sites, counts, wsLevel, tierOf } from './worksites.js';
+import { sites, counts, wsLevel, tierOf, inClip } from './worksites.js';
 import { planStores } from './stores.js';
 import * as C1 from './c1_kinds.js';       // C1: workers / carts of the panning + smokehouse sites
 import * as C2 from './c2_kinds.js';       // C2: workers / carts of the sawmill / masonry / smelter sites
@@ -76,7 +76,20 @@ const TRADES = {
     return [{ k: 'man', w: 3, tasks: w }, { k: 'man', w: 2, tasks: [K(-6, 11, -6, 9.5, 'Fixing_Kneeling', 6, 10), K(5, 11, 5, 9.5, 'Fixing_Kneeling', 6, 10), K(0, 18, 0, 20, 'Idle_Talking_Loop', 6, 11), K(-9, 18, -10, 20, 'Interact', 5, 9)] }];
   },
 };
-Object.assign(TRADES, C1.TRADES, C2.TRADES);      // (C1 / C2: new kinds only; C3 / C4 ship no trades yet: mint, refinery, mill, bakery, butcher stay empty until they are wired, see WIRING_TODO)
+Object.assign(TRADES, C1.TRADES, C2.TRADES);      // (C1 / C2: new kinds only)
+// P1: mint / refinery (C3) and mill / bakery / butcher (C4) shipped no workers: who stands where (site-local metres, the building is at the back, z < 0; a town lot's clip rectangle drops what is outside the lot)
+Object.assign(TRADES, {
+  mill: [{ k: 'man', w: 3, tasks: [K(-2.6, -0.2, -2.6, -2, 'Interact', 6, 11), K(2.6, 0.2, 2.6, -2, 'Interact', 6, 11), K(5, 3, 5, 1.5, 'Interact', 5, 9), K(-6, 3, -6, 1.5, 'Fixing_Kneeling', 5, 9)] },
+         { k: 'woman', f: 1, w: 1, tasks: [K(0, 2.5, 0, 0.5, 'Idle_Talking_Loop', 5, 9), K(-9, 5, -9, 3.5, 'Fixing_Kneeling', 5, 9)] }],
+  bakery: [{ k: 'woman', f: 1, w: 3, tasks: [K(-5.2, 5, -5.2, 3.4, 'Interact', 6, 11), K(-2, -0.5, -2, -3, 'Interact', 6, 11), K(2, -0.5, 2, -3, 'Interact', 6, 11), K(6.5, 0.5, 6.5, -2.5, 'Interact', 5, 9)] },
+           { k: 'man', w: 2, tasks: [K(5.4, 1.6, 6.5, -1.5, 'Interact', 5, 9), K(0, 3, 0, 1, 'Idle_Talking_Loop', 5, 9)] }],
+  butcher: [{ k: 'man', w: 3, tasks: [K(-6.5, 4.2, -6.5, 2.5, 'Interact', 6, 11), K(0, -1.5, 0, -4, 'Interact', 6, 11), K(8.5, 1.5, 8.5, -1, 'Interact', 5, 9)] },
+            { k: 'woman', f: 1, w: 1, tasks: [K(7.5, 3.2, 7.5, 1.2, 'Interact', 5, 9)] }],
+  mint: [{ k: 'man', w: 3, tasks: [K(-3.1, 4.9, -3.1, 3, 'Interact', 7, 12), K(0.2, 4.9, 0.2, 3, 'Interact', 7, 12), K(3.7, 4.9, 3.7, 2.9, 'Interact', 7, 12), K(-4.6, 8, -4.7, 6.3, 'Fixing_Kneeling', 6, 10)] },
+         { k: 'man', w: 2, tasks: [K(4.9, -2.5, 4.9, -4, 'Idle_Talking_Loop', 6, 11), K(-1, -0.3, -1, -3, 'Interact', 5, 9)] }],
+  refinery: [{ k: 'man', w: 3, tasks: [K(1.2, 5.6, 1.2, 3.6, 'Interact', 6, 11), K(5.4, 5.4, 5.4, 3.5, 'Interact', 6, 11), K(6.4, -1.3, 6.4, -3.8, 'Interact', 7, 12), K(-2.2, -5.2, -2.2, -8, 'Interact', 7, 12)] },
+             { k: 'man', w: 2, tasks: [K(-8.6, -1, -8.6, -3.8, 'Interact', 6, 10), K(11.6, -1, 11.6, -3.8, 'Fixing_Kneeling', 6, 10)] }],
+});
 const tradesOf = (site, lv) => { const t = TRADES[site.kind]; return typeof t === 'function' ? t(lv) : t; };
 
 // the pens / yards where animals live: [kind, cx, cz, halfW, halfD, max]
@@ -120,15 +133,23 @@ export function shortest(a, b) {                                        // Dijks
   if (dist[b] >= 1e9) return null; const out = []; for (let u = b; u >= 0; u = prev[u]) out.push([N[u].x, N[u].z]); return out.reverse();
 }
 const STORE_OF = { lumber: 'wood', quarry: 'stone', iron: 'iron', gold: 'gold', oil: 'oil', farm: 'food', livestock: 'food', fishery: 'food', slaughter: 'food', greenhouse: 'food' };
-Object.assign(STORE_OF, C1.STORE_OF, { sawmill: 'wood', masonry: 'stone', smelter: 'iron' });      // (C2's own product stores `planks` / `cutstone` / `ironbars` do not exist in stores.js yet: they haul to the raw-material store)
-export function haulRoute(site) {
+Object.assign(STORE_OF, C1.STORE_OF, { sawmill: 'wood', masonry: 'stone', smelter: 'iron', mint: 'gold', refinery: 'oil', mill: 'food', bakery: 'food', butcher: 'food' });      // (C2's own product stores `planks` / `cutstone` / `ironbars` do not exist in stores.js yet: they haul to the raw-material store)
+// P1: the chain (owner: «گندم → آسیاب → آرد → نانوایی»): a supply site's carts drive to the nearest processing site that stands at the castle level, a processing site's carts to its store
+const CHAIN = { farm: 'mill', mill: 'bakery', lumber: 'sawmill', quarry: 'masonry', iron: 'smelter', gold: 'mint', panning: 'mint', oil: 'refinery', fishery: 'smokehouse', slaughter: 'butcher' };
+export const chainDest = (site, castle = 30) => {
+  const want = CHAIN[site.kind]; if (!want) return null; let best = null, bd = 1e9;
+  for (const t of sites()) if (t.kind === want && t.id !== site.id && wsLevel(t, castle) > 0) { const d = Math.hypot(t.x - site.x, t.z - site.z); if (d < bd) { bd = d; best = t; } }
+  return best;
+};
+export function haulRoute(site, castle = 30) {
   try {
-    const st = planStores().find((s) => s.id === STORE_OF[site.kind]); if (!st) return null;
-    const G = graph(), front = toW(site, 0, site.r * 0.55), a = G.near(front[0], front[1]), b = G.near(st.x, st.z);
+    const dest = chainDest(site, castle), st = dest ? null : planStores().find((s) => s.id === STORE_OF[site.kind]); if (!dest && !st) return null;
+    const G = graph(), front = toW(site, 0, site.r * 0.55), a = G.near(front[0], front[1]);
+    const fd = dest ? toW(dest, 0, dest.r * 0.55) : null, b = fd ? G.near(fd[0], fd[1]) : G.near(st.x, st.z);
     const path = shortest(a, b); if (!path || path.length < 2) return null;
-    const route = [[front[0], front[1]], ...path, [st.x + Math.sin(st.ry) * 6, st.z + Math.cos(st.ry) * 6]];
+    const route = [[front[0], front[1]], ...path, fd ? [fd[0], fd[1]] : [st.x + Math.sin(st.ry) * 6, st.z + Math.cos(st.ry) * 6]];
     const cum = [0]; for (let i = 1; i < route.length; i++) cum.push(cum[i - 1] + Math.hypot(route[i][0] - route[i - 1][0], route[i][1] - route[i - 1][1]));
-    return { pts: route, cum, len: cum[cum.length - 1] };
+    return { pts: route, cum, len: cum[cum.length - 1], dest: dest ? dest.id : null };
   } catch (e) { console.warn('haulRoute', site.id, e); return null; }
 }
 function alongRoute(rt, s, out) {                                // position + heading at distance s
@@ -229,7 +250,8 @@ export function buildWsLife(group, height, opt) {
   };
   function spawnSite(site, lv) {
     const S = { site, lv, agents: [], animals: [], busy: new Set(), carts: [], boats: [] };
-    const c = counts(site, lv), trades = tradesOf(site, lv) || [];
+    const c = counts(site, lv); let trades = tradesOf(site, lv) || [];
+    if (site.clip) { trades = trades.map((t) => ({ ...t, tasks: t.tasks.filter((k) => inClip(site.clip, k.x, k.z)) })).filter((t) => t.tasks.length); c.workers = Math.min(c.workers || 0, trades.reduce((n, t) => n + t.tasks.length, 0)); }       // P1: a town lot keeps its people inside the lot (one per task spot)
     if (alive.people && trades.length) {
       const total = trades.reduce((s, t) => s + t.w, 0), nW = Math.max(0, c.workers - (site.kind === 'fishery' ? (c.fishermen || 0) : 0));
       for (let i = 0; i < nW; i++) {
@@ -269,9 +291,9 @@ export function buildWsLife(group, height, opt) {
     ws_sack: { s: 1.3, it: [...grid([-1.5, -0.5, 0.5, 1.5], [0], [0], 1), ...grid([-1, 0, 1], [0], [1], 0.55)] }, ws_fishset: { s: 0.9, it: [[-1.0, 0, 0, 0], [1.0, 0, 0, 0.2]] },
   };
   const CART_OF = { lumber: ['ws_cart1', 'ws_logs', 3], quarry: ['ws_cart2', 'ws_stoneblocks', 2], iron: ['ws_cart2', 'ws_boulderA', 2], gold: ['ws_cart3', 'ws_goldbars', 3], oil: ['ws_cart2', 'ws_barrelold', 3], farm: ['ws_cart1', 'ws_farmcrate_apple', 3], livestock: ['ws_cart1', 'ws_sack', 4], fishery: ['ws_cart3', 'ws_fishset', 3], slaughter: ['ws_cart3', 'ws_barrel', 3], greenhouse: ['ws_cart1', 'ws_farmcrate_empty', 3] };
-  Object.assign(CART_OF, C1.CART_OF, C2.CART_OF);
+  Object.assign(CART_OF, C1.CART_OF, C2.CART_OF, { mint: ['ws_cart3', 'ws_goldbars', 3], refinery: ['ws_cart2', 'ws_barrelold', 3], mill: ['ws_cart1', 'ws_sack', 4], bakery: ['ws_cart1', 'ws_farmcrate_empty', 3], butcher: ['ws_cart3', 'ws_barrel', 3] });
   function spawnCarts(S, n) {
-    const rt = haulRoute(S.site); if (!rt || rt.len < 20) return;
+    const rt = haulRoute(S.site, typeof castle === 'number' ? castle : 30); if (!rt || rt.len < 20) return;
     const [cartName, loadName, nLoad] = CART_OF[S.site.kind] || CART_OF.lumber;
     for (let i = 0; i < n; i++) {
       const speed = R2(1.9, 2.4), cycle = (rt.len * 2) / speed + 2 * R2(6, 10);

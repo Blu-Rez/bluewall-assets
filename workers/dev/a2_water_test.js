@@ -41,7 +41,7 @@ for (const st of S) {
   ok(miss.length === 0 && spur.length === 0, `${st.id}: every road crossing is bridged (${cross.length} crossing(s): ${cross.join(' ') || '-'}${miss.length ? '; MISSING ' + miss.join(' ') : ''}${spur.length ? '; hamlet spur crossing ' + spur.join(' ') : ''})`);
   // 5. clearances: worksites, camp, mines, fields, other roads' hamlets
   const dmin = (o) => Math.min(...smp.map(([x, z]) => Math.hypot(x - o.x, z - o.z)));
-  const bad = []; for (const s of L.SITES) if (dmin(s) < s.r + 14) bad.push(s.id + ' ' + (dmin(s) - s.r).toFixed(0)); for (const m of L.MINES) if (dmin(m) < 45) bad.push(m.id); if (dmin(L.CAMP) < (L.CAMP.fr ?? L.CAMP.r) + 8) bad.push('CAMP'); for (const o of [L.PASTURE, L.MUSTER, L.LAIR]) if (dmin(o) < (o.fr ?? o.r) + 8) bad.push('zone');
+  const bad = []; for (const s of L.SITES) if (!s.nopad && dmin(s) < s.r + 14) bad.push(s.id + ' ' + (dmin(s) - s.r).toFixed(0)); for (const m of L.MINES) if (dmin(m) < 45) bad.push(m.id); if (dmin(L.CAMP) < (L.CAMP.fr ?? L.CAMP.r) + 8) bad.push('CAMP'); for (const o of [L.PASTURE, L.MUSTER, L.LAIR]) if (dmin(o) < (o.fr ?? o.r) + 8) bad.push('zone');
   ok(bad.length === 0, `${st.id}: clear of every worksite (r + 14 m), the three mines, the camp and the open grounds${bad.length ? ' — TOO CLOSE: ' + bad.join(', ') : ''}`);
   // 6. the gorge and the foot: not through the quarry pad, not on top of a field
   ok(Math.min(...smp.map(([x, z]) => L.fieldD(x, z))) > 1.2, `${st.id}: no field is cut (nearest field index ${Math.min(...smp.map(([x, z]) => L.fieldD(x, z))).toFixed(2)})`);

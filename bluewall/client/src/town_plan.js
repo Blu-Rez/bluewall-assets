@@ -12,9 +12,10 @@ import { layoutFromGame } from './b1_layout.js';
 import { planTownSteps } from './b1_townplan.js';
 import { CIVIC_KINDS, civicLevel, civicPieces, civicSolids } from './b3_civic.js';
 import { HOME_KINDS } from './b2_homes.js';
+import { setTownSiteProvider, WS_KINDS } from './worksites.js';
 
 let LAY = null, RES = null, STEPS = null, STREET = null;
-export const resetTownPlan = () => { LAY = null; RES = null; STEPS = null; STREET = null; };
+export const resetTownPlan = () => { LAY = null; RES = null; STEPS = null; STREET = null; PROD = null; setTownSiteProvider(prodSites); };
 export const townLayout = () => LAY || (LAY = layoutFromGame());
 export function startTownPlan() {
   if (RES) return { step: () => true, result: () => RES, get done() { return true; } };
@@ -46,8 +47,45 @@ export function civicLots(level) {
   return out;
 }
 // the lots of what the town BUILDS now (homes + civic); the production lots (role P: sawmill, bakery, mint ... — worksite kinds C1-C4, not wired yet) stay free for the generic houses until they are wired
-export const BUILT_ROLES = new Set(['H', 'C']);
-export const planLots = () => townPlan().list.filter((p) => BUILT_ROLES.has(p.role)).map((p) => ({ id: p.id, kind: p.kind, x: p.x, z: p.z, ry: p.ry, w: p.w, d: p.d, r: p.r }));
+// P1: the production lots (role P) are built now — as worksite sites (prodSites() below: wsbuild draws them, wslife gives them people and carts).  `jeweler` has no model yet: its lot stays free.
+export const BUILT_ROLES = new Set(['H', 'C', 'P']);
+const NO_MODEL = new Set(['jeweler']);
+const isBuilt = (p) => BUILT_ROLES.has(p.role) && !NO_MODEL.has(p.kind);
+export const planLots = () => townPlan().list.filter(isBuilt).map((p) => ({ id: p.id, kind: p.kind, x: p.x, z: p.z, ry: p.ry, w: p.w, d: p.d, r: p.r }));
+
+// ---- P1: B1's role-P lots as worksite sites ------------------------------------------------------------------------------------------------------------------------------------------------------
+// A site's local frame has its building at the BACK (z < 0) and the yard in front (z > 0); a lot's x, z is the middle of its rectangle.  TOWN_ANCHOR[kind] = the local point of the kit layout that
+// goes to the lot's middle (so the main building stands inside the rectangle); the site's origin is moved so.  `clip` = the rectangle (+ M) in the site's local frame: pieces / soup / chimneys
+// outside it are not drawn, workers do not stand outside it.  Unlock level = E1's count step for the i-th lot of a kind (docs/economy_table.json `kinds[].count_steps`), else the plan's (ph) level.
+const TOWN_ANCHOR = { sawmill: [0, -2], masonry: [0, -3.5], smelter: [0, -4], mint: [0.3, -1.5], refinery: [1.5, -4], mill: [0, -4], millw: [0, -3.2], bakery: [0, -5], butcher: [0, -5.5], smokehouse: [-3, -1.5] };
+const E1_STEPS = { sawmill: [4, 18], masonry: [5, 18], smelter: [9, 22], mint: [15, 25], refinery: [18, 27], mill: [4, 16], bakery: [5, 16, 26], butcher: [7, 18], smokehouse: [8, 20] };
+const CLIP_M = 0;
+const riverD = (lay, x, z) => { let b = null; const P = lay.river.pts; for (let i = 0; i < P.length - 1; i++) { const a = P[i], c = P[i + 1], dx = c[0] - a[0], dz = c[1] - a[1], l2 = dx * dx + dz * dz || 1; const t = Math.max(0, Math.min(1, ((x - a[0]) * dx + (z - a[1]) * dz) / l2)), qx = a[0] + dx * t, qz = a[1] + dz * t, d = Math.hypot(x - qx, z - qz); if (!b || d < b.d) b = { d, x: qx, z: qz }; } return b; };
+let PROD = null;
+export function prodSites() {
+  if (PROD) return PROD;
+  const lay = townLayout(), count = {}, out = [];
+  for (const p of townPlan().list) {
+    if (p.role !== 'P' || NO_MODEL.has(p.kind) || !WS_KINDS[p.kind]) continue;
+    const i = count[p.kind] = (count[p.kind] || 0) + 1, idx = i - 1;
+    let variant;
+    if (p.kind === 'mill') {          // the lot that faces the river is the WATER mill (the town canal turns the wheel), the other one a wind mill
+      const rv = riverD(lay, p.x, p.z), toR = Math.atan2(rv.x - p.x, rv.z - p.z), dr = ((toR - p.ry + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+      variant = rv.d - lay.river.half < 12 && Math.abs(dr) < 0.5 ? 'water' : 'wind';
+    }
+    const [ax, az] = TOWN_ANCHOR[p.kind === 'mill' && variant === 'water' ? 'millw' : p.kind], c = Math.cos(p.ry), s = Math.sin(p.ry);
+    const unlock = (E1_STEPS[p.kind] && E1_STEPS[p.kind][idx] != null) ? E1_STEPS[p.kind][idx] : p.unlockLv;
+    out.push({
+      id: p.id, kind: p.kind, variant, town: true, x: +(p.x - (ax * c + az * s)).toFixed(2), z: +(p.z - (-ax * s + az * c)).toFixed(2), ry: p.ry, r: Math.max(p.w, p.d) / 2, unlock,
+      link: [+(p.x + s * (p.d / 2 + 3)).toFixed(2), +(p.z + c * (p.d / 2 + 3)).toFixed(2)], lot: { x: p.x, z: p.z, w: p.w, d: p.d },
+      clip: { x0: ax - p.w / 2 - CLIP_M, x1: ax + p.w / 2 + CLIP_M, z0: az - p.d / 2 - CLIP_M, z1: az + p.d / 2 + CLIP_M },
+    });
+    if (!variant) delete out[out.length - 1].variant;
+  }
+  return (PROD = out);
+}
+setTownSiteProvider(prodSites);
+export function prodLots(level) { const lv = lvl(level); return prodSites().filter((s) => s.unlock <= lv).map((s) => ({ id: s.id, kind: s.kind, x: s.lot.x, z: s.lot.z, ry: s.ry, w: s.lot.w, d: s.lot.d, r: s.r })); }
 
 // ---- streets: "no civic piece stands on a street" (the old market skipped its stalls on the main street the same way)
 function streetSegs() {
@@ -77,7 +115,7 @@ export function townSolids(level = 30) { const out = []; for (const lot of civic
 const CELL = 40;                                                        // (a bigger cell than the old town's 26 m: the plan's lots are fewer and bigger, so a block has about as many lots as an old block had houses, and the battle value of the town stays what it was)
 export function townTargetSpecs(level) {
   const out = [], cells = new Map(), floorsOf = (l) => (HOME_KINDS[l.kind] ? HOME_KINDS[l.kind].floors : 3);
-  for (const l of [...homeLots(level), ...civicLots(level)]) {
+  for (const l of [...homeLots(level), ...civicLots(level), ...prodLots(level)]) {
     if (l.kind === 'chapel') { out.push({ ids: [l.id], t: { type: 'church', x: l.x, z: l.z, w: l.w, d: l.d, h: 28, rot: 0, n: 1, share: 2.4 } }); continue; }
     const k = Math.floor(l.x / CELL) + ',' + Math.floor(l.z / CELL); if (!cells.has(k)) cells.set(k, []); cells.get(k).push(l);
   }

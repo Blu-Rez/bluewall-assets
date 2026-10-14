@@ -3,14 +3,15 @@ import * as L from '../bot/bluebot_v2/bluewall/client/src/layout.js';
 import { buildRoads, ROADS } from '../bot/bluebot_v2/bluewall/client/src/roads.js';
 import { hamlets } from '../bot/bluebot_v2/bluewall/client/src/hamlets.js';
 import { nomads } from '../bot/bluebot_v2/bluewall/client/src/nomads.js';
-import { sites, pieces, counts, wsLevel, WS_KINDS } from '../bot/bluebot_v2/bluewall/client/src/worksites.js';
+import { sites, outerSites, pieces, counts, wsLevel, WS_KINDS } from '../bot/bluebot_v2/bluewall/client/src/worksites.js';
+import '../bot/bluebot_v2/bluewall/client/src/town_plan.js';       // P1: registers the town's production lots as sites (sites() = the frozen sites outside the walls + the lots inside)
 L.setMap('night'); buildRoads();
 let bad = 0; const ok = (c, m) => { if (!c) { bad++; console.log('FAIL', m); } else console.log('ok  ', m); };
-const S = sites(); ok(S.length === 12, 'twelve sites');
+const S = outerSites(); ok(S.length === 17, 'seventeen sites outside the walls (12 + panning + 4 mills; the production lots of the town are tested by dev/p1_test.sh)');
 for (const s of S) {
   const hs = []; for (const [dx, dz] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [.7, .7], [-.7, -.7]]) hs.push(L.height(s.x + dx * s.r * 0.7, s.z + dz * s.r * 0.7));
   const spread = Math.max(...hs) - Math.min(...hs);
-  if (s.kind === 'fishery') {            // the shore side dips into the water by design: the inland half must be level, the middle dry
+  if (s.kind === 'fishery' || s.water) {            // (P1: panning + the water mills too) the shore side dips into the water by design: the inland half must be level, the middle dry
     const fx = Math.sin(s.ry), fz = Math.cos(s.ry), back = [[0, 0], [-1, 0], [0, -1]].map(([a, b]) => L.height(s.x - fx * 8 * (a + b < 0 ? 1 : 0.2) + (b ? -fz * 6 : 0), s.z - fz * 8 * (a + b < 0 ? 1 : 0.2) + (b ? fx * 6 : 0)));
     ok(Math.max(...back) - Math.min(...back) < 2.0 && L.height(s.x, s.z) > 0.4, `${s.id}: dry, level inland half (${(Math.max(...back) - Math.min(...back)).toFixed(2)} m)`);
   } else {
@@ -18,7 +19,7 @@ for (const s of S) {
     ok(Math.min(...hs) > -0.2, `${s.id}: dry (min ${Math.min(...hs).toFixed(2)})`);
   }
   ok(L.sdTown(s.x, s.z) > 46, `${s.id}: outside the town`);
-  ok(L.distPolyline(L.RIVER, s.x, s.z) > s.r * 0.72 + 4 || s.kind === 'lumber', `${s.id}: off the river bed`);
+  ok(L.distPolyline(L.RIVER, s.x, s.z) > (s.nopad ? 9 : s.r * 0.72 + 4) || s.kind === 'lumber', `${s.id}: off the river bed`);
   const rd = ROADS.filter((q) => q.name !== 'ws_' + s.id && !/^ws_/.test(q.name)).map((q) => { let d = 1e9; for (let i = 0; i < q.pts.length - 1; i++) { const a = q.pts[i], b = q.pts[i + 1], dx = b[0] - a[0], dz = b[1] - a[1], l2 = dx * dx + dz * dz || 1, t = Math.max(0, Math.min(1, ((s.x - a[0]) * dx + (s.z - a[1]) * dz) / l2)); d = Math.min(d, Math.hypot(s.x - a[0] - dx * t, s.z - a[1] - dz * t)); } return d; });
   ok(Math.min(...rd) > (s.kind === 'fishery' ? 7 : 9), `${s.id}: off the country roads (${Math.min(...rd).toFixed(0)} m)`);
   ok(ROADS.some((q) => q.name === 'ws_' + s.id), `${s.id}: has its haul road`);
@@ -30,5 +31,5 @@ for (const s of S) {
 }
 for (const q of ROADS.filter((r) => /^ws_/.test(r.name))) { const s = S.find((t) => 'ws_' + t.id === q.name); const e = q.pts[q.pts.length - 1]; ok(Math.hypot(e[0] - s.x, e[1] - s.z) < s.r, `${q.name}: ends inside the site`); }
 // unlock + counts grow with level
-for (const k of Object.keys(WS_KINDS)) { const s = S.find((t) => t.kind === k); const c1 = counts(s, 1), c30 = counts(s, 30); const grows = Object.keys(c30).every((key) => c30[key] >= (c1[key] ?? 0)) && Object.keys(c30).some((key) => c30[key] > (c1[key] ?? 0)); ok(grows, `${k}: workers / animals / boats grow with the level (${JSON.stringify(c1)} -> ${JSON.stringify(c30)})`); ok(wsLevel(s, WS_KINDS[k].unlock - 1) === 0 || WS_KINDS[k].unlock === 1, `${k}: locked below level ${WS_KINDS[k].unlock}`); }
+for (const k of Object.keys(WS_KINDS)) { const s = sites().find((t) => t.kind === k); ok(!!s, `${k}: has a site (outside or in the town)`); if (!s) continue; const c1 = counts(s, 1), c30 = counts(s, 30); const grows = Object.keys(c30).every((key) => c30[key] >= (c1[key] ?? 0)) && Object.keys(c30).some((key) => c30[key] > (c1[key] ?? 0)); ok(grows, `${k}: workers / animals / boats grow with the level (${JSON.stringify(c1)} -> ${JSON.stringify(c30)})`); ok(wsLevel(s, WS_KINDS[k].unlock - 1) === 0 || WS_KINDS[k].unlock === 1, `${k}: locked below level ${WS_KINDS[k].unlock}`); }
 console.log(bad ? `WS FAIL (${bad})` : 'WS OK');

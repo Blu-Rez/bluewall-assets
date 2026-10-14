@@ -43,13 +43,27 @@ for (const K of [C1.KINDS, C2.KINDS, C3.KINDS, C4.KINDS]) {
     else { Object.defineProperty(WS_KINDS, k, { value: { ...K[k] }, enumerable: false, writable: true, configurable: true }); NEW_KINDS.push(k); }
   }
 }
+for (const k of NEW_KINDS) Object.defineProperty(WS_KINDS, k, { enumerable: true });      // P1: the map has sites of every new kind now (layout.js WS_SITES: panning + 4 mills; town_plan.js prodSites(): the other nine) -> they are listed
 
 // where a player may put a site (owner 6 Oct 19:44: everything is movable, each player arranges his own map; only the gem mines on the mountain are fixed and the fisheries must keep near water):
 //   'free' = anywhere flat enough; 'water' = the site's `water` point must stay on the shore.  (The layout editor of the next round reads this; nothing here assumes a fixed spot — every module reads sites().)
 export const placeRule = (site) => C4.placeRule(site) || (WS_KINDS[site.kind] && WS_KINDS[site.kind].place) || 'free';     // (C4: the water mill variant must touch the shore;  'forest' / 'mount' = informational, from C2 / C3)
-export const sites = () => L.SITES || [];
+// P1: the sites of the map = the frozen sites OUTSIDE the walls (layout.js WS_SITES) + the production lots INSIDE the town (B1's role-P lots, made by town_plan.js prodSites(), registered with
+// setTownSiteProvider at import time).  A town site carries `town: true`, `clip` (the lot rectangle in the site's local frame: nothing of the kit / soup / chimneys outside it is drawn, so a lot
+// never spills into a street or a neighbour) and `unlock` (E1's count step).  `outerSites()` = the frozen sites only (roads, pads, forest keep-clear and the old tests use those).
+let TOWN_PROV = null, ALL = null, ALL_SRC = null;
+export function setTownSiteProvider(f) { TOWN_PROV = f; ALL = null; }
+export const outerSites = () => L.SITES || [];
+export function sites() {
+  const src = L.SITES || [];
+  if (ALL && ALL_SRC === src) return ALL;
+  let extra = []; try { extra = TOWN_PROV ? TOWN_PROV() || [] : []; } catch (e) { console.warn('town sites', e); }
+  ALL_SRC = src; return (ALL = extra.length ? src.concat(extra) : src);
+}
 export const siteById = (id) => sites().find((s) => s.id === id);
-export const wsLevel = (site, castle) => (castle >= WS_KINDS[site.kind].unlock ? Math.max(1, Math.min(30, Math.round(castle))) : 0);
+export const unlockOf = (site) => (site.unlock != null ? site.unlock : WS_KINDS[site.kind].unlock);       // (a site may carry its own level: the legacy windmill stands from 1, the 2nd sawmill opens later ...)
+export const wsLevel = (site, castle) => (castle >= unlockOf(site) ? Math.max(1, Math.min(30, Math.round(castle))) : 0);
+export const inClip = (c, x, z) => !c || (x >= c.x0 && x <= c.x1 && z >= c.z0 && z <= c.z1);
 const N = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, lv) - 1) / 29);            // a at level 1 -> b at level 30
 export const tierOf = (lv) => (lv <= 0 ? 0 : 1 + Math.min(4, Math.floor((lv - 1) / 6)));  // 1..5 (same steps as the structure looks, skin.js)
 const kScale = (lv) => 0.76 + 0.24 * (Math.max(1, lv) - 1) / 29;                           // the main building grows a little with the level (the rest is MORE of everything)
@@ -251,6 +265,7 @@ export function pieces(site, lv) {
   if (g) out = out.concat(g(lv, rng(((site.x * 19349663) ^ (site.z * 73856093)) >>> 0 || 11), site));     // C1: the fisheries get 2 extra pieces; panning / smokehouse are C1's alone
   if (ex2) out = out.concat(ex2(lv, R, site));                                                              // C2: <= 2 extra pieces on lumber / quarry / iron
   if (ex3) out = out.concat(ex3(lv, R, site));                                                              // C3: <= 2 extra pieces on gold / oil
+  if (site.clip) out = out.filter((p) => inClip(site.clip, p.x, p.z));                                      // P1: a town lot keeps only what stands inside its rectangle
   return out;
 }
 // what the level brings alive: people, animals, boats, carts (wslife.js)
@@ -273,13 +288,13 @@ export function counts(site, lv) {
   }
 }
 // the standing buildings of the worksites that no soldier may walk into: [[x, z, radius], ...] in world metres (nav.js / solids.js).  Max level (all buildings that can ever stand).
-const SOLID_R = { lumbermill: 6.8, mine: 6.4, smithy: 4.6, hut: 3.6, market: 4.4, brewhouse: 3.8, barn: 5.4, smallbarn: 3.8, openbarn: 3.6, silo: 2.4, coop: 2.2, watchtower2: 2.2, stageA: 0, butcher: 2.6, waterwheel: 3.2, rockA: 5.6, rockB: 4.8, rockC: 3.4, ...C1.SOLID, ...C2.SOLID_R, ...C3.SOLID_R, ...C4.SOLID_R };      // (C pieces keep their 'c<n>_' name: only 'ws_' is stripped below)
+const SOLID_R = { lumbermill: 6.8, mine: 6.4, smithy: 4.6, hut: 3.6, market: 4.4, brewhouse: 3.8, barn: 5.4, smallbarn: 3.8, openbarn: 3.6, silo: 2.4, coop: 2.2, watchtower2: 2.2, stageA: 0, butcher: 2.6, waterwheel: 3.2, rockA: 5.6, rockB: 4.8, rockC: 3.4, ...C1.SOLID, ...C2.SOLID_R, ...C3.SOLID_R, ...C4.SOLID_R, c4_windmill_nf: 4.2, c4_watermill_nw: 4.6 };      // (P1: the piece names are c4_windmill_nf / c4_watermill_nw, C4's table had the short names: the mills were not solid)      // (C pieces keep their 'c<n>_' name: only 'ws_' is stripped below)
 export function wsSolids() {
   const out = [];
   for (const s of sites()) {
     const c = Math.cos(s.ry), sn = Math.sin(s.ry);
     for (const p of pieces(s, 30)) { const r = SOLID_R[p.n.replace(/^ws_/, '')]; if (r) out.push([s.x + p.x * c + p.z * sn, s.z - p.x * sn + p.z * c, r * p.s]); }
-    const sp = C3.SOLIDS_PROC[s.kind]; if (sp) for (const [x, z, r] of sp(30)) out.push([s.x + x * c + z * sn, s.z - x * sn + z * c, r]);       // C3: the refinery's procedural tanks / column
+    const sp = C3.SOLIDS_PROC[s.kind]; if (sp) for (const [x, z, r] of sp(30)) if (inClip(s.clip, x, z)) out.push([s.x + x * c + z * sn, s.z - x * sn + z * c, r]);       // C3: the refinery's procedural tanks / column
   }
   return out;
 }
