@@ -1,0 +1,10 @@
+{
+ "name": "clock_tower",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 5455,
+ "kb": 257,
+ "note": "",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

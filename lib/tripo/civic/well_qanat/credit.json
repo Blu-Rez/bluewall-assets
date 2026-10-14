@@ -1,0 +1,10 @@
+{
+ "name": "well_qanat",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 3992,
+ "kb": 175,
+ "note": "qanat well: mudbrick ring, windlass, steps, clay jar (#209 var 2)",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

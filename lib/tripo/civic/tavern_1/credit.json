@@ -1,0 +1,10 @@
+{
+ "name": "tavern_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 12759,
+ "kb": 352,
+ "note": "over budget (12.8k); alt generation of tavern_0",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

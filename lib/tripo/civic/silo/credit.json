@@ -1,0 +1,10 @@
+{
+ "name": "silo",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 4998,
+ "kb": 190,
+ "note": "",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

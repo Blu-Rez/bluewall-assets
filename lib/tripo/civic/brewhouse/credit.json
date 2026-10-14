@@ -1,0 +1,10 @@
+{
+ "name": "brewhouse",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 8808,
+ "kb": 302,
+ "note": "8.8k, slightly over",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

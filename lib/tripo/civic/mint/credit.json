@@ -1,0 +1,9 @@
+{
+ "name": "mint",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 7999,
+ "kb": 262,
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

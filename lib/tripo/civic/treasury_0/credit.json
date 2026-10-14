@@ -1,0 +1,10 @@
+{
+ "name": "treasury_0",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "civic (treasury; new building)",
+ "tris": 5997,
+ "kb": 228,
+ "note": "dome treasury",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

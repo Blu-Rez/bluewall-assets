@@ -1,0 +1,10 @@
+{
+ "name": "well_stone",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 3994,
+ "kb": 216,
+ "note": "stone well with deep-blue tiled roof, windlass, bucket and clay jar (#209 var 1)",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

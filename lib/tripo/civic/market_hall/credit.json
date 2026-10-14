@@ -1,0 +1,10 @@
+{
+ "name": "market_hall",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 10318,
+ "kb": 320,
+ "note": "over budget (10.3k): simplifier cannot go lower without damage",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

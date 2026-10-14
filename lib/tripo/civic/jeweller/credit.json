@@ -1,0 +1,9 @@
+{
+ "name": "jeweller",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 7982,
+ "kb": 252,
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

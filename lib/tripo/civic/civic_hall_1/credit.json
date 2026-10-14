@@ -1,0 +1,9 @@
+{
+ "name": "civic_hall_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "civic_hall (TR1_list #25)",
+ "tris": 3996,
+ "kb": 677,
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

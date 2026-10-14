@@ -1,0 +1,9 @@
+{
+ "name": "smokehouse",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 6996,
+ "kb": 246,
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

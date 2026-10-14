@@ -1,0 +1,10 @@
+{
+ "name": "coop_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 4000,
+ "kb": 156,
+ "note": "round mudbrick hen house with clay dome, blue band and perch holes (#321)",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

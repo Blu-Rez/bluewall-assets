@@ -1,0 +1,9 @@
+{
+ "name": "butcher",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 7985,
+ "kb": 255,
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

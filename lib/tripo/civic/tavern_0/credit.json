@@ -1,0 +1,10 @@
+{
+ "name": "tavern_0",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 12514,
+ "kb": 352,
+ "note": "over budget (12.5k): base gets lumpy below this; two generations of the same picture (tavern_1)",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

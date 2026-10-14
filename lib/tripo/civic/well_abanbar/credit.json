@@ -1,0 +1,10 @@
+{
+ "name": "well_abanbar",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new",
+ "tris": 5999,
+ "kb": 171,
+ "note": "ab-anbar: domed water reservoir with two wind-catcher chimneys and a stair entrance (#209 var 3)",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

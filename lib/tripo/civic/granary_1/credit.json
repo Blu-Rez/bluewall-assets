@@ -1,0 +1,10 @@
+{
+ "name": "granary_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "civic (granary; new building)",
+ "tris": 4993,
+ "kb": 203,
+ "note": "two-dome granary",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

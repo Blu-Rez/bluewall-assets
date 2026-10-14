@@ -1,0 +1,10 @@
+{
+ "name": "armory_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "civic (armory; new building)",
+ "tris": 6349,
+ "kb": 240,
+ "note": "long low arsenal",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}
