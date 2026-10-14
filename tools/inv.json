@@ -1,0 +1,6221 @@
+[
+ {
+  "file": "an_llama.glb",
+  "kb": 151,
+  "tris": 661,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 3,
+  "matNames": [
+   "Brown",
+   "White",
+   "Grey"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 1,
+  "joints": 24,
+  "anims": [
+   "Idle",
+   "Jump"
+  ],
+  "ext": [],
+  "bbox": [
+   1.576,
+   5.853,
+   4.912
+  ],
+  "ymin": -0.013
+ },
+ {
+  "file": "an_pig.glb",
+  "kb": 146,
+  "tris": 562,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Material.003",
+   "Material"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 1,
+  "joints": 24,
+  "anims": [
+   "Idle",
+   "Jump"
+  ],
+  "ext": [],
+  "bbox": [
+   3.311,
+   4.59,
+   9.784
+  ],
+  "ymin": -0.002
+ },
+ {
+  "file": "an_sheep.glb",
+  "kb": 144,
+  "tris": 610,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "White",
+   "Black"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 1,
+  "joints": 24,
+  "anims": [
+   "Idle",
+   "Jump"
+  ],
+  "ext": [],
+  "bbox": [
+   2.221,
+   4.36,
+   5.919
+  ],
+  "ymin": -0.01
+ },
+ {
+  "file": "anims.glb",
+  "kb": 2627,
+  "tris": 0,
+  "meshNodes": 0,
+  "top": 1,
+  "materials": 0,
+  "matNames": [],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [
+   "Crouch_Idle_Loop",
+   "Death01",
+   "Fixing_Kneeling",
+   "Hit_Chest",
+   "Idle_Loop",
+   "Idle_Talking_Loop",
+   "Idle_Torch_Loop",
+   "Interact",
+   "Jog_Fwd_Loop",
+   "Punch_Cross",
+   "Sitting_Idle_Loop",
+   "Spell_Simple_Idle_Loop",
+   "Sword_Attack",
+   "Sword_Idle",
+   "Walk_Loop"
+  ],
+  "ext": [
+   "EXT_meshopt_compression"
+  ],
+  "bbox": [
+   null,
+   null,
+   null
+  ],
+  "ymin": null
+ },
+ {
+  "file": "anims_army.glb",
+  "kb": 399,
+  "tris": 0,
+  "meshNodes": 0,
+  "top": 1,
+  "materials": 0,
+  "matNames": [],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [
+   "Idle_Shield_Loop",
+   "Shield_OneShot",
+   "Sword_Block",
+   "Sword_Regular_A",
+   "Sword_Regular_B"
+  ],
+  "ext": [
+   "EXT_meshopt_compression"
+  ],
+  "bbox": [
+   null,
+   null,
+   null
+  ],
+  "ymin": null
+ },
+ {
+  "file": "anvil.glb",
+  "kb": 36,
+  "tris": 750,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "MI_Trim_Metal"
+  ],
+  "textures": 3,
+  "texKB": 22,
+  "texMax": 256,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.082,
+   0.556,
+   0.402
+  ],
+  "ymin": 0.003
+ },
+ {
+  "file": "axe.glb",
+  "kb": 45,
+  "tris": 826,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "MI_Trim_Props_Vertex"
+  ],
+  "textures": 3,
+  "texKB": 31,
+  "texMax": 256,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.294,
+   0.827,
+   0.046
+  ],
+  "ymin": -0.381
+ },
+ {
+  "file": "ballista.glb",
+  "kb": 80,
+  "tris": 1758,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Default"
+  ],
+  "textures": 3,
+  "texKB": 34,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.441,
+   0.814,
+   2
+  ],
+  "ymin": -0.407
+ },
+ {
+  "file": "banner.glb",
+  "kb": 174,
+  "tris": 448,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 3,
+  "matNames": [
+   "MI_Trim_Furniture",
+   "MI_Trim_Metal",
+   "MI_Banner"
+  ],
+  "textures": 9,
+  "texKB": 161,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.613,
+   2.392,
+   0.191
+  ],
+  "ymin": -1.549
+ },
+ {
+  "file": "barn.glb",
+  "kb": 66,
+  "tris": 4222,
+  "meshNodes": 5,
+  "top": 1,
+  "materials": 4,
+  "matNames": [
+   "LightRed",
+   "DarkRed",
+   "White",
+   "RoofBlack"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   7.727,
+   7.887,
+   8.222
+  ],
+  "ymin": -0.004,
+  "parts": [
+   {
+    "name": "RootNode",
+    "tris": 4222,
+    "meshes": 5,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "barrel.glb",
+  "kb": 153,
+  "tris": 824,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "MI_Trim_Furniture",
+   "MI_Trim_Metal"
+  ],
+  "textures": 6,
+  "texKB": 129,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.698,
+   0.898,
+   0.698
+  ],
+  "ymin": 0.003
+ },
+ {
+  "file": "blacksmith.glb",
+  "kb": 983,
+  "tris": 16099,
+  "meshNodes": 141,
+  "top": 1,
+  "materials": 7,
+  "matNames": [
+   "WoodExteriorMat",
+   "WeaponsToolsMat",
+   "ForgeMat",
+   "blacksmithsMat",
+   "FurnitureMat",
+   "InteriorItemsMat",
+   "GroundMat"
+  ],
+  "textures": 20,
+  "texKB": 488,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   845.288,
+   484.12,
+   1011.192
+  ],
+  "ymin": -2.389,
+  "parts": [
+   {
+    "name": "Sketchfab_model",
+    "tris": 16099,
+    "meshes": 141,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "bow.glb",
+  "kb": 22,
+  "tris": 684,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "ranger"
+  ],
+  "textures": 1,
+  "texKB": 2,
+  "texMax": 256,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.494,
+   0.155,
+   1.984
+  ],
+  "ymin": -0.078
+ },
+ {
+  "file": "bush.glb",
+  "kb": 65,
+  "tris": 900,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Leaves_TwistedTree"
+  ],
+  "textures": 1,
+  "texKB": 34,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.915,
+   1.582,
+   1.965
+  ],
+  "ymin": -0.235
+ },
+ {
+  "file": "bushf.glb",
+  "kb": 123,
+  "tris": 1368,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Leaves_NormalTree",
+   "Flowers"
+  ],
+  "textures": 2,
+  "texKB": 79,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.915,
+   1.582,
+   1.965
+  ],
+  "ymin": -0.235
+ },
+ {
+  "file": "cabbage.glb",
+  "kb": 30,
+  "tris": 1392,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "DarkGreen"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.044,
+   0.474,
+   1.044
+  ],
+  "ymin": -0.067
+ },
+ {
+  "file": "cannon.glb",
+  "kb": 256,
+  "tris": 4107,
+  "meshNodes": 2,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "aiStandardSurface1",
+   "aiStandardSurface2"
+  ],
+  "textures": 6,
+  "texKB": 164,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.078,
+   0.048,
+   0.144
+  ],
+  "ymin": -0.004,
+  "parts": [
+   {
+    "name": "Sketchfab_model",
+    "tris": 4107,
+    "meshes": 2,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "carrot.glb",
+  "kb": 14,
+  "tris": 514,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 3,
+  "matNames": [
+   "Green",
+   "DarkGreen2",
+   "LightOrange"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.677,
+   1.279,
+   0.502
+  ],
+  "ymin": -0.61
+ },
+ {
+  "file": "cart.glb",
+  "kb": 229,
+  "tris": 3936,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 3,
+  "matNames": [
+   "MI_Trim_Metal",
+   "MI_Trim_Furniture",
+   "MI_Banner"
+  ],
+  "textures": 9,
+  "texKB": 161,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   3.021,
+   2.632,
+   1.06
+  ],
+  "ymin": -0.004
+ },
+ {
+  "file": "catapult.glb",
+  "kb": 280,
+  "tris": 6086,
+  "meshNodes": 2,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Checker",
+   "Checker_2"
+  ],
+  "textures": 6,
+  "texKB": 154,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   12.232,
+   6.318,
+   7.331
+  ],
+  "ymin": -1.511,
+  "parts": [
+   {
+    "name": "Sketchfab_model",
+    "tris": 6086,
+    "meshes": 2,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "cauldron.glb",
+  "kb": 51,
+  "tris": 2020,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "MI_Trim_Metal"
+  ],
+  "textures": 3,
+  "texKB": 22,
+  "texMax": 256,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.989,
+   0.816,
+   0.944
+  ],
+  "ymin": -0.003
+ },
+ {
+  "file": "chest.glb",
+  "kb": 107,
+  "tris": 2546,
+  "meshNodes": 2,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "MI_Trim_Furniture",
+   "MI_Trim_Metal"
+  ],
+  "textures": 6,
+  "texKB": 47,
+  "texMax": 256,
+  "skins": 2,
+  "joints": 6,
+  "anims": [
+   "Chest_Close",
+   "Chest_Closed",
+   "Chest_Open",
+   "Chest_Opened"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   0.728,
+   1.241
+  ],
+  "ymin": -0.364
+ },
+ {
+  "file": "claymore.glb",
+  "kb": 20,
+  "tris": 1031,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 5,
+  "matNames": [
+   "DarkSteel",
+   "Black",
+   "DarkBrown",
+   "LightRed",
+   "Red"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.978,
+   6.595,
+   0.271
+  ],
+  "ymin": -0.322
+ },
+ {
+  "file": "cliff1.glb",
+  "kb": 418,
+  "tris": 3302,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "drone_rock_01"
+  ],
+  "textures": 3,
+  "texKB": 377,
+  "texMax": 1024,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   8.277,
+   4.96,
+   4.383
+  ],
+  "ymin": -0.419
+ },
+ {
+  "file": "cliff2.glb",
+  "kb": 621,
+  "tris": 6145,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "coastal_cliff_04"
+  ],
+  "textures": 3,
+  "texKB": 550,
+  "texMax": 1024,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   86.772,
+   10.985,
+   24.133
+  ],
+  "ymin": -0.645
+ },
+ {
+  "file": "clover.glb",
+  "kb": 58,
+  "tris": 379,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Leaves"
+  ],
+  "textures": 1,
+  "texKB": 51,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.796,
+   1.145,
+   0.764
+  ],
+  "ymin": -0.013
+ },
+ {
+  "file": "coins.glb",
+  "kb": 42,
+  "tris": 960,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "MI_Trim_Metal_Vertex"
+  ],
+  "textures": 3,
+  "texKB": 22,
+  "texMax": 256,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.197,
+   0.073,
+   0.154
+  ],
+  "ymin": -0.003
+ },
+ {
+  "file": "coop.glb",
+  "kb": 20,
+  "tris": 948,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 5,
+  "matNames": [
+   "White",
+   "DarkRed",
+   "Brown",
+   "RoofBlack",
+   "LightRed"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2.407,
+   1.851,
+   2.154
+  ],
+  "ymin": -0.003
+ },
+ {
+  "file": "corn.glb",
+  "kb": 22,
+  "tris": 958,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 3,
+  "matNames": [
+   "DarkGreen2",
+   "Yellow",
+   "Green"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.887,
+   1.967,
+   0.649
+  ],
+  "ymin": 0.003
+ },
+ {
+  "file": "cow.glb",
+  "kb": 499,
+  "tris": 2450,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 7,
+  "matNames": [
+   "Main",
+   "Main_Light",
+   "Muzzle",
+   "Hooves",
+   "Eye_Black",
+   "Eye_White",
+   "Horns"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 1,
+  "joints": 42,
+  "anims": [
+   "Attack_Kick",
+   "Eating",
+   "Gallop",
+   "Walk",
+   "Idle_Headlow",
+   "Idle_2",
+   "Idle"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   57.332,
+   113.712,
+   200
+  ],
+  "ymin": -56.856
+ },
+ {
+  "file": "crate.glb",
+  "kb": 155,
+  "tris": 1576,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "MI_Trim_Furniture",
+   "MI_Trim_Metal"
+  ],
+  "textures": 6,
+  "texKB": 129,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.842,
+   0.931,
+   0.908
+  ],
+  "ymin": -0.052
+ },
+ {
+  "file": "crow.glb",
+  "kb": 138,
+  "tris": 878,
+  "meshNodes": 6,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "AmericanCrow_v4texturedFeather",
+   "AmericanCrow_v4texturedAmCrowTexture"
+  ],
+  "textures": 4,
+  "texKB": 43,
+  "texMax": 256,
+  "skins": 1,
+  "joints": 59,
+  "anims": [
+   "Take 001"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.686,
+   1.489,
+   0.947
+  ],
+  "ymin": -0.04
+ },
+ {
+  "file": "cyclops.glb",
+  "kb": 479,
+  "tris": 7009,
+  "meshNodes": 10,
+  "top": 1,
+  "materials": 4,
+  "matNames": [
+   "material_0",
+   "Cyclops_Material.001",
+   "Cyclops_Material",
+   "Cyclops_Eye_Naterial"
+  ],
+  "textures": 4,
+  "texKB": 167,
+  "texMax": 512,
+  "skins": 3,
+  "joints": 285,
+  "anims": [
+   "Idle"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   8.504,
+   6.822,
+   4.067
+  ],
+  "ymin": 4.028
+ },
+ {
+  "file": "dragonling.glb",
+  "kb": 177,
+  "tris": 7438,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 4,
+  "matNames": [
+   "Dragon_Main",
+   "Dragon_Secondary",
+   "Dragon_Horn",
+   "Eye_Black"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 1,
+  "joints": 46,
+  "anims": [
+   "CharacterArmature|Death",
+   "CharacterArmature|Fast_Flying",
+   "CharacterArmature|Flying_Idle",
+   "CharacterArmature|Headbutt",
+   "CharacterArmature|HitReact",
+   "CharacterArmature|No",
+   "CharacterArmature|Punch",
+   "CharacterArmature|Yes"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   200,
+   104.386,
+   88.241
+  ],
+  "ymin": -52.193
+ },
+ {
+  "file": "dummy.glb",
+  "kb": 198,
+  "tris": 2858,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 3,
+  "matNames": [
+   "MI_Trim_Furniture",
+   "MI_Trim_Metal",
+   "MI_Trim_Cloth"
+  ],
+  "textures": 9,
+  "texKB": 161,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.808,
+   1.863,
+   0.585
+  ],
+  "ymin": -0.003
+ },
+ {
+  "file": "eagle.glb",
+  "kb": 184,
+  "tris": 3128,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "CH_NPC_MOB_GEagle_A02_MI_IRS"
+  ],
+  "textures": 2,
+  "texKB": 76,
+  "texMax": 512,
+  "skins": 1,
+  "joints": 52,
+  "anims": [
+   "CINEMA_4D_Principal"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.813,
+   1.787,
+   2
+  ],
+  "ymin": -0.894
+ },
+ {
+  "file": "ez_ash_a.glb",
+  "kb": 343,
+  "tris": 4576,
+  "meshNodes": 2,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "branches",
+   "leaves"
+  ],
+  "textures": 5,
+  "texKB": 249,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization",
+   "KHR_texture_transform"
+  ],
+  "bbox": [
+   74.805,
+   81.246,
+   80.728
+  ],
+  "ymin": 0,
+  "parts": [
+   {
+    "name": "Tree",
+    "tris": 4576,
+    "meshes": 2,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "ez_aspen_a.glb",
+  "kb": 266,
+  "tris": 1668,
+  "meshNodes": 2,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "branches",
+   "leaves"
+  ],
+  "textures": 5,
+  "texKB": 232,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   48.902,
+   74.735,
+   44.938
+  ],
+  "ymin": 0,
+  "parts": [
+   {
+    "name": "Tree",
+    "tris": 1668,
+    "meshes": 2,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "ez_bush_a.glb",
+  "kb": 285,
+  "tris": 1684,
+  "meshNodes": 2,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "branches",
+   "leaves"
+  ],
+  "textures": 5,
+  "texKB": 250,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization",
+   "KHR_texture_transform"
+  ],
+  "bbox": [
+   31.353,
+   29.665,
+   38.103
+  ],
+  "ymin": -0.001,
+  "parts": [
+   {
+    "name": "Tree",
+    "tris": 1684,
+    "meshes": 2,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "ez_bush_b.glb",
+  "kb": 367,
+  "tris": 3166,
+  "meshNodes": 2,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "branches",
+   "leaves"
+  ],
+  "textures": 5,
+  "texKB": 298,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization",
+   "KHR_texture_transform"
+  ],
+  "bbox": [
+   33.94,
+   25.701,
+   36.34
+  ],
+  "ymin": -3.963,
+  "parts": [
+   {
+    "name": "Tree",
+    "tris": 3166,
+    "meshes": 2,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "ez_oak_a.glb",
+  "kb": 376,
+  "tris": 5162,
+  "meshNodes": 2,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "branches",
+   "leaves"
+  ],
+  "textures": 5,
+  "texKB": 267,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization",
+   "KHR_texture_transform"
+  ],
+  "bbox": [
+   67.343,
+   74.078,
+   67.165
+  ],
+  "ymin": 0,
+  "parts": [
+   {
+    "name": "Tree",
+    "tris": 5162,
+    "meshes": 2,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "ez_oak_b.glb",
+  "kb": 384,
+  "tris": 5693,
+  "meshNodes": 2,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "branches",
+   "leaves"
+  ],
+  "textures": 5,
+  "texKB": 267,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization",
+   "KHR_texture_transform"
+  ],
+  "bbox": [
+   119.896,
+   102.523,
+   115.974
+  ],
+  "ymin": -0.439,
+  "parts": [
+   {
+    "name": "Tree",
+    "tris": 5693,
+    "meshes": 2,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "ez_pine_a.glb",
+  "kb": 342,
+  "tris": 4101,
+  "meshNodes": 2,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "branches",
+   "leaves"
+  ],
+  "textures": 5,
+  "texKB": 256,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   34.677,
+   54.132,
+   34.905
+  ],
+  "ymin": 0,
+  "parts": [
+   {
+    "name": "Tree",
+    "tris": 4101,
+    "meshes": 2,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "ez_pine_b.glb",
+  "kb": 320,
+  "tris": 3019,
+  "meshNodes": 2,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "branches",
+   "leaves"
+  ],
+  "textures": 5,
+  "texKB": 256,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   48.905,
+   73.528,
+   48.097
+  ],
+  "ymin": -1.426,
+  "parts": [
+   {
+    "name": "Tree",
+    "tris": 3019,
+    "meshes": 2,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "ez_pine_c.glb",
+  "kb": 327,
+  "tris": 3463,
+  "meshNodes": 2,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "branches",
+   "leaves"
+  ],
+  "textures": 5,
+  "texKB": 256,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   22.389,
+   42.381,
+   22.694
+  ],
+  "ymin": -0.527,
+  "parts": [
+   {
+    "name": "Tree",
+    "tris": 3463,
+    "meshes": 2,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "fern.glb",
+  "kb": 59,
+  "tris": 288,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Leaves"
+  ],
+  "textures": 1,
+  "texKB": 51,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2.827,
+   0.84,
+   2.652
+  ],
+  "ymin": -0.077
+ },
+ {
+  "file": "flower3.glb",
+  "kb": 109,
+  "tris": 755,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Leaves",
+   "Flowers"
+  ],
+  "textures": 2,
+  "texKB": 93,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.488,
+   2.055,
+   1.591
+  ],
+  "ymin": -0.035
+ },
+ {
+  "file": "flower4.glb",
+  "kb": 122,
+  "tris": 1690,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Leaves",
+   "Flowers"
+  ],
+  "textures": 2,
+  "texKB": 93,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.781,
+   2.487,
+   1.367
+  ],
+  "ymin": -0.057
+ },
+ {
+  "file": "grass.glb",
+  "kb": 6,
+  "tris": 155,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Grass"
+  ],
+  "textures": 1,
+  "texKB": 1,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.639,
+   1.334,
+   0.737
+  ],
+  "ymin": -0.022
+ },
+ {
+  "file": "grasst.glb",
+  "kb": 8,
+  "tris": 326,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Grass"
+  ],
+  "textures": 1,
+  "texKB": 1,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.895,
+   1.873,
+   0.993
+  ],
+  "ymin": -0.031
+ },
+ {
+  "file": "grassw.glb",
+  "kb": 13,
+  "tris": 494,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Grass"
+  ],
+  "textures": 1,
+  "texKB": 1,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.322,
+   1.072,
+   1.21
+  ],
+  "ymin": -0.086
+ },
+ {
+  "file": "gryphon.glb",
+  "kb": 269,
+  "tris": 3074,
+  "meshNodes": 14,
+  "top": 1,
+  "materials": 9,
+  "matNames": [
+   "Pupil.002",
+   "EyeRim",
+   "Talons",
+   "Brown",
+   "Material",
+   "WingBack",
+   "White",
+   "Beak"
+  ],
+  "textures": 4,
+  "texKB": 76,
+  "texMax": 512,
+  "skins": 10,
+  "joints": 390,
+  "anims": [
+   "Take 01"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.509,
+   0.509,
+   1.768
+  ],
+  "ymin": 0.694
+ },
+ {
+  "file": "hammer_double.glb",
+  "kb": 35,
+  "tris": 1918,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 4,
+  "matNames": [
+   "Steel",
+   "LightSteel",
+   "DarkWood",
+   "LightWood"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2.217,
+   4.971,
+   0.806
+  ],
+  "ymin": -1.777
+ },
+ {
+  "file": "haybale.glb",
+  "kb": 141,
+  "tris": 3080,
+  "meshNodes": 7,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Straw_SG"
+  ],
+  "textures": 3,
+  "texKB": 85,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2.515,
+   0.994,
+   1.782
+  ],
+  "ymin": 0,
+  "parts": [
+   {
+    "name": "Sketchfab_model",
+    "tris": 3080,
+    "meshes": 7,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "helmet2.glb",
+  "kb": 17,
+  "tris": 772,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Grey"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.49,
+   2.047,
+   1.614
+  ],
+  "ymin": -1.206
+ },
+ {
+  "file": "helmet3.glb",
+  "kb": 20,
+  "tris": 656,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 3,
+  "matNames": [
+   "Grey",
+   "Golden",
+   "Black"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.336,
+   1.968,
+   1.53
+  ],
+  "ymin": -0.622
+ },
+ {
+  "file": "hill_giant.glb",
+  "kb": 489,
+  "tris": 11988,
+  "meshNodes": 9,
+  "top": 1,
+  "materials": 7,
+  "matNames": [
+   "MI_Hair_1",
+   "MI_Eyes",
+   "MI_Superhero_Male",
+   "MI_Hair_1",
+   "MI_Hair_2",
+   "MI_Peasant",
+   "MI_Regular_Male"
+  ],
+  "textures": 15,
+  "texKB": 265,
+  "texMax": 512,
+  "skins": 9,
+  "joints": 585,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   2,
+   1.957
+  ],
+  "ymin": -1
+ },
+ {
+  "file": "horse.glb",
+  "kb": 552,
+  "tris": 2182,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 8,
+  "matNames": [
+   "Main",
+   "Hair",
+   "Main_Dark",
+   "Muzzle",
+   "Hooves",
+   "Main_Light",
+   "Eye_Black",
+   "Eye_White"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 1,
+  "joints": 50,
+  "anims": [
+   "Attack_Kick",
+   "Eating",
+   "Gallop",
+   "Walk",
+   "Idle_Headlow",
+   "Idle_2",
+   "Idle"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   49.562,
+   169.97,
+   200
+  ],
+  "ymin": -84.985
+ },
+ {
+  "file": "horse_hq_barded.glb",
+  "kb": 813,
+  "tris": 12134,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "HorseHQ_grey",
+   "Tack"
+  ],
+  "textures": 2,
+  "texKB": 135,
+  "texMax": 1024,
+  "skins": 1,
+  "joints": 50,
+  "anims": [
+   "Attack_Headbutt",
+   "Attack_Kick",
+   "Death",
+   "Eating",
+   "Gallop_Jump",
+   "Gallop",
+   "Idle_HitReact_Left",
+   "Idle_HitReact_Right",
+   "Walk",
+   "Idle_Headlow",
+   "Idle_2",
+   "Idle"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_materials_clearcoat",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   60.677,
+   170.385,
+   200
+  ],
+  "ymin": -85.192
+ },
+ {
+  "file": "horse_m2m_bay.glb",
+  "kb": 874,
+  "tris": 6018,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "HorseHQ_bay",
+   "Tack"
+  ],
+  "textures": 2,
+  "texKB": 95,
+  "texMax": 1024,
+  "skins": 1,
+  "joints": 56,
+  "anims": [
+   "Death",
+   "Eating",
+   "Head_But",
+   "Idle",
+   "Kick",
+   "lay_to_idle",
+   "Rear",
+   "Gallop",
+   "Sleep",
+   "Trot",
+   "Walk"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_materials_clearcoat",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.402,
+   1.274,
+   2
+  ],
+  "ymin": -0.637
+ },
+ {
+  "file": "horse_m2m_black.glb",
+  "kb": 845,
+  "tris": 6018,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "HorseHQ_black",
+   "Tack"
+  ],
+  "textures": 2,
+  "texKB": 66,
+  "texMax": 1024,
+  "skins": 1,
+  "joints": 56,
+  "anims": [
+   "Death",
+   "Eating",
+   "Head_But",
+   "Idle",
+   "Kick",
+   "lay_to_idle",
+   "Rear",
+   "Gallop",
+   "Sleep",
+   "Trot",
+   "Walk"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_materials_clearcoat",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.402,
+   1.274,
+   2
+  ],
+  "ymin": -0.637
+ },
+ {
+  "file": "horse_m2m_grey.glb",
+  "kb": 901,
+  "tris": 6018,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "HorseHQ_grey",
+   "Tack"
+  ],
+  "textures": 2,
+  "texKB": 122,
+  "texMax": 1024,
+  "skins": 1,
+  "joints": 56,
+  "anims": [
+   "Death",
+   "Eating",
+   "Head_But",
+   "Idle",
+   "Kick",
+   "lay_to_idle",
+   "Rear",
+   "Gallop",
+   "Sleep",
+   "Trot",
+   "Walk"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_materials_clearcoat",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.402,
+   1.274,
+   2
+  ],
+  "ymin": -0.637
+ },
+ {
+  "file": "horse_saddle.glb",
+  "kb": 198,
+  "tris": 4036,
+  "meshNodes": 16,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Horse"
+  ],
+  "textures": 1,
+  "texKB": 8,
+  "texMax": 512,
+  "skins": 16,
+  "joints": 560,
+  "anims": [
+   "Walk",
+   "Trot",
+   "Gallop",
+   "Rest"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_materials_unlit",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   2,
+   2
+  ],
+  "ymin": -1
+ },
+ {
+  "file": "horse_white.glb",
+  "kb": 550,
+  "tris": 2182,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 7,
+  "matNames": [
+   "Main",
+   "Hair",
+   "Muzzle",
+   "Hooves",
+   "Main_Light",
+   "Eye_Black",
+   "Eye_White"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 1,
+  "joints": 50,
+  "anims": [
+   "Attack_Kick",
+   "Eating",
+   "Gallop",
+   "Walk",
+   "Idle_Headlow",
+   "Idle_2",
+   "Idle"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   49.562,
+   169.97,
+   200
+  ],
+  "ymin": -84.985
+ },
+ {
+  "file": "horseman.glb",
+  "kb": 195,
+  "tris": 6630,
+  "meshNodes": 6,
+  "top": 1,
+  "materials": 6,
+  "matNames": [
+   "Material.005",
+   "Material.003",
+   "Material.010",
+   "Material.011",
+   "Material.012",
+   "Material.013"
+  ],
+  "textures": 1,
+  "texKB": 15,
+  "texMax": 512,
+  "skins": 1,
+  "joints": 34,
+  "anims": [
+   "Armature|mixamo.com|Layer0"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   3.337,
+   5.992,
+   12.014
+  ],
+  "ymin": -0.003
+ },
+ {
+  "file": "imp.glb",
+  "kb": 226,
+  "tris": 8199,
+  "meshNodes": 5,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "MI_Imp"
+  ],
+  "textures": 4,
+  "texKB": 77,
+  "texMax": 512,
+  "skins": 5,
+  "joints": 275,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_materials_emissive_strength",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   1.914,
+   2
+  ],
+  "ymin": -0.957
+ },
+ {
+  "file": "kit_civic.glb",
+  "kb": 388,
+  "tris": 24443,
+  "meshNodes": 61,
+  "top": 32,
+  "materials": 1,
+  "matNames": [
+   "flat"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   12,
+   18.801,
+   13
+  ],
+  "ymin": 0,
+  "parts": [
+   {
+    "name": "cv_tavern_b",
+    "tris": 1995,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_church_b",
+    "tris": 949,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_well_b",
+    "tris": 454,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_markethall_b",
+    "tris": 1183,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_tower_b",
+    "tris": 934,
+    "meshes": 2,
+    "skin": false
+   },
+   {
+    "name": "cv_wing_b",
+    "tris": 919,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_hall_b",
+    "tris": 800,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_tavern_y",
+    "tris": 1995,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_church_y",
+    "tris": 949,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_well_y",
+    "tris": 454,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_markethall_y",
+    "tris": 1183,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_tower_y",
+    "tris": 934,
+    "meshes": 2,
+    "skin": false
+   },
+   {
+    "name": "cv_wing_y",
+    "tris": 919,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_hall_y",
+    "tris": 800,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_stall",
+    "tris": 597,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_barrel",
+    "tris": 306,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_crate",
+    "tris": 357,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_bag",
+    "tris": 199,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_amphora",
+    "tris": 150,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_bucket",
+    "tris": 199,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_banner",
+    "tris": 158,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_bench",
+    "tris": 98,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_chest",
+    "tris": 490,
+    "meshes": 2,
+    "skin": false
+   },
+   {
+    "name": "cv_stairs",
+    "tris": 62,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cv_lamp",
+    "tris": 216,
+    "meshes": 2,
+    "skin": false
+   },
+   {
+    "name": "cv_tableset",
+    "tris": 765,
+    "meshes": 7,
+    "skin": false
+   },
+   {
+    "name": "cv_counting",
+    "tris": 998,
+    "meshes": 5,
+    "skin": false
+   },
+   {
+    "name": "cv_stall_veg",
+    "tris": 1083,
+    "meshes": 3,
+    "skin": false
+   },
+   {
+    "name": "cv_stall_wine",
+    "tris": 1447,
+    "meshes": 4,
+    "skin": false
+   },
+   {
+    "name": "cv_stall_pots",
+    "tris": 868,
+    "meshes": 5,
+    "skin": false
+   },
+   {
+    "name": "cv_stall_rich",
+    "tris": 1648,
+    "meshes": 5,
+    "skin": false
+   },
+   {
+    "name": "cv_cross",
+    "tris": 334,
+    "meshes": 3,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "kit_def.glb",
+  "kb": 797,
+  "tris": 34879,
+  "meshNodes": 176,
+  "top": 18,
+  "materials": 7,
+  "matNames": [
+   "flatDS",
+   "lambert2",
+   "TT_checker_512x512_COLOR_GRID",
+   "Light",
+   "None.001",
+   "ST_Base",
+   "Sword_Flame"
+  ],
+  "textures": 13,
+  "texKB": 88,
+  "texMax": 256,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_materials_clearcoat",
+   "KHR_materials_emissive_strength",
+   "KHR_materials_specular",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   17,
+   15.225,
+   10.951
+  ],
+  "ymin": 0,
+  "parts": [
+   {
+    "name": "df_bear",
+    "tris": 1200,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "df_bear2",
+    "tris": 564,
+    "meshes": 3,
+    "skin": false
+   },
+   {
+    "name": "df_keg",
+    "tris": 1600,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "df_mine",
+    "tris": 478,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "df_crossbow",
+    "tris": 2074,
+    "meshes": 13,
+    "skin": false
+   },
+   {
+    "name": "df_swing",
+    "tris": 1497,
+    "meshes": 4,
+    "skin": false
+   },
+   {
+    "name": "df_spikeball",
+    "tris": 624,
+    "meshes": 3,
+    "skin": false
+   },
+   {
+    "name": "df_saw",
+    "tris": 764,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "df_grate",
+    "tris": 1188,
+    "meshes": 3,
+    "skin": false
+   },
+   {
+    "name": "df_tesla",
+    "tris": 8378,
+    "meshes": 35,
+    "skin": false
+   },
+   {
+    "name": "df_pit",
+    "tris": 1796,
+    "meshes": 4,
+    "skin": false
+   },
+   {
+    "name": "df_grenade",
+    "tris": 759,
+    "meshes": 11,
+    "skin": false
+   },
+   {
+    "name": "df_hedgehog",
+    "tris": 624,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "df_watchtower",
+    "tris": 446,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "df_brazierpair",
+    "tris": 2016,
+    "meshes": 2,
+    "skin": false
+   },
+   {
+    "name": "df_firestone",
+    "tris": 2122,
+    "meshes": 2,
+    "skin": false
+   },
+   {
+    "name": "df_gatehouse",
+    "tris": 4159,
+    "meshes": 9,
+    "skin": false
+   },
+   {
+    "name": "df_ballista",
+    "tris": 4590,
+    "meshes": 81,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "kit_hex.glb",
+  "kb": 264,
+  "tris": 13201,
+  "meshNodes": 25,
+  "top": 21,
+  "materials": 1,
+  "matNames": [
+   "hexagons_medieval"
+  ],
+  "textures": 1,
+  "texKB": 3,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2.007,
+   1.808,
+   2.094
+  ],
+  "ymin": -0.35,
+  "parts": [
+   {
+    "name": "building_windmill_blue",
+    "tris": 2653,
+    "meshes": 3,
+    "skin": false
+   },
+   {
+    "name": "building_well_blue",
+    "tris": 726,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "building_grain",
+    "tris": 230,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "building_watermill_blue",
+    "tris": 1921,
+    "meshes": 2,
+    "skin": false
+   },
+   {
+    "name": "building_market_blue",
+    "tris": 3125,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "building_blacksmith_blue",
+    "tris": 2410,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "fence_wood_straight",
+    "tris": 212,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "fence_wood_straight_gate",
+    "tris": 308,
+    "meshes": 2,
+    "skin": false
+   },
+   {
+    "name": "tent",
+    "tris": 86,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "sack",
+    "tris": 92,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "resource_lumber",
+    "tris": 220,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "resource_stone",
+    "tris": 220,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "barrel",
+    "tris": 240,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "bucket_water",
+    "tris": 128,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "target",
+    "tris": 156,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ladder",
+    "tris": 84,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "waterlily_A",
+    "tris": 68,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "waterlily_B",
+    "tris": 68,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "waterplant_A",
+    "tris": 66,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "flag_blue",
+    "tris": 48,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "projectile_catapult",
+    "tris": 140,
+    "meshes": 1,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "kit_homes.glb",
+  "kb": 194,
+  "tris": 8108,
+  "meshNodes": 58,
+  "top": 58,
+  "materials": 1,
+  "matNames": [
+   "flat"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization",
+   "KHR_texture_transform"
+  ],
+  "bbox": [
+   11.211,
+   12.643,
+   10.942
+  ],
+  "ymin": -0.001,
+  "parts": [
+   {
+    "name": "cottage_0",
+    "tris": 108,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cottage_0_ra",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cottage_0_rb",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cottage_1",
+    "tris": 92,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cottage_1_ra",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cottage_1_rb",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cottage_2",
+    "tris": 102,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cottage_2_ra",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "cottage_2_rb",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "craftsman_0",
+    "tris": 330,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "craftsman_0_ra",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "craftsman_0_rb",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "craftsman_1",
+    "tris": 306,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "craftsman_1_ra",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "craftsman_1_rb",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "craftsman_2",
+    "tris": 330,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "craftsman_2_ra",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "craftsman_2_rb",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "merchant_0",
+    "tris": 456,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "merchant_0_ra",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "merchant_0_rb",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "merchant_1",
+    "tris": 386,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "merchant_1_ra",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "merchant_1_rb",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "merchant_2",
+    "tris": 402,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "merchant_2_ra",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "merchant_2_rb",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "noble_0",
+    "tris": 354,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "noble_0_ra",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "noble_0_rb",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "noble_1",
+    "tris": 577,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "noble_1_ra",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "noble_1_rb",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "noble_2",
+    "tris": 788,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "noble_2_ra",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "noble_2_rb",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "chim_a_1",
+    "tris": 32,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "chim_b_1",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "chim_a_2",
+    "tris": 32,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "chim_b_2",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "chim_a_3",
+    "tris": 32,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "chim_b_3",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_barrel",
+    "tris": 48,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_sack",
+    "tris": 28,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_wood",
+    "tris": 68,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_stone",
+    "tris": 28,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_barrow",
+    "tris": 71,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_bucket",
+    "tris": 32,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_flag",
+    "tris": 48,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_rack",
+    "tris": 42,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_anvil",
+    "tris": 42,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_bench",
+    "tris": 62,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_stall",
+    "tris": 127,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_wagon",
+    "tris": 92,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_fence",
+    "tris": 40,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_torch",
+    "tris": 34,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_sign",
+    "tris": 51,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "p_crates",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "kit_village.glb",
+  "kb": 1439,
+  "tris": 22871,
+  "meshNodes": 44,
+  "top": 44,
+  "materials": 9,
+  "matNames": [
+   "MI_WoodTrim",
+   "MI_Plaster",
+   "MI_UnevenBrick",
+   "MI_Brick",
+   "MI_RockTrim",
+   "MI_RoundTiles",
+   "MI_MetalOrnaments",
+   "MI_WindowGlass"
+  ],
+  "textures": 21,
+  "texKB": 876,
+  "texMax": 1024,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   9.953,
+   8.909,
+   11.905
+  ],
+  "ymin": -2.121,
+  "parts": [
+   {
+    "name": "Wall_UnevenBrick_Straight",
+    "tris": 56,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Wall_UnevenBrick_Window_Wide_Round",
+    "tris": 116,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Wall_UnevenBrick_Window_Thin_Round",
+    "tris": 158,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Wall_UnevenBrick_Door_Round",
+    "tris": 136,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Wall_Plaster_Straight",
+    "tris": 86,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Wall_Plaster_Window_Wide_Round",
+    "tris": 124,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Wall_Plaster_Window_Thin_Round",
+    "tris": 166,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Wall_Plaster_WoodGrid",
+    "tris": 248,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Wall_Plaster_Door_Round",
+    "tris": 137,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Wall_Plaster_Straight_Base",
+    "tris": 64,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Wall_Plaster_Window_Wide_Flat",
+    "tris": 96,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Corner_Exterior_Brick",
+    "tris": 682,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Corner_Exterior_Wood",
+    "tris": 12,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Roof_RoundTiles_4x4",
+    "tris": 1232,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Roof_RoundTiles_4x6",
+    "tris": 1443,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Roof_RoundTiles_4x8",
+    "tris": 1725,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Roof_RoundTiles_6x6",
+    "tris": 1906,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Roof_RoundTiles_6x8",
+    "tris": 2155,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Roof_RoundTiles_6x10",
+    "tris": 2432,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Roof_RoundTiles_8x10",
+    "tris": 2513,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Roof_Front_Brick4",
+    "tris": 146,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Roof_Front_Brick6",
+    "tris": 224,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Roof_Front_Brick8",
+    "tris": 272,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Roof_Tower_RoundTiles",
+    "tris": 1847,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Roof_Dormer_RoundTile",
+    "tris": 740,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Window_Wide_Round1",
+    "tris": 259,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Window_Thin_Round1",
+    "tris": 287,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "WindowShutters_Wide_Round_Open",
+    "tris": 136,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "WindowShutters_Thin_Round_Open",
+    "tris": 112,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "WindowShutters_Thin_Round_Closed",
+    "tris": 112,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Door_1_Round",
+    "tris": 363,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "DoorFrame_Round_Brick",
+    "tris": 612,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Prop_Chimney",
+    "tris": 312,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Prop_Chimney2",
+    "tris": 64,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Prop_Vine2",
+    "tris": 45,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Prop_Vine5",
+    "tris": 117,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Prop_WoodenFence_Single",
+    "tris": 40,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Prop_WoodenFence_Extension1",
+    "tris": 32,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Balcony_Simple_Straight",
+    "tris": 1120,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Overhang_Plaster_Long",
+    "tris": 204,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Floor_WoodDark",
+    "tris": 32,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Prop_Crate",
+    "tris": 230,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Prop_Support",
+    "tris": 16,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "Stairs_Exterior_Straight",
+    "tris": 62,
+    "meshes": 1,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "kit_ws.glb",
+  "kb": 1560,
+  "tris": 60689,
+  "meshNodes": 273,
+  "top": 70,
+  "materials": 17,
+  "matNames": [
+   "hexagons_medieval",
+   "hexagons_medieval",
+   "flat",
+   "MI_Trim_Furniture",
+   "MI_Trim_Metal",
+   "MI_Trim_Props",
+   "MI_Banner",
+   "flatDS"
+  ],
+  "textures": 27,
+  "texKB": 149,
+  "texMax": 384,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_materials_ior",
+   "KHR_materials_specular",
+   "KHR_mesh_quantization",
+   "KHR_texture_transform"
+  ],
+  "bbox": [
+   14.813,
+   16.13,
+   18
+  ],
+  "ymin": 0,
+  "parts": [
+   {
+    "name": "ws_lumbermill",
+    "tris": 2012,
+    "meshes": 3,
+    "skin": false
+   },
+   {
+    "name": "ws_mine",
+    "tris": 1100,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_smithy",
+    "tris": 1600,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_hut",
+    "tris": 975,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_market",
+    "tris": 1774,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_brewhouse",
+    "tris": 2278,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stageA",
+    "tris": 700,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stageB",
+    "tris": 800,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stageC",
+    "tris": 1050,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_scaffold",
+    "tris": 2400,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_logs",
+    "tris": 220,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stoneblocks",
+    "tris": 220,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stumpsA",
+    "tris": 288,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stumpsB",
+    "tris": 266,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stump",
+    "tris": 16,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_wheelbarrow",
+    "tris": 396,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_pallet",
+    "tris": 72,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_cratelong",
+    "tris": 180,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_sack",
+    "tris": 92,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_ladder",
+    "tris": 84,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_rockA",
+    "tris": 120,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_rockB",
+    "tris": 120,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_rockC",
+    "tris": 200,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_boulderA",
+    "tris": 18,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_boulderC",
+    "tris": 40,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_boulderD",
+    "tris": 22,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_boulderE",
+    "tris": 71,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_openbarn",
+    "tris": 1520,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_smallbarn",
+    "tris": 1664,
+    "meshes": 4,
+    "skin": false
+   },
+   {
+    "name": "ws_barn",
+    "tris": 2176,
+    "meshes": 5,
+    "skin": false
+   },
+   {
+    "name": "ws_silo",
+    "tris": 1525,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_coop",
+    "tris": 914,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_fence",
+    "tris": 188,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_workbench",
+    "tris": 516,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_anvil_log",
+    "tris": 508,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stall_cart_empty",
+    "tris": 1278,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stall_empty",
+    "tris": 660,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_crate_wooden",
+    "tris": 437,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_barrel",
+    "tris": 654,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_barrel_apples",
+    "tris": 782,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_farmcrate_apple",
+    "tris": 274,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_farmcrate_empty",
+    "tris": 184,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_coin_pile",
+    "tris": 246,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_pickaxe_bronze",
+    "tris": 150,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_axe_bronze",
+    "tris": 158,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_bucket_wooden_1",
+    "tris": 215,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_cauldron",
+    "tris": 338,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_whetstone",
+    "tris": 318,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_cage_small",
+    "tris": 892,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_barrel_holder",
+    "tris": 1572,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_chain_coil",
+    "tris": 1404,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_waterwheel",
+    "tris": 664,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_jetty",
+    "tris": 3700,
+    "meshes": 17,
+    "skin": false
+   },
+   {
+    "name": "ws_rowboat",
+    "tris": 322,
+    "meshes": 3,
+    "skin": false
+   },
+   {
+    "name": "ws_fishrack",
+    "tris": 2721,
+    "meshes": 121,
+    "skin": false
+   },
+   {
+    "name": "ws_fishset",
+    "tris": 1344,
+    "meshes": 7,
+    "skin": false
+   },
+   {
+    "name": "ws_butcher",
+    "tris": 4485,
+    "meshes": 8,
+    "skin": false
+   },
+   {
+    "name": "ws_cart1",
+    "tris": 2351,
+    "meshes": 7,
+    "skin": false
+   },
+   {
+    "name": "ws_cart2",
+    "tris": 2341,
+    "meshes": 6,
+    "skin": false
+   },
+   {
+    "name": "ws_cart3",
+    "tris": 2875,
+    "meshes": 6,
+    "skin": false
+   },
+   {
+    "name": "ws_camel",
+    "tris": 1145,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_minecart",
+    "tris": 671,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_orecart",
+    "tris": 867,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_nugget",
+    "tris": 140,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_nugget2",
+    "tris": 120,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_goldbars",
+    "tris": 280,
+    "meshes": 10,
+    "skin": false
+   },
+   {
+    "name": "ws_amphora",
+    "tris": 160,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_logpile",
+    "tris": 72,
+    "meshes": 16,
+    "skin": false
+   },
+   {
+    "name": "ws_barrelold",
+    "tris": 384,
+    "meshes": 4,
+    "skin": false
+   },
+   {
+    "name": "ws_watchtower2",
+    "tris": 360,
+    "meshes": 1,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "kit_ws_p3.glb",
+  "kb": 4296,
+  "tris": 150973,
+  "meshNodes": 416,
+  "top": 78,
+  "materials": 124,
+  "matNames": [
+   "hexagons_medieval",
+   "hexagons_medieval",
+   "DarkRed",
+   "White",
+   "Brown",
+   "LightRed",
+   "RoofBlack",
+   "Grey"
+  ],
+  "textures": 136,
+  "texKB": 1030,
+  "texMax": 384,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_materials_ior",
+   "KHR_materials_specular",
+   "KHR_mesh_quantization",
+   "KHR_texture_transform"
+  ],
+  "bbox": [
+   14.813,
+   16.13,
+   18
+  ],
+  "ymin": 0,
+  "parts": [
+   {
+    "name": "ws_lumbermill",
+    "tris": 2338,
+    "meshes": 3,
+    "skin": false
+   },
+   {
+    "name": "ws_mine",
+    "tris": 1126,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_smithy",
+    "tris": 1950,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_hut",
+    "tris": 975,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_market",
+    "tris": 2079,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_brewhouse",
+    "tris": 2480,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stageA",
+    "tris": 784,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stageB",
+    "tris": 902,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stageC",
+    "tris": 1218,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_scaffold",
+    "tris": 2556,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_logs",
+    "tris": 220,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stoneblocks",
+    "tris": 220,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stumpsA",
+    "tris": 288,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stumpsB",
+    "tris": 266,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stump",
+    "tris": 16,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_wheelbarrow",
+    "tris": 396,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_pallet",
+    "tris": 72,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_cratelong",
+    "tris": 180,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_sack",
+    "tris": 92,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_ladder",
+    "tris": 84,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_rockA",
+    "tris": 120,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_rockB",
+    "tris": 120,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_rockC",
+    "tris": 200,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_boulderA",
+    "tris": 18,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_boulderC",
+    "tris": 40,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_boulderD",
+    "tris": 22,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_boulderE",
+    "tris": 71,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_openbarn",
+    "tris": 1522,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_smallbarn",
+    "tris": 1879,
+    "meshes": 4,
+    "skin": false
+   },
+   {
+    "name": "ws_barn",
+    "tris": 2251,
+    "meshes": 5,
+    "skin": false
+   },
+   {
+    "name": "ws_silo",
+    "tris": 1588,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_coop",
+    "tris": 926,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_fence",
+    "tris": 188,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_workbench",
+    "tris": 560,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_anvil_log",
+    "tris": 773,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stall_cart_empty",
+    "tris": 1386,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_stall_empty",
+    "tris": 828,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_crate_wooden",
+    "tris": 469,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_barrel",
+    "tris": 694,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_barrel_apples",
+    "tris": 1466,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_farmcrate_apple",
+    "tris": 1046,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_farmcrate_empty",
+    "tris": 246,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_coin_pile",
+    "tris": 864,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_pickaxe_bronze",
+    "tris": 150,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_axe_bronze",
+    "tris": 180,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_bucket_wooden_1",
+    "tris": 456,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_cauldron",
+    "tris": 518,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_whetstone",
+    "tris": 480,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_cage_small",
+    "tris": 951,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_barrel_holder",
+    "tris": 1634,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_chain_coil",
+    "tris": 2034,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_rope_1",
+    "tris": 318,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_waterwheel",
+    "tris": 780,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_jetty",
+    "tris": 3700,
+    "meshes": 17,
+    "skin": false
+   },
+   {
+    "name": "ws_rowboat",
+    "tris": 322,
+    "meshes": 3,
+    "skin": false
+   },
+   {
+    "name": "ws_fishrack",
+    "tris": 2721,
+    "meshes": 121,
+    "skin": false
+   },
+   {
+    "name": "ws_fishset",
+    "tris": 2676,
+    "meshes": 7,
+    "skin": false
+   },
+   {
+    "name": "ws_net",
+    "tris": 16384,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_butcher",
+    "tris": 4485,
+    "meshes": 8,
+    "skin": false
+   },
+   {
+    "name": "ws_winepress",
+    "tris": 3584,
+    "meshes": 5,
+    "skin": false
+   },
+   {
+    "name": "ws_winery",
+    "tris": 11000,
+    "meshes": 27,
+    "skin": false
+   },
+   {
+    "name": "ws_cartbeer",
+    "tris": 18582,
+    "meshes": 25,
+    "skin": false
+   },
+   {
+    "name": "ws_cart1",
+    "tris": 3305,
+    "meshes": 7,
+    "skin": false
+   },
+   {
+    "name": "ws_cart2",
+    "tris": 3185,
+    "meshes": 6,
+    "skin": false
+   },
+   {
+    "name": "ws_cart3",
+    "tris": 3685,
+    "meshes": 6,
+    "skin": false
+   },
+   {
+    "name": "ws_camel",
+    "tris": 1380,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_minecart",
+    "tris": 832,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_orecart",
+    "tris": 1059,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_nugget",
+    "tris": 176,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_nugget2",
+    "tris": 266,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_goldbars",
+    "tris": 280,
+    "meshes": 10,
+    "skin": false
+   },
+   {
+    "name": "ws_amphora",
+    "tris": 220,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_logpile",
+    "tris": 72,
+    "meshes": 16,
+    "skin": false
+   },
+   {
+    "name": "ws_barrelold",
+    "tris": 954,
+    "meshes": 4,
+    "skin": false
+   },
+   {
+    "name": "ws_scarecrow",
+    "tris": 16903,
+    "meshes": 2,
+    "skin": false
+   },
+   {
+    "name": "ws_ballistatower",
+    "tris": 11368,
+    "meshes": 81,
+    "skin": false
+   },
+   {
+    "name": "ws_watchtower2",
+    "tris": 360,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "ws_spikes",
+    "tris": 454,
+    "meshes": 1,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "kk_anims.glb",
+  "kb": 554,
+  "tris": 0,
+  "meshNodes": 0,
+  "top": 1,
+  "materials": 0,
+  "matNames": [],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [
+   "Death_A",
+   "Hit_A",
+   "Idle_A",
+   "Idle_B",
+   "Spawn_Ground",
+   "Running_A",
+   "Walking_A",
+   "Ranged_Magic_Raise",
+   "Ranged_Magic_Shoot",
+   "Ranged_Magic_Spellcasting",
+   "Ranged_Magic_Summon",
+   "Skeletons_Awaken_Floor",
+   "Skeletons_Death",
+   "Skeletons_Idle",
+   "Skeletons_Taunt",
+   "Skeletons_Walking"
+  ],
+  "ext": [
+   "EXT_meshopt_compression"
+  ],
+  "bbox": [
+   null,
+   null,
+   null
+  ],
+  "ymin": null
+ },
+ {
+  "file": "knight_k3.glb",
+  "kb": 465,
+  "tris": 10493,
+  "meshNodes": 8,
+  "top": 1,
+  "materials": 3,
+  "matNames": [
+   "MI_Ranger",
+   "MI_Regular_Male",
+   "Kit"
+  ],
+  "textures": 8,
+  "texKB": 202,
+  "texMax": 1024,
+  "skins": 8,
+  "joints": 520,
+  "anims": [
+   "Ride"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   2,
+   1.808
+  ],
+  "ymin": -1
+ },
+ {
+  "file": "mangonel.glb",
+  "kb": 100,
+  "tris": 1978,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Default"
+  ],
+  "textures": 3,
+  "texKB": 52,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.29,
+   1.017,
+   2
+  ],
+  "ymin": -0.508
+ },
+ {
+  "file": "mushroom.glb",
+  "kb": 41,
+  "tris": 880,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Mushrooms"
+  ],
+  "textures": 1,
+  "texKB": 29,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.564,
+   0.464,
+   0.779
+  ],
+  "ymin": -0.017
+ },
+ {
+  "file": "ogre.glb",
+  "kb": 928,
+  "tris": 10289,
+  "meshNodes": 15,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Orge_LP",
+   "Material"
+  ],
+  "textures": 3,
+  "texKB": 67,
+  "texMax": 512,
+  "skins": 14,
+  "joints": 364,
+  "anims": [
+   "Armature|Ideal",
+   "Armature|Ideal3",
+   "Armature|Punch",
+   "Armature|Roar2",
+   "Armature|Slam",
+   "Armature|Walk"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   5.329,
+   5.329,
+   5.329
+  ],
+  "ymin": -2.665
+ },
+ {
+  "file": "openbarn.glb",
+  "kb": 29,
+  "tris": 1612,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 5,
+  "matNames": [
+   "DarkRed",
+   "White",
+   "Brown",
+   "LightRed",
+   "RoofBlack"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   5.744,
+   4.744,
+   6.182
+  ],
+  "ymin": 0.001
+ },
+ {
+  "file": "peasant_f.glb",
+  "kb": 199,
+  "tris": 6784,
+  "meshNodes": 4,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "MI_Peasant"
+  ],
+  "textures": 3,
+  "texKB": 65,
+  "texMax": 512,
+  "skins": 4,
+  "joints": 260,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   2,
+   1.436
+  ],
+  "ymin": -1
+ },
+ {
+  "file": "peasant_m.glb",
+  "kb": 232,
+  "tris": 6445,
+  "meshNodes": 4,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "MI_Peasant",
+   "MI_Regular_Male"
+  ],
+  "textures": 6,
+  "texKB": 110,
+  "texMax": 512,
+  "skins": 4,
+  "joints": 260,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   2,
+   1.457
+  ],
+  "ymin": -1
+ },
+ {
+  "file": "pebble1.glb",
+  "kb": 27,
+  "tris": 136,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "PathRocks"
+  ],
+  "textures": 1,
+  "texKB": 20,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.5,
+   0.095,
+   0.367
+  ],
+  "ymin": -0.008
+ },
+ {
+  "file": "pebble2.glb",
+  "kb": 26,
+  "tris": 128,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "PathRocks"
+  ],
+  "textures": 1,
+  "texKB": 20,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.45,
+   0.099,
+   0.485
+  ],
+  "ymin": -0.002
+ },
+ {
+  "file": "pegasus.glb",
+  "kb": 1063,
+  "tris": 7590,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "HorseHQ_white",
+   "Feathers_B"
+  ],
+  "textures": 5,
+  "texKB": 377,
+  "texMax": 1024,
+  "skins": 1,
+  "joints": 84,
+  "anims": [
+   "Fly",
+   "Glide",
+   "Rest"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_materials_clearcoat",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   0.631,
+   1.169
+  ],
+  "ymin": -0.316
+ },
+ {
+  "file": "pine1.glb",
+  "kb": 126,
+  "tris": 3526,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Bark_NormalTree",
+   "Leaves_Pine"
+  ],
+  "textures": 3,
+  "texKB": 36,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   4.944,
+   7.317,
+   4.539
+  ],
+  "ymin": -0.235
+ },
+ {
+  "file": "pine2.glb",
+  "kb": 120,
+  "tris": 3252,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Bark_NormalTree",
+   "Leaves_Pine"
+  ],
+  "textures": 3,
+  "texKB": 36,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   5.728,
+   7.376,
+   5.221
+  ],
+  "ymin": -0.235
+ },
+ {
+  "file": "pine3.glb",
+  "kb": 147,
+  "tris": 4452,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Bark_NormalTree",
+   "Leaves_Pine"
+  ],
+  "textures": 3,
+  "texKB": 36,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   3.612,
+   7.392,
+   3.996
+  ],
+  "ymin": -0.235
+ },
+ {
+  "file": "pine4.glb",
+  "kb": 120,
+  "tris": 3021,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Bark_NormalTree",
+   "Leaves_Pine"
+  ],
+  "textures": 3,
+  "texKB": 36,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   5.803,
+   10.236,
+   5.371
+  ],
+  "ymin": -0.235
+ },
+ {
+  "file": "pine5.glb",
+  "kb": 81,
+  "tris": 1646,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Bark_NormalTree",
+   "Leaves_Pine"
+  ],
+  "textures": 3,
+  "texKB": 36,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   6.42,
+   8.724,
+   6.222
+  ],
+  "ymin": -0.235
+ },
+ {
+  "file": "plant.glb",
+  "kb": 56,
+  "tris": 120,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Leaves"
+  ],
+  "textures": 1,
+  "texKB": 51,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.273,
+   1.014,
+   1.386
+  ],
+  "ymin": -0.035
+ },
+ {
+  "file": "prowler.glb",
+  "kb": 1357,
+  "tris": 19766,
+  "meshNodes": 17,
+  "top": 1,
+  "materials": 3,
+  "matNames": [
+   "material_0",
+   "Main_Material_.001",
+   "Eye.001"
+  ],
+  "textures": 4,
+  "texKB": 496,
+  "texMax": 1024,
+  "skins": 2,
+  "joints": 252,
+  "anims": [
+   "Walk",
+   "Landing"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.035,
+   0.376,
+   0.158
+  ],
+  "ymin": 0.287
+ },
+ {
+  "file": "puglin.glb",
+  "kb": 221,
+  "tris": 6054,
+  "meshNodes": 3,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "MI_Puglin"
+  ],
+  "textures": 4,
+  "texKB": 124,
+  "texMax": 1024,
+  "skins": 3,
+  "joints": 165,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_materials_emissive_strength",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   1.268,
+   2
+  ],
+  "ymin": -0.634
+ },
+ {
+  "file": "pumpkin.glb",
+  "kb": 54,
+  "tris": 2896,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 3,
+  "matNames": [
+   "Orange",
+   "Green",
+   "DarkGreen"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.29,
+   0.59,
+   1.075
+  ],
+  "ymin": -0.042
+ },
+ {
+  "file": "ram.glb",
+  "kb": 92,
+  "tris": 1926,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Default"
+  ],
+  "textures": 3,
+  "texKB": 35,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.32,
+   0.879,
+   2
+  ],
+  "ymin": -0.44
+ },
+ {
+  "file": "ranger_f.glb",
+  "kb": 365,
+  "tris": 9093,
+  "meshNodes": 9,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "MI_Ranger",
+   "MI_Regular_Female"
+  ],
+  "textures": 6,
+  "texKB": 122,
+  "texMax": 512,
+  "skins": 9,
+  "joints": 585,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   2,
+   2
+  ],
+  "ymin": -1
+ },
+ {
+  "file": "ranger_m.glb",
+  "kb": 363,
+  "tris": 9031,
+  "meshNodes": 9,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "MI_Ranger",
+   "MI_Regular_Male"
+  ],
+  "textures": 6,
+  "texKB": 123,
+  "texMax": 512,
+  "skins": 9,
+  "joints": 585,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   2,
+   1.973
+  ],
+  "ymin": -1
+ },
+ {
+  "file": "rock1.glb",
+  "kb": 31,
+  "tris": 342,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Rocks"
+  ],
+  "textures": 1,
+  "texKB": 23,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   3.225,
+   2.26,
+   2.989
+  ],
+  "ymin": -0.271
+ },
+ {
+  "file": "rock2.glb",
+  "kb": 30,
+  "tris": 244,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Rocks"
+  ],
+  "textures": 1,
+  "texKB": 23,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   3.049,
+   1.899,
+   2.479
+  ],
+  "ymin": -0.051
+ },
+ {
+  "file": "rock3.glb",
+  "kb": 34,
+  "tris": 522,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Rocks"
+  ],
+  "textures": 1,
+  "texKB": 23,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   3.42,
+   2.316,
+   3.476
+  ],
+  "ymin": -0.316
+ },
+ {
+  "file": "rockset1.glb",
+  "kb": 309,
+  "tris": 3150,
+  "meshNodes": 6,
+  "top": 6,
+  "materials": 1,
+  "matNames": [
+   "rock_moss_set_01"
+  ],
+  "textures": 3,
+  "texKB": 261,
+  "texMax": 1024,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   8.005,
+   1.759,
+   6.943
+  ],
+  "ymin": -0.656,
+  "parts": [
+   {
+    "name": "rock_moss_set_01_rock01",
+    "tris": 550,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "rock_moss_set_01_rock02",
+    "tris": 548,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "rock_moss_set_01_rock03",
+    "tris": 250,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "rock_moss_set_01_rock04",
+    "tris": 528,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "rock_moss_set_01_rock05",
+    "tris": 826,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "rock_moss_set_01_rock06",
+    "tris": 448,
+    "meshes": 1,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "rockset2.glb",
+  "kb": 418,
+  "tris": 2878,
+  "meshNodes": 7,
+  "top": 7,
+  "materials": 1,
+  "matNames": [
+   "rock_moss_set_02"
+  ],
+  "textures": 3,
+  "texKB": 375,
+  "texMax": 1024,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   8.276,
+   1.349,
+   3.396
+  ],
+  "ymin": -0.305,
+  "parts": [
+   {
+    "name": "rock_moss_set_02_rock08",
+    "tris": 400,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "rock_moss_set_02_rock09",
+    "tris": 394,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "rock_moss_set_02_rock12",
+    "tris": 398,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "rock_moss_set_02_rock13",
+    "tris": 396,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "rock_moss_set_02_rock10",
+    "tris": 400,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "rock_moss_set_02_rock11",
+    "tris": 400,
+    "meshes": 1,
+    "skin": false
+   },
+   {
+    "name": "rock_moss_set_02_rock07",
+    "tris": 490,
+    "meshes": 1,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "shield.glb",
+  "kb": 107,
+  "tris": 1404,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 3,
+  "matNames": [
+   "MI_Trim_Furniture",
+   "MI_Trim_Metal_Vertex",
+   "MI_Trim_Props"
+  ],
+  "textures": 9,
+  "texKB": 78,
+  "texMax": 256,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.615,
+   0.621,
+   0.179
+  ],
+  "ymin": -0.31
+ },
+ {
+  "file": "shield_heater.glb",
+  "kb": 31,
+  "tris": 1948,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 4,
+  "matNames": [
+   "Steel",
+   "DarkWood",
+   "LightSteel",
+   "LightWood"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2.005,
+   2.564,
+   0.597
+  ],
+  "ymin": -1.302
+ },
+ {
+  "file": "shield_round2.glb",
+  "kb": 26,
+  "tris": 1204,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 5,
+  "matNames": [
+   "Steel",
+   "DarkWood",
+   "LightSteel",
+   "White",
+   "LightWood"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   2,
+   0.604
+  ],
+  "ymin": -1
+ },
+ {
+  "file": "shieldmaiden.glb",
+  "kb": 539,
+  "tris": 11988,
+  "meshNodes": 13,
+  "top": 1,
+  "materials": 6,
+  "matNames": [
+   "MI_Hair_2",
+   "MI_Eyes",
+   "MI_Superhero_Female",
+   "MI_Hair_2",
+   "MI_Ranger",
+   "MI_Regular_Female"
+  ],
+  "textures": 13,
+  "texKB": 227,
+  "texMax": 512,
+  "skins": 13,
+  "joints": 845,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   2,
+   1.957
+  ],
+  "ymin": -1
+ },
+ {
+  "file": "siege_tower.glb",
+  "kb": 80,
+  "tris": 1258,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Default"
+  ],
+  "textures": 3,
+  "texKB": 48,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.867,
+   2,
+   1.511
+  ],
+  "ymin": -1
+ },
+ {
+  "file": "silo.glb",
+  "kb": 27,
+  "tris": 1592,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 5,
+  "matNames": [
+   "LightRed",
+   "White",
+   "DarkRed",
+   "Brown",
+   "Grey"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   3.668,
+   9.069,
+   3.51
+  ],
+  "ymin": -0.049
+ },
+ {
+  "file": "skel_mage.glb",
+  "kb": 106,
+  "tris": 4588,
+  "meshNodes": 9,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "skeleton",
+   "Glow"
+  ],
+  "textures": 1,
+  "texKB": 4,
+  "texMax": 512,
+  "skins": 8,
+  "joints": 184,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   3.63,
+   2
+  ],
+  "ymin": -1
+ },
+ {
+  "file": "skel_staff.glb",
+  "kb": 32,
+  "tris": 1519,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "skeleton"
+  ],
+  "textures": 1,
+  "texKB": 3,
+  "texMax": 256,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.598,
+   2.102,
+   0.753
+  ],
+  "ymin": -0.846
+ },
+ {
+  "file": "spear.glb",
+  "kb": 24,
+  "tris": 1202,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 4,
+  "matNames": [
+   "DarkWood",
+   "LightWood",
+   "Steel",
+   "LightSteel"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.53,
+   9.717,
+   0.325
+  ],
+  "ymin": -2.155
+ },
+ {
+  "file": "stall.glb",
+  "kb": 191,
+  "tris": 1496,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 3,
+  "matNames": [
+   "MI_Trim_Metal",
+   "MI_Trim_Furniture",
+   "MI_Banner"
+  ],
+  "textures": 9,
+  "texKB": 161,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.845,
+   2.627,
+   0.932
+  ],
+  "ymin": -0.005
+ },
+ {
+  "file": "sword.glb",
+  "kb": 58,
+  "tris": 1540,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "MI_Trim_Props_Vertex"
+  ],
+  "textures": 3,
+  "texKB": 31,
+  "texMax": 256,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.267,
+   1.132,
+   0.065
+  ],
+  "ymin": -0.208
+ },
+ {
+  "file": "sword_mw.glb",
+  "kb": 18,
+  "tris": 872,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 5,
+  "matNames": [
+   "DarkSteel",
+   "DarkWood",
+   "LightWood",
+   "LightSteel",
+   "Steel"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.142,
+   5.453,
+   0.261
+  ],
+  "ymin": -0.819
+ },
+ {
+  "file": "tent_general.glb",
+  "kb": 91,
+  "tris": 1938,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Default"
+  ],
+  "textures": 4,
+  "texKB": 39,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   1.507,
+   1.979
+  ],
+  "ymin": -0.753
+ },
+ {
+  "file": "torch.glb",
+  "kb": 42,
+  "tris": 970,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "MI_Trim_Metal"
+  ],
+  "textures": 3,
+  "texKB": 22,
+  "texMax": 256,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   0.223,
+   0.648,
+   0.388
+  ],
+  "ymin": -0.278
+ },
+ {
+  "file": "treant.glb",
+  "kb": 794,
+  "tris": 7724,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Material.001"
+  ],
+  "textures": 1,
+  "texKB": 10,
+  "texMax": 512,
+  "skins": 1,
+  "joints": 98,
+  "anims": [
+   "Armature|Attack01",
+   "Armature|Idle01",
+   "Armature|Idle02",
+   "Armature|Walk"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   200,
+   93.612,
+   71.468
+  ],
+  "ymin": -46.806
+ },
+ {
+  "file": "trebuchet.glb",
+  "kb": 142,
+  "tris": 1671,
+  "meshNodes": 2,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Trebuchet",
+   "Cups"
+  ],
+  "textures": 7,
+  "texKB": 83,
+  "texMax": 512,
+  "skins": 2,
+  "joints": 16,
+  "anims": [
+   "Reload_1",
+   "Reload_2",
+   "Reload_3",
+   "Reload_4",
+   "Shoot"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   2,
+   1.789,
+   2
+  ],
+  "ymin": -0.894
+ },
+ {
+  "file": "trebuchet2.glb",
+  "kb": 89,
+  "tris": 1364,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Default"
+  ],
+  "textures": 3,
+  "texKB": 45,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.596,
+   1.579,
+   2
+  ],
+  "ymin": -0.79
+ },
+ {
+  "file": "tree1.glb",
+  "kb": 216,
+  "tris": 5881,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Bark_NormalTree",
+   "Leaves_NormalTree"
+  ],
+  "textures": 3,
+  "texKB": 59,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   4.311,
+   7.265,
+   4.577
+  ],
+  "ymin": -0.243
+ },
+ {
+  "file": "tree2.glb",
+  "kb": 195,
+  "tris": 5218,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Bark_NormalTree",
+   "Leaves_NormalTree"
+  ],
+  "textures": 3,
+  "texKB": 59,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   4.464,
+   7.643,
+   4.276
+  ],
+  "ymin": -0.243
+ },
+ {
+  "file": "tree3.glb",
+  "kb": 157,
+  "tris": 3346,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Bark_NormalTree",
+   "Leaves_NormalTree"
+  ],
+  "textures": 3,
+  "texKB": 59,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   4.063,
+   9.425,
+   4.241
+  ],
+  "ymin": -0.243
+ },
+ {
+  "file": "tree4.glb",
+  "kb": 160,
+  "tris": 3804,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Bark_NormalTree",
+   "Leaves_NormalTree"
+  ],
+  "textures": 3,
+  "texKB": 59,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   3.826,
+   9.438,
+   3.755
+  ],
+  "ymin": -0.243
+ },
+ {
+  "file": "tree5.glb",
+  "kb": 151,
+  "tris": 2953,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Bark_NormalTree",
+   "Leaves_NormalTree"
+  ],
+  "textures": 3,
+  "texKB": 59,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   3.671,
+   7.006,
+   4.22
+  ],
+  "ymin": -0.243
+ },
+ {
+  "file": "troll.glb",
+  "kb": 1607,
+  "tris": 10467,
+  "meshNodes": 7,
+  "top": 1,
+  "materials": 4,
+  "matNames": [
+   "tanga_mat",
+   "troll_body_mat",
+   "hair_mat",
+   "weapon_mat"
+  ],
+  "textures": 12,
+  "texKB": 300,
+  "texMax": 512,
+  "skins": 6,
+  "joints": 702,
+  "anims": [
+   "idle",
+   "idle_break",
+   "walk",
+   "attack1",
+   "attack2"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   96.825,
+   103.028,
+   149.168
+  ],
+  "ymin": -0.468
+ },
+ {
+  "file": "twisted1.glb",
+  "kb": 303,
+  "tris": 8982,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "Bark_TwistedTree",
+   "Leaves_TwistedTree"
+  ],
+  "textures": 3,
+  "texKB": 69,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   13.516,
+   16.725,
+   11.549
+  ],
+  "ymin": -0.201
+ },
+ {
+  "file": "wagon.glb",
+  "kb": 115,
+  "tris": 1672,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "MI_WoodTrim_Wear"
+  ],
+  "textures": 3,
+  "texKB": 80,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.951,
+   1.529,
+   4.024
+  ],
+  "ymin": 0.003
+ },
+ {
+  "file": "watchtower.glb",
+  "kb": 415,
+  "tris": 10544,
+  "meshNodes": 6,
+  "top": 1,
+  "materials": 6,
+  "matNames": [
+   "Material_565",
+   "Material_14",
+   "Material_94",
+   "Material_409",
+   "Material_243",
+   "Material_15"
+  ],
+  "textures": 7,
+  "texKB": 150,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   4289.761,
+   1751.95,
+   2989.361
+  ],
+  "ymin": -875.975,
+  "parts": [
+   {
+    "name": "Sketchfab_model",
+    "tris": 10544,
+    "meshes": 6,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "watermill.glb",
+  "kb": 338,
+  "tris": 9302,
+  "meshNodes": 10,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Scene_-_Root"
+  ],
+  "textures": 4,
+  "texKB": 116,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   11.543,
+   13.312,
+   12.834
+  ],
+  "ymin": -1.049,
+  "parts": [
+   {
+    "name": "Sketchfab_model",
+    "tris": 9302,
+    "meshes": 10,
+    "skin": false
+   }
+  ]
+ },
+ {
+  "file": "weaponstand.glb",
+  "kb": 161,
+  "tris": 2084,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 2,
+  "matNames": [
+   "MI_Trim_Furniture",
+   "MI_Trim_Metal"
+  ],
+  "textures": 6,
+  "texKB": 129,
+  "texMax": 512,
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.386,
+   1.109,
+   0.983
+  ],
+  "ymin": -0.003
+ },
+ {
+  "file": "werewolf.glb",
+  "kb": 395,
+  "tris": 2524,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "lambert6"
+  ],
+  "textures": 1,
+  "texKB": 35,
+  "texMax": 512,
+  "skins": 1,
+  "joints": 60,
+  "anims": [
+   "Stand - 1",
+   "Stand - 2",
+   "Walk",
+   "Attack - 1",
+   "Attack - 2",
+   "Death",
+   "Spell"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_materials_unlit",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   3.812,
+   2.771,
+   2.752
+  ],
+  "ymin": -1.386
+ },
+ {
+  "file": "windmill2.glb",
+  "kb": 158,
+  "tris": 4321,
+  "meshNodes": 4,
+  "top": 1,
+  "materials": 1,
+  "matNames": [
+   "Material"
+  ],
+  "textures": 1,
+  "texKB": 75,
+  "texMax": 512,
+  "skins": 2,
+  "joints": 14,
+  "anims": [
+   "Move"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "EXT_texture_webp",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   1.386,
+   2,
+   2
+  ],
+  "ymin": -0.891
+ },
+ {
+  "file": "wolf.glb",
+  "kb": 480,
+  "tris": 1962,
+  "meshNodes": 1,
+  "top": 1,
+  "materials": 4,
+  "matNames": [
+   "Main",
+   "Main_Light",
+   "Eyes_Black",
+   "Nose"
+  ],
+  "textures": 0,
+  "texKB": 0,
+  "texMax": 0,
+  "skins": 1,
+  "joints": 51,
+  "anims": [
+   "Attack",
+   "Eating",
+   "Gallop",
+   "Walk",
+   "Idle_2_HeadLow",
+   "Idle_2",
+   "Idle"
+  ],
+  "ext": [
+   "EXT_meshopt_compression",
+   "KHR_mesh_quantization"
+  ],
+  "bbox": [
+   38.356,
+   96.567,
+   200
+  ],
+  "ymin": -48.283
+ }
+]

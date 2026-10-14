@@ -1,0 +1,58 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#222">
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
+<canvas id=out></canvas>
+<script type=module>
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+const q = new URLSearchParams(location.search), list = await (await fetch(q.get('list'))).json();
+const TW = +q.get('tw') || 320, TH = +q.get('th') || 260, COLS = +q.get('cols') || 5;
+const rows = Math.ceil(list.length / COLS), cv = document.getElementById('out'); cv.width = TW * COLS; cv.height = TH * rows;
+const c2 = cv.getContext('2d'); c2.fillStyle = '#1b2230'; c2.fillRect(0, 0, cv.width, cv.height);
+const R = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true }); R.setSize(TW, TH - 34); R.outputColorSpace = THREE.SRGBColorSpace; R.toneMapping = THREE.ACESFilmicToneMapping;
+const sc = new THREE.Scene(); sc.background = new THREE.Color(0x9aa9bc);
+sc.add(new THREE.HemisphereLight(0xffffff, 0x556070, 1.7)); const dl = new THREE.DirectionalLight(0xfff2dd, 2.6); dl.position.set(3, 5, 4); sc.add(dl);
+const grid = new THREE.GridHelper(1, 1); grid.visible = false;
+const cam = new THREE.PerspectiveCamera(35, TW / (TH - 34), 0.01, 1e5), ld = new GLTFLoader(); ld.setMeshoptDecoder(MeshoptDecoder);
+const KC = {};
+window.__info = [];
+const triOf = (o) => { let t = 0; o.traverse((m) => { if (m.isMesh) { const ix = m.geometry.index; t += (ix ? ix.count : m.geometry.attributes.position.count) / 3; } }); return t; };
+for (let i = 0; i < list.length; i++) {
+  const it = list[i], x = (i % COLS) * TW, y = Math.floor(i / COLS) * TH; let info = { n: it.n };
+  try {
+    const grp = new THREE.Group(); let cursor = 0; const multi = it.parts.length > 1; let tris = 0;
+    for (const p of it.parts) {
+      const g = KC[p.url] || (KC[p.url] = await Promise.race([ld.loadAsync(p.url), new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 90000))]));
+      let o;
+      if (p.nodes && p.nodes.length) { o = new THREE.Group(); g.scene.updateMatrixWorld(true); for (const nm of p.nodes) { const s = g.scene.getObjectByName(nm); if (!s) throw new Error('no node ' + nm); const c = s.clone(true); c.position.set(0, 0, 0); c.rotation.set(0, 0, 0); c.scale.set(1, 1, 1); o.add(c); } }
+      else o = multi ? SkeletonUtils.clone(g.scene) : g.scene;
+      if (p.pose !== undefined && g.animations.length) { const mx = new THREE.AnimationMixer(o); mx.clipAction(g.animations[0]).play(); mx.setTime(p.pose); o.updateMatrixWorld(true); }
+      const w = new THREE.Group(); w.add(o); grp.add(w); w.updateMatrixWorld(true);
+      tris += triOf(o);
+      const b = new THREE.Box3().setFromObject(w), s = b.getSize(new THREE.Vector3()), mx = Math.max(s.x, s.y, s.z) || 1;
+      if (multi) { const k = 1 / mx; w.scale.setScalar(k); w.updateMatrixWorld(true); }
+      const b2 = new THREE.Box3().setFromObject(w), s2 = b2.getSize(new THREE.Vector3());
+      if (multi) { const idx = grp.children.length - 1, col = idx % 4, row = Math.floor(idx / 4); w.position.x += col * 1.25 - (b2.min.x + b2.max.x) / 2; w.position.y -= b2.min.y; w.position.z += row * 1.25 - (b2.min.z + b2.max.z) / 2; }
+      else { w.position.x += cursor - b2.min.x; w.position.y -= b2.min.y; w.position.z -= (b2.min.z + b2.max.z) / 2; }
+    }
+    sc.add(grp); grp.updateMatrixWorld(true);
+    const b = new THREE.Box3().setFromObject(grp), s = b.getSize(new THREE.Vector3()), cn = b.getCenter(new THREE.Vector3()), r = Math.max(s.x, s.y, s.z) || 1;
+    const wide = multi_wide(s);
+    const d = r * 1.55 / Math.tan(THREE.MathUtils.degToRad(17.5)) * (wide ? 0.52 : 0.5);
+    cam.position.set(cn.x + d * (wide ? 0.2 : 0.62), cn.y + d * (wide ? 0.62 : 0.42), cn.z + d * (wide ? 0.85 : 0.78)); cam.lookAt(cn); cam.near = d / 200; cam.far = d * 40; cam.updateProjectionMatrix();
+    R.render(sc, cam); c2.drawImage(R.domElement, x, y);
+    sc.remove(grp);
+    info.tris = Math.round(tris); info.size = [s.x, s.y, s.z].map((v) => +v.toFixed(2));
+  } catch (e) { c2.fillStyle = '#601818'; c2.fillRect(x, y, TW, TH); info.err = String(e).slice(0, 80); }
+  function multi_wide(s) { return it.parts.length > 1; }
+  // number badge + label strip
+  c2.fillStyle = '#10151f'; c2.fillRect(x, y + TH - 34, TW, 34);
+  c2.fillStyle = '#ffd23f'; c2.beginPath(); c2.arc(x + 26, y + 26, 21, 0, 7); c2.fill(); c2.strokeStyle = '#000'; c2.lineWidth = 2; c2.stroke();
+  c2.fillStyle = '#000'; c2.font = 'bold ' + (it.n > 99 ? 17 : 21) + 'px sans-serif'; c2.textAlign = 'center'; c2.textBaseline = 'middle'; c2.fillText(String(it.n), x + 26, y + 27);
+  c2.textAlign = 'left'; c2.textBaseline = 'alphabetic'; c2.fillStyle = '#fff'; c2.font = 'bold 13px sans-serif'; c2.fillText((it.label || '').slice(0, 40), x + 5, y + TH - 19);
+  c2.fillStyle = '#9fe0c0'; c2.font = '12px sans-serif'; c2.fillText((it.sub || ''), x + 5, y + TH - 5);
+  c2.strokeStyle = '#000'; c2.lineWidth = 1; c2.strokeRect(x, y, TW, TH); window.__info.push(info);
+}
+window.__done = true;
+</script>

@@ -1,0 +1,3560 @@
+[
+ {
+  "cat": "castle",
+  "key": "castle_keep",
+  "fa": "قلعه‌ی اصلی (Keep) — ۶ پوسته: چوب/سنگ/آهن/طلا/الماس/کریستال آبی",
+  "kind": "keep",
+  "verdict": "now",
+  "prio": 1,
+  "where": "both",
+  "count": "۱ تا (ولی ۶ مدل لازمه)",
+  "parts": null,
+  "note": "کدساز: جعبه/استوانه‌ها + شیدر پوسته (castle.js, skin.js)",
+  "n": 1,
+  "tris": null,
+  "kb": null,
+  "mats": null,
+  "rig": "کدساز",
+  "kit": null,
+  "files": [],
+  "budget": "≤20k tris · ≤2.5MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "castle",
+  "key": "castle_wall",
+  "fa": "تکه‌ی دیوار (ماژولار) — ۶ پوسته، ۳ حلقه",
+  "kind": "wall",
+  "verdict": "now",
+  "prio": 1,
+  "where": "both",
+  "count": "صدها تکه",
+  "parts": null,
+  "note": "کدساز: wallRun() روی چندضلعی",
+  "n": 2,
+  "tris": null,
+  "kb": null,
+  "mats": null,
+  "rig": "کدساز",
+  "kit": null,
+  "files": [],
+  "budget": "≤2k tris · ≤300KB · ≤1 mat · rig no"
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower",
+  "fa": "برج دیوار — ۶ پوسته",
+  "kind": "tower",
+  "verdict": "now",
+  "prio": 1,
+  "where": "both",
+  "count": "۲۰ تا ۴۰",
+  "parts": null,
+  "note": "کدساز: tower()",
+  "n": 3,
+  "tris": null,
+  "kb": null,
+  "mats": null,
+  "rig": "کدساز",
+  "kit": null,
+  "files": [],
+  "budget": "≤6k tris · ≤800KB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "castle",
+  "key": "castle_gatehouse",
+  "fa": "دروازه‌ی قلعه (دیوار داخلی/بیرونی) — ۶ پوسته",
+  "kind": "tower",
+  "verdict": "now",
+  "prio": 1,
+  "where": "both",
+  "count": "۲ تا ۳",
+  "parts": null,
+  "note": "کدساز: gatehouse",
+  "n": 4,
+  "tris": null,
+  "kb": null,
+  "mats": null,
+  "rig": "کدساز",
+  "kit": null,
+  "files": [],
+  "budget": "≤6k tris · ≤800KB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "castle",
+  "key": "town_gate",
+  "fa": "دروازه‌ی شهر + پل روی خندق",
+  "kind": "tower",
+  "verdict": "later",
+  "prio": 2,
+  "where": "both",
+  "count": "۱",
+  "parts": null,
+  "note": "کدساز: townGate()",
+  "n": 5,
+  "tris": null,
+  "kb": null,
+  "mats": null,
+  "rig": "کدساز",
+  "kit": null,
+  "files": [],
+  "budget": "≤6k tris · ≤800KB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "castle",
+  "key": "river_bridge",
+  "fa": "پل سنگی رودخانه",
+  "kind": "prop",
+  "verdict": "later",
+  "prio": 3,
+  "where": "both",
+  "count": "۲ تا ۴",
+  "parts": null,
+  "note": "کدساز: riverBridge()",
+  "n": 6,
+  "tris": null,
+  "kb": null,
+  "mats": null,
+  "rig": "کدساز",
+  "kit": null,
+  "files": [],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "castle",
+  "key": "water_gate",
+  "fa": "دروازه‌ی آبی / اسکله‌ی کانال",
+  "kind": "tower",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "۱ تا ۲",
+  "parts": null,
+  "note": "کدساز: waterGate(), riverQuay()",
+  "n": 7,
+  "tris": null,
+  "kb": null,
+  "mats": null,
+  "rig": "کدساز",
+  "kit": null,
+  "files": [],
+  "budget": "≤6k tris · ≤800KB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "houses",
+  "key": "house_cottage_0",
+  "fa": "کلبه — مدل 0",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 1,
+  "where": "home",
+  "count": "۳۰ تا ۱۰۹ خونه تو صحنه",
+  "parts": [
+   [
+    "kit_homes.glb",
+    [
+     "cottage_0",
+     "cottage_0_ra"
+    ]
+   ]
+  ],
+  "note": "روی بدنه + سقف A؛ از kit_homes",
+  "n": 8,
+  "tris": 204,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_homes",
+   194
+  ],
+  "files": [
+   "kit_homes.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "houses",
+  "key": "house_cottage_1",
+  "fa": "کلبه — مدل 1",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 1,
+  "where": "home",
+  "count": "۳۰ تا ۱۰۹ خونه تو صحنه",
+  "parts": [
+   [
+    "kit_homes.glb",
+    [
+     "cottage_1",
+     "cottage_1_ra"
+    ]
+   ]
+  ],
+  "note": "روی بدنه + سقف A؛ از kit_homes",
+  "n": 9,
+  "tris": 188,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_homes",
+   194
+  ],
+  "files": [
+   "kit_homes.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "houses",
+  "key": "house_cottage_2",
+  "fa": "کلبه — مدل 2",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 1,
+  "where": "home",
+  "count": "۳۰ تا ۱۰۹ خونه تو صحنه",
+  "parts": [
+   [
+    "kit_homes.glb",
+    [
+     "cottage_2",
+     "cottage_2_ra"
+    ]
+   ]
+  ],
+  "note": "روی بدنه + سقف A؛ از kit_homes",
+  "n": 10,
+  "tris": 218,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_homes",
+   194
+  ],
+  "files": [
+   "kit_homes.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "houses",
+  "key": "house_craftsman_0",
+  "fa": "خونه‌ی صنعتگر — مدل 0",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 1,
+  "where": "home",
+  "count": "۳۰ تا ۱۰۹ خونه تو صحنه",
+  "parts": [
+   [
+    "kit_homes.glb",
+    [
+     "craftsman_0",
+     "craftsman_0_ra"
+    ]
+   ]
+  ],
+  "note": "روی بدنه + سقف A؛ از kit_homes",
+  "n": 11,
+  "tris": 446,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_homes",
+   194
+  ],
+  "files": [
+   "kit_homes.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "houses",
+  "key": "house_craftsman_1",
+  "fa": "خونه‌ی صنعتگر — مدل 1",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 1,
+  "where": "home",
+  "count": "۳۰ تا ۱۰۹ خونه تو صحنه",
+  "parts": [
+   [
+    "kit_homes.glb",
+    [
+     "craftsman_1",
+     "craftsman_1_ra"
+    ]
+   ]
+  ],
+  "note": "روی بدنه + سقف A؛ از kit_homes",
+  "n": 12,
+  "tris": 422,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_homes",
+   194
+  ],
+  "files": [
+   "kit_homes.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "houses",
+  "key": "house_craftsman_2",
+  "fa": "خونه‌ی صنعتگر — مدل 2",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 1,
+  "where": "home",
+  "count": "۳۰ تا ۱۰۹ خونه تو صحنه",
+  "parts": [
+   [
+    "kit_homes.glb",
+    [
+     "craftsman_2",
+     "craftsman_2_ra"
+    ]
+   ]
+  ],
+  "note": "روی بدنه + سقف A؛ از kit_homes",
+  "n": 13,
+  "tris": 446,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_homes",
+   194
+  ],
+  "files": [
+   "kit_homes.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "houses",
+  "key": "house_merchant_0",
+  "fa": "خونه‌ی بازرگان — مدل 0",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 1,
+  "where": "home",
+  "count": "۳۰ تا ۱۰۹ خونه تو صحنه",
+  "parts": [
+   [
+    "kit_homes.glb",
+    [
+     "merchant_0",
+     "merchant_0_ra"
+    ]
+   ]
+  ],
+  "note": "روی بدنه + سقف A؛ از kit_homes",
+  "n": 14,
+  "tris": 552,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_homes",
+   194
+  ],
+  "files": [
+   "kit_homes.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "houses",
+  "key": "house_merchant_1",
+  "fa": "خونه‌ی بازرگان — مدل 1",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 1,
+  "where": "home",
+  "count": "۳۰ تا ۱۰۹ خونه تو صحنه",
+  "parts": [
+   [
+    "kit_homes.glb",
+    [
+     "merchant_1",
+     "merchant_1_ra"
+    ]
+   ]
+  ],
+  "note": "روی بدنه + سقف A؛ از kit_homes",
+  "n": 15,
+  "tris": 482,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_homes",
+   194
+  ],
+  "files": [
+   "kit_homes.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "houses",
+  "key": "house_merchant_2",
+  "fa": "خونه‌ی بازرگان — مدل 2",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 1,
+  "where": "home",
+  "count": "۳۰ تا ۱۰۹ خونه تو صحنه",
+  "parts": [
+   [
+    "kit_homes.glb",
+    [
+     "merchant_2",
+     "merchant_2_ra"
+    ]
+   ]
+  ],
+  "note": "روی بدنه + سقف A؛ از kit_homes",
+  "n": 16,
+  "tris": 498,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_homes",
+   194
+  ],
+  "files": [
+   "kit_homes.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "houses",
+  "key": "house_noble_0",
+  "fa": "عمارت اشراف — مدل 0",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 1,
+  "where": "home",
+  "count": "۳۰ تا ۱۰۹ خونه تو صحنه",
+  "parts": [
+   [
+    "kit_homes.glb",
+    [
+     "noble_0",
+     "noble_0_ra"
+    ]
+   ]
+  ],
+  "note": "روی بدنه + سقف A؛ از kit_homes",
+  "n": 17,
+  "tris": 470,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_homes",
+   194
+  ],
+  "files": [
+   "kit_homes.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "houses",
+  "key": "house_noble_1",
+  "fa": "عمارت اشراف — مدل 1",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 1,
+  "where": "home",
+  "count": "۳۰ تا ۱۰۹ خونه تو صحنه",
+  "parts": [
+   [
+    "kit_homes.glb",
+    [
+     "noble_1",
+     "noble_1_ra"
+    ]
+   ]
+  ],
+  "note": "روی بدنه + سقف A؛ از kit_homes",
+  "n": 18,
+  "tris": 693,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_homes",
+   194
+  ],
+  "files": [
+   "kit_homes.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "houses",
+  "key": "house_noble_2",
+  "fa": "عمارت اشراف — مدل 2",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 1,
+  "where": "home",
+  "count": "۳۰ تا ۱۰۹ خونه تو صحنه",
+  "parts": [
+   [
+    "kit_homes.glb",
+    [
+     "noble_2",
+     "noble_2_ra"
+    ]
+   ]
+  ],
+  "note": "روی بدنه + سقف A؛ از kit_homes",
+  "n": 19,
+  "tris": 904,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_homes",
+   194
+  ],
+  "files": [
+   "kit_homes.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "houses",
+  "key": "house_chimneys",
+  "fa": "دودکش‌ها (۶ تا)",
+  "kind": "prop",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "روی هر خونه",
+  "parts": [
+   [
+    "kit_homes.glb",
+    [
+     "chim_b_1",
+     "chim_b_2",
+     "chim_b_3"
+    ]
+   ]
+  ],
+  "note": "",
+  "n": 20,
+  "tris": 288,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_homes",
+   194
+  ],
+  "files": [
+   "kit_homes.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "houses",
+  "key": "house_props",
+  "fa": "وسایل کنار خونه (بشکه، گاری، نیمکت، پرچم…) ۱۶ تا",
+  "kind": "prop",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "زیاد، ریز",
+  "parts": [
+   [
+    "kit_homes.glb",
+    [
+     "p_barrel",
+     "p_stall",
+     "p_wagon",
+     "p_barrow",
+     "p_flag",
+     "p_crates"
+    ]
+   ]
+  ],
+  "note": "",
+  "n": 21,
+  "tris": 482,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_homes",
+   194
+  ],
+  "files": [
+   "kit_homes.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "houses",
+  "key": "house_generic",
+  "fa": "خونه‌های عمومی شهر (~۱۰۹ تا) — از ماژول‌های دیوار/سقف/پنجره/در سر هم می‌شن",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 1,
+  "where": "home",
+  "count": "۱۰۹ تا (تا ۲۴۰ تو سطح بالا)",
+  "parts": [
+   [
+    "kit_village.glb",
+    [
+     "Roof_RoundTiles_6x8",
+     "Wall_Plaster_WoodGrid",
+     "Wall_UnevenBrick_Door_Round",
+     "Corner_Exterior_Brick",
+     "Window_Wide_Round1",
+     "Balcony_Simple_Straight",
+     "Prop_Chimney",
+     "Roof_Tower_RoundTiles"
+    ]
+   ]
+  ],
+  "note": "پک kit_village (۴۴ ماژول، بافت PBR واقعی)؛ آمار = کل پک؛ تو شیت فقط ۸ ماژول نمونه",
+  "n": 22,
+  "tris": 22871,
+  "kb": 0,
+  "mats": 9,
+  "rig": "static",
+  "kit": [
+   "kit_village",
+   1439
+  ],
+  "files": [
+   "kit_village.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "civic_tavern",
+  "fa": "قهوه‌خانه / میخانه (tavern)",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 2,
+  "where": "home",
+  "count": "۱ تا ۲",
+  "parts": [
+   [
+    "kit_civic.glb",
+    [
+     "cv_tavern_b"
+    ]
+   ]
+  ],
+  "note": "از kit_civic (نسخه‌ی آبی _b)",
+  "n": 23,
+  "tris": 1995,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_civic",
+   388
+  ],
+  "files": [
+   "kit_civic.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "civic_church",
+  "fa": "عبادتگاه (chapel)",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 2,
+  "where": "home",
+  "count": "۱",
+  "parts": [
+   [
+    "kit_civic.glb",
+    [
+     "cv_church_b"
+    ]
+   ]
+  ],
+  "note": "از kit_civic (نسخه‌ی آبی _b)",
+  "n": 24,
+  "tris": 949,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_civic",
+   388
+  ],
+  "files": [
+   "kit_civic.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "civic_hall",
+  "fa": "تالار شهر (townhall)",
+  "kind": "house",
+  "verdict": "now",
+  "prio": 2,
+  "where": "home",
+  "count": "۱",
+  "parts": [
+   [
+    "kit_civic.glb",
+    [
+     "cv_hall_b"
+    ]
+   ]
+  ],
+  "note": "از kit_civic (نسخه‌ی آبی _b)",
+  "n": 25,
+  "tris": 800,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_civic",
+   388
+  ],
+  "files": [
+   "kit_civic.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "civic_markethall",
+  "fa": "تالار بازار",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 2,
+  "where": "home",
+  "count": "۱",
+  "parts": [
+   [
+    "kit_civic.glb",
+    [
+     "cv_markethall_b"
+    ]
+   ]
+  ],
+  "note": "از kit_civic (نسخه‌ی آبی _b)",
+  "n": 26,
+  "tris": 1183,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_civic",
+   388
+  ],
+  "files": [
+   "kit_civic.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "civic_tower",
+  "fa": "برج ساعت شهر",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "۱",
+  "parts": [
+   [
+    "kit_civic.glb",
+    [
+     "cv_tower_b"
+    ]
+   ]
+  ],
+  "note": "از kit_civic (نسخه‌ی آبی _b)",
+  "n": 27,
+  "tris": 934,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_civic",
+   388
+  ],
+  "files": [
+   "kit_civic.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "civic_wing",
+  "fa": "ساختمان فرعی شهر",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "۱ تا ۲",
+  "parts": [
+   [
+    "kit_civic.glb",
+    [
+     "cv_wing_b"
+    ]
+   ]
+  ],
+  "note": "از kit_civic (نسخه‌ی آبی _b)",
+  "n": 28,
+  "tris": 919,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_civic",
+   388
+  ],
+  "files": [
+   "kit_civic.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "civic_well",
+  "fa": "چاه / آب‌انبار",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "۱ تا ۳",
+  "parts": [
+   [
+    "kit_civic.glb",
+    [
+     "cv_well_b"
+    ]
+   ]
+  ],
+  "note": "از kit_civic (نسخه‌ی آبی _b)",
+  "n": 29,
+  "tris": 454,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_civic",
+   388
+  ],
+  "files": [
+   "kit_civic.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "civic_stalls",
+  "fa": "غرفه‌های بازار (۵ نوع)",
+  "kind": "prop",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "۵ تا ۱۵",
+  "parts": [
+   [
+    "kit_civic.glb",
+    [
+     "cv_stall",
+     "cv_stall_veg",
+     "cv_stall_wine",
+     "cv_stall_pots",
+     "cv_stall_rich"
+    ]
+   ]
+  ],
+  "note": "",
+  "n": 30,
+  "tris": 5643,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_civic",
+   388
+  ],
+  "files": [
+   "kit_civic.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "civic",
+  "key": "civic_props",
+  "fa": "وسایل بازار (بشکه، جعبه، چراغ، میز…)",
+  "kind": "prop",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "زیاد، ریز",
+  "parts": [
+   [
+    "kit_civic.glb",
+    [
+     "cv_barrel",
+     "cv_crate",
+     "cv_lamp",
+     "cv_tableset",
+     "cv_chest",
+     "cv_banner"
+    ]
+   ]
+  ],
+  "note": "",
+  "n": 31,
+  "tris": 2292,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_civic",
+   388
+  ],
+  "files": [
+   "kit_civic.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "civic",
+  "key": "ws_lumbermill",
+  "fa": "چوب‌بری",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 2,
+  "where": "home",
+  "count": "۱ تا ۳ (جاهای کار)",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_lumbermill"
+    ]
+   ]
+  ],
+  "note": "از kit_ws",
+  "n": 32,
+  "tris": 2012,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "ws_smithy",
+  "fa": "آهنگری (کارگاه)",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 2,
+  "where": "home",
+  "count": "۱ تا ۳ (جاهای کار)",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_smithy"
+    ]
+   ]
+  ],
+  "note": "از kit_ws",
+  "n": 33,
+  "tris": 1600,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "ws_brewhouse",
+  "fa": "کارگاه نوشیدنی",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 2,
+  "where": "home",
+  "count": "۱ تا ۳ (جاهای کار)",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_brewhouse"
+    ]
+   ]
+  ],
+  "note": "از kit_ws",
+  "n": 34,
+  "tris": 2278,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "ws_hut",
+  "fa": "کلبه‌ی کارگر",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "۱ تا ۳ (جاهای کار)",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_hut"
+    ]
+   ]
+  ],
+  "note": "از kit_ws",
+  "n": 35,
+  "tris": 975,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "ws_market",
+  "fa": "بازار (ساختمون)",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 2,
+  "where": "home",
+  "count": "۱ تا ۳ (جاهای کار)",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_market"
+    ]
+   ]
+  ],
+  "note": "از kit_ws",
+  "n": 36,
+  "tris": 1774,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "ws_butcher",
+  "fa": "قصابی",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "۱ تا ۳ (جاهای کار)",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_butcher"
+    ]
+   ]
+  ],
+  "note": "از kit_ws",
+  "n": 37,
+  "tris": 4485,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "ws_jetty",
+  "fa": "اسکله",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "۱ تا ۳ (جاهای کار)",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_jetty"
+    ]
+   ]
+  ],
+  "note": "از kit_ws",
+  "n": 38,
+  "tris": 3700,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "ws_fishrack",
+  "fa": "چوب‌ماهی خشک‌کن",
+  "kind": "house",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "۱ تا ۳ (جاهای کار)",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_fishrack"
+    ]
+   ]
+  ],
+  "note": "از kit_ws",
+  "n": 39,
+  "tris": 2721,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "farm_barn",
+  "fa": "انبار بزرگ مزرعه",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 2,
+  "where": "home",
+  "count": "۱ تا ۲",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_barn"
+    ]
+   ]
+  ],
+  "note": "از kit_ws (مزرعه)",
+  "n": 40,
+  "tris": 2176,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "farm_smallbarn",
+  "fa": "انبار کوچیک",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "۱ تا ۲",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_smallbarn"
+    ]
+   ]
+  ],
+  "note": "از kit_ws (مزرعه)",
+  "n": 41,
+  "tris": 1664,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "farm_openbarn",
+  "fa": "سایبون مزرعه",
+  "kind": "house",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "۱ تا ۲",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_openbarn"
+    ]
+   ]
+  ],
+  "note": "از kit_ws (مزرعه)",
+  "n": 42,
+  "tris": 1520,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "farm_silo",
+  "fa": "سیلو",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "۱ تا ۲",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_silo"
+    ]
+   ]
+  ],
+  "note": "از kit_ws (مزرعه)",
+  "n": 43,
+  "tris": 1525,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "farm_coop",
+  "fa": "مرغدونی",
+  "kind": "house",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "۱ تا ۲",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_coop"
+    ]
+   ]
+  ],
+  "note": "از kit_ws (مزرعه)",
+  "n": 44,
+  "tris": 914,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "civic",
+  "key": "ws_construction",
+  "fa": "مرحله‌های ساخت + داربست (۴ تا)",
+  "kind": "prop",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "موقع ساخت",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_stageA",
+     "ws_stageB",
+     "ws_stageC",
+     "ws_scaffold"
+    ]
+   ]
+  ],
+  "note": "",
+  "n": 45,
+  "tris": 4950,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "civic",
+  "key": "production_lots_missing",
+  "fa": "ساختمون‌های تولید (اره‌خونه، سنگ‌بری، ذوب، ضرابخانه، پالایشگاه، نانوایی، قصابی، دودخانه، جواهری، انبارها) — ۱۰ نوع",
+  "kind": "house",
+  "verdict": "new",
+  "prio": 2,
+  "where": "home",
+  "count": "برنامه‌ریزی شده ولی ساخته نشده (WIRING_TODO)",
+  "parts": null,
+  "note": "الان مدلی ندارن: پر کردن این خلأ با مدل Tripo",
+  "n": 46,
+  "tris": null,
+  "kb": null,
+  "mats": null,
+  "rig": "کدساز",
+  "kit": null,
+  "files": [],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "mines",
+  "key": "gem_mines",
+  "fa": "معدن‌های جواهر (یاقوت، زمرد، فیروزه) — ۳ تا",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 2,
+  "where": "home",
+  "count": "۳",
+  "parts": null,
+  "note": "کدساز (mines.js) + صخره‌ی cliff1/2 + کریستال",
+  "n": 47,
+  "tris": null,
+  "kb": null,
+  "mats": null,
+  "rig": "کدساز",
+  "kit": null,
+  "files": [],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "mines",
+  "key": "ws_mine",
+  "fa": "معدن ساده‌ی کارگاه (ws_mine)",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "۱ تا ۲",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_mine"
+    ]
+   ]
+  ],
+  "note": "از kit_ws",
+  "n": 48,
+  "tris": 1100,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "mines",
+  "key": "windmill",
+  "fa": "آسیاب بادی (windmill2)",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 2,
+  "where": "home",
+  "count": "۱ (نشونه‌ی نقشه)",
+  "parts": [
+   [
+    "windmill2.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 49,
+  "tris": 4321,
+  "kb": 158,
+  "mats": 1,
+  "rig": "14 bones/1 clips",
+  "kit": null,
+  "files": [
+   "windmill2.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "mines",
+  "key": "watermill",
+  "fa": "آسیاب آبی (watermill)",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 2,
+  "where": "home",
+  "count": "۱",
+  "parts": [
+   [
+    "watermill.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 50,
+  "tris": 9302,
+  "kb": 338,
+  "mats": 1,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "watermill.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "mines",
+  "key": "blacksmith",
+  "fa": "آهنگری روستا (blacksmith)",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 2,
+  "where": "home",
+  "count": "۱",
+  "parts": [
+   [
+    "blacksmith.glb",
+    null
+   ]
+  ],
+  "note": "bbox خیلی بزرگ؛ مقیاس در کد تنظیم می‌شه",
+  "n": 51,
+  "tris": 16099,
+  "kb": 983,
+  "mats": 7,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "blacksmith.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "mines",
+  "key": "watchtower",
+  "fa": "برج دیدبانی (watchtower)",
+  "kind": "tower",
+  "verdict": "later",
+  "prio": 2,
+  "where": "both",
+  "count": "چندتا روی دیوار",
+  "parts": [
+   [
+    "watchtower.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 52,
+  "tris": 10544,
+  "kb": 415,
+  "mats": 6,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "watchtower.glb"
+  ],
+  "budget": "≤6k tris · ≤800KB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "mines",
+  "key": "hex_buildings",
+  "fa": "ساختمان‌های kit_hex (آسیاب، چاه، بازار، آهنگر، انبار غله) ۶ تا",
+  "kind": "house",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "لود می‌شه؛ مصرفش رو نگرفتم",
+  "parts": [
+   [
+    "kit_hex.glb",
+    [
+     "building_windmill_blue",
+     "building_well_blue",
+     "building_watermill_blue",
+     "building_market_blue",
+     "building_blacksmith_blue",
+     "building_grain"
+    ]
+   ]
+  ],
+  "note": "سبک Kenney (کارتونی‌تر)",
+  "n": 53,
+  "tris": 11065,
+  "kb": 0,
+  "mats": 1,
+  "rig": "static",
+  "kit": [
+   "kit_hex",
+   264
+  ],
+  "files": [
+   "kit_hex.glb"
+  ],
+  "budget": "≤8k tris · ≤1.0MB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "mines",
+  "key": "ws_mining_props",
+  "fa": "وسایل معدن (واگن، سنگ معدن، شمش، چرخ‌آب)",
+  "kind": "prop",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "ریز",
+  "parts": [
+   [
+    "kit_ws.glb",
+    [
+     "ws_minecart",
+     "ws_orecart",
+     "ws_goldbars",
+     "ws_waterwheel",
+     "ws_nugget"
+    ]
+   ]
+  ],
+  "note": "",
+  "n": 54,
+  "tris": 2622,
+  "kb": 0,
+  "mats": 17,
+  "rig": "static",
+  "kit": [
+   "kit_ws",
+   1560
+  ],
+  "files": [
+   "kit_ws.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "infantry",
+  "key": "soldier_base",
+  "fa": "سرباز پایه (ranger_m) — نیزه‌دار، شمشیرزن، نگهبان، کماندار، لژیونر، کاپیتان",
+  "kind": "soldier",
+  "verdict": "now",
+  "prio": 1,
+  "where": "both",
+  "count": "صدها تا (ازدحام)",
+  "parts": [
+   [
+    "ranger_m.glb",
+    null
+   ]
+  ],
+  "note": "یه مدل برای ۶+ نوع سرباز؛ رنگ و تجهیزات روش سوار می‌شه؛ انیمیشن‌ها از anims.glb",
+  "n": 55,
+  "tris": 9031,
+  "kb": 363,
+  "mats": 2,
+  "rig": "585 bones/0 clips",
+  "kit": null,
+  "files": [
+   "ranger_m.glb"
+  ],
+  "budget": "≤3k tris · ≤300KB · ≤3 mat · rig biped"
+ },
+ {
+  "cat": "infantry",
+  "key": "ranger_f",
+  "fa": "رنجر زن (ranger_f)",
+  "kind": "soldier",
+  "verdict": "later",
+  "prio": 2,
+  "where": "home",
+  "count": "ده‌ها",
+  "parts": [
+   [
+    "ranger_f.glb",
+    null
+   ]
+  ],
+  "note": "ارتش خونه (units.js)",
+  "n": 56,
+  "tris": 9093,
+  "kb": 365,
+  "mats": 2,
+  "rig": "585 bones/0 clips",
+  "kit": null,
+  "files": [
+   "ranger_f.glb"
+  ],
+  "budget": "≤3k tris · ≤300KB · ≤3 mat · rig biped"
+ },
+ {
+  "cat": "infantry",
+  "key": "villager_m",
+  "fa": "روستایی مرد (peasant_m)",
+  "kind": "soldier",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "ده‌ها",
+  "parts": [
+   [
+    "peasant_m.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 57,
+  "tris": 6445,
+  "kb": 232,
+  "mats": 2,
+  "rig": "260 bones/0 clips",
+  "kit": null,
+  "files": [
+   "peasant_m.glb"
+  ],
+  "budget": "≤3k tris · ≤300KB · ≤3 mat · rig biped"
+ },
+ {
+  "cat": "infantry",
+  "key": "villager_f",
+  "fa": "روستایی زن (peasant_f)",
+  "kind": "soldier",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "ده‌ها",
+  "parts": [
+   [
+    "peasant_f.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 58,
+  "tris": 6784,
+  "kb": 199,
+  "mats": 1,
+  "rig": "260 bones/0 clips",
+  "kit": null,
+  "files": [
+   "peasant_f.glb"
+  ],
+  "budget": "≤3k tris · ≤300KB · ≤3 mat · rig biped"
+ },
+ {
+  "cat": "infantry",
+  "key": "shieldmaiden",
+  "fa": "دختر سپردار (shieldmaiden)",
+  "kind": "soldier",
+  "verdict": "later",
+  "prio": 2,
+  "where": "battle",
+  "count": "ده‌ها",
+  "parts": [
+   [
+    "shieldmaiden.glb",
+    null
+   ]
+  ],
+  "note": "قهرمان‌های خواهر (RP0A) جداست و دست نمی‌خوره",
+  "n": 59,
+  "tris": 11988,
+  "kb": 539,
+  "mats": 6,
+  "rig": "845 bones/0 clips",
+  "kit": null,
+  "files": [
+   "shieldmaiden.glb"
+  ],
+  "budget": "≤3k tris · ≤300KB · ≤3 mat · rig biped"
+ },
+ {
+  "cat": "infantry",
+  "key": "skeleton_mage",
+  "fa": "لیچ / جادوگر اسکلتی (skel_mage)",
+  "kind": "soldier",
+  "verdict": "later",
+  "prio": 2,
+  "where": "battle",
+  "count": "ده‌ها",
+  "parts": [
+   [
+    "skel_mage.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 60,
+  "tris": 4588,
+  "kb": 106,
+  "mats": 2,
+  "rig": "184 bones/0 clips",
+  "kit": null,
+  "files": [
+   "skel_mage.glb"
+  ],
+  "budget": "≤3k tris · ≤300KB · ≤3 mat · rig biped"
+ },
+ {
+  "cat": "infantry",
+  "key": "imp",
+  "fa": "ایمپ (imp)",
+  "kind": "soldier",
+  "verdict": "later",
+  "prio": 2,
+  "where": "battle",
+  "count": "ده‌ها",
+  "parts": [
+   [
+    "imp.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 61,
+  "tris": 8199,
+  "kb": 226,
+  "mats": 1,
+  "rig": "275 bones/0 clips",
+  "kit": null,
+  "files": [
+   "imp.glb"
+  ],
+  "budget": "≤3k tris · ≤300KB · ≤3 mat · rig biped"
+ },
+ {
+  "cat": "infantry",
+  "key": "puglin",
+  "fa": "پاگلین (puglin)",
+  "kind": "soldier",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "چندتا",
+  "parts": [
+   [
+    "puglin.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 62,
+  "tris": 6054,
+  "kb": 221,
+  "mats": 1,
+  "rig": "165 bones/0 clips",
+  "kit": null,
+  "files": [
+   "puglin.glb"
+  ],
+  "budget": "≤3k tris · ≤300KB · ≤3 mat · rig biped"
+ },
+ {
+  "cat": "infantry",
+  "key": "hill_giant",
+  "fa": "غول تپه (hill_giant)",
+  "kind": "creature",
+  "verdict": "later",
+  "prio": 2,
+  "where": "battle",
+  "count": "چندتا",
+  "parts": [
+   [
+    "hill_giant.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 63,
+  "tris": 11988,
+  "kb": 489,
+  "mats": 7,
+  "rig": "585 bones/0 clips",
+  "kit": null,
+  "files": [
+   "hill_giant.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "infantry",
+  "key": "gear_swords",
+  "fa": "شمشیرها (sword، claymore، sword_mw)",
+  "kind": "weapon",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "battle",
+  "count": "روی هر سرباز",
+  "parts": [
+   [
+    "sword.glb",
+    null
+   ],
+   [
+    "claymore.glb",
+    null
+   ],
+   [
+    "sword_mw.glb",
+    null
+   ]
+  ],
+  "note": "تا وقتی بدنه‌ی سرباز عوض نشده بمونه",
+  "n": 64,
+  "tris": 3443,
+  "kb": 96,
+  "mats": 11,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "sword.glb",
+   "claymore.glb",
+   "sword_mw.glb"
+  ],
+  "budget": "≤1k tris · ≤150KB · ≤1 mat · rig no"
+ },
+ {
+  "cat": "infantry",
+  "key": "gear_shields",
+  "fa": "سپرها (shield، heater، round2)",
+  "kind": "weapon",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "battle",
+  "count": "روی هر سرباز",
+  "parts": [
+   [
+    "shield.glb",
+    null
+   ],
+   [
+    "shield_heater.glb",
+    null
+   ],
+   [
+    "shield_round2.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 65,
+  "tris": 4556,
+  "kb": 164,
+  "mats": 12,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "shield.glb",
+   "shield_heater.glb",
+   "shield_round2.glb"
+  ],
+  "budget": "≤1k tris · ≤150KB · ≤1 mat · rig no"
+ },
+ {
+  "cat": "infantry",
+  "key": "gear_helmets",
+  "fa": "کلاه‌خودها (helmet2، helmet3)",
+  "kind": "weapon",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "battle",
+  "count": "روی هر سرباز",
+  "parts": [
+   [
+    "helmet2.glb",
+    null
+   ],
+   [
+    "helmet3.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 66,
+  "tris": 1428,
+  "kb": 37,
+  "mats": 4,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "helmet2.glb",
+   "helmet3.glb"
+  ],
+  "budget": "≤1k tris · ≤150KB · ≤1 mat · rig no"
+ },
+ {
+  "cat": "infantry",
+  "key": "gear_polearms",
+  "fa": "نیزه، کمان، تبر، چکش، عصا، مشعل",
+  "kind": "weapon",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "battle",
+  "count": "روی هر سرباز",
+  "parts": [
+   [
+    "spear.glb",
+    null
+   ],
+   [
+    "bow.glb",
+    null
+   ],
+   [
+    "axe.glb",
+    null
+   ],
+   [
+    "hammer_double.glb",
+    null
+   ],
+   [
+    "skel_staff.glb",
+    null
+   ],
+   [
+    "torch.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 67,
+  "tris": 7119,
+  "kb": 200,
+  "mats": 12,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "spear.glb",
+   "bow.glb",
+   "axe.glb",
+   "hammer_double.glb",
+   "skel_staff.glb",
+   "torch.glb"
+  ],
+  "budget": "≤1k tris · ≤150KB · ≤1 mat · rig no"
+ },
+ {
+  "cat": "creatures",
+  "key": "ogre",
+  "fa": "غول (ogre)",
+  "kind": "creature",
+  "verdict": "later",
+  "prio": 2,
+  "where": "battle",
+  "count": "چندتا",
+  "parts": [
+   [
+    "ogre.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 68,
+  "tris": 10289,
+  "kb": 928,
+  "mats": 2,
+  "rig": "364 bones/6 clips",
+  "kit": null,
+  "files": [
+   "ogre.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "creatures",
+  "key": "troll",
+  "fa": "ترول (troll)",
+  "kind": "creature",
+  "verdict": "later",
+  "prio": 2,
+  "where": "battle",
+  "count": "چندتا",
+  "parts": [
+   [
+    "troll.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 69,
+  "tris": 10467,
+  "kb": 1607,
+  "mats": 4,
+  "rig": "702 bones/5 clips",
+  "kit": null,
+  "files": [
+   "troll.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "creatures",
+  "key": "cyclops",
+  "fa": "سیکلوپ (cyclops)",
+  "kind": "creature",
+  "verdict": "later",
+  "prio": 3,
+  "where": "battle",
+  "count": "چندتا؟",
+  "parts": [
+   [
+    "cyclops.glb",
+    null
+   ]
+  ],
+  "note": "فقط تو LATE لود می‌شه؛ مصرفش رو پیدا نکردم",
+  "n": 70,
+  "tris": 7009,
+  "kb": 479,
+  "mats": 4,
+  "rig": "285 bones/1 clips",
+  "kit": null,
+  "files": [
+   "cyclops.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "creatures",
+  "key": "treant",
+  "fa": "درخت‌مرد (treant)",
+  "kind": "creature",
+  "verdict": "later",
+  "prio": 2,
+  "where": "battle",
+  "count": "چندتا",
+  "parts": [
+   [
+    "treant.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 71,
+  "tris": 7724,
+  "kb": 794,
+  "mats": 1,
+  "rig": "98 bones/4 clips",
+  "kit": null,
+  "files": [
+   "treant.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "creatures",
+  "key": "werewolf",
+  "fa": "گرگینه (werewolf)",
+  "kind": "creature",
+  "verdict": "later",
+  "prio": 2,
+  "where": "battle",
+  "count": "ده‌ها",
+  "parts": [
+   [
+    "werewolf.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 72,
+  "tris": 2524,
+  "kb": 395,
+  "mats": 1,
+  "rig": "60 bones/7 clips",
+  "kit": null,
+  "files": [
+   "werewolf.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "creatures",
+  "key": "wolf",
+  "fa": "گرگ (wolf)",
+  "kind": "creature",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "شب‌ها چندتا",
+  "parts": [
+   [
+    "wolf.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 73,
+  "tris": 1962,
+  "kb": 480,
+  "mats": 4,
+  "rig": "51 bones/7 clips",
+  "kit": null,
+  "files": [
+   "wolf.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "creatures",
+  "key": "knight_rider",
+  "fa": "شوالیه‌ی سوار (knight_k3)",
+  "kind": "rider",
+  "verdict": "now",
+  "prio": 2,
+  "where": "both",
+  "count": "ده‌ها",
+  "parts": [
+   [
+    "knight_k3.glb",
+    null
+   ]
+  ],
+  "note": "سوار روی همه‌ی اسب‌ها؛ حالت سواری ثابت",
+  "n": 74,
+  "tris": 10493,
+  "kb": 465,
+  "mats": 3,
+  "rig": "520 bones/1 clips",
+  "kit": null,
+  "files": [
+   "knight_k3.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "creatures",
+  "key": "horse_grey",
+  "fa": "اسب خاکستری (horse_m2m_grey)",
+  "kind": "creature",
+  "verdict": "now",
+  "prio": 2,
+  "where": "both",
+  "count": "ده‌ها",
+  "parts": [
+   [
+    "horse_m2m_grey.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 75,
+  "tris": 6018,
+  "kb": 901,
+  "mats": 2,
+  "rig": "56 bones/11 clips",
+  "kit": null,
+  "files": [
+   "horse_m2m_grey.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "creatures",
+  "key": "horse_bay",
+  "fa": "اسب بور (horse_m2m_bay)",
+  "kind": "creature",
+  "verdict": "later",
+  "prio": 2,
+  "where": "both",
+  "count": "ده‌ها",
+  "parts": [
+   [
+    "horse_m2m_bay.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 76,
+  "tris": 6018,
+  "kb": 874,
+  "mats": 2,
+  "rig": "56 bones/11 clips",
+  "kit": null,
+  "files": [
+   "horse_m2m_bay.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "creatures",
+  "key": "horse_black",
+  "fa": "اسب سیاه (horse_m2m_black)",
+  "kind": "creature",
+  "verdict": "later",
+  "prio": 2,
+  "where": "both",
+  "count": "چندتا",
+  "parts": [
+   [
+    "horse_m2m_black.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 77,
+  "tris": 6018,
+  "kb": 845,
+  "mats": 2,
+  "rig": "56 bones/11 clips",
+  "kit": null,
+  "files": [
+   "horse_m2m_black.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "creatures",
+  "key": "horse_barded",
+  "fa": "اسب زره‌دار (horse_hq_barded)",
+  "kind": "creature",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "چندتا",
+  "parts": [
+   [
+    "horse_hq_barded.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 78,
+  "tris": 12134,
+  "kb": 813,
+  "mats": 2,
+  "rig": "50 bones/12 clips",
+  "kit": null,
+  "files": [
+   "horse_hq_barded.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "creatures",
+  "key": "horse_old",
+  "fa": "اسب قدیمی (horse، مرتع)",
+  "kind": "creature",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "چندتا",
+  "parts": [
+   [
+    "horse.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 79,
+  "tris": 2182,
+  "kb": 552,
+  "mats": 8,
+  "rig": "50 bones/7 clips",
+  "kit": null,
+  "files": [
+   "horse.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "creatures",
+  "key": "cow",
+  "fa": "گاو (cow)",
+  "kind": "creature",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "چندتا",
+  "parts": [
+   [
+    "cow.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 80,
+  "tris": 2450,
+  "kb": 499,
+  "mats": 7,
+  "rig": "42 bones/7 clips",
+  "kit": null,
+  "files": [
+   "cow.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "creatures",
+  "key": "farm_small",
+  "fa": "گوسفند و خوک (an_sheep, an_pig)",
+  "kind": "creature",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "چندتا",
+  "parts": [
+   [
+    "an_sheep.glb",
+    null
+   ],
+   [
+    "an_pig.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 81,
+  "tris": 1172,
+  "kb": 290,
+  "mats": 4,
+  "rig": "24 bones/2 clips; 24 bones/2 clips",
+  "kit": null,
+  "files": [
+   "an_sheep.glb",
+   "an_pig.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "dragons",
+  "key": "dragon_prowler",
+  "fa": "اژدها (prowler) — اژدهای گشت + baby/dragon/سه‌سر تو نبرد",
+  "kind": "dragon",
+  "verdict": "now",
+  "prio": 1,
+  "where": "both",
+  "count": "۱ تا چندتا",
+  "parts": [
+   [
+    "prowler.glb",
+    null
+   ]
+  ],
+  "note": "نسخه‌ی ۳ سر با کد از همین ساخته می‌شه (bdragon3.js)",
+  "n": 82,
+  "tris": 19766,
+  "kb": 1357,
+  "mats": 3,
+  "rig": "252 bones/2 clips",
+  "kit": null,
+  "files": [
+   "prowler.glb"
+  ],
+  "budget": "≤15k tris · ≤1.5MB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "dragons",
+  "key": "dragonling",
+  "fa": "اژدهاچه (dragonling)",
+  "kind": "dragon",
+  "verdict": "now",
+  "prio": 2,
+  "where": "both",
+  "count": "۲",
+  "parts": [
+   [
+    "dragonling.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 83,
+  "tris": 7438,
+  "kb": 177,
+  "mats": 4,
+  "rig": "46 bones/8 clips",
+  "kit": null,
+  "files": [
+   "dragonling.glb"
+  ],
+  "budget": "≤15k tris · ≤1.5MB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "dragons",
+  "key": "gryphon",
+  "fa": "گریفین (gryphon)",
+  "kind": "dragon",
+  "verdict": "now",
+  "prio": 2,
+  "where": "battle",
+  "count": "ده‌ها",
+  "parts": [
+   [
+    "gryphon.glb",
+    null
+   ]
+  ],
+  "note": "اسکلت و بال‌زدن با کد (bgryphon.js)؛ فقط هندسه‌ی glb",
+  "n": 84,
+  "tris": 3074,
+  "kb": 269,
+  "mats": 9,
+  "rig": "390 bones/1 clips",
+  "kit": null,
+  "files": [
+   "gryphon.glb"
+  ],
+  "budget": "≤15k tris · ≤1.5MB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "dragons",
+  "key": "pegasus",
+  "fa": "پگاسوس (pegasus)",
+  "kind": "dragon",
+  "verdict": "later",
+  "prio": 2,
+  "where": "both",
+  "count": "ده‌ها",
+  "parts": [
+   [
+    "pegasus.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 85,
+  "tris": 7590,
+  "kb": 1063,
+  "mats": 2,
+  "rig": "84 bones/3 clips",
+  "kit": null,
+  "files": [
+   "pegasus.glb"
+  ],
+  "budget": "≤15k tris · ≤1.5MB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "dragons",
+  "key": "eagle",
+  "fa": "عقاب (eagle)",
+  "kind": "creature",
+  "verdict": "later",
+  "prio": 3,
+  "where": "home",
+  "count": "چندتا",
+  "parts": [
+   [
+    "eagle.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 86,
+  "tris": 3128,
+  "kb": 184,
+  "mats": 1,
+  "rig": "52 bones/1 clips",
+  "kit": null,
+  "files": [
+   "eagle.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "dragons",
+  "key": "crow",
+  "fa": "کلاغ (crow)",
+  "kind": "creature",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "چندتا",
+  "parts": [
+   [
+    "crow.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 87,
+  "tris": 878,
+  "kb": 138,
+  "mats": 2,
+  "rig": "59 bones/1 clips",
+  "kit": null,
+  "files": [
+   "crow.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "nature",
+  "key": "trees_pine_ez",
+  "fa": "کاج‌های جنگل (ez_pine_a/b/c)",
+  "kind": "tree",
+  "verdict": "later",
+  "prio": 2,
+  "where": "home",
+  "count": "هزاران (ایمپاستر)",
+  "parts": [
+   [
+    "ez_pine_a.glb",
+    null
+   ],
+   [
+    "ez_pine_b.glb",
+    null
+   ],
+   [
+    "ez_pine_c.glb",
+    null
+   ]
+  ],
+  "note": "جنگل با کارت‌های ایمپاستر از این‌ها ساخته می‌شه (trees.js)",
+  "n": 88,
+  "tris": 10583,
+  "kb": 989,
+  "mats": 6,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "ez_pine_a.glb",
+   "ez_pine_b.glb",
+   "ez_pine_c.glb"
+  ],
+  "budget": "≤1k tris · ≤200KB · ≤1 mat · rig no"
+ },
+ {
+  "cat": "nature",
+  "key": "trees_broad_ez",
+  "fa": "درخت‌های پهن‌برگ (ez_oak_a/b، ash، aspen)",
+  "kind": "tree",
+  "verdict": "later",
+  "prio": 2,
+  "where": "home",
+  "count": "هزاران (ایمپاستر)",
+  "parts": [
+   [
+    "ez_oak_a.glb",
+    null
+   ],
+   [
+    "ez_oak_b.glb",
+    null
+   ],
+   [
+    "ez_ash_a.glb",
+    null
+   ],
+   [
+    "ez_aspen_a.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 89,
+  "tris": 17099,
+  "kb": 1369,
+  "mats": 8,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "ez_oak_a.glb",
+   "ez_oak_b.glb",
+   "ez_ash_a.glb",
+   "ez_aspen_a.glb"
+  ],
+  "budget": "≤1k tris · ≤200KB · ≤1 mat · rig no"
+ },
+ {
+  "cat": "nature",
+  "key": "bushes_ez",
+  "fa": "بوته‌ها (ez_bush_a/b، bush، bushf)",
+  "kind": "tree",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "هزاران",
+  "parts": [
+   [
+    "ez_bush_a.glb",
+    null
+   ],
+   [
+    "ez_bush_b.glb",
+    null
+   ],
+   [
+    "bush.glb",
+    null
+   ],
+   [
+    "bushf.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 90,
+  "tris": 7118,
+  "kb": 840,
+  "mats": 7,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "ez_bush_a.glb",
+   "ez_bush_b.glb",
+   "bush.glb",
+   "bushf.glb"
+  ],
+  "budget": "≤1k tris · ≤200KB · ≤1 mat · rig no"
+ },
+ {
+  "cat": "nature",
+  "key": "trees_scatter",
+  "fa": "درخت‌های پراکنده (tree1–5، pine1–5)",
+  "kind": "tree",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "صدها",
+  "parts": [
+   [
+    "tree3.glb",
+    null
+   ],
+   [
+    "tree4.glb",
+    null
+   ],
+   [
+    "tree5.glb",
+    null
+   ],
+   [
+    "pine1.glb",
+    null
+   ],
+   [
+    "pine2.glb",
+    null
+   ],
+   [
+    "pine4.glb",
+    null
+   ],
+   [
+    "pine5.glb",
+    null
+   ]
+  ],
+  "note": "tree1، tree2، pine3 مستقیم صدا زده نمی‌شن",
+  "n": 91,
+  "tris": 21548,
+  "kb": 915,
+  "mats": 14,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "tree3.glb",
+   "tree4.glb",
+   "tree5.glb",
+   "pine1.glb",
+   "pine2.glb",
+   "pine4.glb",
+   "pine5.glb"
+  ],
+  "budget": "≤1k tris · ≤200KB · ≤1 mat · rig no"
+ },
+ {
+  "cat": "nature",
+  "key": "ground_cover",
+  "fa": "علف، گل، سرخس، شبدر، قارچ (۹ فایل)",
+  "kind": "tree",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "ده‌ها هزار",
+  "parts": [
+   [
+    "grass.glb",
+    null
+   ],
+   [
+    "grasst.glb",
+    null
+   ],
+   [
+    "grassw.glb",
+    null
+   ],
+   [
+    "flower3.glb",
+    null
+   ],
+   [
+    "flower4.glb",
+    null
+   ],
+   [
+    "fern.glb",
+    null
+   ],
+   [
+    "clover.glb",
+    null
+   ],
+   [
+    "mushroom.glb",
+    null
+   ],
+   [
+    "plant.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 92,
+  "tris": 5087,
+  "kb": 472,
+  "mats": 11,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "grass.glb",
+   "grasst.glb",
+   "grassw.glb",
+   "flower3.glb",
+   "flower4.glb",
+   "fern.glb",
+   "clover.glb",
+   "mushroom.glb",
+   "plant.glb"
+  ],
+  "budget": "≤1k tris · ≤200KB · ≤1 mat · rig no"
+ },
+ {
+  "cat": "nature",
+  "key": "rocks",
+  "fa": "سنگ و ریگ (rock1–3، pebble1–2)",
+  "kind": "tree",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "هزاران",
+  "parts": [
+   [
+    "rock1.glb",
+    null
+   ],
+   [
+    "rock2.glb",
+    null
+   ],
+   [
+    "rock3.glb",
+    null
+   ],
+   [
+    "pebble1.glb",
+    null
+   ],
+   [
+    "pebble2.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 93,
+  "tris": 1372,
+  "kb": 148,
+  "mats": 5,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "rock1.glb",
+   "rock2.glb",
+   "rock3.glb",
+   "pebble1.glb",
+   "pebble2.glb"
+  ],
+  "budget": "≤1k tris · ≤200KB · ≤1 mat · rig no"
+ },
+ {
+  "cat": "nature",
+  "key": "rocksets_cliffs",
+  "fa": "صخره‌ها (rockset1–2، cliff1–2)",
+  "kind": "prop",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "ده‌ها",
+  "parts": [
+   [
+    "rockset1.glb",
+    null
+   ],
+   [
+    "rockset2.glb",
+    null
+   ],
+   [
+    "cliff1.glb",
+    null
+   ],
+   [
+    "cliff2.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 94,
+  "tris": 15475,
+  "kb": 1766,
+  "mats": 4,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "rockset1.glb",
+   "rockset2.glb",
+   "cliff1.glb",
+   "cliff2.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "nature",
+  "key": "crops",
+  "fa": "محصولات مزرعه (ذرت، کلم، کدو، هویج، بقچه‌ی کاه)",
+  "kind": "prop",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "مزرعه",
+  "parts": [
+   [
+    "corn.glb",
+    null
+   ],
+   [
+    "cabbage.glb",
+    null
+   ],
+   [
+    "pumpkin.glb",
+    null
+   ],
+   [
+    "carrot.glb",
+    null
+   ],
+   [
+    "haybale.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 95,
+  "tris": 8840,
+  "kb": 261,
+  "mats": 11,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "corn.glb",
+   "cabbage.glb",
+   "pumpkin.glb",
+   "carrot.glb",
+   "haybale.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "traps",
+  "key": "def_tesla",
+  "fa": "برج تسلا (tesla)",
+  "kind": "tower",
+  "verdict": "later",
+  "prio": 2,
+  "where": "both",
+  "count": "۱ تا ۱۰",
+  "parts": [
+   [
+    "kit_def.glb",
+    [
+     "df_tesla"
+    ]
+   ]
+  ],
+  "note": "از kit_def",
+  "n": 96,
+  "tris": 8378,
+  "kb": 0,
+  "mats": 7,
+  "rig": "static",
+  "kit": [
+   "kit_def",
+   797
+  ],
+  "files": [
+   "kit_def.glb"
+  ],
+  "budget": "≤6k tris · ≤800KB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "traps",
+  "key": "def_gatehouse",
+  "fa": "دروازه‌خونه‌ی دفاعی (df_gatehouse)",
+  "kind": "tower",
+  "verdict": "later",
+  "prio": 2,
+  "where": "both",
+  "count": "۱ تا ۱۰",
+  "parts": [
+   [
+    "kit_def.glb",
+    [
+     "df_gatehouse"
+    ]
+   ]
+  ],
+  "note": "از kit_def",
+  "n": 97,
+  "tris": 4159,
+  "kb": 0,
+  "mats": 7,
+  "rig": "static",
+  "kit": [
+   "kit_def",
+   797
+  ],
+  "files": [
+   "kit_def.glb"
+  ],
+  "budget": "≤6k tris · ≤800KB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "traps",
+  "key": "def_ballista",
+  "fa": "منجنیق‌کمان دفاعی (df_ballista)",
+  "kind": "prop",
+  "verdict": "later",
+  "prio": 2,
+  "where": "both",
+  "count": "۱ تا ۱۰",
+  "parts": [
+   [
+    "kit_def.glb",
+    [
+     "df_ballista"
+    ]
+   ]
+  ],
+  "note": "از kit_def",
+  "n": 98,
+  "tris": 4590,
+  "kb": 0,
+  "mats": 7,
+  "rig": "static",
+  "kit": [
+   "kit_def",
+   797
+  ],
+  "files": [
+   "kit_def.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "traps",
+  "key": "def_watchtower",
+  "fa": "برج دیده‌بانی دفاعی",
+  "kind": "tower",
+  "verdict": "later",
+  "prio": 3,
+  "where": "both",
+  "count": "۱ تا ۱۰",
+  "parts": [
+   [
+    "kit_def.glb",
+    [
+     "df_watchtower"
+    ]
+   ]
+  ],
+  "note": "از kit_def",
+  "n": 99,
+  "tris": 446,
+  "kb": 0,
+  "mats": 7,
+  "rig": "static",
+  "kit": [
+   "kit_def",
+   797
+  ],
+  "files": [
+   "kit_def.glb"
+  ],
+  "budget": "≤6k tris · ≤800KB · ≤2 mat · rig no"
+ },
+ {
+  "cat": "traps",
+  "key": "def_crossbow",
+  "fa": "کمان‌پران (crossbow)",
+  "kind": "prop",
+  "verdict": "later",
+  "prio": 3,
+  "where": "both",
+  "count": "۱ تا ۱۰",
+  "parts": [
+   [
+    "kit_def.glb",
+    [
+     "df_crossbow"
+    ]
+   ]
+  ],
+  "note": "از kit_def",
+  "n": 100,
+  "tris": 2074,
+  "kb": 0,
+  "mats": 7,
+  "rig": "static",
+  "kit": [
+   "kit_def",
+   797
+  ],
+  "files": [
+   "kit_def.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "traps",
+  "key": "def_firestone",
+  "fa": "سنگ آتش",
+  "kind": "prop",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "both",
+  "count": "۱ تا ۱۰",
+  "parts": [
+   [
+    "kit_def.glb",
+    [
+     "df_firestone"
+    ]
+   ]
+  ],
+  "note": "از kit_def",
+  "n": 101,
+  "tris": 2122,
+  "kb": 0,
+  "mats": 7,
+  "rig": "static",
+  "kit": [
+   "kit_def",
+   797
+  ],
+  "files": [
+   "kit_def.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "traps",
+  "key": "def_brazierpair",
+  "fa": "آتشدان‌ها",
+  "kind": "prop",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "both",
+  "count": "۱ تا ۱۰",
+  "parts": [
+   [
+    "kit_def.glb",
+    [
+     "df_brazierpair"
+    ]
+   ]
+  ],
+  "note": "از kit_def",
+  "n": 102,
+  "tris": 2016,
+  "kb": 0,
+  "mats": 7,
+  "rig": "static",
+  "kit": [
+   "kit_def",
+   797
+  ],
+  "files": [
+   "kit_def.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "traps",
+  "key": "def_traps",
+  "fa": "تله‌ها (خرس‌گیر، مین، اره، چاله، خارپشت، بشکه، گلوله‌ی خاردار…) ۱۱ تا",
+  "kind": "prop",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "both",
+  "count": "ده‌ها",
+  "parts": [
+   [
+    "kit_def.glb",
+    [
+     "df_bear",
+     "df_mine",
+     "df_saw",
+     "df_pit",
+     "df_hedgehog",
+     "df_keg",
+     "df_spikeball",
+     "df_grenade",
+     "df_swing",
+     "df_grate",
+     "df_bear2"
+    ]
+   ]
+  ],
+  "note": "",
+  "n": 103,
+  "tris": 11094,
+  "kb": 0,
+  "mats": 7,
+  "rig": "static",
+  "kit": [
+   "kit_def",
+   797
+  ],
+  "files": [
+   "kit_def.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "traps",
+  "key": "catapult",
+  "fa": "منجنیق (catapult)",
+  "kind": "prop",
+  "verdict": "later",
+  "prio": 2,
+  "where": "battle",
+  "count": "چندتا",
+  "parts": [
+   [
+    "catapult.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 104,
+  "tris": 6086,
+  "kb": 280,
+  "mats": 2,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "catapult.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "traps",
+  "key": "ram",
+  "fa": "کوبنده (ram)",
+  "kind": "prop",
+  "verdict": "later",
+  "prio": 2,
+  "where": "battle",
+  "count": "چندتا",
+  "parts": [
+   [
+    "ram.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 105,
+  "tris": 1926,
+  "kb": 92,
+  "mats": 1,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "ram.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "traps",
+  "key": "trebuchet",
+  "fa": "تریبوشه (trebuchet)",
+  "kind": "creature",
+  "verdict": "later",
+  "prio": 2,
+  "where": "battle",
+  "count": "چندتا",
+  "parts": [
+   [
+    "trebuchet.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 106,
+  "tris": 1671,
+  "kb": 142,
+  "mats": 2,
+  "rig": "16 bones/5 clips",
+  "kit": null,
+  "files": [
+   "trebuchet.glb"
+  ],
+  "budget": "≤8k tris · ≤900KB · ≤3 mat · rig yes"
+ },
+ {
+  "cat": "traps",
+  "key": "siege_tower",
+  "fa": "برج محاصره",
+  "kind": "prop",
+  "verdict": "later",
+  "prio": 2,
+  "where": "battle",
+  "count": "چندتا",
+  "parts": [
+   [
+    "siege_tower.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 107,
+  "tris": 1258,
+  "kb": 80,
+  "mats": 1,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "siege_tower.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "traps",
+  "key": "cannon",
+  "fa": "توپ (cannon)",
+  "kind": "prop",
+  "verdict": "later",
+  "prio": 2,
+  "where": "battle",
+  "count": "چندتا",
+  "parts": [
+   [
+    "cannon.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 108,
+  "tris": 4107,
+  "kb": 256,
+  "mats": 2,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "cannon.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "traps",
+  "key": "ballista_unit",
+  "fa": "بالیستا (ballista)",
+  "kind": "prop",
+  "verdict": "later",
+  "prio": 3,
+  "where": "both",
+  "count": "چندتا",
+  "parts": [
+   [
+    "ballista.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 109,
+  "tris": 1758,
+  "kb": 80,
+  "mats": 1,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "ballista.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "traps",
+  "key": "props_town",
+  "fa": "وسایل شهر (بشکه، جعبه، گاری، واگن، گنجینه، سکه، پرچم)",
+  "kind": "prop",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "زیاد",
+  "parts": [
+   [
+    "barrel.glb",
+    null
+   ],
+   [
+    "crate.glb",
+    null
+   ],
+   [
+    "cart.glb",
+    null
+   ],
+   [
+    "wagon.glb",
+    null
+   ],
+   [
+    "chest.glb",
+    null
+   ],
+   [
+    "coins.glb",
+    null
+   ],
+   [
+    "banner.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 110,
+  "tris": 11962,
+  "kb": 975,
+  "mats": 14,
+  "rig": "6 bones/4 clips",
+  "kit": null,
+  "files": [
+   "barrel.glb",
+   "crate.glb",
+   "cart.glb",
+   "wagon.glb",
+   "chest.glb",
+   "coins.glb",
+   "banner.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "traps",
+  "key": "props_camp",
+  "fa": "وسایل اردو و کارگاه (سندان، دیگ، غرفه، مانکن، چادر)",
+  "kind": "prop",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "home",
+  "count": "چندتا",
+  "parts": [
+   [
+    "anvil.glb",
+    null
+   ],
+   [
+    "cauldron.glb",
+    null
+   ],
+   [
+    "stall.glb",
+    null
+   ],
+   [
+    "dummy.glb",
+    null
+   ],
+   [
+    "weaponstand.glb",
+    null
+   ],
+   [
+    "tent_general.glb",
+    null
+   ]
+  ],
+  "note": "",
+  "n": 111,
+  "tris": 11146,
+  "kb": 728,
+  "mats": 11,
+  "rig": "static",
+  "kit": null,
+  "files": [
+   "anvil.glb",
+   "cauldron.glb",
+   "stall.glb",
+   "dummy.glb",
+   "weaponstand.glb",
+   "tent_general.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ },
+ {
+  "cat": "traps",
+  "key": "unused_files",
+  "fa": "فایل‌های بدون مصرف (an_llama, carrot, horse_saddle, horse_white, horseman, mangonel, twisted1, kit_ws_p3)",
+  "kind": "prop",
+  "verdict": "keep",
+  "prio": 3,
+  "where": "none",
+  "count": "هیچ",
+  "parts": [
+   [
+    "an_llama.glb",
+    null
+   ],
+   [
+    "horse_saddle.glb",
+    null
+   ],
+   [
+    "horseman.glb",
+    null
+   ],
+   [
+    "mangonel.glb",
+    null
+   ],
+   [
+    "twisted1.glb",
+    null
+   ]
+  ],
+  "note": "تو کد صدا زده نمی‌شن؛ می‌تونن حذف بشن (حجم کم کنه)",
+  "n": 112,
+  "tris": 22287,
+  "kb": 947,
+  "mats": 13,
+  "rig": "24 bones/2 clips; 560 bones/4 clips; 34 bones/1 clips",
+  "kit": null,
+  "files": [
+   "an_llama.glb",
+   "horse_saddle.glb",
+   "horseman.glb",
+   "mangonel.glb",
+   "twisted1.glb"
+  ],
+  "budget": "≤3k tris · ≤400KB · ≤2 mat · rig no/simple"
+ }
+]
