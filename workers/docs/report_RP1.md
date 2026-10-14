@@ -1,0 +1,43 @@
+**For the mother:** RP1 = owner-only hero mode (hero pick, walk on the home map, 1st/3rd-person camera, door to an underworld test area, perf overlay). Review like any patch: every frame at full size, `GATE_W: ALL OK`, gate off = +0 programs and +0 boot bytes, no change to battle / economy / server / `pkg` / gate files, six hero GLBs only under `web/assets/rpg/` and loaded lazily. Put it into the next package you build. RP0C (phone test page) is cancelled: this overlay replaces it.
+
+# report_RP1
+
+## How to open it
+- Owner (`opts.owner` from the server): a round icon button (a crown, no word) appears on the home screen (left, under the level badge). Tap → pick screen → tap a sister → loader with % → she stands just inside the main gate.
+- Dev page: `dev/rp1_dev.html` (passes `rpg:true`). Gate = `opts.owner || opts.rpg`; the loader never passes `rpg`, so a normal player has no way in.
+- In hero mode: joystick = left half, look = right half drag, buttons (icons only, grey glass + turquoise neon): jump, roll (dims while recharging), sprint (hold), camera 1st↔3rd, exit. Keyboard on desktop: WASD, Space, Ctrl/Q/E, Shift, V, Esc.
+
+## Files
+New (owned): `web/assets/rpg/rpg.js` (hero layer, lazy ES module), `web/assets/rpg/rpg_under.js` (underworld, lazy, fetched only when the door is used), six `web/assets/rpg/<key>.glb` (2.48–2.67 MB each, only the picked one is downloaded) and six `c_<key>.webp` card pictures (320×400, ≈22–31 KB each) = the half-body (head to waist) of the front-view figure on the owner's own character sheet, cut free of the sheet text (text painted out with the sheet's own backdrop), and six `e_<key>.png` element emblems (6–12 KB) taken from the same sheets and tinted with each sister's accent colour — the pick screen loads these 12 small files (~0.3 MB) and nothing else; the old face portraits `p_*.webp` are dropped. Dev: `dev/rp1_*` (dev page, persistent browser driver, measuring script).
+Shared files touched (diffs in `shared/`):
+- `client/src/main.js`: 3 small hooks. (1) 4 imports that are already inside the bundle through battle.js (no new code). (2) a block `if (opts.owner || opts.rpg) {…}` that makes the button and `import()`s rpg.js on tap. (3) loop: `inHero`/`uw` flags; `if (!inHero) ctl.update(dt)`; `if (!uw) world.update`; `if (inHero) hero.frame(now,dt)`; `if (uw) renderer.render(hero.scene,camera) else {old path}`; `!inHero` in the idle-slow condition (so hero mode does not drop to 30 fps after 3.5 s).
+- `client/src/assets.js`: one export `heroKit` (BASE, V, a GLB-parse helper that reuses the GLTFLoader/Meshopt already in the bundle).
+Not touched: battle, economy, server `*.py`, `pkg/`, `dev/gate*.sh`, `web/app/*`, credits.json.
+
+## Numbers
+- `dev/gate_w.sh` → **GATE_W: ALL OK** (re-run after the last change), noRoute events **622** (same as before my changes).
+- Gate off (new bundle, no owner/rpg): **166 programs = base 166**; request count 579 = 579; no request under `assets/rpg/`.
+- Boot bundle (release): `wall.js` 2,707,403 → 2,709,039 B raw (**+1,636 B**), gzip 1,062,309 → 1,063,132 (**+823 B**). Exactly +0 is impossible with any hook in main.js; this is the whole cost. (The summed content-length of all requests differs 64.4 vs 62.4 MB between two loads — that is cache/header noise; the request lists are identical.)
+- Hero mode on the home map: programs **166 → 168 (+2**: the skinned hero + its shadow program). Draw calls per frame at the gate view ≈ 285–312 (the home map itself; the hero is 1 skinned mesh, 19k tris, +1 call, +1 more in the shadow pass), triangles ≈ 1.5–1.7 M, software GL, quality `low`, pixel ratio 0.75–0.9. I did not get a clean "same camera, hero hidden" call count (my measuring window raced the overlay's own counter reset) — so the +calls for the hero is by construction (1 mesh), not measured.
+- Underworld: **12–15 draw calls, 79–81k triangles** (limits 150 / 400k); programs 168 → 180–183 (+12..15, all in a separate scene; the home scene gets no new lights/materials). 150 crystal clusters = one InstancedMesh, motes = one Points, 191 circle colliders.
+- Collision: 146 boxes from `world.targets` (gates cut into two side boxes with the arch passage open), `staticSolids()` discs, nav water. BFS from the spawn reaches 264,126 1-m cells and **the keep door**; the real physics walked spawn → door (60-cell path, 16.6 s simulated, no sticking) and entered the door trigger; walking at the gate arch passes through, walking into the keep/inner wall stops.
+- Perf overlay (owner only, top-right, tap to collapse): fps (0.5 s avg), frame ms p95, draw calls, triangles, `renderer.info.programs.length`, pixel ratio.
+
+## Pick screen (rebuilt on the owner's request, three times)
+Six HALF-BODY pictures (head to waist, the owner asked for «نیم‌تنه» after the face close-ups were too tight) side by side (3×2 on a phone, one row of six in landscape), cut from the front-view figure of the owner's own character sheets (320×400, 22–31 KB each; made by `dev/rp1_bust_cards.py`: figure segmented from the sheet backdrop, sheet text painted out, then a 4:5 crop per sister), each with her own element emblem (flame, wind swirl, vines, mountains, water drop, snowflake — extracted from the sheets, 6–12 KB) as a glowing round badge on the card's lower edge; neon frame on the pressed / remembered card. **No text at all on the pick screen** and no Persian anywhere in the hero UI: the close button is an icon, the loader shows Latin names (ELINA…, UNDERWORLD, RETURN), the home entry button is an icon. Elements are not named in words, so nothing is inferred (the sheets say Melika = Plants, Mobina = Earth & Stone).
+Face question (step 1) was never answered: default taken = all six OK.
+
+## Proof frames (photos_RP1.tar.gz, all viewed by me)
+(01 and 15 were taken inside the full game after the last pick-screen change (half-body); 01b/01c with a stub host that imports the real rpg.js.)
+00 face sheet + portraits + the source face panels · 01 pick screen inside the full game + 01b/01c pick screen portrait 2x / landscape (half-body) · 02 3rd person walking from behind · 03 3rd person at a wall (camera pulled in, not inside) · 04 1st person looking down (cape, boots visible; head bone scaled to ~0) · 05 jump mid-air · 06 dodge (roll) · 07 the door at the keep · 08 loader (existing loader, 35 %) · 09–11 underworld (3 angles incl. the return portal) · 12 back at the castle · 13a/13b strategic view before / after exit (same camera and HUD; only moving things — dragon, walkers — differ) · 13c home screen with the icon button (taken before the final crown-icon swap; the crown was checked on its own, not inside the full game) · 15 Aylar chosen from the pick screen and walking in the real game · 14 the new neon icon buttons (sprint shown pressed, roll dimmed while recharging).
+
+## NOT PROVEN
+- Frames 05–12 and 13a/13b were shot before the "no Persian" change: they still show the old text buttons / the Persian loader title; the later frames (01, 13c, 14-style icon HUD, 15) show the final look. The loader title is now Latin (UNDERWORLD) — not re-shot.
+- Anything on a real phone: touch joystick / drag-look / buttons were never touched by a finger (the frames come from the dev API `sim()` + paused frames; one real mouse click on the pick card, the exit path and the button states were exercised). Real fps unknown: software GL gives ~20 fps.
+- Foot sliding at real fps: walk/run are phase-locked to speed (stride 2.75 / 5.49 m), looks right in stills, not judged in motion.
+- `rpg.js` / `rpg_under.js` are fetched with native `import()`: the production static server must send `.js` with a JavaScript MIME type (dev server does).
+- Props with no collision data (barrels, small stalls) can be walked through; only buildings, walls, towers, keep, gates, hamlet/worksite solids, water are solid. The hero's sun shadow refreshes with the world's shadow cadence (every 3rd–5th frame).
+- The door sits on the keep face towards the gate, ~6.6 m from the inner wall (narrow courtyard): the 3rd-person camera is pulled in tight there. Position can be tuned with `H.doorOff`.
+- The underworld first draw compiles shaders (`compileAsync` during the loader); on a weak phone this may still hitch. Its look is a test area, not final art.
+- Gate-off "byte-for-byte same behaviour": by construction (hooks inert when `opts.owner`/`opts.rpg` are falsy, loop adds three false booleans) + equal programs/requests/gate; I did not diff screenshots pixel-for-pixel.
+- Credits for the hero models are not added to the game's `credits.json` (shared file): needs the mother (source data is in each hero's `credit.json` in the assets repo).
