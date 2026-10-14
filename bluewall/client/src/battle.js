@@ -65,9 +65,24 @@ function makeVeil(root) {
 }
 
 // ================================================================= the mode
-export function createBattleMode({ renderer, scene, camera, root, world, audio, econ, ui, weatherMode = 'auto' }) {
+export function createBattleMode({ renderer, scene, camera, root, world, audio, econ, ui, weatherMode = 'auto', pf = null }) {
   let S = null, busy = false;
   const dev = () => (typeof window !== 'undefined' && window.__bw ? window.__bw : null);
+  // PERF2: where the battle load time goes -> named durations in the black box (perf.js mark) and, on dev pages, the console
+  const mk = (n, t0) => nm(n, performance.now() - t0), nm = (n, d) => { try { pf && pf.mark(n, d); } catch (e) { /* ignore */ } if (dev()) console.info('[pf] ' + n + ' ' + Math.round(d)); };
+  //   (pf = lazy hooks from main.js: sw = the shader-warm machinery, mark = the black box, rt = the render target of the path in use (null = screen), draw = one frame of that path, old = dev: the p39 loader)
+
+  // PERF2 (the 23 s freeze): the map's shaders are keyed by the NUMBER of point lights.  The home dragon's belly-glow light hangs under the dragon's root, which an attack hides, so the
+  // scene had one point light less (6 -> 5) and EVERY material of the map (1014 of them) was linked again: +156 programs, ~16 s on the phone.  The count is kept: for each light that
+  // goes away with the home life an intensity-0 black light takes its place (it adds exactly nothing: the picture is the one of the 5 lights), and goes again before the home map comes back.
+  const litePad = []; let litePoint = 0;
+  const pointLights = () => { let n = 0; scene.traverseVisible((o) => { if (o.isPointLight) n++; }); return n; };
+  function balanceLights() {
+    const want = Math.max(0, litePoint - (pointLights() - litePad.length));
+    while (litePad.length < want) { const l = new THREE.PointLight(0x000000, 0, 1, 2); l.name = 'lightPad'; scene.add(l); litePad.push(l); }
+    while (litePad.length > want) scene.remove(litePad.pop());
+  }
+  const dropLightPad = () => { while (litePad.length) scene.remove(litePad.pop()); };
 
   async function start(target, preVeil = null, loader = null) {
     if (S || busy) return false;
@@ -93,6 +108,7 @@ export function createBattleMode({ renderer, scene, camera, root, world, audio, 
   }
   // put the home map back (also used when a start fails half way)
   function restoreWorld(s) {
+    dropLightPad();
     world.setBattle(false); DU.battle.value = 0; DS.reset(); restoreLevels(); if (econ.st.emblem) setEmblem(econ.st.emblem); if (HOME_GATE != null) { setGateName(HOME_GATE); HOME_GATE = null; } world.tesla && world.tesla.set((econ.st.own && econ.st.own.tesla) || 0);
     try { world.setWeather && world.setWeather(weatherMode, true); } catch (e) { /* ignore */ }
     if (s) { uLv.value.set(s.savedLv); if (world.key && world.key.shadow) { const c = world.key.shadow.camera; c.left = c.bottom = -s.shadowHalf0; c.right = c.top = s.shadowHalf0; c.updateProjectionMatrix(); world.key.target.position.set(0, 0, 0); } }
@@ -100,12 +116,15 @@ export function createBattleMode({ renderer, scene, camera, root, world, audio, 
 
   async function build(target, veil, loader = null) {
     const A = world.assets, models = A.models;
+    const tb0 = performance.now(); let tm = tb0; const lap = (n) => { const t = performance.now(); mk(n, tm); tm = t; };          // (PERF2: named durations of the load stages -> the black box)
+    const seenVis = new WeakSet(); if (pf) scene.traverseVisible((o) => { seenVis.add(o); });       // (what the home map had on screen-able at the tap: its first draw was done by the home warm-up)
     const army = attackRoster(econ.st.army), forge = (econ.st.army && econ.st.army.forge) || 1;          // (his guardians stay home: they are not in the attack roster)
     const sv = (econ.st.army && econ.st.army.spell && econ.st.army.spell.spells) || {}, spells = {}; for (const k of SPELL_ORDER) if (sv[k] && sv[k].n > 0) spells[k] = sv[k].n;
     const nav = buildNav({ height: world.fastHeight, bridges: bridgesFromLayout(L), solids: staticSolids() });        // where ground units may walk: no water except over the bridges, and no going into the farmhouse, the cottages or the mill
     const lv = (econ.st.army && econ.st.army.lv) || {};
     const sim = createBattle({ spec: { levels: target.levels, seed: target.seed, ratio: target.ratio, power: target.power, loot: target.loot, tesla: target.tesla | 0, guard: target.guard }, army, forge, lv, spells,
       targets: JSON.parse(JSON.stringify(world.targets)), meta: world.baseMeta, nav });
+    lap('b:sim');
     if (world.ballistas && world.ballistas.hide) for (const q of sim.buildings) if (q.off) world.ballistas.hide(q.id);          // (a war machine / wizard the castle does not man at this level or profile is not on its tower)
     const types = DEFS.order.filter((t) => (sim.sent[t] || 0) > 0);
     const kc = world.key && world.key.shadow ? world.key.shadow.camera : null;
@@ -115,23 +134,29 @@ export function createBattleMode({ renderer, scene, camera, root, world, audio, 
     S = s;                                                      // (active from now on: the main loop drives the world, the frame() below waits for `loading`)
     const hud = s.hud = createHUD(root, { target, types, spells: s.spellTypes, onSpell: (k) => selectSpell(s, k), onAbility: (t) => useAbility(s, t), onTool: FEATURES.squad || FEATURES.scout ? (k) => tool(s, k) : null, toolSet: { squad: !!FEATURES.squad, scout: !!FEATURES.scout }, onEnd: () => retreat(s), onNext: () => scoutNext(s), loader });
     hud.el.style.zIndex = '30'; const stage = (f, txt) => hud.progress(f, txt);
+    if (pf) { const hp = hud.progress; let tv = performance.now(), nv = 0; hud.progress = (f, txt) => { const t1 = performance.now(); if (txt && txt.startsWith('Mustering ') && t1 - tv > 250 && nv++ < 8) nm('v:' + txt.slice(10, -1), t1 - tv); tv = t1; return hp.call(hud, f, txt); }; }       // (PERF2: a unit kind that took > 250 ms to build)
     if (ui && ui.root) ui.root.style.display = 'none';
     hud.el.querySelector('.bwb-load').classList.remove('pre');   // (the HUD's own loading screen - or the one the search already showed - takes over from the veil)
     veil.el.style.opacity = '0'; veil.el.style.pointerEvents = 'none'; await nextFrame();
 
     // ---- turn the map into the enemy's base
     stage(0.05, 'Scouting the land…');
+    litePoint = pointLights();                                   // (PERF2: see balanceLights)
     world.setBattle(true); DU.battle.value = 1; DS.reset(); if (target.emblem) setEmblem(target.emblem); setShieldCrest(target.emblem || 'swords', 'foe'); if (HOME_GATE == null) HOME_GATE = gateName(); setGateName(target.name || ''); world.tesla && world.tesla.set(target.tesla | 0);
+    balanceLights(); lap('b:m.set');
     world.setLevel(Math.max(1, Math.min(MAXL, (target.levels && target.levels.keep) | 0 || 1)));
     try { world.setWeather && world.setWeather('clear', true); } catch (e) { /* ignore */ }
     if (kc) { kc.left = kc.bottom = -140; kc.right = kc.top = 140; kc.updateProjectionMatrix(); }
+    balanceLights();                                             // (a weather / time change of the map turn may have moved a light as well)
     await nextFrame();
+    lap('b:m.rest');
 
     // ---- effects, sound
     s.fx = createFX(scene, { scale: PX.scale, height: world.fastHeight }); s.sfx = createSFX(audio, camera);
     s.wake = createWake({ scene, fx: s.fx, isWet: (x, z) => nav.isWet(x, z) });
     s.spfx = createSpellFX(scene, { height: world.fastHeight, camera, fx: s.fx });
     s.cracks = createCracks({ scene, height: world.fastHeight, wet: (x, z) => nav.isWet(x, z) });                      // (a walking giant splits the ground; it heals after he has passed)
+    lap('b:fx');
     stage(0.2, 'Raising the banners…');
     await nextFrame();
     // ---- fighters
@@ -146,6 +171,7 @@ export function createBattleMode({ renderer, scene, camera, root, world, audio, 
       collapse: (x, z, w, h) => { s.fx.debris(x, H(x, z) + 1, z, w, h, w, 0x7a5a38, 14, 0.8); s.fx.puff(x, H(x, z) + 1, z, 6, 6, 5); s.sfx.at('collapse', x, 2, z, 0.7); s.shake = Math.max(s.shake, 0.4); },
     };
     s.views = await createUnitViews({ M: models, scene, sim, forgeLevel: forge, enemyLevel: (target.levels && target.levels.keep) || 1, height: H, hooks, progress: (n) => stage(Math.min(0.82, 0.3 + 0.07 * (++mustered)), 'Mustering ' + n + '…') });
+    lap('b:views');
     // the ground where the army stands (and the lane from there to the gate) is cleared of trees, bushes, rocks and grass until the battle is over
     if (sim.deploy) {
       const dp = sim.deploy, tx = -dp.nz, tz = dp.nx; let l0 = 1e9, l1 = -1e9, b0 = 1e9, b1 = -1e9;
@@ -153,12 +179,15 @@ export function createBattleMode({ renderer, scene, camera, root, world, audio, 
       const M0 = 11, base = { x: dp.x, z: dp.z, tx, tz, nx: dp.nx, nz: dp.nz };
       stage(0.83, 'Pitching camp…');
       try { s.camp = await createCamp({ scene, height: H, dp: { x: dp.x, z: dp.z, nx: dp.nx, nz: dp.nz }, emblem: econ.st.emblem, army, targets: world.targets }); } catch (e) { console.warn('camp', e); s.camp = null; }      // (the attacker's own camp + crest behind the army)
+      lap('b:camp');
       s.cleared = world.clearZones([{ ...base, l0: l0 - M0, l1: l1 + M0, b0: b0 - 14, b1: b1 + M0 }, { ...base, l0: -16, l1: 16, b0: -70, b1: 0 }, ...(s.camp ? [{ ...base, ...s.camp.rect }] : [])]);
     }
     s.rings = createSquadRings(scene, { height: world.fastHeight, types }); s.paths = createRingPaths(scene, { height: world.fastHeight });
     s.threat = FEATURES.scout ? createThreat(scene, { height: world.fastHeight }) : null; if (s.threat) s.threat.build(sim.buildings);          // (S8: the reach of every gun, shown while the player looks the base over)
+    lap('b:rings');
     stage(0.85, 'Charting the roads…');
     for (let j = 0; j < nav.rows; j += 20) { nav.warm(j, j + 20); stage(0.85 + 0.1 * Math.min(1, (j + 20) / nav.rows), 'Charting the roads…'); await nextFrame(); }
+    lap('b:nav');
     stage(0.96, 'Warming up…');
     // ---- camera + input
     const dp = sim.deploy, k0 = world.baseMeta.keep;
@@ -169,8 +198,30 @@ export function createBattleMode({ renderer, scene, camera, root, world, audio, 
     // ---- compile everything before the curtain opens
     world.setTime && 0;
     placeCamera(s, 0);
-    try { await renderer.compileAsync(scene, camera); } catch (e) { /* the first draw compiles instead */ }
-    for (let i = 0; i < 3; i++) { s.views.update(0, 0.016, camera); placeCamera(s, 0); if (renderer.shadowMap.enabled) renderer.shadowMap.needsUpdate = true; renderer.render(scene, camera); await nextFrame(); }   // (the home loop leaves shadow autoUpdate off: without the explicit update the new sun has no shadow map and every draw is rejected)
+    const sw = pf && !(pf.old && pf.old()) ? pf.sw() : null;
+    let sliced = false;
+    if (sw) {
+      // PERF2: the p39 machinery instead of one compileAsync + three full-scene renders (= one 23 s task on the phone): every new material is linked a few at a time
+      // (shaderwarm.js: a slice of ~90 ms, then a frame for the loading bar), then everything off screen is drawn once in small chunks.  The attack is drawn by the plain path by day
+      // (the bloom composer is parked), by the composer's target at night: pf.rt() says which.
+      try {
+        s.views.update(0, 0.016, camera); placeCamera(s, 0); sw.lap();
+        let ns = 0; const rt = pf.rt();
+        await sw.compile(pf.rt, { path: rt ? 'rt' : 'screen', k0: 1, maxNew: 2, progress: (f) => stage(0.96 + 0.025 * f, 'Warming up…'), slow: (n, d, np) => { if (ns++ < 6) nm('u:b:' + n + '×' + np, d); } });
+        lap('b:compile');
+        const draw = () => { if (renderer.shadowMap.enabled) renderer.shadowMap.needsUpdate = true; pf.draw(); };       // (the home loop leaves shadow autoUpdate off: without the explicit update the new sun has no shadow map and every draw is rejected)
+        await sw.warmDraw(draw, { target: 120, filter: (o) => !seenVis.has(o), progress: (f) => stage(0.985 + 0.015 * f, 'Warming up…') });
+        lap('b:warm');
+        s.views.update(0, 0.016, camera); placeCamera(s, 0); draw(); await nextFrame();                                 // (one whole frame: everything in view is hot when the curtain opens)
+        const L = sw.lap(); nm('n:progs', L.p); nm('n:slice', L.w); nm('n:chunk', L.ww); sliced = true;
+      } catch (e) { console.warn('battle warm', e); }
+    }
+    if (!sliced) {                                                // (the p39 way - dev ?oldload=1, or the fallback if the sliced one failed)
+      try { await renderer.compileAsync(scene, camera); } catch (e) { /* the first draw compiles instead */ }
+      lap('b:compileAsync');
+      for (let i = 0; i < 3; i++) { s.views.update(0, 0.016, camera); placeCamera(s, 0); if (renderer.shadowMap.enabled) renderer.shadowMap.needsUpdate = true; renderer.render(scene, camera); await nextFrame(); lap('b:warm' + i); }   // (the home loop leaves shadow autoUpdate off: without the explicit update the new sun has no shadow map and every draw is rejected)
+    }
+    nm('b:total', performance.now() - tb0);
     audio && audio.playMode && audio.playMode('storm');
     audio && audio.setBattle && audio.setBattle(true);
     audio && audio.setWar && audio.setWar(0.25);

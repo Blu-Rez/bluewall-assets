@@ -168,7 +168,8 @@ async def h_pub(req: web.Request) -> web.StreamResponse:
 
 
 _ASSET_TYPES = {".glb": "model/gltf-binary", ".webp": "image/webp", ".png": "image/png",
-                ".jpg": "image/jpeg", ".json": "application/json", ".ogg": "audio/ogg", ".mp3": "audio/mpeg"}
+                ".jpg": "image/jpeg", ".json": "application/json", ".ogg": "audio/ogg", ".mp3": "audio/mpeg",
+                ".js": "application/javascript"}      # (RP1: rpg.js / rpg_under.js are loaded with native import() from /assets/rpg/ — a module script needs a JS MIME type)
 ASSETS = (WEB / "assets").resolve()
 
 
@@ -483,7 +484,7 @@ async def h_perf(req: web.Request) -> web.Response:
     except Exception:  # noqa: BLE001
         return _nocache(web.json_response({"ok": False, "reason": "bad"}, status=400))
     if isinstance(body, dict):
-        log.warning("perf uid=%s %s", uid, json.dumps(body, separators=(",", ":"), ensure_ascii=True)[:1800])
+        log.warning("perf uid=%s %s", uid, json.dumps(body, separators=(",", ":"), ensure_ascii=True)[:4000])
     return _nocache(web.json_response({"ok": True}))
 
 

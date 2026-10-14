@@ -6,6 +6,7 @@ import { mat4 } from './util.js';
 import { rng } from './noise.js';
 import { ENT } from './skin.js';
 import { buildRoads } from './roads.js';
+import { createRingTracker, GATE_HALF, DIMS } from './a1_rings.js';
 
 const BOX = new THREE.BoxGeometry(1, 1, 1);
 const CYL = (rt, rb, h, s = 14) => new THREE.CylinderGeometry(rt, rb, h, s, 1, false);
@@ -15,6 +16,7 @@ const SLATE = 0x4d6fae, SLATE2 = 0x3b5891, STONE_T = 0xffffff, STONE_WARM = 0xe9
 export function buildCastle(ctx) {
   const { B, M } = ctx;
   const r = rng(99);
+  const RT = createRingTracker(ctx); ctx.rings = RT;       // A1: remembers which targets / weapons / torches belong to which wall ring (a1_rings.js hides the rings that are not built yet at the castle's level)
   const put = (geo, mat, m, o) => B.add(geo, mat, m, o);
   const box = (mat, x, y, z, ry, sx, sy, sz, o = {}) => put(BOX, mat, mat4(x, y, z, ry, sx, sy, sz), o);
   const stoneUV = { worldUV: 0.085 };
@@ -178,6 +180,7 @@ export function buildCastle(ctx) {
 
   // ------------------------------------------------ town gatehouse (two square towers, arch, portcullis, bridge over the outer moat)
   function townGate(G, poly) {
+    RT.begin('town');
     const a = poly[G.seg], b = poly[(G.seg + 1) % poly.length];
     const al = Math.hypot(b[0] - a[0], b[1] - a[1]), dx = (b[0] - a[0]) / al, dz = (b[1] - a[1]) / al, ry = Math.atan2(-dz, dx);
     const H = 13, half = 5.2, gw = half + 3.2 + 3.6;
@@ -206,6 +209,7 @@ export function buildCastle(ctx) {
     for (let yy = 2.2; yy < 8; yy += 1.4) box(M.metal, G.x + G.nx * 0.65, yy, G.z + G.nz * 0.65, ry, 2 * half - 0.4, 0.14, 0.14);
     ctx.pick({ x: G.x, z: G.z, y0: 0, y1: 16, r: 7 }, 'gate');
     for (const e of [-1, 1]) ctx.torch(G.x + G.nx * 3 + dx * e * 5.6, 4.4, G.z + G.nz * 3 + dz * e * 5.6, { pool: true, sconce: true, ry: Math.atan2(G.nx, G.nz) });
+    RT.end();                                                  // (the bridge over the moat is not part of the ring: roads and the nav lists need it at every level)
     B.bid(0);                                                  // the bridge stays up
     // bridge over the outer moat
     const off = L.MOAT2.off + 0.5, bl = 17, bw = 7.6, bcx = G.x + G.nx * off, bcz = G.z + G.nz * off, bry = Math.atan2(-G.nz, G.nx);
@@ -254,28 +258,35 @@ export function buildCastle(ctx) {
   }
   if (L.TOWN) riverQuay();
 
-  // ------------------------------------------------ outer + inner walls
+  // ------------------------------------------------ the three wall rings (A1: all three are built; a1_rings.js shows as many as the castle's level allows — layout.ringsAt)
   const outerRoof = (i) => i % 2 === 0 || i === 8;
   B.tag(ENT.wall);
-  wallRun(L.OUTER, L.WALL.outer.H, L.WALL.outer.T, L.WALL.outer.R, L.GATE_SEG, 7.5, { ring: 'outer', runeH: 1.15, torches: true, roof: outerRoof, tapestry: 2 });
-  B.tag(ENT.keep);
-  wallRun(L.INNER, L.WALL.inner.H, L.WALL.inner.T, L.WALL.inner.R, L.INNER_GATE_SEG, 4.5, { ring: 'inner', runeH: 0.9, torches: false, roof: () => true, tapestry: 1, tapW: 2.0, tapFoot: 2.6 });
-  // third ring: the lower town's wall (a little lower, thinner rune band), two gatehouses with bridges
-  if (L.TOWN) {
-    B.tag(ENT.wall);
-    wallRun(L.TOWN, L.WALL.town.H, L.WALL.town.T, L.WALL.town.R, L.TOWN_GATES, 5.2, { ring: 'town', wgates: L.WGATES, runeH: 0.55, torches: true, roof: (i) => i % 3 === 1, onTower: ctx.townTower, tapestry: 1, tapW: 2.4, tapFoot: 2.6 });
-    for (let i = 0; i < L.TOWN.length; i++) { const m = L.segMid(L.TOWN, i); ctx.pick({ x: m[0], z: m[1], y0: 0, y1: 10, r: 5 }, 'wall'); }
-    for (const TG of L.TGATES) townGate(TG, L.TOWN);
-  }
-  B.tag(ENT.wall);
+  RT.begin('outer');
+  wallRun(L.OUTER, DIMS.outer.H, DIMS.outer.T, DIMS.outer.R, L.GATE_SEG, GATE_HALF.outer, { ring: 'outer', runeH: 1.15, torches: true, roof: outerRoof, tapestry: 2 });
   ctx.pick({ x: L.OUTER[0][0], z: L.OUTER[0][1], y0: 0, y1: 1, r: 0 }, 'wall'); // (wall itself picked via segments below)
   for (let i = 0; i < L.OUTER.length; i++) {
     const m = L.segMid(L.OUTER, i);
     ctx.pick({ x: m[0], z: m[1], y0: 0, y1: 11, r: 5 }, 'wall');
   }
+  RT.end();
+  B.tag(ENT.keep);
+  RT.begin('inner');
+  wallRun(L.INNER, DIMS.inner.H, DIMS.inner.T, DIMS.inner.R, L.INNER_GATE_SEG, GATE_HALF.inner, { ring: 'inner', runeH: 0.9, torches: false, roof: () => true, tapestry: 1, tapW: 2.0, tapFoot: 2.6 });
+  RT.end();
+  // third ring: the lower town's wall (a little lower, thinner rune band), two gatehouses with bridges
+  if (L.TOWN) {
+    B.tag(ENT.wall);
+    RT.begin('town');
+    wallRun(L.TOWN, DIMS.town.H, DIMS.town.T, DIMS.town.R, L.TOWN_GATES, GATE_HALF.town, { ring: 'town', wgates: L.WGATES, runeH: 0.55, torches: true, roof: (i) => i % 3 === 1, onTower: ctx.townTower, tapestry: 1, tapW: 2.4, tapFoot: 2.6 });
+    for (let i = 0; i < L.TOWN.length; i++) { const m = L.segMid(L.TOWN, i); ctx.pick({ x: m[0], z: m[1], y0: 0, y1: 10, r: 5 }, 'wall'); }
+    RT.end();
+    for (const TG of L.TGATES) townGate(TG, L.TOWN);
+  }
+  B.tag(ENT.wall);
 
   // ------------------------------------------------ gatehouse
   const G = L.GATE;
+  RT.begin('outer');
   {
     const ux = Math.cos(-G.rot + Math.PI / 2), uz = Math.sin(-G.rot + Math.PI / 2);
     const ax = L.OUTER[L.GATE_SEG + 1][0] - L.OUTER[L.GATE_SEG][0], az = L.OUTER[L.GATE_SEG + 1][1] - L.OUTER[L.GATE_SEG][1];
@@ -323,6 +334,7 @@ export function buildCastle(ctx) {
       put(CYL(0.25, 0.35, 2.0, 8), M.metal, mat4(bx, 1.0, bz));
       ctx.torch(bx, 3.3, bz, { pool: true, light: true, big: true });
     }
+    RT.end();
     B.bid(0);
     // stone bridge across the (inner) moat — the Blue Wall's own moat is gone now: only the town moat remains
     if (L.MOAT.on) {

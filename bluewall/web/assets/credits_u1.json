@@ -1,0 +1,54 @@
+{
+ "_note": "U1 (legionary + captain). Entries follow credits_new.json (id, name, author, license, source, uid, faces, cat); 'group' + 'by' are the keys of the in-game credits.json items, so the mother can merge either way.",
+ "items": [
+  {
+   "id": "viking_lowpoly_57344ed1",
+   "name": "Viking (lowpoly)",
+   "author": "SlagPerch 3D",
+   "license": "CC-BY 4.0",
+   "source": "https://sketchfab.com/3d-models/viking-lowpoly-57344ed1b37a4bbdac3b1481f8a85a65",
+   "uid": "57344ed1b37a4bbdac3b1481f8a85a65",
+   "faces": 2520,
+   "cat": "heroes",
+   "group": "Models (CC-BY 4.0)",
+   "by": "SlagPerch 3D",
+   "files": [
+    "u1_captain.glb"
+   ],
+   "used_for": "the captain (hero, lv 7)",
+   "changes": "only the four clips Idle / Walk / Run / Sword_swing kept, textures resized to 1024 px WebP, mesh and rig untouched; the banner on his back is a prop made in code (u1_looks.js)",
+   "attribution": "This work is based on \"Viking (lowpoly)\" (https://sketchfab.com/3d-models/viking-lowpoly-57344ed1b37a4bbdac3b1481f8a85a65) by SlagPerch 3D (https://sketchfab.com/slagperch3d) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)"
+  },
+  {
+   "id": "kaykit_adventurers_2_0_free",
+   "name": "KayKit Adventurers Character Pack 2.0 FREE (Knight, sword_1handed, shield_square)",
+   "author": "Kay Lousberg (KayKit)",
+   "license": "CC0 1.0",
+   "source": "https://kaylousberg.itch.io/kaykit-adventurers",
+   "faces": 5786,
+   "cat": "soldiers",
+   "group": "Models (CC0)",
+   "by": "Kay Lousberg (KayKit)",
+   "files": [
+    "u1_legionary.glb"
+   ],
+   "used_for": "the legionary (lv 2): the Knight with his own sword and square shield",
+   "changes": "sword and shield attached to the hand bones, the red cape mesh left out (a unit that must read as blue), mesh lightly simplified (6362 to 5786 triangles), texture resized to 512 px WebP; nothing redrawn or recoloured"
+  },
+  {
+   "id": "kaykit_character_animations_1_1",
+   "name": "KayKit Character Animations 1.1 (Rig_Medium: CombatMelee, General, MovementBasic)",
+   "author": "Kay Lousberg (KayKit)",
+   "license": "CC0 1.0",
+   "source": "https://kaylousberg.itch.io/kaykit-character-animations",
+   "cat": "animations",
+   "group": "Models (CC0)",
+   "by": "Kay Lousberg (KayKit)",
+   "files": [
+    "u1_legionary.glb"
+   ],
+   "used_for": "the legionary's clips: Melee_Blocking (stance), Running_A, Walking_A, Melee_1H_Attack_Slice_Horizontal, Melee_1H_Attack_Stab, Hit_A, Death_A",
+   "changes": "the seven clips copied onto the Knight's rig (same rig), constant channels dropped"
+  }
+ ]
+}

@@ -20,6 +20,9 @@ import { nomads, nomadD, keepClear, treeClear, buildNomads } from './nomads.js';
 import { buildCastle } from './castle.js';
 import { buildBuildings } from './buildings.js';
 import { buildTown } from './town.js';
+import { startTownPlan, planLots, homeLots, castleLevel } from './town_plan.js';              // p41: B1's town plan -> the town (town_build.js: B2 homes + B3 civic lots)
+import { registerTownTargets, createPlannedTown } from './town_build.js';
+import { b1Dev } from './b1_dev.js';
 import { buildMines } from './mines.js';
 import { buildMilitary } from './military.js';
 import { gemBadge } from './gems.js';
@@ -111,6 +114,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
   const pieceM = (x, y, z, ry, s) => new THREE.Matrix4().compose(new THREE.Vector3(x, y, z), new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), ry), new THREE.Vector3(s, s, s));
   const liveBy = new Map(), downSaved = [];
   const ctx = { levelHooks: [],
+    fx: { flames, pools, flags, lights, picks },                        // (A1: a1_rings.js hides / shows the torches, glow pools, lamps and tap boxes of a wall ring)
     weaponSites: [],
     // battle targets (castle.js, vault.js, ...): every destructible structure registers its footprint and tags the next batched pieces with its id
     targets: [],
@@ -220,10 +224,20 @@ export async function buildWorld(renderer, scene, Q, progress) {
     buildCastle(ctx);
     progress(0.7, 'Building the town…'); await tick();
     buildBuildings(ctx);
-    ctx.town = buildTown(ctx, A, Q, scene);
+    // p41: the town shows what B1 plans.  The plan is made in slices on the loading screen (a few ms per slice), the battle targets of its blocks are registered now (before initDestruct), the meshes are
+    // baked later, when kit_homes / kit_civic have loaded (a late job, below).  Any failure => the old town, unchanged.
+    let tplan = null; const lv0 = Math.max(1, Math.min(30, Math.round(Q.level0 || 20)));
+    if (L.TOWN) try {
+      const st = startTownPlan(); let done = false;
+      while (!done) { const t0 = performance.now(); while (!done && performance.now() - t0 < 12) done = st.step(); if (!done) await tick(); }
+      tplan = { lots: planLots(), homes: homeLots(lv0).length };
+    } catch (e) { console.warn('townplan', e); tplan = null; }
+    ctx.town = buildTown(ctx, A, Q, scene, tplan);
+    if (tplan) try { ctx.townTids = registerTownTargets(ctx, lv0); } catch (e) { console.warn('town targets', e); ctx.townTids = new Map(); }
     ctx.mines = buildMines(ctx, A, Q, scene, anim);
     ctx.military = buildMilitary(ctx, { scene, A, Q });
   }
+  b1Dev(ctx, scene);                                  // B1 dev flag: ?b1town=1 draws coloured boxes for planTown(); without the flag it returns at once (nothing built)
   const badges = [];
   for (const m of (ctx.mines ? ctx.mines.list : [])) {
     const b = gemBadge(m.id); b.position.copy(m.top); scene.add(b); badges.push({ id: m.id, sprite: b, y: m.top.y });
@@ -235,6 +249,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
   const stores = buildStores(ctx, { M, height }) || { list: [], setFill() {} };            // p38: wood / stone / iron / gold / oil / food storehouses
   const moat = buildMoat(ctx, { scene, M, Q, A, height, fastHeight: terrain.fastHeight, water }) || { update() {} };
   const falls = buildFalls({ scene, fh: terrain.fastHeight || height }) || { update() {} };
+  const fallsA2 = (L.STREAMS || []).map((S) => L.withRiver(S.pts, () => buildFalls({ scene, fh: terrain.fastHeight || height }))).filter(Boolean);      // (A2: one fall at the head of every mountain stream)
   // the houses of the town: clusters of ~26 m cells become destructible targets (the whole block crumbles together)
   { const cell = 26, map = new Map();
     for (const h of ctx.houses) { const k = Math.floor(h.x / cell) + ',' + Math.floor(h.z / cell); if (!map.has(k)) map.set(k, []); map.get(k).push(h); }
@@ -388,7 +403,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     if (tesla) { tesla.update(t, dt); if (extras.ballistas && !extras.ballistas.__ts) { extras.ballistas.__ts = 1; syncWeapons(); } }
     if (dlings) dlings.update(t, dt, camera);
     pe('tesla+dlings');
-    extras.update(t, dt, camera, lastP); pe('extras'); if (worksites) worksites.update(t, camera); if (defField) defField.update(t, camera); if (wsLife) wsLife.update(t, dt, camera); moat.update(t, dt, camera, lastP); pe('moat'); falls.update(t, dt, camera, lastP); levels.update(t, dt); vaults.update(t, dt, camera, lastP); pe('falls+levels+vaults');
+    extras.update(t, dt, camera, lastP); pe('extras'); if (worksites) worksites.update(t, camera); if (defField) defField.update(t, camera); if (wsLife) wsLife.update(t, dt, camera); moat.update(t, dt, camera, lastP); pe('moat'); falls.update(t, dt, camera, lastP); for (const f of fallsA2) f.update(t, dt, camera, lastP); levels.update(t, dt); vaults.update(t, dt, camera, lastP); pe('falls+levels+vaults');
     if (shakeReq.v > 0 && camera) {
       const d = camera.position.distanceTo(shakeReq.at || tmpV.set(0, 0, 0));
       shakeReq.out = shakeReq.v * Math.max(0, 1 - d / 160); shakeReq.v = Math.max(0, shakeReq.v - dt * 1.6);
@@ -457,12 +472,26 @@ export async function buildWorld(renderer, scene, Q, progress) {
     if (DEVLOG) console.info('[late] build ' + n + ' ' + (performance.now() - t0).toFixed(1) + 'ms');
   }
   // after the models: army + extra defenses, each into its own hidden bucket
-  let worksites = null, wsLife = null, wsLifeSteps = null, defField = null;
+  let worksites = null, wsLife = null, wsLifeSteps = null, defField = null, planned = null;
   const lateJobs = [
     // p38: the worksites (wood, stone, iron, gold, oil, farm, livestock, fisheries, slaughterhouse, greenhouse) — one hidden bucket, revealed like the rest
     // p38: the traps and the defensive buildings in front of the gates (defplan.js / defbuild.js)
     () => { const b = bucketFor('deffield'); const defers = []; curDefers = defers; try { defField = buildDefField(b, A.models.kit_def, terrain.fastHeight, { shadows: !!Q.shadows, level: levelOf('keep') || 30 }); ctx.levelHooks.push(() => { if (defField) defField.rebuild(levelOf('keep') || 30); }); } catch (e) { console.warn('deffield', e); } curDefers = null; revealQ.push({ b, defers }); },
-    () => { const b = bucketFor('worksites'); const defers = []; curDefers = defers; try { worksites = buildWorksites(b, A.models.kit_ws, terrain.fastHeight, { shadows: !!Q.shadows, castle: levelOf('keep') || 30 }); ctx.levelHooks.push(() => { if (worksites) worksites.rebuild(levelOf('keep') || 30); }); } catch (e) { console.warn('worksites', e); } curDefers = null; revealQ.push({ b, defers }); },
+    // p41: the planned town (B2 homes + B3 civic lots): the first job creates + queues the bake, three more bake one chunk each (<= 40 homes), the last drains what is left
+    () => {
+      if (!ctx.townTids) return;
+      const b = bucketFor('townplan'); const defers = []; curDefers = defers;
+      try {
+        planned = createPlannedTown({ scene: b, kitHomes: A.models.kit_homes, kitCivic: A.models.kit_civic, height: terrain.fastHeight, shadows: !!Q.shadows, ctx, tids: ctx.townTids, level: () => castleLevel(levelOf('keep')), civicCap: Q.level === 'low' ? 15 : 30 });
+        planned.rebuild(); ctx.levelHooks.push(() => { if (planned) planned.rebuild(); }); anim.push(() => { if (planned && !planned.idle) planned.tick(); });
+      } catch (e) { console.warn('planned town', e); planned = null; }
+      curDefers = null; revealQ.push({ b, defers });
+    },
+    () => { if (planned) try { planned.tick(); } catch (e) { console.warn('planned town', e); } },
+    () => { if (planned) try { planned.tick(); } catch (e) { console.warn('planned town', e); } },
+    () => { if (planned) try { planned.tick(); } catch (e) { console.warn('planned town', e); } },
+    () => { if (planned) try { while (!planned.idle) planned.tick(); } catch (e) { console.warn('planned town', e); } },
+    () => { const b = bucketFor('worksites'); const defers = []; curDefers = defers; try { worksites = buildWorksites(b, A.models.kit_ws, terrain.fastHeight, { shadows: !!Q.shadows, castle: levelOf('keep') || 30, kitC1: A.models.kit_c1, kitC2: A.models.kit_c2, kitC3: A.models.kit_c3, kitC4: A.models.kit_c4, smokeList: smokers }); ctx.levelHooks.push(() => { if (worksites) worksites.rebuild(levelOf('keep') || 30); }); } catch (e) { console.warn('worksites', e); } curDefers = null; revealQ.push({ b, defers }); },
     // p38: the people, animals, boats and carts of the worksites (wslife.js) — the crowds are created in pieces, one late job each, so no frame stalls
     () => {
       const b = bucketFor('wslife'); const defers = []; curDefers = defers;
@@ -478,7 +507,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     () => { if (wsLifeSteps && wsLifeSteps.length) try { wsLifeSteps.shift()(); } catch (e) { console.warn('wslife step', e); } },
     () => { while (wsLifeSteps && wsLifeSteps.length) try { wsLifeSteps.shift()(); } catch (e) { console.warn('wslife step', e); } },
     () => { const b = bucketFor('army'); const defers = []; curDefers = defers; try { const la = lateApi(b); la.armyLv = armyLv; army = buildArmy(la) || army; if (armyLv && army.setTiers) army.setTiers(armyLv); } catch (e) { console.warn('army', e); } curDefers = null; revealQ.push({ b, defers }); },
-    () => { const b = bucketFor('defenses'); const defers = []; curDefers = defers; try { extras = lateDefenses(lateApi(b)) || extras; } catch (e) { console.warn('defenses', e); } curDefers = null; revealQ.push({ b, defers }); },
+    () => { const b = bucketFor('defenses'); const defers = []; curDefers = defers; try { extras = lateDefenses(lateApi(b)) || extras; if (ctx.rings) ctx.rings.apply(true); } catch (e) { console.warn('defenses', e); } curDefers = null; revealQ.push({ b, defers }); },
   ];
   // called every frame from update(): at most ~6 ms of late building per frame
   function lateTick() {
@@ -509,6 +538,8 @@ export async function buildWorld(renderer, scene, Q, progress) {
   const levels = createLevels({ scene, M, ctx, TROOF, flags, town: ctx.town, mines: ctx.mines, Q });
   const LV = levels.LV, setLevel = (n) => levels.setLevel(n);
   setLevel(Q.level0 || 20);
+  // A1: one row of wall up to level 10, two up to 20, three up to 30 (a1_rings.js: the rings that are not built yet at the wall's level are hidden — no rebuild, no draw call)
+  if (ctx.rings) { ctx.levelHooks.push(() => ctx.rings.apply()); ctx.rings.install({ scene, weapons: () => extras.ballistas || null, patrols, coils: { up: () => { try { if (tesla) tesla.set(teslaN); } catch (e) { /* not built yet */ } }, hide: (id) => { try { if (tesla) tesla.hide(id); } catch (e) { /* not built yet */ } } } }); }
   // owned creatures (dragons for players who have one — the owner does for now)
   function setOption(k, v) {
     if (k === 'level') setLevel(v);
@@ -529,12 +560,14 @@ export async function buildWorld(renderer, scene, Q, progress) {
       for (const u of units.units) u.root.visible = false;               // gate guards, villagers, the stable's trainer and groom: not in the enemy base
       dragon.root.visible = false; for (const g of units.giants) g.visible = false; for (const b of badges) b.sprite.visible = false; if (patrols) patrols.kinds.forEach((k) => { k.group.visible = false; });
       if (extras.ballistas) extras.ballistas.setManual(true);
+      if (ctx.rings) ctx.rings.setBattle(true);                          // (A1: an attack still shows the whole base, all three rings, until the battle base is reworked)
     } else {
       const o = bat; bat = null;
       for (const [c, v] of o.stage) c.visible = v;
       units.units.forEach((u, i) => { u.root.visible = o.people[i] !== false; });
       dragon.root.visible = o.dragon && OWN.dragon; units.giants.forEach((g, i) => { g.visible = o.giants[i]; }); badges.forEach((b, i) => { b.sprite.visible = o.badges[i]; }); if (patrols) patrols.kinds.forEach((k, i) => { k.group.visible = o.patrol[i]; });
       flames.reset(); flags.reset(); if (extras.ballistas) { extras.ballistas.setManual(false); extras.ballistas.reset(); }
+      if (ctx.rings) ctx.rings.setBattle(false);
       keepCampClear();
     }
   }
@@ -602,7 +635,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
   let tesla = null, armyLv = null, teslaN = 0, dlings = null;
   const syncWeapons = () => { if (extras.ballistas && extras.ballistas.replace) extras.ballistas.replace(tesla ? tesla.ids() : []); };
   const teslaApi = {
-    set(n) { teslaN = n | 0; if (!(n > 0) && !tesla) return; try { tesla = tesla || createTesla({ scene, targets: ctx.targets, meta: baseMetaNow(), height: terrain.fastHeight || height }); tesla.set(n); syncWeapons(); } catch (e) { console.warn('tesla', e); } },
+    set(n) { teslaN = n | 0; if (!(n > 0) && !tesla) return; try { tesla = tesla || createTesla({ scene, targets: ctx.targets, meta: baseMetaNow(), height: terrain.fastHeight || height }); tesla.set(n); syncWeapons(); if (ctx.rings) ctx.rings.apply(true); } catch (e) { console.warn('tesla', e); } },
     orb: (id) => (tesla ? tesla.orb(id) : null), fire: (id) => tesla && tesla.fire(id), hide: (id) => tesla && tesla.hide(id), get count() { return tesla ? tesla.count : 0; },
     sync: syncWeapons, ids: () => (tesla ? tesla.ids() : []),
   };
@@ -627,7 +660,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
   // the green Dragonlings at the Lair (dragonling_home.js): an egg until the shop's egg is bought, then two of them
   const setDragonlings = (owned) => { if (!dlings) { try { dlings = createHomeDragonlings({ scene, height: terrain.fastHeight || height }); ctx.levelHooks.push(() => dlings.refresh()); } catch (e) { console.warn('dragonlings', e); return; } } dlings.set(owned); };
   return {
-    update, setTime, picks, water, get keptClear() { return world_keepClear; }, get lod() { return forest.ez ? forest.ez.lod : null; }, fastHeight: terrain.fastHeight, setBattle, targetDown, clearZones, key, stage, get ballistas() { return extras.ballistas || null; }, get dragon() { return dragon; }, giants: units.giants, shake: shakeReq, creatures, setOption, startLate, revealLate, lateProgress, setLateBudget, patrols, events, get late() { return extras; },
+    rings: ctx.rings, update, setTime, picks, water, get keptClear() { return world_keepClear; }, get lod() { return forest.ez ? forest.ez.lod : null; }, fastHeight: terrain.fastHeight, setBattle, targetDown, clearZones, key, stage, get ballistas() { return extras.ballistas || null; }, get dragon() { return dragon; }, giants: units.giants, shake: shakeReq, creatures, setOption, startLate, revealLate, lateProgress, setLateBudget, patrols, events, get late() { return extras; },
     setWeather: (m, snap) => weather.setMode(m, snap), weatherIcon: (base) => weather.icon() || base, weather,
     // p37 (old N6): a phone's GPU that lost its context comes back with every target EMPTY (the picture went half as bright, the ground black): paint again what was drawn into targets
     restoreGpu() { try { if (terrain.bake && terrain.bake.redo) terrain.bake.redo(null); } catch (e) { console.warn('restore ground', e); } try { rebakeAtlases(renderer); } catch (e) { console.warn('restore cards', e); }

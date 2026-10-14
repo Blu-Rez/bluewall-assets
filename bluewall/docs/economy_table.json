@@ -1,0 +1,1798 @@
+{
+ "version": "E1-1",
+ "date": "2026-10-07",
+ "ph": "every number is a placeholder (ph) for the server owner; the sim only proves pacing",
+ "level_factor": {
+  "formula": "1.13^(L-1)",
+  "x10": 3.0,
+  "x20": 10.2,
+  "x30": 34.62
+ },
+ "levels_follow_castle": true,
+ "resources": {
+  "wood": {
+   "fa": "چوب",
+   "store": "wood",
+   "class": "raw",
+   "food_value": 0
+  },
+  "planks": {
+   "fa": "تخته",
+   "store": "wood",
+   "class": "processed",
+   "food_value": 0
+  },
+  "stone": {
+   "fa": "سنگ",
+   "store": "stone",
+   "class": "raw",
+   "food_value": 0
+  },
+  "cut_stone": {
+   "fa": "سنگ تراشیده",
+   "store": "stone",
+   "class": "processed",
+   "food_value": 0
+  },
+  "iron_ore": {
+   "fa": "سنگ آهن",
+   "store": "iron",
+   "class": "raw",
+   "food_value": 0
+  },
+  "iron_bars": {
+   "fa": "شمش آهن",
+   "store": "iron",
+   "class": "processed",
+   "food_value": 0
+  },
+  "gold_ore": {
+   "fa": "سنگ طلا",
+   "store": "treasury",
+   "class": "raw",
+   "food_value": 0
+  },
+  "gold_dust": {
+   "fa": "خاک طلا",
+   "store": "treasury",
+   "class": "raw",
+   "food_value": 0
+  },
+  "coins": {
+   "fa": "سکه",
+   "store": "treasury",
+   "class": "processed",
+   "food_value": 0
+  },
+  "crude": {
+   "fa": "نفت خام",
+   "store": "oil",
+   "class": "raw",
+   "food_value": 0
+  },
+  "oil": {
+   "fa": "نفت",
+   "store": "oil",
+   "class": "processed",
+   "food_value": 0
+  },
+  "wheat": {
+   "fa": "گندم",
+   "store": "food",
+   "class": "raw",
+   "food_value": 0
+  },
+  "flour": {
+   "fa": "آرد",
+   "store": "food",
+   "class": "processed",
+   "food_value": 0
+  },
+  "bread": {
+   "fa": "نان",
+   "store": "food",
+   "class": "food",
+   "food_value": 1.0
+  },
+  "vegetables": {
+   "fa": "سبزی",
+   "store": "food",
+   "class": "food",
+   "food_value": 0.8
+  },
+  "livestock": {
+   "fa": "دام",
+   "store": "food",
+   "class": "raw",
+   "food_value": 0
+  },
+  "carcass": {
+   "fa": "لاشه",
+   "store": "food",
+   "class": "food",
+   "food_value": 0.8
+  },
+  "meat": {
+   "fa": "گوشت",
+   "store": "food",
+   "class": "food",
+   "food_value": 1.5
+  },
+  "fish": {
+   "fa": "ماهی",
+   "store": "food",
+   "class": "raw",
+   "food_value": 0
+  },
+  "dried_fish": {
+   "fa": "ماهی خشک",
+   "store": "food",
+   "class": "food",
+   "food_value": 1.5
+  }
+ },
+ "kinds": [
+  {
+   "id": "lumber",
+   "fa": "چوب‌بری",
+   "role": "S",
+   "place": "forest",
+   "unlock": 1,
+   "count_steps": [
+    [
+     1,
+     2
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     22,
+     4
+    ]
+   ],
+   "count_at": {
+    "5": 2,
+    "10": 2,
+    "20": 3,
+    "30": 4
+   },
+   "use": "چوب: ساخت‌وساز همه‌ی ارتقاها + خوراک اره‌کشی",
+   "place_price_hours": {
+    "wood": 3,
+    "stone": 0
+   },
+   "place_crew_hours": 1,
+   "out": {
+    "res": "wood",
+    "base_per_h": 40,
+    "per_h_at_unlock": 40.0,
+    "per_h_at_30": 1384.6
+   },
+   "store": "wood"
+  },
+  {
+   "id": "quarry",
+   "fa": "معدن سنگ",
+   "role": "S",
+   "place": "mount",
+   "unlock": 2,
+   "count_steps": [
+    [
+     2,
+     1
+    ],
+    [
+     6,
+     2
+    ],
+    [
+     20,
+     3
+    ]
+   ],
+   "count_at": {
+    "5": 1,
+    "10": 2,
+    "20": 3,
+    "30": 3
+   },
+   "use": "سنگ: ساخت‌وساز (دیوار و برج بیشتر) + خوراک سنگ‌تراشی",
+   "place_price_hours": {
+    "wood": 3,
+    "stone": 0
+   },
+   "place_crew_hours": 1,
+   "out": {
+    "res": "stone",
+    "base_per_h": 40,
+    "per_h_at_unlock": 45.2,
+    "per_h_at_30": 1384.6
+   },
+   "store": "stone"
+  },
+  {
+   "id": "iron",
+   "fa": "معدن آهن",
+   "role": "S",
+   "place": "mount",
+   "unlock": 8,
+   "count_steps": [
+    [
+     8,
+     1
+    ],
+    [
+     14,
+     2
+    ],
+    [
+     26,
+     3
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 1,
+    "20": 2,
+    "30": 3
+   },
+   "use": "سنگ آهن: خوراک کوره‌ی ذوب",
+   "place_price_hours": {
+    "wood": 3,
+    "stone": 0
+   },
+   "place_crew_hours": 1,
+   "out": {
+    "res": "iron_ore",
+    "base_per_h": 28,
+    "per_h_at_unlock": 65.9,
+    "per_h_at_30": 969.2
+   },
+   "store": "iron"
+  },
+  {
+   "id": "gold",
+   "fa": "معدن طلا",
+   "role": "S",
+   "place": "mount",
+   "unlock": 14,
+   "count_steps": [
+    [
+     14,
+     1
+    ],
+    [
+     22,
+     2
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 0,
+    "20": 1,
+    "30": 2
+   },
+   "use": "سنگ طلا: خوراک ضرابخانه",
+   "place_price_hours": {
+    "wood": 3,
+    "stone": 0
+   },
+   "place_crew_hours": 1,
+   "out": {
+    "res": "gold_ore",
+    "base_per_h": 8,
+    "per_h_at_unlock": 39.2,
+    "per_h_at_30": 276.9
+   },
+   "store": "treasury"
+  },
+  {
+   "id": "panning",
+   "fa": "طلاشویی رود",
+   "role": "S",
+   "place": "water",
+   "unlock": 12,
+   "count_steps": [
+    [
+     12,
+     1
+    ],
+    [
+     24,
+     2
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 0,
+    "20": 1,
+    "30": 2
+   },
+   "use": "خاک طلا: خوراک ضرابخانه",
+   "place_price_hours": {
+    "wood": 3,
+    "stone": 0
+   },
+   "place_crew_hours": 1,
+   "out": {
+    "res": "gold_dust",
+    "base_per_h": 5,
+    "per_h_at_unlock": 19.2,
+    "per_h_at_30": 173.1
+   },
+   "store": "treasury"
+  },
+  {
+   "id": "oil",
+   "fa": "میدان نفت",
+   "role": "S",
+   "place": "free",
+   "unlock": 17,
+   "count_steps": [
+    [
+     17,
+     1
+    ],
+    [
+     26,
+     2
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 0,
+    "20": 1,
+    "30": 2
+   },
+   "use": "نفت خام: خوراک پالایشگاه",
+   "place_price_hours": {
+    "wood": 3,
+    "stone": 0
+   },
+   "place_crew_hours": 1,
+   "out": {
+    "res": "crude",
+    "base_per_h": 12,
+    "per_h_at_unlock": 84.8,
+    "per_h_at_30": 415.4
+   },
+   "store": "oil"
+  },
+  {
+   "id": "farm",
+   "fa": "مزرعه",
+   "role": "S",
+   "place": "free",
+   "unlock": 3,
+   "count_steps": [
+    [
+     3,
+     1
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     18,
+     3
+    ],
+    [
+     27,
+     4
+    ]
+   ],
+   "count_at": {
+    "5": 1,
+    "10": 2,
+    "20": 3,
+    "30": 4
+   },
+   "use": "گندم: خوراک آسیاب",
+   "place_price_hours": {
+    "wood": 3,
+    "stone": 0
+   },
+   "place_crew_hours": 1,
+   "out": {
+    "res": "wheat",
+    "base_per_h": 45,
+    "per_h_at_unlock": 57.5,
+    "per_h_at_30": 1557.7
+   },
+   "store": "food"
+  },
+  {
+   "id": "greenhouse",
+   "fa": "گلخانه",
+   "role": "S",
+   "place": "free",
+   "unlock": 11,
+   "count_steps": [
+    [
+     11,
+     1
+    ],
+    [
+     20,
+     2
+    ],
+    [
+     28,
+     3
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 0,
+    "20": 2,
+    "30": 3
+   },
+   "use": "سبزی: خوراک ارتش (مستقیم)",
+   "place_price_hours": {
+    "wood": 3,
+    "stone": 0
+   },
+   "place_crew_hours": 1,
+   "out": {
+    "res": "vegetables",
+    "base_per_h": 36,
+    "per_h_at_unlock": 122.2,
+    "per_h_at_30": 1246.2
+   },
+   "store": "food"
+  },
+  {
+   "id": "livestock",
+   "fa": "دامداری",
+   "role": "S",
+   "place": "free",
+   "unlock": 5,
+   "count_steps": [
+    [
+     5,
+     1
+    ],
+    [
+     14,
+     2
+    ],
+    [
+     24,
+     3
+    ]
+   ],
+   "count_at": {
+    "5": 1,
+    "10": 1,
+    "20": 2,
+    "30": 3
+   },
+   "use": "دام: خوراک قصابی و کشتارگاه",
+   "place_price_hours": {
+    "wood": 3,
+    "stone": 0
+   },
+   "place_crew_hours": 1,
+   "out": {
+    "res": "livestock",
+    "base_per_h": 12,
+    "per_h_at_unlock": 19.6,
+    "per_h_at_30": 415.4
+   },
+   "store": "food"
+  },
+  {
+   "id": "slaughter",
+   "fa": "کشتارگاه",
+   "role": "S/P",
+   "place": "free",
+   "unlock": 9,
+   "count_steps": [
+    [
+     9,
+     1
+    ],
+    [
+     20,
+     2
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 1,
+    "20": 2,
+    "30": 2
+   },
+   "use": "لاشه: خوراک ارتش (ارزون و فراوان)",
+   "place_price_hours": {
+    "wood": 4,
+    "stone": 3
+   },
+   "place_crew_hours": 2,
+   "proc": {
+    "in": [
+     "livestock"
+    ],
+    "out": "carcass",
+    "ratio": 2.0,
+    "throughput_in_per_h": 24,
+    "throughput_at_unlock": 63.8,
+    "throughput_at_30": 830.8
+   },
+   "store": "food"
+  },
+  {
+   "id": "fishery",
+   "fa": "ماهی‌گیری",
+   "role": "S",
+   "place": "water",
+   "unlock": 6,
+   "count_steps": [
+    [
+     6,
+     1
+    ],
+    [
+     13,
+     2
+    ],
+    [
+     24,
+     3
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 1,
+    "20": 2,
+    "30": 3
+   },
+   "use": "ماهی: خوراک دودخانه",
+   "place_price_hours": {
+    "wood": 3,
+    "stone": 0
+   },
+   "place_crew_hours": 1,
+   "out": {
+    "res": "fish",
+    "base_per_h": 30,
+    "per_h_at_unlock": 55.3,
+    "per_h_at_30": 1038.5
+   },
+   "store": "food"
+  },
+  {
+   "id": "sawmill",
+   "fa": "اره‌کشی",
+   "role": "P",
+   "place": "free",
+   "unlock": 4,
+   "count_steps": [
+    [
+     4,
+     1
+    ],
+    [
+     18,
+     2
+    ]
+   ],
+   "count_at": {
+    "5": 1,
+    "10": 1,
+    "20": 2,
+    "30": 2
+   },
+   "use": "تخته: ساخت‌وساز (از لول 4) + خونه‌ها",
+   "place_price_hours": {
+    "wood": 4,
+    "stone": 3
+   },
+   "place_crew_hours": 2,
+   "proc": {
+    "in": [
+     "wood"
+    ],
+    "out": "planks",
+    "ratio": 0.5,
+    "throughput_in_per_h": 120,
+    "throughput_at_unlock": 173.1,
+    "throughput_at_30": 4153.9
+   },
+   "store": "wood"
+  },
+  {
+   "id": "masonry",
+   "fa": "سنگ‌تراشی",
+   "role": "P",
+   "place": "free",
+   "unlock": 5,
+   "count_steps": [
+    [
+     5,
+     1
+    ],
+    [
+     18,
+     2
+    ]
+   ],
+   "count_at": {
+    "5": 1,
+    "10": 1,
+    "20": 2,
+    "30": 2
+   },
+   "use": "سنگ تراشیده: دیوار، برج و ساختمون‌های شهری",
+   "place_price_hours": {
+    "wood": 4,
+    "stone": 3
+   },
+   "place_crew_hours": 2,
+   "proc": {
+    "in": [
+     "stone"
+    ],
+    "out": "cut_stone",
+    "ratio": 0.5,
+    "throughput_in_per_h": 90,
+    "throughput_at_unlock": 146.7,
+    "throughput_at_30": 3115.4
+   },
+   "store": "stone"
+  },
+  {
+   "id": "smelter",
+   "fa": "کوره‌ی ذوب",
+   "role": "P",
+   "place": "free",
+   "unlock": 9,
+   "count_steps": [
+    [
+     9,
+     1
+    ],
+    [
+     22,
+     2
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 1,
+    "20": 1,
+    "30": 2
+   },
+   "use": "شمش آهن: تجهیزات سرباز + آهنگری",
+   "place_price_hours": {
+    "wood": 4,
+    "stone": 3
+   },
+   "place_crew_hours": 2,
+   "proc": {
+    "in": [
+     "iron_ore"
+    ],
+    "out": "iron_bars",
+    "ratio": 0.5,
+    "throughput_in_per_h": 90,
+    "throughput_at_unlock": 239.3,
+    "throughput_at_30": 3115.4
+   },
+   "store": "iron"
+  },
+  {
+   "id": "mint",
+   "fa": "ضرابخانه",
+   "role": "P",
+   "place": "free",
+   "unlock": 15,
+   "count_steps": [
+    [
+     15,
+     1
+    ],
+    [
+     25,
+     2
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 0,
+    "20": 1,
+    "30": 2
+   },
+   "use": "سکه: طلسم‌ها + ساختمون شهری",
+   "place_price_hours": {
+    "wood": 4,
+    "stone": 3
+   },
+   "place_crew_hours": 2,
+   "proc": {
+    "in": [
+     "gold_ore",
+     "gold_dust"
+    ],
+    "out": "coins",
+    "ratio": 4.0,
+    "throughput_in_per_h": 24,
+    "throughput_at_unlock": 132.8,
+    "throughput_at_30": 830.8
+   },
+   "store": "treasury"
+  },
+  {
+   "id": "refinery",
+   "fa": "پالایشگاه",
+   "role": "P",
+   "place": "free",
+   "unlock": 18,
+   "count_steps": [
+    [
+     18,
+     1
+    ],
+    [
+     27,
+     2
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 0,
+    "20": 1,
+    "30": 2
+   },
+   "use": "نفت: برج آتشین و تله‌ی شعله",
+   "place_price_hours": {
+    "wood": 4,
+    "stone": 3
+   },
+   "place_crew_hours": 2,
+   "proc": {
+    "in": [
+     "crude"
+    ],
+    "out": "oil",
+    "ratio": 0.5,
+    "throughput_in_per_h": 36,
+    "throughput_at_unlock": 287.5,
+    "throughput_at_30": 1246.2
+   },
+   "store": "oil"
+  },
+  {
+   "id": "mill",
+   "fa": "آسیاب",
+   "role": "P",
+   "place": "free",
+   "unlock": 4,
+   "count_steps": [
+    [
+     4,
+     1
+    ],
+    [
+     16,
+     2
+    ]
+   ],
+   "count_at": {
+    "5": 1,
+    "10": 1,
+    "20": 2,
+    "30": 2
+   },
+   "use": "آرد: خوراک نانوایی",
+   "place_price_hours": {
+    "wood": 4,
+    "stone": 3
+   },
+   "place_crew_hours": 2,
+   "proc": {
+    "in": [
+     "wheat"
+    ],
+    "out": "flour",
+    "ratio": 1.0,
+    "throughput_in_per_h": 135,
+    "throughput_at_unlock": 194.8,
+    "throughput_at_30": 4673.1
+   },
+   "store": "food"
+  },
+  {
+   "id": "bakery",
+   "fa": "نانوایی",
+   "role": "P",
+   "place": "free",
+   "unlock": 5,
+   "count_steps": [
+    [
+     5,
+     1
+    ],
+    [
+     16,
+     2
+    ],
+    [
+     26,
+     3
+    ]
+   ],
+   "count_at": {
+    "5": 1,
+    "10": 1,
+    "20": 2,
+    "30": 3
+   },
+   "use": "نان: خوراک ارتش",
+   "place_price_hours": {
+    "wood": 4,
+    "stone": 3
+   },
+   "place_crew_hours": 2,
+   "proc": {
+    "in": [
+     "flour"
+    ],
+    "out": "bread",
+    "ratio": 1.0,
+    "throughput_in_per_h": 135,
+    "throughput_at_unlock": 220.1,
+    "throughput_at_30": 4673.1
+   },
+   "store": "food"
+  },
+  {
+   "id": "butcher",
+   "fa": "قصابی",
+   "role": "P",
+   "place": "free",
+   "unlock": 7,
+   "count_steps": [
+    [
+     7,
+     1
+    ],
+    [
+     18,
+     2
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 1,
+    "20": 2,
+    "30": 2
+   },
+   "use": "گوشت: خوراک ارتش (کیفیت بالا)",
+   "place_price_hours": {
+    "wood": 4,
+    "stone": 3
+   },
+   "place_crew_hours": 2,
+   "proc": {
+    "in": [
+     "livestock"
+    ],
+    "out": "meat",
+    "ratio": 3.0,
+    "throughput_in_per_h": 36,
+    "throughput_at_unlock": 75.0,
+    "throughput_at_30": 1246.2
+   },
+   "store": "food"
+  },
+  {
+   "id": "smokehouse",
+   "fa": "دودخانه‌ی ماهی",
+   "role": "P",
+   "place": "water",
+   "unlock": 8,
+   "count_steps": [
+    [
+     8,
+     1
+    ],
+    [
+     20,
+     2
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 1,
+    "20": 2,
+    "30": 2
+   },
+   "use": "ماهی خشک: خوراک ارتش (کیفیت بالا)",
+   "place_price_hours": {
+    "wood": 4,
+    "stone": 3
+   },
+   "place_crew_hours": 2,
+   "proc": {
+    "in": [
+     "fish"
+    ],
+    "out": "dried_fish",
+    "ratio": 1.0,
+    "throughput_in_per_h": 90,
+    "throughput_at_unlock": 211.7,
+    "throughput_at_30": 3115.4
+   },
+   "store": "food"
+  },
+  {
+   "id": "jeweler",
+   "fa": "جواهرساز",
+   "role": "P",
+   "place": "free",
+   "unlock": 20,
+   "count_steps": [
+    [
+     20,
+     1
+    ],
+    [
+     28,
+     2
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 0,
+    "20": 1,
+    "30": 2
+   },
+   "use": "تراش جواهر برای تزئین قلعه و پرچم؛ فقط ظاهر، اقتصاد جواهر رو دست نمی‌زنه",
+   "place_price_hours": {
+    "wood": 4,
+    "stone": 3
+   },
+   "place_crew_hours": 2,
+   "proc": {
+    "in": [
+     "gems"
+    ],
+    "out": "cut_gems",
+    "ratio": 1.0,
+    "throughput_in_per_h": 0,
+    "throughput_at_unlock": 0.0,
+    "throughput_at_30": 0.0
+   },
+   "store": "treasury"
+  },
+  {
+   "id": "stores",
+   "fa": "انبارها",
+   "role": "T",
+   "place": "free",
+   "unlock": 1,
+   "count_steps": [
+    [
+     1,
+     6
+    ]
+   ],
+   "count_at": {
+    "5": 6,
+    "10": 6,
+    "20": 6,
+    "30": 6
+   },
+   "use": "6 انبار: چوب / سنگ / آهن / خزانه / نفت / غذا؛ ظرفیت با لول بالا می‌ره",
+   "place_price_hours": {
+    "wood": 4,
+    "stone": 4
+   },
+   "place_crew_hours": 1,
+   "stores": {
+    "groups": [
+     "wood",
+     "stone",
+     "iron",
+     "treasury",
+     "oil",
+     "food"
+    ],
+    "cap_hours": 48,
+    "cap_at": {
+     "wood": {
+      "5": 6261,
+      "10": 11535,
+      "20": 58737,
+      "30": 265849
+     },
+     "stone": {
+      "5": 3130,
+      "10": 11535,
+      "20": 58737,
+      "30": 199387
+     },
+     "iron": {
+      "5": 0,
+      "10": 2994,
+      "20": 13705,
+      "30": 69785
+     },
+     "treasury": {
+      "5": 156,
+      "10": 757,
+      "20": 38849,
+      "30": 291188
+     },
+     "oil": {
+      "5": 0,
+      "10": 0,
+      "20": 2936,
+      "30": 19938
+     },
+     "food": {
+      "5": 0,
+      "10": 24743,
+      "20": 174155,
+      "30": 849389
+     }
+    }
+   }
+  },
+  {
+   "id": "cottage",
+   "fa": "کلبه",
+   "role": "H",
+   "place": "free",
+   "unlock": 1,
+   "count_steps": [
+    [
+     1,
+     3
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     8,
+     8
+    ],
+    [
+     12,
+     10
+    ],
+    [
+     16,
+     13
+    ],
+    [
+     20,
+     16
+    ],
+    [
+     26,
+     18
+    ],
+    [
+     30,
+     20
+    ]
+   ],
+   "count_at": {
+    "5": 5,
+    "10": 8,
+    "20": 16,
+    "30": 20
+   },
+   "use": "مردم عادی؛ مالیات",
+   "place_price_hours": {
+    "wood": 1,
+    "stone": 0.5
+   },
+   "place_crew_hours": 0.25,
+   "home": {
+    "residents": 4,
+    "wage_per_resident_h": 1.0,
+    "tax_per_h_per_home_at_10pct": {
+     "5": 0.65,
+     "10": 1.2,
+     "20": 4.08,
+     "30": 13.85
+    }
+   }
+  },
+  {
+   "id": "craftsman",
+   "fa": "خانه‌ی پیشه‌ور",
+   "role": "H",
+   "place": "free",
+   "unlock": 6,
+   "count_steps": [
+    [
+     6,
+     2
+    ],
+    [
+     12,
+     4
+    ],
+    [
+     18,
+     6
+    ],
+    [
+     24,
+     8
+    ],
+    [
+     30,
+     10
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 2,
+    "20": 6,
+    "30": 10
+   },
+   "use": "پیشه‌ورها؛ مالیات بیشتر",
+   "place_price_hours": {
+    "wood": 1.5,
+    "stone": 1.5
+   },
+   "place_crew_hours": 0.25,
+   "home": {
+    "residents": 6,
+    "wage_per_resident_h": 1.5,
+    "tax_per_h_per_home_at_10pct": {
+     "5": 1.47,
+     "10": 2.7,
+     "20": 9.18,
+     "30": 31.15
+    }
+   }
+  },
+  {
+   "id": "merchant",
+   "fa": "خانه‌ی تاجر",
+   "role": "H",
+   "place": "free",
+   "unlock": 12,
+   "count_steps": [
+    [
+     12,
+     2
+    ],
+    [
+     18,
+     4
+    ],
+    [
+     24,
+     7
+    ],
+    [
+     30,
+     10
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 0,
+    "20": 4,
+    "30": 10
+   },
+   "use": "تاجرها؛ مالیات خوب",
+   "place_price_hours": {
+    "wood": 2,
+    "stone": 3
+   },
+   "place_crew_hours": 0.25,
+   "home": {
+    "residents": 8,
+    "wage_per_resident_h": 2.5,
+    "tax_per_h_per_home_at_10pct": {
+     "5": 3.26,
+     "10": 6.01,
+     "20": 20.39,
+     "30": 69.23
+    }
+   }
+  },
+  {
+   "id": "noble",
+   "fa": "خانه‌ی اشراف",
+   "role": "H",
+   "place": "free",
+   "unlock": 20,
+   "count_steps": [
+    [
+     20,
+     1
+    ],
+    [
+     25,
+     3
+    ],
+    [
+     30,
+     5
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 0,
+    "20": 1,
+    "30": 5
+   },
+   "use": "اشراف؛ بیشترین مالیات",
+   "place_price_hours": {
+    "wood": 3,
+    "stone": 6
+   },
+   "place_crew_hours": 0.25,
+   "home": {
+    "residents": 10,
+    "wage_per_resident_h": 4.0,
+    "tax_per_h_per_home_at_10pct": {
+     "5": 6.52,
+     "10": 12.02,
+     "20": 40.79,
+     "30": 138.46
+    }
+   }
+  },
+  {
+   "id": "market",
+   "fa": "بازار",
+   "role": "C",
+   "place": "free",
+   "unlock": 3,
+   "count_steps": [
+    [
+     3,
+     1
+    ],
+    [
+     18,
+     2
+    ]
+   ],
+   "count_at": {
+    "5": 1,
+    "10": 1,
+    "20": 2,
+    "30": 2
+   },
+   "use": "تجارت: +5% مالیات در هر پله‌ی ظاهر (تا +25%) + کمی وفاداری",
+   "place_price_hours": {
+    "wood": 4,
+    "stone": 4
+   },
+   "place_crew_hours": 2,
+   "civic": {
+    "loyalty": 3,
+    "tax_bonus_per_tier": 0.05
+   }
+  },
+  {
+   "id": "tavern",
+   "fa": "میخانه",
+   "role": "C",
+   "place": "free",
+   "unlock": 6,
+   "count_steps": [
+    [
+     6,
+     1
+    ],
+    [
+     15,
+     2
+    ],
+    [
+     25,
+     3
+    ]
+   ],
+   "count_at": {
+    "5": 0,
+    "10": 1,
+    "20": 2,
+    "30": 3
+   },
+   "use": "وفاداری +8 هر کدوم",
+   "place_price_hours": {
+    "wood": 3,
+    "stone": 3
+   },
+   "place_crew_hours": 2,
+   "civic": {
+    "loyalty": 8
+   }
+  },
+  {
+   "id": "townhall",
+   "fa": "تالار شهر",
+   "role": "C",
+   "place": "free",
+   "unlock": 2,
+   "count_steps": [
+    [
+     2,
+     1
+    ]
+   ],
+   "count_at": {
+    "5": 1,
+    "10": 1,
+    "20": 1,
+    "30": 1
+   },
+   "use": "مالیات رو جمع می‌کنه؛ نرخ مالیات 0 تا 30% اینجا تنظیم می‌شه",
+   "place_price_hours": {
+    "wood": 6,
+    "stone": 6
+   },
+   "place_crew_hours": 2,
+   "civic": {}
+  },
+  {
+   "id": "chapel",
+   "fa": "کلیسا",
+   "role": "C",
+   "place": "free",
+   "unlock": 1,
+   "count_steps": [
+    [
+     1,
+     1
+    ],
+    [
+     12,
+     2
+    ],
+    [
+     24,
+     3
+    ]
+   ],
+   "count_at": {
+    "5": 1,
+    "10": 1,
+    "20": 2,
+    "30": 3
+   },
+   "use": "وفاداری +6 هر کدوم",
+   "place_price_hours": {
+    "wood": 4,
+    "stone": 6
+   },
+   "place_crew_hours": 2,
+   "civic": {
+    "loyalty": 6
+   }
+  },
+  {
+   "id": "well",
+   "fa": "چاه",
+   "role": "C",
+   "place": "free",
+   "unlock": 1,
+   "count_steps": [
+    [
+     1,
+     2
+    ],
+    [
+     8,
+     4
+    ],
+    [
+     14,
+     6
+    ],
+    [
+     22,
+     8
+    ],
+    [
+     28,
+     10
+    ]
+   ],
+   "count_at": {
+    "5": 2,
+    "10": 4,
+    "20": 6,
+    "30": 10
+   },
+   "use": "آب شهر: هر چاه 40 نفر؛ بیشتر از ظرفیتِ آب مالیات نمی‌دن",
+   "place_price_hours": {
+    "wood": 0.5,
+    "stone": 1
+   },
+   "place_crew_hours": 0.5,
+   "civic": {
+    "loyalty": 1,
+    "serves": 40
+   }
+  }
+ ],
+ "construction": {
+  "share": 0.3,
+  "floor": 5,
+  "needs_from": {
+   "wood": 1,
+   "stone": 2,
+   "planks": 4,
+   "cut_stone": 7,
+   "iron_bars": 9,
+   "oil": 18,
+   "food": 6
+  },
+  "weights": {
+   "keep": {
+    "wood": 1.0,
+    "stone": 1.0,
+    "planks": 0.6,
+    "cut_stone": 0.6,
+    "iron_bars": 0.3
+   },
+   "wall": {
+    "stone": 1.5,
+    "cut_stone": 1.2,
+    "wood": 0.3,
+    "iron_bars": 0.4
+   },
+   "towers": {
+    "stone": 1.2,
+    "cut_stone": 1.0,
+    "wood": 0.3,
+    "iron_bars": 0.5,
+    "oil": 0.4
+   },
+   "training": {
+    "wood": 0.8,
+    "planks": 0.6,
+    "stone": 0.4,
+    "iron_bars": 0.5
+   },
+   "barracks": {
+    "wood": 0.8,
+    "planks": 0.6,
+    "stone": 0.4,
+    "iron_bars": 0.6
+   },
+   "stable": {
+    "wood": 1.0,
+    "planks": 0.8,
+    "stone": 0.3,
+    "iron_bars": 0.6
+   },
+   "workshop": {
+    "wood": 0.8,
+    "planks": 0.6,
+    "stone": 0.4,
+    "iron_bars": 1.2
+   },
+   "lair": {
+    "wood": 0.6,
+    "planks": 0.4,
+    "stone": 0.8,
+    "cut_stone": 0.6,
+    "iron_bars": 0.4
+   },
+   "forge": {
+    "wood": 0.4,
+    "stone": 0.4,
+    "iron_bars": 1.5
+   },
+   "mine_ruby": {
+    "wood": 0.4,
+    "stone": 0.6,
+    "cut_stone": 0.4
+   },
+   "mine_emerald": {
+    "wood": 0.4,
+    "stone": 0.6,
+    "cut_stone": 0.4
+   },
+   "mine_turq": {
+    "wood": 0.4,
+    "stone": 0.6,
+    "cut_stone": 0.4
+   },
+   "vault_ruby": {
+    "wood": 0.4,
+    "stone": 0.6,
+    "cut_stone": 0.4
+   },
+   "vault_emerald": {
+    "wood": 0.4,
+    "stone": 0.6,
+    "cut_stone": 0.4
+   },
+   "vault_turq": {
+    "wood": 0.4,
+    "stone": 0.6,
+    "cut_stone": 0.4
+   }
+  },
+  "note": "price(res) = max(floor*w, share*w*hours_of_build*output_per_h_of_one_building_of_res_at_level_below); gems unchanged; round rule unchanged; resource kinds are not in progress.STRUCTS",
+  "sample": {
+   "keep": {
+    "to": 10,
+    "wood": 5503,
+    "stone": 5503,
+    "planks": 1651,
+    "cut_stone": 1651,
+    "iron_bars": 578
+   },
+   "wall": {
+    "to": 10,
+    "stone": 5503,
+    "cut_stone": 2202,
+    "wood": 1101,
+    "iron_bars": 514
+   },
+   "forge": {
+    "to": 10,
+    "wood": 1615,
+    "stone": 1615,
+    "iron_bars": 2119
+   },
+   "lair": {
+    "to": 10,
+    "wood": 2202,
+    "planks": 734,
+    "stone": 2935,
+    "cut_stone": 1101,
+    "iron_bars": 514
+   }
+  }
+ },
+ "stores": {
+  "cap_hours": 48,
+  "rule": "max(48 h of the resource's output, 1.25 x dearest price of the next round)",
+  "cap": {
+   "wood": {
+    "5": 6261,
+    "10": 11535,
+    "20": 58737,
+    "30": 265849
+   },
+   "planks": {
+    "5": 3130,
+    "10": 5767,
+    "20": 29368,
+    "30": 132924
+   },
+   "stone": {
+    "5": 3130,
+    "10": 11535,
+    "20": 58737,
+    "30": 199387
+   },
+   "cut_stone": {
+    "5": 0,
+    "10": 5767,
+    "20": 29368,
+    "30": 99693
+   },
+   "iron_bars": {
+    "5": 0,
+    "10": 2994,
+    "20": 13705,
+    "30": 69785
+   },
+   "oil": {
+    "5": 0,
+    "10": 0,
+    "20": 2936,
+    "30": 19938
+   },
+   "coins": {
+    "5": 156,
+    "10": 757,
+    "20": 38849,
+    "30": 291188
+   },
+   "food": {
+    "5": 0,
+    "10": 24743,
+    "20": 174155,
+    "30": 849389
+   }
+  }
+ },
+ "army": {
+  "gear_hours_of_one_smelter_chain_per_lost_space": 0.007,
+  "gear_from_castle": 9,
+  "upkeep_food_per_space_h": 0.4,
+  "upkeep_level_factor": true,
+  "short_food": "training slower: x(0.5 + 0.5 * fed_share); never kills soldiers",
+  "food_variety_bonus": {
+   "2": 0.1,
+   "3": 0.2,
+   "4+": 0.3
+  },
+  "oil_per_defended_raid_hours_of_one_refinery": 4.0,
+  "spell_coin_hours_of_default_tax_per_space": 1.0
+ },
+ "tax": {
+  "min": 0,
+  "max": 30,
+  "default": 10,
+  "step": 1,
+  "collect_cap_hours": 24,
+  "uncollected_stolen": 0.25,
+  "formula": "sum(homes x residents x wage) x rate x 1.13^(L-1) x (1 + market bonus) x loyalty factor; residents above well capacity pay nothing",
+  "market_bonus_per_tier": 0.05,
+  "stored_in": "townhall panel (setting)",
+  "at_default_10pct": {
+   "5": 3.3,
+   "10": 15.8,
+   "20": 279.1,
+   "30": 2466.4
+  },
+  "at_30pct": {
+   "5": 9.8,
+   "10": 47.3,
+   "20": 837.3,
+   "30": 7399.1
+  },
+  "residents": {
+   "5": 20,
+   "10": 44,
+   "20": 142,
+   "30": 270
+  },
+  "water_capacity": {
+   "5": 80,
+   "10": 160,
+   "20": 240,
+   "30": 400
+  }
+ },
+ "loyalty": {
+  "per_tax_pct": -3,
+  "base": 100,
+  "threshold": 50,
+  "slow_floor": 0.5,
+  "move_per_hour": 4,
+  "start": 70,
+  "well_bonus_cap": 5,
+  "formula": "target = clamp(100 - 3 x tax% + chapel 6 + tavern 8 + market 3 + well 1 (5 wells at most), 0, 100); moves 4 points per hour toward the target",
+  "slow": "below 50 every producer works x(0.5 + 0.5 x loyalty / 50)",
+  "target_at": {
+   "5": {
+    "0": 100,
+    "10": 81,
+    "20": 51,
+    "30": 21
+   },
+   "10": {
+    "0": 100,
+    "10": 91,
+    "20": 61,
+    "30": 31
+   },
+   "20": {
+    "0": 100,
+    "10": 100,
+    "20": 79,
+    "30": 49
+   },
+   "30": {
+    "0": 100,
+    "10": 100,
+    "20": 93,
+    "30": 63
+   }
+  }
+ },
+ "raid": {
+  "bot_hours": 6.0,
+  "player_hours": 8.0,
+  "store_share_cap": 0.25,
+  "resources": [
+   "wood",
+   "stone",
+   "iron_bars",
+   "coins",
+   "oil",
+   "food"
+  ],
+  "rule": "a win also takes from the six stores of the victim: each store gives min(25 % of its content, 6 h (bot) / 8 h (player) of ONE building's output at the attacker's castle level) x the same share (destruction x stars) as the gems; plus 25 % of the tax not yet collected; the victim loses exactly what is taken; gems as today"
+ },
+ "time": {
+  "upgrade": {
+   "rule": "unchanged: progress.T_HOURS x structure multiplier; builders 2 (3 from castle 7); 2 reserved",
+   "hours_at_x1": {
+    "1": 0.167,
+    "2": 28.1,
+    "3": 10.6,
+    "5": 33.2,
+    "10": 115.0,
+    "20": 132.0,
+    "30": 155.0
+   }
+  },
+  "town_crew": {
+   "rule": "placing a resource / home / civic kind takes its crew hours x (1 + 0.04 (L-1)) with 2 town crews, separate from the builders",
+   "simultaneous": 2
+  },
+  "attack": {
+   "scout_cooldown_s": 20.0,
+   "owner_scout_cooldown_s": 2,
+   "battle_token_min": 20,
+   "note": "unchanged"
+  },
+  "shield": {
+   "today_h": 4,
+   "by_stars_h": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     2,
+     8
+    ],
+    [
+     3,
+     12
+    ]
+   ],
+   "attacking_ends_own_shield": true,
+   "target_filter": "offline > 10 min and no shield (unchanged)"
+  }
+ },
+ "pacing": {
+  "rule": "resource kinds are outside the gem ladder and the round rule; the resource price is small and priced in hours of output, so castle 20 / 30 days stay within 5 %",
+  "proof": "dev/e1_sim.py"
+ },
+ "ids": [
+  "lumber",
+  "quarry",
+  "iron",
+  "gold",
+  "panning",
+  "oil",
+  "farm",
+  "greenhouse",
+  "livestock",
+  "slaughter",
+  "fishery",
+  "sawmill",
+  "masonry",
+  "smelter",
+  "mint",
+  "refinery",
+  "mill",
+  "bakery",
+  "butcher",
+  "smokehouse",
+  "jeweler",
+  "stores",
+  "cottage",
+  "craftsman",
+  "merchant",
+  "noble",
+  "market",
+  "tavern",
+  "townhall",
+  "chapel",
+  "well"
+ ]
+}

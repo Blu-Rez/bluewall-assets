@@ -16,6 +16,8 @@ import { axeProp, AXE_GRIP } from './gear_axe.js';
 import { crowdShadows, cowPatch, coatPatch, smoothSkinned, measure, prepHorse, scaleK } from './pas_life.js';
 import { sites, counts, wsLevel, tierOf } from './worksites.js';
 import { planStores } from './stores.js';
+import * as C1 from './c1_kinds.js';       // C1: workers / carts of the panning + smokehouse sites
+import * as C2 from './c2_kinds.js';       // C2: workers / carts of the sawmill / masonry / smelter sites
 
 const PS = 1.75 * 0.95;                         // the people's scale (pas_life.js)
 const rnd = (() => { let s = 90210; return () => { s = (s * 16807) % 2147483647; return s / 2147483647; }; })();
@@ -74,6 +76,7 @@ const TRADES = {
     return [{ k: 'man', w: 3, tasks: w }, { k: 'man', w: 2, tasks: [K(-6, 11, -6, 9.5, 'Fixing_Kneeling', 6, 10), K(5, 11, 5, 9.5, 'Fixing_Kneeling', 6, 10), K(0, 18, 0, 20, 'Idle_Talking_Loop', 6, 11), K(-9, 18, -10, 20, 'Interact', 5, 9)] }];
   },
 };
+Object.assign(TRADES, C1.TRADES, C2.TRADES);      // (C1 / C2: new kinds only; C3 / C4 ship no trades yet: mint, refinery, mill, bakery, butcher stay empty until they are wired, see WIRING_TODO)
 const tradesOf = (site, lv) => { const t = TRADES[site.kind]; return typeof t === 'function' ? t(lv) : t; };
 
 // the pens / yards where animals live: [kind, cx, cz, halfW, halfD, max]
@@ -117,6 +120,7 @@ export function shortest(a, b) {                                        // Dijks
   if (dist[b] >= 1e9) return null; const out = []; for (let u = b; u >= 0; u = prev[u]) out.push([N[u].x, N[u].z]); return out.reverse();
 }
 const STORE_OF = { lumber: 'wood', quarry: 'stone', iron: 'iron', gold: 'gold', oil: 'oil', farm: 'food', livestock: 'food', fishery: 'food', slaughter: 'food', greenhouse: 'food' };
+Object.assign(STORE_OF, C1.STORE_OF, { sawmill: 'wood', masonry: 'stone', smelter: 'iron' });      // (C2's own product stores `planks` / `cutstone` / `ironbars` do not exist in stores.js yet: they haul to the raw-material store)
 export function haulRoute(site) {
   try {
     const st = planStores().find((s) => s.id === STORE_OF[site.kind]); if (!st) return null;
@@ -265,6 +269,7 @@ export function buildWsLife(group, height, opt) {
     ws_sack: { s: 1.3, it: [...grid([-1.5, -0.5, 0.5, 1.5], [0], [0], 1), ...grid([-1, 0, 1], [0], [1], 0.55)] }, ws_fishset: { s: 0.9, it: [[-1.0, 0, 0, 0], [1.0, 0, 0, 0.2]] },
   };
   const CART_OF = { lumber: ['ws_cart1', 'ws_logs', 3], quarry: ['ws_cart2', 'ws_stoneblocks', 2], iron: ['ws_cart2', 'ws_boulderA', 2], gold: ['ws_cart3', 'ws_goldbars', 3], oil: ['ws_cart2', 'ws_barrelold', 3], farm: ['ws_cart1', 'ws_farmcrate_apple', 3], livestock: ['ws_cart1', 'ws_sack', 4], fishery: ['ws_cart3', 'ws_fishset', 3], slaughter: ['ws_cart3', 'ws_barrel', 3], greenhouse: ['ws_cart1', 'ws_farmcrate_empty', 3] };
+  Object.assign(CART_OF, C1.CART_OF, C2.CART_OF);
   function spawnCarts(S, n) {
     const rt = haulRoute(S.site); if (!rt || rt.len < 20) return;
     const [cartName, loadName, nLoad] = CART_OF[S.site.kind] || CART_OF.lumber;

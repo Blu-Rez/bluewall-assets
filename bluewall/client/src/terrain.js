@@ -345,6 +345,7 @@ export function forestDensity(x, z) {
   d *= 1 - smooth(L.MOUNT + 20, L.MOUNT + 90, r);           // tree line
   d *= smooth(1.05, 1.4, L.fieldD(x, z));                  // fields stay open
   d *= smooth(10, 20, L.distPolyline(L.RIVER, x, z));
+  d *= smooth(15, 36, L.streamD(x, z));                      // A2: a meadow strip along the mountain streams (the trees stand back, so the water is seen from the game camera)
   d *= smooth(6, 22, Math.hypot(x - L.LAKE.x, z - L.LAKE.z) - L.LAKE.r);
   d *= smooth(8, 20, roadEdge(x, z));
   for (const Z of [L.PASTURE, L.CAMP, L.MUSTER, L.LAIR]) d *= smooth((Z.fr ?? Z.r) + 4, (Z.fr ?? Z.r) + 22, Math.hypot(x - Z.x, z - Z.z));

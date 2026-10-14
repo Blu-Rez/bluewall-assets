@@ -13,6 +13,10 @@
 //   spur(site)                    -> the haul road [[x,z], ...] from the nearest country road to the site's front
 import * as L from './layout.js';
 import { rng } from './noise.js';
+import * as C1 from './c1_kinds.js';           // C1 (the water family): panning + smokehouse, the fishery's extras
+import * as C2 from './c2_kinds.js';           // C2 (timber, stone, metal): sawmill / masonry / smelter + extras on lumber / quarry / iron
+import * as C3 from './c3_kinds.js';           // C3 (gold, oil): mint + refinery, extras on gold / oil
+import * as C4 from './c4_kinds.js';           // C4 (food family): mill / bakery / butcher, the improved farm / slaughter
 
 export const WS_KINDS = {
   lumber:     { fa: 'چوب‌بری',      unlock: 1,  paint: '124,100,64' },
@@ -27,9 +31,22 @@ export const WS_KINDS = {
   oil:        { fa: 'میدان نفت',    unlock: 17, paint: '52,46,42' },
 };
 
+// C1-C4 merge (p42).  The kinds that exist already (fishery, lumber, quarry, iron, gold, oil, farm, livestock, slaughter, greenhouse) keep their unlock / paint and gain what the packages
+// declare (role / in / out / place ...).  The NEW kinds (panning, smokehouse, sawmill, masonry, smelter, mint, refinery, mill, bakery, butcher) are looked up normally (WS_KINDS.sawmill,
+// wsLevel, placeRule ...) but are NOT listed by Object.keys(WS_KINDS): dev/ws_test.js wants a site for every listed kind and the map has none for them yet.  When a plan creates sites of a
+// new kind, make it listed:  Object.defineProperty(WS_KINDS, kind, { enumerable: true })  (and extend ws_test).  NOTE `in` / `out` are as the packages delivered them: strings in C2 / C4,
+// arrays in C1 / C3 (the economy table E1 must pick one shape).
+export const NEW_KINDS = [];
+for (const K of [C1.KINDS, C2.KINDS, C3.KINDS, C4.KINDS]) {
+  for (const k of Object.keys(K)) {
+    if (WS_KINDS[k]) WS_KINDS[k] = { ...K[k], ...WS_KINDS[k] };
+    else { Object.defineProperty(WS_KINDS, k, { value: { ...K[k] }, enumerable: false, writable: true, configurable: true }); NEW_KINDS.push(k); }
+  }
+}
+
 // where a player may put a site (owner 6 Oct 19:44: everything is movable, each player arranges his own map; only the gem mines on the mountain are fixed and the fisheries must keep near water):
 //   'free' = anywhere flat enough; 'water' = the site's `water` point must stay on the shore.  (The layout editor of the next round reads this; nothing here assumes a fixed spot — every module reads sites().)
-export const placeRule = (site) => (WS_KINDS[site.kind] && WS_KINDS[site.kind].place) || 'free';
+export const placeRule = (site) => C4.placeRule(site) || (WS_KINDS[site.kind] && WS_KINDS[site.kind].place) || 'free';     // (C4: the water mill variant must touch the shore;  'forest' / 'mount' = informational, from C2 / C3)
 export const sites = () => L.SITES || [];
 export const siteById = (id) => sites().find((s) => s.id === id);
 export const wsLevel = (site, castle) => (castle >= WS_KINDS[site.kind].unlock ? Math.max(1, Math.min(30, Math.round(castle))) : 0);
@@ -224,15 +241,23 @@ const BUILD = {
   },
 };
 
+Object.assign(BUILD, C2.BUILD, C3.BUILD, C4.BUILD);     // whole-kind builders: C2 sawmill / masonry / smelter, C3 mint / refinery, C4 mill / bakery / butcher + the improved farm / slaughter
 export function pieces(site, lv) {
   if (lv <= 0) return [];
-  const f = BUILD[site.kind]; if (!f) return [];
+  const f = BUILD[site.kind], g = C1.BUILD[site.kind], ex2 = C2.EXTRA[site.kind], ex3 = C3.EXTRA[site.kind];
+  if (!f && !g) return [];
   const R = rng(((site.x * 73856093) ^ (site.z * 19349663)) >>> 0 || 7);
-  return f(lv, R, site);
+  let out = f ? f(lv, R, site) : [];
+  if (g) out = out.concat(g(lv, rng(((site.x * 19349663) ^ (site.z * 73856093)) >>> 0 || 11), site));     // C1: the fisheries get 2 extra pieces; panning / smokehouse are C1's alone
+  if (ex2) out = out.concat(ex2(lv, R, site));                                                              // C2: <= 2 extra pieces on lumber / quarry / iron
+  if (ex3) out = out.concat(ex3(lv, R, site));                                                              // C3: <= 2 extra pieces on gold / oil
+  return out;
 }
 // what the level brings alive: people, animals, boats, carts (wslife.js)
+const C4_COUNTS = new Set(['mill', 'bakery', 'butcher', 'farm', 'slaughter']);      // (C4's farm / slaughter are supersets of the p38 numbers: + scarecrows / racks)
 export function counts(site, lv) {
   if (lv <= 0) return {};
+  if (C4_COUNTS.has(site.kind)) return C4.counts(site.kind, lv, site);
   switch (site.kind) {
     case 'lumber': return { workers: N(lv, 2, 14), carts: N(lv, 1, 3) };
     case 'quarry': return { workers: N(lv, 2, 14), carts: N(lv, 1, 3) };
@@ -240,20 +265,21 @@ export function counts(site, lv) {
     case 'gold': return { workers: N(lv, 2, 12), carts: N(lv, 1, 4) };
     case 'farm': return { workers: N(lv, 2, 10), animals: N(lv, 2, 8), plots: N(lv, 2, 8), carts: N(lv, 1, 2) };
     case 'livestock': return { workers: N(lv, 1, 6), animals: N(lv, 4, 40), pens: N(lv, 1, 4), carts: N(lv, 1, 2) };
-    case 'fishery': return { workers: N(lv, 1, 9) + N(lv, 1, 5), boats: N(lv, 1, 9), fishermen: N(lv, 1, 9), carts: N(lv, 1, 3) };
+    case 'fishery': return { workers: N(lv, 1, 9) + N(lv, 1, 5), boats: N(lv, 1, 9), fishermen: N(lv, 1, 9), carts: N(lv, 1, 3), ...C1.counts('fishery', lv) };
     case 'slaughter': return { workers: N(lv, 2, 8), animals: N(lv, 1, 6), carts: N(lv, 1, 2) };
     case 'greenhouse': return { workers: N(lv, 1, 6), houses: N(lv, 1, 5), carts: N(lv, 1, 2) };
     case 'oil': return { workers: N(lv, 2, 12), camels: N(lv, 1, 9), wells: N(lv, 1, 7), carts: N(lv, 1, 4) };
-    default: return {};
+    default: return { ...C1.counts(site.kind, lv), ...C2.counts(site.kind, lv), ...C3.counts(site.kind, lv) };      // panning / smokehouse (C1), sawmill / masonry / smelter (C2), mint / refinery (C3): each returns {} for the others
   }
 }
 // the standing buildings of the worksites that no soldier may walk into: [[x, z, radius], ...] in world metres (nav.js / solids.js).  Max level (all buildings that can ever stand).
-const SOLID_R = { lumbermill: 6.8, mine: 6.4, smithy: 4.6, hut: 3.6, market: 4.4, brewhouse: 3.8, barn: 5.4, smallbarn: 3.8, openbarn: 3.6, silo: 2.4, coop: 2.2, watchtower2: 2.2, stageA: 0, butcher: 2.6, waterwheel: 3.2, rockA: 5.6, rockB: 4.8, rockC: 3.4 };
+const SOLID_R = { lumbermill: 6.8, mine: 6.4, smithy: 4.6, hut: 3.6, market: 4.4, brewhouse: 3.8, barn: 5.4, smallbarn: 3.8, openbarn: 3.6, silo: 2.4, coop: 2.2, watchtower2: 2.2, stageA: 0, butcher: 2.6, waterwheel: 3.2, rockA: 5.6, rockB: 4.8, rockC: 3.4, ...C1.SOLID, ...C2.SOLID_R, ...C3.SOLID_R, ...C4.SOLID_R };      // (C pieces keep their 'c<n>_' name: only 'ws_' is stripped below)
 export function wsSolids() {
   const out = [];
   for (const s of sites()) {
     const c = Math.cos(s.ry), sn = Math.sin(s.ry);
     for (const p of pieces(s, 30)) { const r = SOLID_R[p.n.replace(/^ws_/, '')]; if (r) out.push([s.x + p.x * c + p.z * sn, s.z - p.x * sn + p.z * c, r * p.s]); }
+    const sp = C3.SOLIDS_PROC[s.kind]; if (sp) for (const [x, z, r] of sp(30)) out.push([s.x + x * c + z * sn, s.z - x * sn + z * c, r]);       // C3: the refinery's procedural tanks / column
   }
   return out;
 }

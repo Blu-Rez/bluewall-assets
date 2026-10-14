@@ -9,11 +9,14 @@ import { prowlerFly, EMBER } from './bdragon.js';
 import { createLiveKind, LIVE_LOOK } from './bdragon_live.js';
 import { makeMultiHead } from './bdragon3.js';
 import { createKind } from './crowd.js';
+import { u5Flyers } from './u5_looks.js';
 import { buildGryphon } from './bgryphon.js';
+import { buildU4Gryphon, U4_CLIPS, u4Glint } from './u4_looks.js';
 import { bakeKnight, darkRider } from './bgrider.js';
 import { dressKnight, setPlumeTier } from './gear_plume.js';
 import { GLINT } from './unitlook.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+import { setupDarkRiderU3 } from './u3_looks.js';              // U3: the dark rider from real models (u3_looks.js); the prowler version below stays only as the fallback
 
 // ---- the looks (bdragon_live.js LIVE_LOOK: tint = the colour the grey skin is multiplied with, rim light, eye glow)
 // the three-headed ones stay in the warm family of our dragons but richer: deeper oxblood hide, a hotter rim, hotter eyes
@@ -26,9 +29,10 @@ const devOpt = () => (typeof window !== 'undefined' && window.__flyOpt) || {};  
 
 export async function setupFlyers(ctx) {
   const { M, need, step, TYPE, count, TT } = ctx, DEV = devOpt();
+  const u5 = await u5Flyers(ctx);                                            // U5: baby3 / dragon3 on the real three-head model (u5_looks.js); if its asset is missing the old look below stays
   for (const [k, v] of Object.entries(DEV.look || {})) LIVE_LOOK[k] = { ...LIVE_LOOK[k], ...v };
   // ---------------------------------------------------------------- the three-headed dragons (bdragon3.js: the prowler with two more necks)
-  if (count.baby3 || count.dragon3) {
+  if ((count.baby3 && !u5.baby3) || (count.dragon3 && !u5.dragon3)) {
     const pw = await need('prowler'); prowlerFly(pw);
     const dk = (key, lookKey, tier, opt) => () => {
       const g3 = M['prowler_3_' + key] || (M['prowler_3_' + key] = makeMultiHead(pw, { ...opt, ...((DEV.heads || {})[key] || {}) }));
@@ -36,12 +40,12 @@ export async function setupFlyers(ctx) {
       return createLiveKind({ gltf: g3, look: gl ? { ...L, rimK: L.rimK + gl[1] * 4 } : L, key, rim: gl ? [((gl[0] >> 16) & 255) / 255, ((gl[0] >> 8) & 255) / 255, (gl[0] & 255) / 255] : null });
     };
     const MOUTHS = [[0.55, 0.37, 0], [0.5, 0.37, -0.24], [0.5, 0.37, 0.24]];           // [forward, up, sideways (+ = the unit's left)] in model scales
-    if (count.dragon3) {
+    if (count.dragon3 && !u5.dragon3) {
       await step('dragon3', dk('dragon3', 'dragon3', TT.dragon3, { heads: 3, yaw: 0.6, spread: 4.4, neckK: 1.45, lag: 0.2 }));
       TYPE.dragon3 = { turn: 2.0, lift: 20, air: true, big: true, fire: 'orange', mouth: MOUTHS[0], mouths: MOUTHS, parts: [
         { k: 'dragon3', scale: 16.9, crK: 3, clip: { idle: 'Perch', hover: 'Fly', run: 'Fly', atk: ['Fly'], hit: 'Fly' }, die: { tumble: { key: 'roll', to: 2.4, dur: 1.2, sink: 0 } } }] };
     }
-    if (count.baby3) {
+    if (count.baby3 && !u5.baby3) {
       await step('baby3', dk('baby3', 'baby3', TT.baby3, { heads: 3, yaw: 0.6, spread: 4.4, neckK: 1.45, lag: 0.2 }));
       TYPE.baby3 = { turn: 3.0, lift: 12.2, air: true, big: false, fire: 'orange', mouth: MOUTHS[0], mouths: MOUTHS, parts: [
         { k: 'baby3', scale: 8.8, crK: 3, clip: { idle: 'Perch', hover: 'Fly', run: 'Fly', atk: ['Fly'], hit: 'Fly' }, die: { tumble: { key: 'roll', to: 2.4, dur: 1.0, sink: 0 } } }] };
@@ -49,8 +53,8 @@ export async function setupFlyers(ctx) {
   }
   // ---------------------------------------------------------------- the gryphon (bgryphon.js: gryphon.glb's geometry on our own rig and wing-beat)
   if (count.gryphon) {
-    const g = await need('gryphon'), gl = buildGryphon(g, { hero: false, id: 'gry' });
-    await step('gryphon', () => createKind({ gltf: gl, anims: gl, clips: ['Rest', 'Fly', 'Hover', 'Atk', 'Hit', 'Die'], capacity: count.gryphon + 3, glint: GLINT[TT.gryphon | 0] || undefined }));
+    const u4 = await need('u4_gryphon'), gl = u4 ? buildU4Gryphon(u4) : buildGryphon(await need('gryphon'), { hero: false, id: 'gry' });      // p39 U4: the real model (u4_looks.js); the old beast stays only as the fallback if the file is missing
+    await step('gryphon', () => createKind({ gltf: gl, anims: gl, clips: U4_CLIPS, capacity: count.gryphon + 3, glint: u4Glint(GLINT[TT.gryphon | 0]) }));
     TYPE.gryphon = { turn: 4, lift: 9.5, air: true, parts: [
       { k: 'gryphon', scale: 3.0, crAbs: 13, atkSp: 1, atkOff: 0.18, clip: { idle: 'Rest', hover: 'Hover', run: 'Fly', atk: ['Atk'], hit: 'Hit' }, die: { clip: 'Die', tumble: { key: 'roll', to: 1.45, dur: 0.9, sink: 0.4 } } }] };
   }
@@ -64,7 +68,7 @@ export async function setupFlyers(ctx) {
       { k: 'gryphonknight', scale: 3.45, crAbs: 15, atkSp: 1, atkOff: 0.18, clip: { idle: 'Rest', hover: 'Hover', run: 'Fly', atk: ['Atk'], hit: 'Hit' }, die: { clip: 'Die', tumble: { key: 'roll', to: 1.45, dur: 1.0, sink: 0.4 } } }] };
   }
   // ---------------------------------------------------------------- the dark rider (hero): a near-black dragon, a knight in black plate with a spiked crown and a long cloak on its back (bgrider.js), shadow fire
-  if (count.darkrider) {
+  if (count.darkrider && !(await setupDarkRiderU3(ctx))) {
     const pw = await need('prowler'), kn = await need('knight_k3'); prowlerFly(pw); dressKnight(kn);
     await step('darkrider', () => {
       const kind = createLiveKind({ gltf: pw, look: LIVE_LOOK.darkrider, key: 'darkrider' });

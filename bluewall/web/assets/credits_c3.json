@@ -1,0 +1,94 @@
+[
+ {
+  "id": "gold_bar_pile_ac639a7c",
+  "name": "Gold Bar pile",
+  "author": "pooiloui2",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/gold-bar-pile-ac639a7c53244a0db904c1745a947a6c",
+  "uid": "ac639a7c53244a0db904c1745a947a6c",
+  "faces": 280,
+  "animated": false,
+  "thumb": "https://media.sketchfab.com/models/ac639a7c53244a0db904c1745a947a6c/thumbnails/a079d8c6d173471aad97e31adedb8ffb/49b1a80235a34cc3995dbaee0ed19682.jpeg",
+  "cat": "gold",
+  "used_in": "kit_c3.glb"
+ },
+ {
+  "id": "fantasy_designed_coins_gold_silver_coppe_71a3526b",
+  "name": "Fantasy Designed Coins - (Gold, Silver, Copper)",
+  "author": "Kigha",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/fantasy-designed-coins-gold-silver-copper-71a3526b3403419f97717865afb27a41",
+  "uid": "71a3526b3403419f97717865afb27a41",
+  "faces": 744,
+  "animated": false,
+  "thumb": "https://media.sketchfab.com/models/71a3526b3403419f97717865afb27a41/thumbnails/94a511559fdb4c5daaf9a25cfaa05480/8fe99a3939574889be0db2c5c82d0a4c.jpeg",
+  "cat": "gold",
+  "used_in": "kit_c3.glb"
+ },
+ {
+  "id": "old_barrel_e7b12378",
+  "name": "Old barrel",
+  "author": "Reliefy3D",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/old-barrel-e7b123784dc14a26b25a384400339b7f",
+  "uid": "e7b123784dc14a26b25a384400339b7f",
+  "faces": 1648,
+  "animated": false,
+  "thumb": "https://media.sketchfab.com/models/e7b123784dc14a26b25a384400339b7f/thumbnails/40327598323940c19c19abf5aec0602e/20809620335a43a7b814c8da4f001fda.jpeg",
+  "cat": "food",
+  "used_in": "kit_c3.glb"
+ },
+ {
+  "id": "medieval_wine_press_free_706ee74b",
+  "name": "Medieval Wine Press (Free)",
+  "author": "wolfgar74",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/medieval-wine-press-free-706ee74b7c1843559f8b9a440e359423",
+  "uid": "706ee74b7c1843559f8b9a440e359423",
+  "faces": 6208,
+  "animated": false,
+  "thumb": "https://media.sketchfab.com/models/706ee74b7c1843559f8b9a440e359423/thumbnails/cf4bcee0d6444444809191a284c83422/c81c8d7a464f4791bf6f87a4c0fa64ce.jpeg",
+  "cat": "food",
+  "used_in": "kit_c3.glb"
+ },
+ {
+  "id": "medieval_braziers_l_lights_l_enviroment_fc5c7544",
+  "name": "Medieval braziers l Lights l Enviroment",
+  "author": "burnedhrum",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/medieval-braziers-l-lights-l-enviroment-fc5c7544dd224365b055febee02bb496",
+  "uid": "fc5c7544dd224365b055febee02bb496",
+  "faces": 4974,
+  "animated": false,
+  "thumb": "https://media.sketchfab.com/models/fc5c7544dd224365b055febee02bb496/thumbnails/2c1f2a305f6f416db7af41d4d81c3c1c/11ec18f9c3234c21bc6dbf8271418bd4.jpeg",
+  "cat": "defense",
+  "used_in": "kit_c3.glb"
+ },
+ {
+  "id": "kaykit-medieval-hexagon",
+  "name": "KayKit Medieval Hexagon Pack (tower base, blacksmith, tower A, home A, wall, wall gate)",
+  "author": "Kay Lousberg (KayKit)",
+  "license": "CC0",
+  "source": "bluewall-assets/kaykit-medieval-hexagon",
+  "cat": "gold",
+  "used_in": "kit_c3.glb"
+ },
+ {
+  "id": "fantasy-props-megakit",
+  "name": "Fantasy Props MegaKit (anvil, metal crate)",
+  "author": "Quaternius",
+  "license": "CC0",
+  "source": "bluewall-assets/fantasy-props-megakit",
+  "cat": "gold",
+  "used_in": "kit_c3.glb"
+ },
+ {
+  "id": "farm-buildings",
+  "name": "Farm Buildings (water tower)",
+  "author": "Quaternius",
+  "license": "CC0",
+  "source": "bluewall-assets/v2/farm-buildings",
+  "cat": "oil",
+  "used_in": "kit_c3.glb"
+ }
+]

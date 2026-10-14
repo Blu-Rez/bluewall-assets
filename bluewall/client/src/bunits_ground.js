@@ -8,6 +8,9 @@ import { createKind, bwExtra } from './crowd.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { trimClips } from './creature.js';
 import { tintGear, GLINT, CLOTH, HAIR, kit } from './unitlook.js';
+import { setupU1 } from './u1_looks.js';                                   // U1: the real legionary + captain
+import { setupU2 } from './u2_looks.js';                                   // U2: the real ogre + treant
+import { setupLichU3 } from './u3_looks.js';                                // U3: the lich from a real model (the hand-built one below stays only as the fallback)
 
 const rad = (d) => (d * Math.PI) / 180;
 const strip = (g) => { if (g.__bwg) return; g.__bwg = true; for (const c of g.animations) c.name = c.name.replace(/^.*\|/, ''); trimClips(g); };
@@ -319,13 +322,14 @@ const gradeOf = (root, matName, extra) => { let done = false; root.traverse((o) 
 
 export async function setupGround(ctx) {
   const { M, step, TYPE, count, TT, K, ANIMS, BASE, LOD1 } = ctx;
+  const U1 = await setupU1(ctx);                                                  // (U1: the legionary / captain built from real models; the old hand-built ones below only run when that failed)
   // the soldier body (the Quaternius ranger, hood and all) as a crowd kind: the kingdom's cloth, props on the bones of the hands and head
   const body = (clips, props, cap, tier) => createKind({ gltf: M.ranger_m, anims: ANIMS, clips: [...BASE, ...clips], props, capacity: cap + 6, lod1Skip: LOD1, hue: true, cloth: CLOTH[tier], tier, crest: 'own',
     lod2: { cloth: 0x2a5fc4, legs: 0x1c2a4a, skin: 0xd9a77f, h: 1.8 } });
   const F = M.ranger_m ? framesOf(M.ranger_m) : null;
   const pp = (g, bone, s, pos, rot) => ({ gltf: g, bone, s, pos, rot: rot.map(rad) });
   // ---- the legionary: the soldier body with a galea, a scutum (left forearm) and a gladius (right fist)
-  if (count.legionary && F) {
+  if (count.legionary && F && !U1.legionary) {
     const t = TT.legionary | 0;
     // the wrist turns in every clip, the forearm does not: the shield is strapped to the forearm bone, placed where the hand-held prop sits in the shield pose (idle)
     const sh = scutumProp(0.25), A = new THREE.Matrix4().compose(new THREE.Vector3(0, 0.05, 0.05), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, rad(90), 0)), new THREE.Vector3(0.25, 0.25, 0.25));
@@ -336,13 +340,13 @@ export async function setupGround(ctx) {
   }
   // ---- the ogre (Mountain Ogre by SamThePie, CC-BY): one skinned mesh sheet, 14 parts -> one draw call
   // ---- the captain (hero): the soldier body in plate, plumed helm, cloak and banner, a sword (the soldiers' own model, a little larger) in the right fist
-  if (count.captain && F) {
+  if (count.captain && F && !U1.captain) {
     const t = TT.captain | 0, parts = captainParts(F, t);
     await step('captain', () => body(['Sword_Idle', 'Idle_Loop', 'Idle_Shield_Loop', 'Sword_Block', 'Sword_Attack', 'Sword_Regular_A', 'Sword_Regular_B'], parts.map((q) => pp(prop(q.geos), q.bone, 1, [0, 0, 0], [0, 0, 0])).concat(M.sword ? [pp(M.sword, 'hand_r', 0.95, [0, 0, 0], [0, 0, -90])] : []), count.captain, t));
     tintGear(K.captain, t);
   }
   // ---- the lich
-  if (count.lich && M.skel_mage && M.kk_anims) {
+  if (count.lich && !(await setupLichU3(ctx)) && M.skel_mage && M.kk_anims) {
     const root = SkeletonUtils.clone(M.skel_mage.scene); stripHat(root);
     root.traverse((o) => { if (o.isSkinnedMesh) o.material = o.material.clone(); });
     const mats = []; root.traverse((o) => { if (o.isSkinnedMesh) mats.push(o.material); });
@@ -369,4 +373,5 @@ export async function setupGround(ctx) {
       props: [pp(prop(treantCrown(framesOf(M.treant))), 'Head_012', 1, [0, 0, 0], [0, 0, 0])] }));
     tintGear(K.treant, TT.treant | 0);
   }
+  await setupU2(ctx);                                            // u2: the real ogre + treant (u2_looks.js); the two blocks above only run with the old p35 models (M.ogre / M.treant), which bunits.js no longer loads
 }

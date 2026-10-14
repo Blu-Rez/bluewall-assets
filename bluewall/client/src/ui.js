@@ -66,13 +66,13 @@ const CSS = `
 .bw-fps{position:absolute;left:50%;transform:translateX(-50%);top:calc(var(--st) + 3px);font:700 10px ${FONT};color:#9fe3ff;background:rgba(0,0,0,.4);padding:2px 7px;border-radius:8px;display:none;pointer-events:none;white-space:nowrap}
 .bw-toast{position:absolute;z-index:90;left:50%;transform:translateX(-50%);top:calc(var(--st) + 112px);max-width:86vw;width:max-content;box-sizing:border-box;text-align:center;line-height:1.35;padding:9px 16px;border-radius:18px;background:var(--glass);border:1px solid var(--line);font-size:13px;opacity:0;transition:opacity .6s;pointer-events:none}
 .bw-toast.on{opacity:1}
-.bw-sheet{pointer-events:auto;position:absolute;z-index:11;left:12px;right:12px;bottom:calc(var(--sb) + 14px);max-width:520px;margin:0 auto;padding:16px 18px 18px;border-radius:20px;background:linear-gradient(180deg,rgba(11,30,66,.95),rgba(3,8,20,.97));border:1px solid var(--line);box-shadow:0 10px 40px rgba(0,0,0,.55);transform:translateY(160%);transition:transform .45s cubic-bezier(.2,.9,.25,1.1)}
-.bw-sheet.on{transform:none}
+.bw-sheet{pointer-events:auto;position:absolute;z-index:11;left:12px;right:12px;bottom:calc(var(--sb) + 14px);max-width:520px;margin:0 auto;padding:16px 18px 18px;border-radius:20px;background:linear-gradient(180deg,rgba(11,30,66,.95),rgba(3,8,20,.97));border:1px solid var(--line);box-shadow:0 10px 40px rgba(0,0,0,.55);transform:translateY(160%);transition:transform 220ms cubic-bezier(.22,1,.36,1)}
+.bw-sheet.on{transform:none;transition-duration:320ms}
 .bw-sheet .h{display:flex;align-items:center;gap:10px;font-size:18px;color:#d9f2ff}
 .bw-sheet .h .e{font-size:24px}
 .bw-sheet .d{margin-top:8px;font-size:13.5px;font-weight:400;line-height:1.75;color:#a9c4e6}
 .bw-sheet .chip{display:inline-block;margin-top:10px;padding:5px 12px;border-radius:999px;background:rgba(95,182,255,.12);border:1px solid var(--line);font-size:12px;color:#9fd8ff}
-.bw-x{position:absolute;right:12px;top:12px;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.07);font-size:14px;cursor:pointer;pointer-events:auto}
+.bw-x{position:absolute;right:6px;top:6px;width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.07);font-size:16px;cursor:pointer;pointer-events:auto}
 .bw-mine{margin-top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .bw-mine div{padding:8px 6px;border-radius:12px;background:rgba(95,182,255,.08);border:1px solid rgba(120,190,255,.2);text-align:center}
 .bw-mine b{display:block;font-size:18px;color:#fff}.bw-mine span{font-size:10.5px;font-weight:400;color:#9fc4e8}
@@ -375,9 +375,9 @@ export class UI {
     this.sheet.querySelector('.e').textContent = it[0];
     this.sheet.querySelector('.t').textContent = it[1];
     this.sheet.querySelector('.d').textContent = it[2];
-    this.sheet.classList.add('on'); this.open = id; this.haptic('light');
+    this.sheet.classList.add('on'); this.root.classList.add('sheet-on'); this.open = id; this.haptic('light');          // (T1: 'sheet-on' hides the corner buttons that sat on top of the sheet)
   }
-  hide() { this.sheet.classList.remove('on'); this.open = null; }
+  hide() { this.sheet.classList.remove('on'); this.root.classList.remove('sheet-on'); this.open = null; }
 
   // ------------------------------------------------ cinematic welcome card over the live scene
   // c = { date, time, tod } ; resolves when the player taps (or after `auto` seconds)

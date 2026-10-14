@@ -1,0 +1,16 @@
+[
+ {
+  "id": "battle_ogre_behemoth_9b3f7a6e",
+  "name": "BATTLE OGRE BEHEMOTH ATTACKS!",
+  "author": "StrykerDoesAnimation",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/battle-ogre-behemoth-attacks-9b3f7a6ed8944b72a4bda663468cc102",
+  "uid": "9b3f7a6ed8944b72a4bda663468cc102",
+  "faces": 9929,
+  "animated": true,
+  "cat": "units",
+  "file": "u2_ogre.glb",
+  "used_for": "the ogre (lv 22)",
+  "changes": "mesh reduced from 9,929 to ~6,000 triangles, textures resized and converted to WebP, only the attack clip kept (dev/u2_pack.mjs, dev/m43_r_ogre.json); not recoloured"
+ }
+]

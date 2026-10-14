@@ -8,6 +8,17 @@ export const NOISE = makeNoise(20261001);
 // H = wall height, T = thickness, R = tower radius. The walkway surface is H + 0.145.
 export const WALL = { outer: { H: 9.5, T: 4.2, R: 4.6 }, inner: { H: 7.5, T: 3.2, R: 3.5 }, town: { H: 8.2, T: 3.8, R: 3.9 } };
 
+// A1 (owner 6 Oct 12:35, «تا لول ده، یک لایه / تا لول بیست دو لایه / تا لول سی، سه لایه»): which wall rings stand at a castle level.
+// The castle grows OUTWARD: the keep ring (INNER) from level 1, the citadel wall (OUTER, the Blue Wall) from 11, the lower-town wall (TOWN) from 21.
+// RING_ORDER is the one place that says which ring is row 1 / 2 / 3 (a dev page may reorder it before the world is built).
+export const RING_ORDER = ['inner', 'outer', 'town'];
+export const RING_STEP = 10;                                    // a new row every 10 levels: 1-10 one row, 11-20 two, 21-30 three
+export const ringsAt = (lv) => {
+  const n = Math.max(1, Math.min(3, 1 + Math.floor((Math.max(1, Math.min(30, Math.round(+lv) || 1)) - 1) / RING_STEP)));
+  const has = { inner: !!INNER, outer: true, town: !!TOWN };     // (the day map has the square fort only)
+  return RING_ORDER.filter((r) => has[r]).slice(0, n);
+};
+
 // Two maps share every builder:
 //   night — the Blue Wall citadel (irregular wall, moat, inner citadel, keep)
 //   day   — a Siegefall-style square fort on open grass (towers every 1/3 side)
@@ -53,6 +64,100 @@ const NIGHT = {
   WGATES: [{ seg: 10, c: 34.8, half: 6.6 }, { seg: 4, c: 43.1, half: 6.6 }],
   // stone bridges over the river (where the farm road to the ruby mine crosses it): centre, direction of travel (unit), length, width
   RBRIDGES: [],                                                               // (p38: roads.js adds a bridge wherever a road meets the river — see autoBridges)
+  // A2-STREAMS-BEGIN
+  // A2 (owner 6 Oct 2026: «ساعت ۲ ... از بالا کوه از وسط کوه پایین و بیاد تو خندق» — «هر دو! ولی رود ۱ عریض‌تر»): two streams from the mountain at the 2 o'clock of the home camera. Each one runs down its own gorge with its own waterfall
+  // (falls.js draws it from pts[0..1], like RIVER[0..1]), across the north plain and into the moat. k = width scale of the bed / banks / clearance (1 = like the p38 river). Planned OFFLINE by dev/a2_plan.mjs
+  // (A* over the real terrain, clear of camp / quarry / mines / hamlets and their spurs / nomads, and of each other) and frozen here; roads.js bridges every road a stream meets.
+  STREAMS: [
+    { id: 'stream_w', kind: 'stream', k: 1.8, pts: [
+      [-157, -411],
+      [-155.7, -402],
+      [-154.3, -393],
+      [-154, -382],
+      [-144.2, -383.7],
+      [-134.2, -383.1],
+      [-124.3, -382.7],
+      [-114.7, -383.3],
+      [-104.5, -383.2],
+      [-93.2, -379.3],
+      [-83.8, -370.9],
+      [-79.5, -360],
+      [-80.2, -349.8],
+      [-83.5, -340.3],
+      [-87, -329.8],
+      [-89, -318.9],
+      [-89.6, -309.4],
+      [-90.9, -301.6],
+      [-93.3, -293.1],
+      [-97, -283.4],
+      [-101.9, -273.6],
+      [-105.9, -265.2],
+      [-107.4, -257.7],
+      [-108.3, -249.5],
+      [-109.3, -240.2],
+      [-110.9, -229.7],
+      [-111.9, -218.1],
+      [-108.4, -206.6],
+      [-100.1, -199.7],
+      [-91.7, -194.7],
+      [-83.5, -188.9],
+      [-76.2, -182],
+      [-69, -175.1],
+      [-61.8, -168.2],
+    ] },
+    { id: 'stream_e', kind: 'stream', k: 1, pts: [
+      [-92, -430],
+      [-90.8, -422.5],
+      [-89.5, -415],
+      [-88.3, -407.5],
+      [-86, -398],
+      [-79.2, -405.3],
+      [-71.3, -410.9],
+      [-62.3, -412.8],
+      [-53.4, -410],
+      [-44.7, -405.1],
+      [-36.3, -399.1],
+      [-28.7, -391.9],
+      [-22.7, -383.3],
+      [-19.2, -373.6],
+      [-18.7, -363.5],
+      [-19.4, -353.4],
+      [-18.6, -342.7],
+      [-14.2, -332.9],
+      [-7.3, -325.1],
+      [0.4, -318.8],
+      [8.5, -312.8],
+      [16.4, -306.1],
+      [23.1, -297.7],
+      [26.5, -287.5],
+      [25.6, -277.1],
+      [21.9, -267.8],
+      [16.8, -259.2],
+      [10.9, -251],
+      [5.5, -242.4],
+      [1.4, -233.2],
+      [-1.3, -223.6],
+      [-2.2, -213.8],
+      [0.2, -204.7],
+      [5.3, -196.9],
+      [11.6, -190.1],
+      [18.8, -184],
+      [27.4, -179.4],
+      [37.2, -176.5],
+      [47.5, -175.2],
+      [57.6, -175],
+      [67.2, -175],
+      [76.6, -173.6],
+      [85.9, -169.9],
+      [94.2, -163.7],
+      [101.1, -156.2],
+      [107.1, -148.2],
+      [113, -140.3],
+      [119.5, -132.7],
+      [121.5, -130.4],
+    ] },
+  ],
+  // A2-STREAMS-END
   PASTURE: pushO({ x: 46, z: 206, r: 30, fr: 44 }),
   CAMP: pushO({ x: -34, z: -212, r: 30, fr: 46 }),
   MUSTER: pushO({ x: 215, z: 60, r: 34, fr: 66 }),
@@ -103,6 +208,7 @@ export function withoutPads(fn) { const keep = PADS, dirty = PAD_DIRTY; PADS = [
 export const addBridge = (b) => { if (!RBRIDGES.some((q) => Math.hypot(q.x - b.x, q.z - b.z) < 6)) RBRIDGES.push(b); };
 export let OUTER, GATE_SEG, INNER, INNER_GATE_SEG, KEEP, PLAZA, MOAT, WINDMILL, FIELDS, LAKE, RIVER, GATE, PASTURE, CAMP, MUSTER, LAIR, RBRIDGES = [], WGATES = [];
 export let TOWN = null, TOWN_GATES = [], TGATES = [], MOAT2 = null, FIELDS2 = null, FARMS = [], MINES = [], MOUNT = 330;
+export let STREAMS = [];                // A2: mountain streams that join the moat (tributaries of RIVER): [{ id, kind:'stream', pts:[[x,z],...] }] — pts[0..1] = the waterfall (like RIVER[0..1]), the last point lies in the moat water
 let PAD_DIRTY = false;
 export let PADS = [];                    // p38: the level pads under the worksites (see height())
 export let SITES = [];                   // p38: the worksites of this map (WS_SITES on the night map, none on the day map)
@@ -125,6 +231,7 @@ export function setMap(m) {
   ({ OUTER, GATE_SEG, INNER, INNER_GATE_SEG, KEEP, PLAZA, MOAT, WINDMILL, FIELDS, LAKE, RIVER } = c);
   PASTURE = c.PASTURE || { x: 1e4, z: 1e4, r: 0 }; CAMP = c.CAMP || { x: 1e4, z: 1e4, r: 0 }; MUSTER = c.MUSTER || { x: 1e4, z: 1e4, r: 0 }; LAIR = c.LAIR || { x: 1e4, z: 1e4, r: 0 };
   RBRIDGES = c.RBRIDGES || []; WGATES = c.WGATES || [];
+  STREAMS = c.STREAMS || [];
   calcStable();
   TOWN = c.TOWN || null; TOWN_GATES = c.TOWN_GATES || []; MOAT2 = c.MOAT2 || null; FIELDS2 = c.FIELDS2 || null; MINES = c.MINES || []; MOUNT = c.MOUNT || 330;
   FARMS = [FIELDS, FIELDS2].filter(Boolean);
@@ -169,8 +276,29 @@ export function sdPoly(poly, x, z) {
 export function distPolyline(pts, x, z) {
   let d = 1e9;
   for (let i = 0; i < pts.length - 1; i++) d = Math.min(d, segDist(x, z, pts[i], pts[i + 1]));
+  if (pts === RIVER) d = streamD(x, z, d);                                                       // (A2: the mountain streams count as river everywhere; k > 1 = a wider bed, banks and clearance)
   return d;
 }
+// A2: distance to the nearest mountain stream, divided by its width scale k (so k = 1.8 means 'a 1.8 x wider stream'); `best` = a distance already known (prunes)
+export function streamD(x, z, best = 1e9) {
+  let d = best;
+  for (const S of STREAMS) {
+    const k = S.k || 1, ch = S._ch || (S._ch = streamChunks(S.pts));                             // chunks of 6 segments with their own boxes: a chunk whose box is already farther than the best distance cannot win (exact)
+    for (const c of ch) {
+      let ex = c[0] - x, ez = c[1] - z; if (ex < 0) { ex = x - c[2]; if (ex < 0) ex = 0; } if (ez < 0) { ez = z - c[3]; if (ez < 0) ez = 0; }
+      if (ex * ex + ez * ez >= d * d * k * k) continue;
+      for (let i = c[4]; i < c[5]; i++) d = Math.min(d, segDist(x, z, S.pts[i], S.pts[i + 1]) / k);
+    }
+  }
+  return d;
+}
+function streamChunks(P) {
+  const out = [];
+  for (let i = 0; i < P.length - 1; i += 6) { const j = Math.min(i + 6, P.length - 1), q = P.slice(i, j + 1); out.push([Math.min(...q.map((p) => p[0])), Math.min(...q.map((p) => p[1])), Math.max(...q.map((p) => p[0])), Math.max(...q.map((p) => p[1])), i, j]); }
+  return out;
+}
+// A2: run fn with `pts` as the river (falls.js builds its waterfall from RIVER[0..1]: this gives every mountain stream its own fall)
+export function withRiver(pts, fn) { const keep = RIVER; RIVER = pts; try { return fn(); } finally { RIVER = keep; } }
 
 // normalized distance to the nearest farm field (<1 inside)
 export function fieldD(x, z) {

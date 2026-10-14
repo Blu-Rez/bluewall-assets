@@ -1,0 +1,46 @@
+[
+ {
+  "id": "kaykit_skeletons",
+  "name": "KayKit Character Pack: Skeletons (Skeleton Rogue + Skeleton Staff) and Character Animations",
+  "author": "Kay Lousberg (KayKit)",
+  "license": "CC0",
+  "source": "https://kaylousberg.itch.io/kaykit-skeletons",
+  "faces": 5278,
+  "animated": true,
+  "files": [
+   "u3_skel_rogue.glb",
+   "u3_staff.glb"
+  ],
+  "used_for": "lich (the clips come from the already shipped kk_anims.glb)",
+  "cat": "units"
+ },
+ {
+  "id": "low_poly_dragon_bocdagla",
+  "name": "Low Poly Dragon",
+  "author": "bocdagla",
+  "license": "CC-BY 4.0",
+  "source": "https://bocdagla.itch.io/low-poly-dragon",
+  "faces": 2004,
+  "animated": true,
+  "files": [
+   "u3_dragon_dark.glb"
+  ],
+  "used_for": "darkrider (the mount)",
+  "cat": "heroes"
+ },
+ {
+  "id": "low_poly_dark_knight_mixamo_rigged_7f59a7b0",
+  "name": "Low Poly Dark Knight (Mixamo Rigged)",
+  "author": "giorgi.abashidze95",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/low-poly-dark-knight-mixamo-rigged-7f59a7b0e952457c9102cd65fe485f09",
+  "uid": "7f59a7b0e952457c9102cd65fe485f09",
+  "faces": 3056,
+  "animated": true,
+  "files": [
+   "u3_dk_knight.glb"
+  ],
+  "used_for": "darkrider (the rider, posed once in a riding seat)",
+  "cat": "heroes"
+ }
+]

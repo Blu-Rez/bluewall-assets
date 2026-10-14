@@ -73,6 +73,9 @@ class Pool {
   }
 }
 
+let ACTIVE = null;                                       // the FX of the running battle (D1: bunits.js kill() draws its death powder through it; battle.js hooks stay untouched)
+export const activeFX = () => ACTIVE;
+
 export function createFX(scene, { scale, height = () => 0 }) {
   const soft = new Pool(scene, { n: 1600, additive: false, tex: puffTex(), scale }), glow = new Pool(scene, { n: 900, additive: true, tex: softTex(), scale });
   const G = new THREE.Group(); scene.add(G);
@@ -351,12 +354,26 @@ export function createFX(scene, { scale, height = () => 0 }) {
     for (let i = 0; i < 70; i++) { const a = rnd() * 6.283, sp = 4 + rnd() * 16; glow.spawn(x, y + 6 + rnd() * 5, z, Math.cos(a) * sp, 6 + rnd() * 14, Math.sin(a) * sp, 0.9 + rnd() * 0.9, 1.7, 0.25, [col[0], col[1], col[2], 1], [col[0], col[1], col[2], 0], 22, 0.5); }
   };
 
+  // D1 — the ONE death effect: a unit turns to powder and light. n motes out of a body `size` tall centred at (x, y, z), rgb = tier colour (0..1):
+  // 15 % a thin column of light that climbs, 25 % light motes (additive, the pure colour), 60 % powder (normal blending, the colour lifted towards white: it also reads on the bright ground where additive light washes out).
+  // Glow + soft pools only: no new draw call, no new program.  Sizes / speeds follow the body (`size`), counts follow the tier (bunits.js DIS.n).
+  api.dissolve = (x, y, z, size, rgb, n) => {
+    const r = rgb[0], g = rgb[1], b = rgb[2], pr = r + (1 - r) * 0.25, pg = g + (1 - g) * 0.25, pb = b + (1 - b) * 0.25, s = Math.max(0.45, Math.min(3, size * 0.13)), w = size * 0.36, vk = Math.sqrt(Math.max(1, size / 4.85));
+    for (let i = 0; i < n; i++) {
+      const q = rnd(), px = x + (rnd() - 0.5) * w, py = y + (rnd() - 0.5) * size * 0.95, pz = z + (rnd() - 0.5) * w;
+      if (q < 0.15) glow.spawn(x + (rnd() - 0.5) * w * 0.2, y - size * 0.5 + rnd() * size * 0.9, z + (rnd() - 0.5) * w * 0.2, 0, (4 + rnd() * 4) * vk, 0, 0.5 + rnd() * 0.3, s * 1.3, s * 0.3, [r, g, b, 0.95], [r, g, b, 0]);
+      else if (q < 0.4) glow.spawn(px, py, pz, (rnd() - 0.5) * 1.8 * vk, (1.2 + rnd() * 2.4) * vk, (rnd() - 0.5) * 1.8 * vk, 0.7 + rnd() * 0.5, s * 2, s * 0.25, [r, g, b, 1], [r, g, b, 0], -1.5, 0.6);
+      else soft.spawn(px, py, pz, (rnd() - 0.5) * 2.4 * vk, (0.9 + rnd() * 2.2) * vk, (rnd() - 0.5) * 2.4 * vk, 0.8 + rnd() * 0.5, s * 1.1, s * 0.35, [pr, pg, pb, 0.95], [r, g, b, 0], -0.8, 0.9);
+    }
+  };
+
   api.update = (dt) => {
     soft.update(dt); glow.update(dt); updateProj(dt); updateDebris(dt); updateGems(dt); ruins.update(dt);
     for (let i = later.length - 1; i >= 0; i--) { const l = later[i]; l.t -= dt; if (l.t <= 0) { later.splice(i, 1); l.fn(); } }
   };
   api.clear = () => { ruins.clear(); soft.age.fill(9e9); glow.age.fill(9e9); for (const P of Object.values(proj)) P.list.length = 0; chunks.length = 0; later.length = 0; rub.r = rub.p = rub.rn = rub.pn = 0; rub.dirty = true; flushRubble(); sootN = 0; soot.count = 0; for (const k in GM) GM[k].list.length = 0; };
-  api.dispose = () => { ruins.dispose(); scene.remove(G); G.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m && m.dispose && m.dispose()); if (o.isInstancedMesh) o.dispose(); }); sootTex.dispose(); for (const P of [soft, glow]) { P.points.removeFromParent(); if (P.points.geometry) P.points.geometry.dispose(); const u = P.points.material && P.points.material.uniforms; if (u && u.uTex && u.uTex.value) u.uTex.value.dispose(); if (P.points.material && P.points.material.dispose) P.points.material.dispose(); } };
+  api.dispose = () => { if (ACTIVE === api) ACTIVE = null; ruins.dispose(); scene.remove(G); G.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m && m.dispose && m.dispose()); if (o.isInstancedMesh) o.dispose(); }); sootTex.dispose(); for (const P of [soft, glow]) { P.points.removeFromParent(); if (P.points.geometry) P.points.geometry.dispose(); const u = P.points.material && P.points.material.uniforms; if (u && u.uTex && u.uTex.value) u.uTex.value.dispose(); if (P.points.material && P.points.material.dispose) P.points.material.dispose(); } };
   api.stats = () => ({ ruins: ruins.stats(), chunks: chunks.length, rubble: rub.rn, beams: rub.pn, arrows: proj.arrow.list.length });
+  ACTIVE = api;
   return api;
 }

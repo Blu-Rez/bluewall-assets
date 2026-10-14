@@ -5,6 +5,7 @@
 //     a dark engraved shadow (depth), a wide soft glow, a coloured line and a thin bright core.
 // Types without their own glyph use the line icon of the army screen.  Real colours are painted here: the vertex colour only dims it.
 import { ICON } from './armyui.js';
+import { U2_GLYPH } from './u2_glyphs.js';
 
 const TAU = Math.PI * 2;
 const hex = (c) => { const n = parseInt(String(c).replace('#', ''), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
@@ -37,17 +38,18 @@ export const GLYPH = {
   imp: ['M22 52Q22 26 50 26Q78 26 78 52Q78 82 50 87Q22 82 22 52Z', 'M30 34Q16 26 20 8Q33 14 40 28', 'M70 34Q84 26 80 8Q67 14 60 28', 'M22 50L4 42L20 63Z', 'M78 50L96 42L80 63Z', 'M31 50L44 55', 'M69 50L56 55', 'M32 68Q50 82 68 68', { d: 'M40 73L43 80L46 75M60 73L57 80L54 75', soft: 1 }, { d: 'M50 6V19M43 9L57 16M57 9L43 16', soft: 1 }],
   dragonling: ['M50 22L72 30L80 50L66 62L60 80L50 87L40 80L34 62L20 50L28 30Z', 'M30 34Q10 28 6 6Q26 10 40 28', 'M70 34Q90 28 94 6Q74 10 60 28', 'M20 50L4 58L22 64Z', 'M80 50L96 58L78 64Z', 'M32 42L46 49', 'M68 42L54 49', dot(46, 74, 2.2), dot(54, 74, 2.2), { d: 'M50 22V44', soft: 1 }, { d: 'M44 30L50 38L56 30', soft: 1 }, 'M42 82L44 93L47 84M58 82L56 93L53 84', { d: 'M38 56Q50 66 62 56', soft: 1 }],
   // ---- p35: the new units (hand drawn like the rest: a few big shapes + soft detail lines)
-  legionary: ['M22 60Q22 26 50 26Q78 26 78 60V74H22Z', 'M30 24Q50 2 70 24', { d: 'M36 14L36 24M44 8L44 24M56 8L56 24M64 14L64 24', soft: 1 }, 'M22 60L14 86H34V74', 'M78 60L86 86H66V74', { d: 'M32 54H68', soft: 1 }, { d: 'M50 26V54', soft: 1 }],
+  legionary: ['M22 14H62Q66 14 66 18V82Q66 86 62 86H22Q18 86 18 82V18Q18 14 22 14Z', dot(42, 50, 8), { d: 'M42 14V42M42 58V86M18 50H34M50 50H66', soft: 1 }, { d: 'M24 22H60M24 78H60', soft: 1 }, 'M82 6L88 22V64L82 72L76 64V22Z', 'M70 72H94', 'M82 72V88', dot(82, 93, 3.4), { d: 'M82 14V60', soft: 1 }],   // U1: the real legionary's square scutum + gladius
   captain: ['M28 4V97', 'M28 9H80L67 25L80 41H28Z', { d: 'M36 17H66M36 33H66', soft: 1 }, dot(52, 25, 4), 'M20 97H36', { d: 'M24 4L28 0L32 4', soft: 1 }],
   ogre: ['M44 95L47 42Q38 24 52 9Q72 10 74 30Q72 46 57 43L55 95Z', 'M38 26L24 20', 'M40 40L24 44', 'M74 22L88 14', 'M76 38L91 42', { d: 'M50 46V90M52 14Q62 24 52 34', soft: 1 }, dot(60, 24, 3)],
   gryphon: ['M10 60L4 30L20 38L18 14L36 28L44 8L54 30', 'M30 70Q22 44 44 32Q62 22 76 30L94 44L76 50Q70 60 62 66Q54 86 36 92Z', 'M94 44L84 62L74 52', { d: 'M40 74Q46 62 56 58M34 84Q44 76 50 70', soft: 1 }, dot(62, 38, 3)],
-  lich: ['M26 46Q26 20 50 20Q74 20 74 46Q74 58 66 62V74H34V62Q26 58 26 46Z', 'M28 20L32 6L41 14L50 3L59 14L68 6L72 20', dot(40, 46, 7), dot(60, 46, 7), 'M50 54L45 64H55Z', { d: 'M40 74V84M47 74V84M53 74V84M60 74V84', soft: 1 }, 'M90 96V24', dot(90, 16, 7), { d: 'M90 4V9', soft: 1 }],
+  lich: ['M50 3Q16 9 16 50Q16 66 25 76L18 96L40 87Q50 91 60 87L78 96L75 76Q84 66 84 50Q84 9 50 3Z', 'M34 42Q34 25 50 25Q66 25 66 42V55Q66 66 58 70H42Q34 66 34 55Z', dot(43, 43, 5.5), dot(57, 43, 5.5), 'M50 50L46 58H54Z', { d: 'M41 64V70M47 64V71M53 64V71M59 64V70', soft: 1 }, { d: 'M26 30Q50 8 74 30', soft: 1 }, 'M93 99V28', 'M93 6Q100 10 99 19Q97 27 93 27Q89 27 87 19Q86 10 93 6Z', { d: 'M88 31H98M88 36H98', soft: 1 }],
   treant: ['M22 46Q9 36 22 25Q24 9 42 12Q52 1 63 12Q82 9 82 27Q96 36 82 47Q76 55 63 53H38Q28 54 22 46Z', 'M42 53Q45 72 34 95H66Q55 72 58 53', { d: 'M42 62L22 58L12 68M58 62L78 58L88 68', soft: 1 }, dot(45, 66, 3.2), dot(55, 66, 3.2), { d: 'M44 78Q50 84 56 78', soft: 1 }, { d: 'M34 95L24 99M66 95L76 99', soft: 1 }],
   gryphonknight: ['M10 60L4 30L20 38L18 14L36 28L44 8L54 30', 'M30 70Q22 44 44 32Q62 22 76 30L94 44L76 50Q70 60 62 66Q54 86 36 92Z', 'M94 44L84 62L74 52', { d: 'M12 96L56 6', rot: 0 }, 'M56 6L76 12L60 20', dot(62, 38, 3), { d: 'M40 74Q46 62 56 58', soft: 1 }],
-  darkrider: ['M30 86V46Q30 22 50 22Q70 22 70 46V86L60 78H40Z', 'M32 36Q12 32 7 6Q26 12 38 28', 'M68 36Q88 32 93 6Q74 12 62 28', { d: 'M36 54H64', soft: 1 }, { d: 'M50 22V44', soft: 1 }, { d: 'M42 62V72M58 62V72', soft: 1 }, 'M46 54L50 60L54 54'],
+  darkrider: ['M50 3L43 14L46 27H54L57 14Z', { d: 'M43 14L35 7M57 14L65 7', soft: 0 }, 'M46 27L43 66L50 76L57 66L54 27', 'M44 34L5 12Q10 33 3 47Q15 46 18 58Q28 54 32 67Q40 63 44 74', 'M56 34L95 12Q90 33 97 47Q85 46 82 58Q72 54 68 67Q60 63 56 74', dot(50, 45, 7), 'M44 59Q50 51 56 59', { d: 'M50 38Q60 28 69 32', soft: 1 }, { d: 'M50 76V97M50 97L44 91M50 97L56 91', soft: 1 }, { d: 'M50 40V50', soft: 1 }],
   baby3: ['M50 94Q50 64 50 44', 'M50 72Q30 64 24 42', 'M50 72Q70 64 76 42', 'M50 44L43 31L50 16L57 31Z', 'M24 42L15 33L21 19L31 30Z', 'M76 42L85 33L79 19L69 30Z', { d: 'M44 82L18 78L26 92Z', soft: 1 }, { d: 'M56 82L82 78L74 92Z', soft: 1 }, dot(50, 28, 2), dot(22, 31, 1.8), dot(78, 31, 1.8)],
   dragon3: ['M50 94L50 48', 'M50 70Q30 62 24 40', 'M50 70Q70 62 76 40', 'M50 46L42 31L50 12L58 31Z', 'M24 40L14 30L20 14L32 28Z', 'M76 40L86 30L80 14L68 28Z', 'M46 60L4 26Q8 44 2 56Q14 56 16 66Q26 62 30 74Q38 70 44 82Z', 'M54 60L96 26Q92 44 98 56Q86 56 84 66Q74 62 70 74Q62 70 56 82Z', dot(50, 26, 2.2), dot(20, 28, 2), dot(80, 28, 2), { d: 'M46 60L18 38M46 66L12 56', soft: 1 }, { d: 'M54 60L82 38M54 66L88 56', soft: 1 }],
 };
+Object.assign(GLYPH, U2_GLYPH);                                  // u2: the ogre glyph redrawn for its real model (u2_glyphs.js)
 
 function strokeAll(g, items, style) {                                                          // one pass of every path of a glyph
   for (const it of items) {

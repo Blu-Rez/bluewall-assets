@@ -1,0 +1,15 @@
+[
+ {
+  "id": "gryphon_simple_animated_2e79d72e",
+  "name": "Gryphon-simple animated",
+  "author": "Twqero",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/gryphon-simple-animated-2e79d72e91ac4077b710c3e29181de92",
+  "uid": "2e79d72e91ac4077b710c3e29181de92",
+  "faces": 670,
+  "animated": true,
+  "thumb": "https://media.sketchfab.com/models/2e79d72e91ac4077b710c3e29181de92/thumbnails/73310c98d9444b73ab3343d42a198e27/c2fa6062a4fe422ba24cb6c8a1d38c02.jpeg",
+  "cat": "units",
+  "used_for": "gryphon (u4_gryphon.glb): mesh, texture and skeleton unchanged; texture re-encoded to webp 512, geometry meshopt-compressed; the Fly / Hover / Atk / Hit / Die clips are keyed on the artist's own bones (client/src/u4_looks.js)"
+ }
+]

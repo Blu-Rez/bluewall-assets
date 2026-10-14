@@ -15,6 +15,8 @@ import { createLiveKind, LIVE_LOOK } from './bdragon_live.js';
 import { trollStride } from './bgiant.js';
 import { GIANT_SWING, hitTOf } from './battlesim.js';
 import { createKind } from './crowd.js';
+import { activeFX } from './bfx.js';                                           // D1: the death powder
+import { RARITY, TIERS } from './rarity.js';                                // D1: the death colour = the unit's rarity tier
 import { trimClips } from './creature.js';
 import { loadGLB, parts as modelParts } from './assets.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
@@ -28,6 +30,8 @@ import { dressKnight, axeKnight, setPlumeTier } from './gear_plume.js';
 import { dressPegasus } from './gear_pegasus.js';
 import { setupFlyers } from './bunits_fly.js';
 import { setupGround } from './bunits_ground.js';
+import { U1_TYPE, U1_CONTACT } from './u1_looks.js';                  // U1: real legionary + captain (u1_looks.js)
+import { U2_TYPE } from './u2_looks.js';                                        // U2: real ogre + treant (u2_looks.js)
 
 const freeGL = (root) => root.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m && m.dispose && m.dispose()); if (o.isInstancedMesh) o.dispose(); });   // (GPU buffers of a finished battle: the renderer rebuilds anything still shared)
 
@@ -99,6 +103,8 @@ const TYPE = {
 // the foe's guardians (owner 5 Oct 01:35): the same beasts, their own kinds (dark charcoal hide, bdragon.js)
 TYPE.e_baby = { ...TYPE.baby, parts: [{ ...TYPE.baby.parts[0], k: 'baby_e' }] };
 TYPE.e_dragon = { ...TYPE.dragon, parts: [{ ...TYPE.dragon.parts[0], k: 'dragon_e' }] };
+Object.assign(TYPE, U1_TYPE);                                                    // U1: the legionary's and the captain's recipes (clips / speeds of the real models)
+Object.assign(TYPE, U2_TYPE);                                                    // U2: the ogre + treant (real models, u2_looks.js) replace the p35 recipes above
 
 // ---------------------------------------------------------------- the factory
 export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLevel = 1, height = () => 0, hooks = {}, progress }) {
@@ -109,7 +115,7 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
   const anyInf = types.some((t) => ['spear', 'sword', 'guard', 'archer', 'e_guard', 'e_archer', 'hill', 'shieldmaiden', 'legionary', 'captain'].includes(t)), anyRound = count.guard || count.e_guard || count.shieldmaiden;
   await Promise.all([need('ranger_m'), need('anims'), anyInf && need('anims_army'), need('helmet2'), need('helmet3'), need('spear'), need('claymore'), need('shield_heater'), need('sword'), need('bow'),
     count.cavalry && need('horse_m2m_grey'), count.axerider && need('horse_m2m_bay'), (count.cavalry || count.axerider) && need('knight_k3'), count.pegasus && need('pegasus'), (count.baby || count.dragon || count.e_baby || count.e_dragon) && need('prowler'), (count.giant || count.e_giant) && need('troll'), count.catapult && need('catapult'),
-    count.ogre && need('ogre'), count.treant && need('treant'), count.imp && need('imp'), (count.hill || count.e_hill) && need('hill_giant'), (count.hill || count.e_hill) && need('hammer_double'), count.shieldmaiden && need('shieldmaiden'), anyRound && need('shield_round2'),
+    count.ogre && need('u2_ogre'), count.treant && need('treant'), count.imp && need('imp'), (count.hill || count.e_hill) && need('hill_giant'), (count.hill || count.e_hill) && need('hammer_double'), count.shieldmaiden && need('shieldmaiden'), anyRound && need('shield_round2'),
     (count.mage || count.lich) && need('skel_mage'), count.mage && need('skel_staff'), (count.mage || count.lich) && need('kk_anims'), count.werewolf && need('werewolf'), count.lord && need('horse_m2m_black'), count.lord && need('knight_k3'),
     count.cannon && need('cannon'), count.ram && need('ram'), count.trebuchet && need('trebuchet2'), count.dragonling && need('dragonling')].filter(Boolean));
   const TT = {}; for (const u of units) TT[u.type] = u.tier | 0;                       // the tier of each unit type (= the level tier of its building, from the sim)
@@ -303,6 +309,7 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
   // the riders' strike clips are authored in gear_sword.js: the cut passes the target at ~0.42 / 0.46 of their 1 s).  An attack is played at the speed that puts this frame on
   // hitTOf(type) = the moment the sim counts the damage, so the blow and the damage are the same instant.
   const CONTACT = { Punch_Cross: 0.25, Sword_Regular_A: 0.24, Sword_Regular_B: 0.26, Sword_Attack: 0.42, Shield_OneShot: 0.15, Ranged_Magic_Shoot: 0.3, RideStrike: 0.43, AxeStrike: 0.46, Punch: 0.28 };
+  Object.assign(CONTACT, U1_CONTACT);                                       // U1: contact frames of the legionary's / captain's blows
   function setState(v, s, t, init) {
     for (const pt of v.parts) {
       const c = pt.P.clip; let name = s === 'hit' ? c.hit : s === 'hover' ? (c.hover || c.idle) : s === 'atk' ? c.atk : c[s];
@@ -330,7 +337,7 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
     const sc = (0.97 + rnd() * 0.06) * (u.side === 'A' ? tierScale(u.tier | 0) : 1);
     if (Tp.catapult) {
       const sk = S[key]; if (!sk) return null;
-      v.cat = { x: u.x, y: height(u.x, u.z), z: u.z, yaw: u.face, rec: 0, sy: 1 }; v.sk = sk; sk.list.push(v.cat);
+      v.cat = { x: u.x, y: height(u.x, u.z), z: u.z, yaw: u.face, rec: 0, sk: 1, rise: 0 }; v.sk = sk; sk.list.push(v.cat);
     } else {
       for (const P of Tp.parts) {
         const k = K[P.k]; if (!k) continue;
@@ -346,20 +353,44 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
   for (const u of units) addView(u);
   for (const d of defs) addView(d);
 
-  // ---------------------------------------------------------------- death
-  const freeze = (p, k, name) => { const c = k.info[name]; if (!c) return; const now = k.group.userData.now || 0; p.cur = { base: c.base, count: c.count, start: now - (c.count - 1.5) / 0.001, rate: 0.001 }; p.prv = p.cur; p.sw = -1e9; };
+  // ---------------------------------------------------------------- death (D1): ONE effect for every unit (soldier, rider, flyer, giant, dragon, siege machine, defender)
+  //   0 - 0.35 s   frozen in the pose it died in (no clip, no fall-over, flyers do not drop)
+  //   0.35 - 1.3 s the body thins out (instance scale only: no shader, no program) while it turns to powder + light in the colour of its RARITY tier (rarity.js); the light is stronger with the tier
+  //   1.5 s        the view is gone (the crowd slot is free again).  Motes: bfx.js dissolve(), spread over the window; one global budget keeps a mass death from flooding the pool.
+  const DIS = { hold: 0.35, end: 1.3, gone: 1.5, n: [18, 25, 32, 43, 54], budget: 650 };      // n = motes per unit by tier (common ... mythic) · budget = motes per second for all dissolving units together
+  const hexRGB = (h) => { const n = parseInt(h.slice(1), 16); return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]; };
+  const TRGB = TIERS.map((T) => hexRGB(T.c)), _fc = [0, 0, 0];
+  let budgetK = 1, nextBudget = 1;                                                              // (this frame's thinning factor, measured from last frame's dissolving units)
+  // freeze the part where it stands: the baked clip slows to a crawl at its current frame (rate 0.001 = 1.5 s -> 0.0015 of a frame), a live one (dragon / giant) pauses its mixer
+  const hold = (pt) => {
+    const p = pt.p, c = p.cur, now = pt.k.group.userData.now || 0;
+    if (c && c.count) { const fr = ((((now - c.start) * c.rate) % c.count) + c.count) % c.count; p.cur = { base: c.base, count: c.count, start: now - fr / 0.001, rate: 0.001 }; }
+    else if (p._act) p._act.timeScale = 0;
+  };
+  // the body's size in world units (it only sizes the motes and the drift): a live kind (dragon, giant) is measured once, at its death; a baked one is estimated from its scale (`crAbs` for the giants) + a rider's seat height
+  const _bb = new THREE.Box3(), _bs = new THREE.Vector3();
+  const bodyBox = (pt) => {
+    const P = pt.P, root = pt.p.c && pt.p.c.root;
+    if (root) { _bb.setFromObject(root); _bb.getSize(_bs); if (isFinite(_bs.y) && _bs.y > 0.5) return { h: Math.max(_bs.y, 0.6 * Math.max(_bs.x, _bs.z)), cy: (_bb.min.y + _bb.max.y) / 2 - pt.p.y }; }
+    return { h: (P.crAbs ? P.crAbs * 0.9 : pt.p.scale * (P.crK ? 1.8 : 1.9)) + (P.off ? P.off[0] : 0), cy: null };
+  };
   function kill(v, t) {
-    if (!v || v.dead) return; v.dead = true; v.dieAt = t; v.state = 'die'; v.removeAt = t + 10 + rnd() * 3;
-    if (v.cat) { v.cat.dead = true; hooks.collapse && hooks.collapse(v.u.x, v.u.z, 4, 7); return; }
-    v.fall = !!v.T.air;
-    for (const pt of v.parts) {
-      const D = pt.P.die || {};
-      if (D.clip === 'Death01') pt.p.l2pitch = -1.5;
-      if (D.clip && pt.k.info[D.clip]) { pt.p.play(D.clip, { speed: 1 }); pt.freezeAt = t + pt.k.info[D.clip].dur / 1; pt.dead = D.clip; }
-      if (D.tumble) pt.tumble = { ...D.tumble, t0: t, y0: pt.p.y };
-      if (D.hide) pt.hideAt = t + D.hide;
-    }
-    if (!v.fall && v.T.big && hooks.land) v.landAt = t + 1.0;
+    if (!v || v.dead) return; v.dead = true; v.dieAt = t; v.state = 'die'; v.removeAt = t + DIS.gone; v.acc = 0; v.flashed = false;
+    v.ti = Math.max(0, TIERS.indexOf(RARITY[v.u.type]));                         // a type without a tier -> common steel
+    if (v.cat) { v.cat.dead = true; v.H = 5; v.cy = 2.5; return; }
+    let H = 0, cy = null; for (const pt of v.parts) { hold(pt); pt.s0 = pt.p.scale; const bx = bodyBox(pt); if (bx.h > H) { H = bx.h; cy = bx.cy; } }
+    v.H = clamp(H, 3.5, 24); v.cy = cy == null ? v.H * (v.T.air ? 0.2 : 0.5) : clamp(cy, 0, v.H);         // (cy = where the middle of the body is above the model's origin: the thinning pivots there, the flash and the motes start there)
+
+  }
+  // one frame of a dying unit: the soft flash at the chest when the dissolve starts, then its share of motes
+  function dissolve(v, age, dt, k, gy) {
+    const fx = activeFX(); if (!fx || age < DIS.hold) return;
+    const ti = v.ti, u = v.u, rgb = TRGB[ti], cy = gy + v.ly + v.cy * (1 + 0.3 * k);
+    nextBudget += DIS.n[ti] / (DIS.end - DIS.hold);
+    if (!v.flashed) { v.flashed = true; const q = 0.5 + 0.5 * budgetK; _fc[0] = rgb[0] * q; _fc[1] = rgb[1] * q; _fc[2] = rgb[2] * q; fx.flash(u.x, cy, u.z, v.H * (0.8 + 0.14 * ti), _fc); }
+    if (k >= 1) return;
+    v.acc += DIS.n[ti] * (dt / (DIS.end - DIS.hold)) * budgetK;
+    const m = Math.floor(v.acc); if (m > 0) { v.acc -= m; fx.dissolve(u.x, cy, u.z, v.H * (0.5 + 0.5 * (1 - k)), rgb, m); }
   }
 
   // ---------------------------------------------------------------- events
@@ -382,21 +413,17 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
   function update(t, dt, camera) {
     dt = Math.max(1e-3, Math.min(0.1, dt));
     for (const k of Object.values(K)) k.group.userData.now = t;
+    budgetK = nextBudget > DIS.budget ? DIS.budget / nextBudget : 1; nextBudget = 0;
     for (let i = list.length - 1; i >= 0; i--) {
       const v = list[i], u = v.u;
       if (v.dead) {
-        if (v.cat) { v.cat.sy += (0.28 - v.cat.sy) * Math.min(1, dt * 3); if (t > v.removeAt) { v.sk.list.splice(v.sk.list.indexOf(v.cat), 1); list.splice(i, 1); } continue; }
-        const gy = height(u.x, u.z);
-        if (v.fall) { v.vy -= 36 * dt; v.ly = Math.max(0, v.ly + v.vy * dt); if (v.ly <= 0 && !v.landed) { v.landed = true; hooks.land && hooks.land(u.x, u.z, !!v.T.big); } }
-        if (v.landAt && t >= v.landAt) { v.landAt = 0; hooks.land && hooks.land(u.x, u.z, true); }
-        const sinkK = t > v.removeAt - 3 ? (t - (v.removeAt - 3)) * 0.55 : 0;
-        for (let j = v.parts.length - 1; j >= 0; j--) {
-          const pt = v.parts[j], p = pt.p;
-          if (pt.freezeAt && t >= pt.freezeAt) { freeze(p, pt.k, pt.dead); pt.freezeAt = 0; }
-          let ty = 0;
-          if (pt.tumble) { const k = clamp((t - pt.tumble.t0) / pt.tumble.dur, 0, 1), e = k * k; p[pt.tumble.key] = pt.tumble.to * e; ty = -(pt.tumble.sink || 0) * e; if (k >= 1 && !pt.tumble.done && pt.tumble.key === 'pitch') { pt.tumble.done = true; hooks.land && hooks.land(u.x - Math.sin(v.yaw) * 4, u.z - Math.cos(v.yaw) * 4, true); } }
-          const o = pt.P.off || [0, 0]; p.x = u.x + Math.sin(v.yaw) * o[1]; p.z = u.z + Math.cos(v.yaw) * o[1]; p.y = gy + v.ly + o[0] + ty - sinkK; p.yaw = v.yaw;
-          if (pt.hideAt && t >= pt.hideAt) { pt.k.remove(p); v.parts.splice(j, 1); hooks.land && hooks.land(u.x, u.z, false); }
+        const age = t - v.dieAt, k = clamp((age - DIS.hold) / (DIS.end - DIS.hold), 0, 1), f = Math.max(0.001, 1 - k * Math.sqrt(k)), gy = height(u.x, u.z);
+        dissolve(v, age, dt, k, gy);
+        const up = v.cy * (1 - f) + v.H * 0.16 * k;                    // shrinks about its chest, drifts up while it goes
+        if (v.cat) { v.cat.sk = f; v.cat.rise = up; if (t > v.removeAt) { v.sk.list.splice(v.sk.list.indexOf(v.cat), 1); list.splice(i, 1); } continue; }
+        for (const pt of v.parts) {
+          const p = pt.p, o = pt.P.off || [0, 0];
+          p.scale = pt.s0 * f; p.x = u.x + Math.sin(v.yaw) * o[1] * f; p.z = u.z + Math.cos(v.yaw) * o[1] * f; p.y = gy + v.ly + o[0] * f + up; p.yaw = v.yaw;
         }
         if (t > v.removeAt) { for (const pt of v.parts) pt.k.remove(pt.p); v.parts.length = 0; list.splice(i, 1); }
         continue;
@@ -448,7 +475,7 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
         for (let i = 0; i < n; i++) {
           const c = sk.list[i], back = c.rec * sk.kick, yaw = c.yaw + sk.yawOff;
           _q.setFromAxisAngle(_up, yaw); _q.multiply(new THREE.Quaternion().setFromEuler(_e.set(-c.rec * 0.05 * Math.sign(sk.kick), 0, 0)));
-          _p.set(c.x - Math.sin(c.yaw) * back, c.y + (c.dead ? -0.2 * (1 - c.sy) : 0), c.z - Math.cos(c.yaw) * back); _s.set(1, c.sy, 1);
+          _p.set(c.x - Math.sin(c.yaw) * back, c.y + c.rise, c.z - Math.cos(c.yaw) * back); _s.setScalar(c.sk);
           _m.compose(_p, _q, _s); im.setMatrixAt(i, _m);
         }
         im.instanceMatrix.needsUpdate = true;

@@ -1,0 +1,19 @@
+[
+ {
+  "id": "low_poly_medieval_forge_2e2b4343",
+  "name": "Low Poly Medieval Forge",
+  "author": "Nick Landar",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/low-poly-medieval-forge-2e2b434374e744cda3fddae92d4fe8ca",
+  "uid": "2e2b434374e744cda3fddae92d4fe8ca",
+  "faces": 20566,
+  "animated": false,
+  "thumb": "https://media.sketchfab.com/models/2e2b434374e744cda3fddae92d4fe8ca/thumbnails/248eb2209bbe4a3c9c05dfb51ab84d80/c780b7d4f23e42398610b20492daf6d3.jpeg",
+  "cat": "iron",
+  "pieces": [
+   "c2_furnace",
+   "c2_grindwheel"
+  ],
+  "note": "only the furnace and the grinding-wheel meshes are used (re-baked to vertex colours, simplified); the forge hut was dropped"
+ }
+]

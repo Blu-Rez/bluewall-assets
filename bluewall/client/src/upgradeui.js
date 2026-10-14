@@ -54,6 +54,16 @@ function fmtT(s) {
   return d ? `${d}d ${h}h` : h ? `${h}h ${String(m).padStart(2, '0')}m` : m ? `${m}m ${String(c).padStart(2, '0')}s` : `${c}s`;
 }
 
+// the label / state of the "next level" button of one structure (T1: the context sheet calls this too, so the rule lives in one place)
+function nextBtn(r, p) {
+  const nx = r.next, lv = r.lv, free = p.builders_busy < p.builders, canReserve = p.reserved < p.reserve_max;
+  let label, dis = false, cls = '';
+  if (nx.ok) label = free ? (lv ? `Upgrade to Lv ${nx.to}` : 'Build') : 'Reserve';
+  else { dis = true; cls = 'sec'; const i = nx.info || {}; label = nx.why === 'cap' ? `Castle Lv ${i.need_keep}` : nx.why === 'locked' ? `Castle Lv ${i.need_keep}` : nx.why === 'round' ? `All buildings Lv ${i.need} first (${(i.left || []).length} left)` : nx.why === 'vault' ? `Bigger ${i.gem === 'turq' ? 'turquoise' : i.gem} vault` : nx.why === 'gems' ? 'Not enough gems' : (WHY[nx.why] || nx.why); }
+  if (nx.ok && !free && !canReserve) { dis = true; label = 'Queue full'; }
+  return { label, dis, cls };
+}
+
 const CSS = `
 .bwu-btn{pointer-events:auto;position:absolute;right:calc(12px + var(--sr));bottom:calc(var(--sb) + 16px);width:78px;height:86px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .15s,opacity .6s;transform:scale(var(--hs,1));transform-origin:100% 100%}
 .bwu-btn:active{transform:scale(calc(var(--hs,1) * .93))}
@@ -77,7 +87,7 @@ const CSS = `
 .bwu.on .bwu-pan{transform:none}
 .bwu-h{display:flex;align-items:center;gap:10px;padding:14px 16px 8px}
 .bwu-h .t{flex:1;font-size:19px;color:#d9f2ff;letter-spacing:.3px}
-.bwu-x{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.07);font-size:14px;cursor:pointer}
+.bwu-x{width:44px;height:44px;margin:-6px -6px -6px 0;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.07);font-size:16px;cursor:pointer}
 .bwu-bl{display:flex;gap:8px;padding:2px 14px 10px}
 .bwu-b{flex:1;min-width:0;padding:7px 8px 8px;border-radius:12px;background:rgba(95,182,255,.07);border:1px solid rgba(120,190,255,.2);text-align:center;position:relative;overflow:hidden}
 .bwu-b .ic{color:#8fd3ff;height:22px;display:grid;place-items:center}.bwu-b.off{opacity:.38}
@@ -170,11 +180,7 @@ export function createUpgradeUI(mount, { econ, ui, audio } = {}) {
           <div class="bwu-go">${u.rush_cut === 0 && u.rush === 0 && !u.rush_full ? `<button class="sec" disabled>Rush limit · ${fmtH(Math.max(0, (p.rush_day_h || 4) * 3600))}/day</button>` : `<button class="rush" data-a="rush" data-e="${e}" ${have.turq < u.rush ? 'disabled' : ''}>${u.rush > 0 ? (u.rush_full === false ? `Rush −${fmtH(u.rush_cut)} ${GEMS.turq}${fmtN(u.rush)}` : `Rush ${GEMS.turq}${fmtN(u.rush)}`) : 'Finish free'}</button>`}<button class="sec" data-a="cancel" data-e="${e}">Cancel</button></div>`;
       }
     } else if (r.next && r.next.cost) {
-      const nx = r.next, free = p.builders_busy < p.builders, canReserve = p.reserved < p.reserve_max;
-      let label, dis = false, cls = '';
-      if (nx.ok) label = free ? (lv ? `Upgrade to Lv ${nx.to}` : 'Build') : 'Reserve';
-      else { dis = true; cls = 'sec'; const i = nx.info || {}; label = nx.why === 'cap' ? `Castle Lv ${i.need_keep}` : nx.why === 'locked' ? `Castle Lv ${i.need_keep}` : nx.why === 'round' ? `All buildings Lv ${i.need} first (${(i.left || []).length} left)` : nx.why === 'vault' ? `Bigger ${i.gem === 'turq' ? 'turquoise' : i.gem} vault` : nx.why === 'gems' ? 'Not enough gems' : (WHY[nx.why] || nx.why); }
-      if (nx.ok && !free && !canReserve) { dis = true; label = 'Queue full'; }
+      const nx = r.next, { label, dis, cls } = nextBtn(r, p);
       body = `<div class="bwu-cost">${costHtml(nx.cost, have)}<span class="tm">⏱ ${fmtT(nx.dur)}</span></div>
         <div class="bwu-go"><button class="${cls}" data-a="up" data-e="${e}" ${dis ? 'disabled' : ''}>${label}</button></div>`;
     } else body = `<div class="bwu-note" style="margin:6px 0 0;text-align:left">Maximum level — ${TIERS[5][0]} tier</div>`;
@@ -270,5 +276,11 @@ export function createUpgradeUI(mount, { econ, ui, audio } = {}) {
     }
   }, 1000);
 
-  return { open, close, focus, update() { if (S.open) render(); else updateBtn(); } };
+  // T1 (context sheet): read what one structure shows + run the SAME actions the page runs (start / speedup / cancel)
+  function info(ent) {
+    const p = P(), r = p && p.structs[ent]; if (!r) return null;
+    return { name: NAME[ent], desc: DESC[ent] || '', r, p, tier: TIERS[tierOf(Math.max(1, r.lv))], btn: !r.up && r.next && r.next.cost ? nextBtn(r, p) : null, have: econ.st.gems, now: now() };
+  }
+  return { open, close, focus, info, act, update() { if (S.open) render(); else updateBtn(); } };
 }
+export { NAME as STRUCT_NAME, DESC as STRUCT_DESC, TIERS, tierOf, fmtT, fmtN, icon as structIcon, GEM_KEYS };

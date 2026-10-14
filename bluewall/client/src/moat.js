@@ -125,7 +125,7 @@ function padTexture() {
 export function buildMoat(ctx, api) {
   const { scene, M, Q, water } = api, fh = api.fastHeight || api.height;
   if (!L.TOWN) return { update() {} };
-  const LV = L.MOAT.level, R = rng(4242), B = ctx.B;
+  const LV = L.MOAT.level, R = rng(4242), RS = rng(9137), B = ctx.B;      // (A2: RS = the mountain streams' own random stream, so the p38 moat / river / lake keep exactly the decoration they had)
   const q0 = Q && Q.level === 'low' ? 0.4 : Q && Q.level === 'medium' ? 0.7 : 1, SE = season(), winter = SE.s === 3;
   const gateAng = L.TGATES.map((g) => Math.atan2(g.z, g.x));
   const nearGate = (ang) => gateAng.some((a) => Math.abs(Math.atan2(Math.sin(ang - a), Math.cos(ang - a))) < 0.05);
@@ -258,16 +258,15 @@ export function buildMoat(ctx, api) {
   }
   // river banks (only the part inside the playable valley)
   {
-    const P = L.RIVER;
-    for (let i = 0; i < P.length - 1; i++) {
+    for (const [P, RR] of [[L.RIVER, R], ...L.STREAMS.map((S) => [S.pts, RS])]) for (let i = 0; i < P.length - 1; i++) {      // (A2: the mountain streams get the same banks)
       const a = P[i], b = P[i + 1], len = Math.hypot(b[0] - a[0], b[1] - a[1]), tx = (b[0] - a[0]) / len, tz = (b[1] - a[1]) / len;
-      for (let s = 0; s < len; s += 7 + R() * 6) {
-        const cx = a[0] + tx * s, cz = a[1] + tz * s; if (Math.hypot(cx, cz) > 300 || L.sdTown(cx, cz) < 2) continue;                                   // (p38: inside the town the river is a stone-edged canal: no reeds / boulders)
+      for (let s = 0; s < len; s += 7 + RR() * 6) {
+        const cx = a[0] + tx * s, cz = a[1] + tz * s; if (Math.hypot(cx, cz) > (P === L.RIVER ? 300 : 405) || L.sdTown(cx, cz) < 2) continue;                                   // (p38: inside the town the river is a stone-edged canal: no reeds / boulders)
         for (const side of [-1, 1]) {
           const nx = -tz * side, nz = tx * side, r = cross(fh, LV, cx, cz, nx, nz, 0, 14); if (r == null) continue;
           const x = cx + nx * r, z = cz + nz * r;
-          if (R() < 0.6) { const xx = x + nx * (R() - 0.6) * 1.6, zz = z + nz * (R() - 0.6) * 1.6, h = fh(xx, zz); if (h < LV + 1.1 && h > LV - 0.8) reeds.push([xx, h - 0.1, zz, R() * 3.14, 0.9 + R() * 0.8]); }
-          if (R() < 0.4) { const sc = 0.4 + Math.pow(R(), 2) * 1.1; rocks.push([x, fh(x, z) - sc * 0.28, z, R() * 6.28, sc]); }
+          if (RR() < 0.6) { const xx = x + nx * (RR() - 0.6) * 1.6, zz = z + nz * (RR() - 0.6) * 1.6, h = fh(xx, zz); if (h < LV + 1.1 && h > LV - 0.8) reeds.push([xx, h - 0.1, zz, RR() * 3.14, 0.9 + RR() * 0.8]); }
+          if (RR() < 0.4) { const sc = 0.4 + Math.pow(RR(), 2) * 1.1; rocks.push([x, fh(x, z) - sc * 0.28, z, RR() * 6.28, sc]); }
         }
       }
     }
@@ -280,35 +279,35 @@ export function buildMoat(ctx, api) {
   {
     const Lk = L.LAKE;
     for (let a = 0; a < TAU; a += 0.035 + R() * 0.03) { const dx = Math.cos(a), dz = Math.sin(a), r = cross(fh, LV, Lk.x, Lk.z, dx, dz, Lk.r * 0.5, Lk.r * 1.9); if (r != null) shore.push([Lk.x + dx * r, Lk.z + dz * r, dx, dz]); }
-    const P = L.RIVER;
-    for (let i = 0; i < P.length - 1; i++) {
+    for (const [P, RR, tag] of [[L.RIVER, R, 0], ...L.STREAMS.map((S) => [S.pts, RS, 1])]) for (let i = 0; i < P.length - 1; i++) {      // (A2: the mountain streams get the same banks)
       const a = P[i], b = P[i + 1], len = Math.hypot(b[0] - a[0], b[1] - a[1]), tx = (b[0] - a[0]) / len, tz = (b[1] - a[1]) / len;
-      for (let sdist = 0; sdist < len; sdist += 2.2 + R() * 1.6) {
-        const cx = a[0] + tx * sdist, cz = a[1] + tz * sdist; if (Math.hypot(cx, cz) > 300 || L.sdTown(cx, cz) < 2) continue;
-        for (const side of [-1, 1]) { const nx = -tz * side, nz = tx * side, r = cross(fh, LV, cx, cz, nx, nz, 0, 14); if (r != null) shore.push([cx + nx * r, cz + nz * r, nx, nz]); }
+      for (let sdist = 0; sdist < len; sdist += 2.2 + RR() * 1.6) {
+        const cx = a[0] + tx * sdist, cz = a[1] + tz * sdist; if (Math.hypot(cx, cz) > (P === L.RIVER ? 300 : 405) || L.sdTown(cx, cz) < 2) continue;
+        for (const side of [-1, 1]) { const nx = -tz * side, nz = tx * side, r = cross(fh, LV, cx, cz, nx, nz, 0, 14); if (r != null) shore.push(tag ? [cx + nx * r, cz + nz * r, nx, nz, 1] : [cx + nx * r, cz + nz * r, nx, nz]); }
       }
     }
   }
   const sedges = [], blooms = [];
-  for (const [x, z, dx, dz] of shore) {
-    const nS = Math.round((2.6 + R() * 3.4) * q);
+  for (const [x, z, dx, dz, st] of shore) {
+    const RR = st ? RS : R;
+    const nS = Math.round((2.6 + RR() * 3.4) * q);
     for (let i = 0; i < nS; i++) {                    // sedge / meadow tufts, thick at the water and thinning out inland
-      const off = -0.25 + Math.pow(R(), 1.5) * 5.4, lat = (R() - 0.5) * 2.6, px = x + dx * off - dz * lat, pz = z + dz * off + dx * lat, h = fh(px, pz);
+      const off = -0.25 + Math.pow(RR(), 1.5) * 5.4, lat = (RR() - 0.5) * 2.6, px = x + dx * off - dz * lat, pz = z + dz * off + dx * lat, h = fh(px, pz);
       if (h < LV - 0.3 || h > LV + 3.6 || roadDist(px, pz) < 1.2) continue;
-      sedges.push([px, h - 0.05, pz, R() * 6.28, (0.85 + R() * 0.7) * (1 - Math.max(0, off) * 0.045), R()]);
+      sedges.push([px, h - 0.05, pz, RR() * 6.28, (0.85 + RR() * 0.7) * (1 - Math.max(0, off) * 0.045), RR()]);
     }
-    if (R() < 0.34 * q + 0.1) {                       // more reeds on the very edge
-      const off = (R() - 0.65) * 1.5, px = x + dx * off + (R() - 0.5) * 1.2, pz = z + dz * off + (R() - 0.5) * 1.2, h = fh(px, pz);
-      if (h < LV + 1.1 && h > LV - 0.7) reeds.push([px, h - 0.1, pz, R() * 3.14, 0.9 + R() * 0.9]);
+    if (RR() < 0.34 * q + 0.1) {                       // more reeds on the very edge
+      const off = (RR() - 0.65) * 1.5, px = x + dx * off + (RR() - 0.5) * 1.2, pz = z + dz * off + (RR() - 0.5) * 1.2, h = fh(px, pz);
+      if (h < LV + 1.1 && h > LV - 0.7) reeds.push([px, h - 0.1, pz, RR() * 3.14, 0.9 + RR() * 0.9]);
     }
     const pat = FB.fbm(x * 0.045 + 3, z * 0.045 - 8, 2);       // wild flowers grow in drifts of one colour
     if (pat > -0.1) {
-      const kind = R() < 0.8 ? Math.min(3, Math.floor((FB.fbm(x * 0.03 + 9, z * 0.03, 1) * 0.5 + 0.5) * 4)) : Math.floor(R() * 4);
-      const nF = Math.round((0.8 + R() * 2.4) * (0.5 + (pat + 0.1) * 2.6) * q);
+      const kind = RR() < 0.8 ? Math.min(3, Math.floor((FB.fbm(x * 0.03 + 9, z * 0.03, 1) * 0.5 + 0.5) * 4)) : Math.floor(RR() * 4);
+      const nF = Math.round((0.8 + RR() * 2.4) * (0.5 + (pat + 0.1) * 2.6) * q);
       for (let i = 0; i < nF; i++) {
-        const off = 0.5 + R() * 4.6, lat = (R() - 0.5) * 2.4, px = x + dx * off - dz * lat, pz = z + dz * off + dx * lat, h = fh(px, pz);
+        const off = 0.5 + RR() * 4.6, lat = (RR() - 0.5) * 2.4, px = x + dx * off - dz * lat, pz = z + dz * off + dx * lat, h = fh(px, pz);
         if (h < LV + 0.05 || h > LV + 3.2 || roadDist(px, pz) < 1.5) continue;
-        blooms.push([px, h - 0.04, pz, R() * 6.28, 0.85 + R() * 0.6, kind]);
+        blooms.push([px, h - 0.04, pz, RR() * 6.28, 0.85 + RR() * 0.6, kind]);
       }
     }
   }
@@ -438,7 +437,7 @@ export function buildMoat(ctx, api) {
   };
   return {
     stats: { reeds: reeds.length, rocks: rocks.length, pads: pads.length, lotus: lotus.length, sedges: sedges.length, blooms: blooms.length, shore: shore.length, ...life.stats },
-    shore, life,
+    shore: shore.filter((q) => !q[4]), life,      // (A2: the streams' banks keep their reeds / rocks / sedge / flowers (single meshes) but add no meadow cells: the budget is +10 draw calls)
     update(t, dt, camera, P) {
       uTime.value = t;
       if (water && water.mesh) floater.position.y = water.mesh.position.y - LV;

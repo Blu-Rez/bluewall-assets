@@ -6,6 +6,7 @@
 import * as THREE from 'three';
 import * as L from './layout.js';
 import { createKind } from './crowd.js';
+import { DIMS } from './a1_rings.js';
 
 const SC = 1.75;                                  // people scale in this game (readable from the strategy camera)
 const TURN = 3.4;                                 // rad/s turning on the spot
@@ -15,9 +16,9 @@ const PI2 = Math.PI * 2;
 // rings: [polygon, wall dims, segments without a walkway (gates), spacing between archers in metres]
 function ringsList(density) {
   const k = 1 / density;
-  const r = [{ poly: L.OUTER, w: L.WALL.outer, skip: [L.GATE_SEG], gap: 24 * k }];
-  if (L.INNER) r.push({ poly: L.INNER, w: L.WALL.inner, skip: [L.INNER_GATE_SEG], gap: 26 * k });
-  if (L.TOWN) r.push({ poly: L.TOWN, w: L.WALL.town, skip: L.TOWN_GATES, gap: 36 * k });
+  const r = [{ id: 'outer', poly: L.OUTER, w: DIMS.outer, skip: [L.GATE_SEG], gap: 24 * k }];
+  if (L.INNER) r.push({ id: 'inner', poly: L.INNER, w: DIMS.inner, skip: [L.INNER_GATE_SEG], gap: 26 * k });
+  if (L.TOWN) r.push({ id: 'town', poly: L.TOWN, w: DIMS.town, skip: L.TOWN_GATES, gap: 36 * k });
   return r;
 }
 
@@ -47,7 +48,7 @@ export function buildPatrols(scene, A, opts = {}) {
         const s0 = lo + k * bl + (k ? 1.0 : 0), s1 = lo + (k + 1) * bl - (k < cnt - 1 ? 1.0 : 0);   // neighbours keep 2 m between their beats
         const kind = kinds[n++ % kinds.length], p = kind.add({ y, scale: SC });
         const f = 0.92 + rnd() * 0.16;                                                          // walking pace differs a little per archer
-        const ar = { p, kind, ax: a[0], az: a[1], ux, uz, s0, s1, s: s0 + rnd() * (s1 - s0), dir: rnd() < 0.5 ? -1 : 1, y, lookYaw,
+        const ar = { ring: ring.id, p, kind, ax: a[0], az: a[1], ux, uz, s0, s1, s: s0 + rnd() * (s1 - s0), dir: rnd() < 0.5 ? -1 : 1, y, lookYaw,
           f, v: base * SC * f, state: 'walk', timer: 0, yawT: 0, flip: false, since: 2 + rnd() * 8 };
         ar.p.yaw = ar.yawT = Math.atan2(ux * ar.dir, uz * ar.dir);
         p.play('Walk_Loop', { fade: false, speed: f, offset: rnd() * 1.3 });
@@ -64,7 +65,7 @@ export function buildPatrols(scene, A, opts = {}) {
       if (!p) continue;
       p.x = s.x + ox * 2.9 + tx * side * 2.45; p.z = s.z + oz * 2.9 + tz * side * 2.45; p.y = s.y; p.yaw = yaw0 + side * 0.25;
       p.play('Idle_Loop', { fade: false, speed: 0.9 + rnd() * 0.2, offset: rnd() * 2 });
-      sentries.push({ p, yaw0: yaw0 + side * 0.25, ph: rnd() * 6.28, f: 0.12 + rnd() * 0.08 });
+      sentries.push({ ring: s.ring || null, kind, y: s.y, x: p.x, z: p.z, p, yaw0: yaw0 + side * 0.25, ph: rnd() * 6.28, f: 0.12 + rnd() * 0.08 });
     }
   }
   function place(a) { a.p.x = a.ax + a.ux * a.s; a.p.z = a.az + a.uz * a.s; a.p.y = a.y; }
@@ -74,7 +75,7 @@ export function buildPatrols(scene, A, opts = {}) {
   }
   function update(t, dt, camera) {
     for (const a of archers) {
-      const p = a.p;
+      const p = a.p; if (!p) continue;                                         // (A1: its ring is not built at this level)
       if (a.state === 'walk') {
         a.s += a.dir * a.v * dt; a.since -= dt;
         if (a.s >= a.s1 || a.s <= a.s0) {                                 // reached the tower end
@@ -97,8 +98,22 @@ export function buildPatrols(scene, A, opts = {}) {
       if (p.yaw > Math.PI) p.yaw -= PI2; else if (p.yaw < -Math.PI) p.yaw += PI2;
       place(a);
     }
-    for (const q of sentries) q.p.yaw = q.yaw0 + 0.55 * Math.sin(t * q.f + q.ph) * Math.sin(t * q.f * 0.37 + q.ph * 2);   // looking left and right, slowly
+    for (const q of sentries) if (q.p) q.p.yaw = q.yaw0 + 0.55 * Math.sin(t * q.f + q.ph) * Math.sin(t * q.f * 0.37 + q.ph * 2);   // looking left and right, slowly
     for (const k of kinds) k.update(t, camera);
   }
-  return { update, archers, sentries, kinds };
+  // A1: only the archers / sentries of the rings that stand at the castle's level are drawn (a1_rings.js calls this whenever the level changes)
+  const idle = (q, f) => { q.p.play('Idle_Loop', { fade: false, speed: 0.9 + f * 0.2, offset: f * 2 }); };
+  function setRings(on) {
+    for (const a of archers) {
+      const want = !a.ring || on.has(a.ring);
+      if (want && !a.p) { a.p = a.kind.add({ y: a.y, scale: SC }); a.p.play('Walk_Loop', { fade: false, speed: a.f, offset: rnd() * 1.3 }); a.state = 'walk'; a.timer = 0; place(a); a.p.yaw = a.yawT = Math.atan2(a.ux * a.dir, a.uz * a.dir); }
+      else if (!want && a.p) { a.kind.remove(a.p); a.p = null; }
+    }
+    for (const q of sentries) {
+      const want = !q.ring || on.has(q.ring);
+      if (want && !q.p) { q.p = q.kind.add({ y: q.y, scale: SC }); q.p.x = q.x; q.p.z = q.z; q.p.y = q.y; q.p.yaw = q.yaw0; idle(q, rnd()); }
+      else if (!want && q.p) { q.kind.remove(q.p); q.p = null; }
+    }
+  }
+  return { update, archers, sentries, kinds, setRings };
 }

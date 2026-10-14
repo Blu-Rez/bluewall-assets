@@ -8,6 +8,13 @@ import * as THREE from 'three';
 import { bakePieces } from './village.js';
 import { sites, pieces, counts, wsLevel, tierOf, countAt, WS_KINDS } from './worksites.js';
 import { rng } from './noise.js';
+import * as C1 from './c1_kinds.js';                                   // C1 (water family): kinds, smoke points, MINOR bucket
+import { PROC_C1 } from './c1_proc.js';                                // C1: nets, sluice boxes, smoke stack, drying sheds, fish baskets
+import { FX as C2_FX, MINOR as C2_MINOR } from './c2_kinds.js';        // C2 (timber / stone / metal): chimney + furnace points, MINOR bucket
+import { MINOR as C3_MINOR, FX as c3fx } from './c3_kinds.js';         // C3 (gold / oil): flames + smoke, MINOR bucket
+import { C3_PROC } from './c3_proc.js';                                // C3: the procedural parts of the mint, the refinery, the gold heaps
+import { PROC as C4PROC, MINOR as C4MINOR, smokers as c4smokers, movers as c4movers } from './c4_kinds.js';      // C4 (food family)
+import { makeC4Anim } from './c4_anim.js';                             // C4: the turning sails / water wheel
 
 const col = (hex) => new THREE.Color(hex);
 class Soup {
@@ -186,32 +193,71 @@ function rails(M, lv, R, ore) {
   for (let i = 0; i < heaps; i++) { const hx = -12 + i * 8, hz = 17 + R() * 2; M.cyl(M.S, hx, hz, 0, 2.4, 1.6, 7, ore, 0.5); M.cyl(M.S, hx + 1.6, hz + 0.6, 0, 1.3, 0.9, 6, ore, 0.3); }
 }
 
+Object.assign(PROC, C3_PROC);                                      // C3: mint + refinery (new) and a better gold mine (its `gold` REPLACES the p38 one: grey rock heaps with nuggets instead of haystack cones)
+
 // ------------------------------------------------------------------ build / rebuild
 const MINOR = /^ws_(logpile|logs|stump|workbench|ladder|cratelong|crate_wooden|pallet|sack|wheelbarrow|minecart|orecart|barrel|barrelold|barrel_holder|barrel_apples|bucket_wooden_1|fishset|nugget|nugget2|goldbars|coin_pile|amphora|chain_coil|cauldron|anvil_log|whetstone|pickaxe_bronze|axe_bronze|rope_1|cage_small|boulder[A-E]|stoneblocks|farmcrate_apple|farmcrate_empty|cart1|cart2|cart3|stall_cart_empty|stall_empty|fishrack)$/;
+
+// C1 + C2: kit_c1.glb / kit_c2.glb are merged into the worksite kit (kit_ws.glb) so all of them bake with the SAME materials (+0 draw calls, +0 shader programs):
+// a material of an extra kit takes the kit_ws material with the same name + the same vertex attributes.  Cached per kit set.  (C3 / C4 bake from their own kits, below.)
+const KMERGE = new WeakMap();
+function mergeKits(ws, extras) {
+  const ex = extras.filter(Boolean); if (!ws || !ex.length) return ws || ex[0] || null;
+  const m = KMERGE.get(ws); if (m && m.ex.length === ex.length && m.ex.every((e, i) => e === ex[i])) return m.k;
+  const sig = (o) => o.material.name + '|' + Object.keys(o.geometry.attributes).sort().join(','), mats = new Map();       // (a kit has several materials of one name: same name + same vertex attributes = mergeable)
+  ws.scene.traverse((o) => { if (o.isMesh && o.material && !Array.isArray(o.material) && !mats.has(sig(o))) mats.set(sig(o), o.material); });
+  const scene = new THREE.Group(); for (const h of ws.scene.children) scene.add(h.clone(true));
+  for (const e of ex) for (const h of e.scene.children) { const c = h.clone(true); c.traverse((o) => { if (o.isMesh && o.material && !Array.isArray(o.material) && mats.has(sig(o))) o.material = mats.get(sig(o)); }); scene.add(c); }
+  const k = { scene, animations: [] }; KMERGE.set(ws, { ex, k }); return k;
+}
+const isC3 = (n) => n.startsWith('c3_'), isC4 = (n) => n.startsWith('c4_');
+const smallMain = (n) => MINOR.test(n) || C1.MINOR.test(n) || C2_MINOR.test(n);
 export const WS_NEAR = 170, WS_FAR = 620;     // m from the camera: small props appear inside WS_NEAR, whole sites vanish beyond WS_FAR
-export function buildWorksites(scene, gltf, hf, { shadows = false, castle = 30 } = {}) {
+export function buildWorksites(scene, gltf0, hf, { shadows = false, castle = 30, kitC1 = null, kitC2 = null, kitC3 = null, kitC4 = null, smokeList = null } = {}) {
+  const kit = mergeKits(gltf0, [kitC1, kitC2]);
   const group = new THREE.Group(); group.name = 'worksites'; scene.add(group);
   const state = new Map();                         // site id -> { lv, g }
-  const flames = [];
-  const dispose = (g) => { g.traverse((o) => { if (o.isMesh && o.geometry) o.geometry.dispose(); }); group.remove(g); };
+  const c4a = makeC4Anim(group, kitC4);            // C4: the turning sails / wheels of the mills (plain Meshes, 1 draw each)
+  const flames = [];                               // flame points of the sites in world metres [{ x, y, z, size, col, site }] (C2 furnace mouths, C3 flare stacks / braziers); a Flames instance can take them (not wired yet)
+  const smokers = smokeList || [];                 // the chimneys of the sites, in the shape of world.js smokers ({ x, y, z, heavy, acc, off }): pass world.js's own `smokers` array as smokeList and they smoke like every chimney
+  const dispose = (g) => { g.traverse((o) => { if (o.isMesh && o.geometry) o.geometry.dispose(); }); group.remove(g); for (const r of g.userData.smokers || []) { const i = smokers.indexOf(r); if (i >= 0) smokers.splice(i, 1); } };
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), up = new THREE.Vector3(0, 1, 0), v = new THREE.Vector3(), sc = new THREE.Vector3();
   function buildSite(site, lv) {
-    const g = new THREE.Group(); g.name = 'ws:' + site.id;
+    const g = new THREE.Group(); g.name = 'ws:' + site.id; if (c4a) c4a.set(site.id, []);
+    for (let i = flames.length - 1; i >= 0; i--) if (flames[i].site === site.id) flames.splice(i, 1);
     if (lv > 0) {
-      const c = Math.cos(site.ry), s = Math.sin(site.ry), list = [];
+      const c = Math.cos(site.ry), s = Math.sin(site.ry), list = [], l3 = [], l4 = [];
       for (const p of pieces(site, lv)) {
         const wx = site.x + p.x * c + p.z * s, wz = site.z - p.x * s + p.z * c;
         m4.compose(v.set(wx, hf(wx, wz) - 0.04, wz), q.setFromAxisAngle(up, site.ry + p.ry), sc.set(p.s, p.s, p.s));
-        list.push({ name: p.n, matrix: m4.clone() });
+        (isC3(p.n) ? l3 : isC4(p.n) ? l4 : list).push({ name: p.n, matrix: m4.clone() });      // 'c3_*' come from kit_c3.glb, 'c4_*' from kit_c4.glb (skipped silently while a kit is not loaded), the rest from kit_ws (+ C1 / C2)
       }
-      if (gltf && list.length) {
-        // two bakes: the BIG things (buildings, fences, boats, camels, rock faces) are seen from far; the small props (barrels, carts, tools, racks) only from near by (update())
-        const minor = new THREE.Group(); minor.name = 'minor'; g.add(minor); g.userData.minor = minor;
-        bakePieces(g, gltf, list.filter((o) => !MINOR.test(o.name)), { shadows, tag: 'ws:' + site.id });
-        bakePieces(minor, gltf, list.filter((o) => MINOR.test(o.name)), { shadows: false, tag: 'ws:' + site.id + ':minor' });
+      // two bakes: the BIG things (buildings, fences, boats, camels, rock faces) are seen from far; the small props (barrels, carts, tools, racks) only from near by (update())
+      let minor = null; if (list.length || l3.length || l4.length) { minor = new THREE.Group(); minor.name = 'minor'; g.add(minor); g.userData.minor = minor; }
+      if (kit && list.length) {
+        bakePieces(g, kit, list.filter((o) => !smallMain(o.name)), { shadows, tag: 'ws:' + site.id });
+        bakePieces(minor, kit, list.filter((o) => smallMain(o.name)), { shadows: false, tag: 'ws:' + site.id + ':minor' });
       }
+      if (kitC3 && l3.length) {
+        bakePieces(g, kitC3, l3.filter((o) => !C3_MINOR.test(o.name)), { shadows, tag: 'ws:' + site.id + ':c3' });
+        bakePieces(minor, kitC3, l3.filter((o) => C3_MINOR.test(o.name)), { shadows: false, tag: 'ws:' + site.id + ':minor:c3' });
+      }
+      if (kitC4 && l4.length) {
+        bakePieces(g, kitC4, l4.filter((o) => !C4MINOR.test(o.name)), { shadows, tag: 'ws:' + site.id + ':c4' });
+        bakePieces(minor, kitC4, l4.filter((o) => C4MINOR.test(o.name)), { shadows: false, tag: 'ws:' + site.id + ':c4m' });
+      }
+      if (c4a) c4a.set(site.id, c4movers(site.kind, lv, site).map((m) => { const wx = site.x + m.x * c + m.z * s, wz = site.z - m.x * s + m.z * c; return { n: m.n, x: wx, y: hf(wx, wz) - 0.04, z: wz, yaw: site.ry + m.ry, s: m.s, spin: m.spin }; }));
       const M = maker(site, hf), R = rng(((site.x * 31) ^ (site.z * 17)) >>> 0 || 5);
-      (PROC[site.kind] || (() => {}))(M, lv, R);
+      (PROC[site.kind] || (() => {}))(M, lv, R); (PROC_C1[site.kind] || (() => {}))(M, lv, R, site); (C4PROC[site.kind] || (() => {}))(M, lv, R, site);
+      // smoke + flame points (site-local -> world): every chimney becomes a world.js smoker record, every flame a point in `flames`
+      const sm = [], W = (f) => [site.x + f.x * c + f.z * s, site.z - f.x * s + f.z * c];
+      const smoke = (f, heavy) => { const [wx, wz] = W(f), r = { x: wx, y: hf(wx, wz) + f.y, z: wz, heavy: !!heavy, acc: Math.random(), off: false }; smokers.push(r); sm.push(r); };
+      const flame = (f, size, colr) => { const [wx, wz] = W(f); flames.push({ x: wx, y: hf(wx, wz) + (f.y || 0), z: wz, size: size || 1.6, col: colr || [1, 0.55, 0.18], site: site.id }); };
+      for (const f of C1.smokers(site.kind, lv)) smoke(f, f.heavy);
+      for (const f of C2_FX(site.kind, lv)) { if (f.k === 'smoke') smoke(f, f.heavy); else flame(f, 1.8, [1, 0.55, 0.18]); }
+      { const fx = c3fx(site.kind, lv); for (const f of fx.flames) flame(f, f.size, f.col); for (const f of fx.smoke) smoke(f, false); }
+      for (const f of c4smokers(site.kind, lv, site)) smoke(f, f.heavy);
+      g.userData.smokers = sm;
       for (const [S, mat, nm] of [[M.S, MAT.soup, 'soup'], [M.Gl, MAT.glass, 'glass'], [M.Oil, MAT.oil, 'oil']]) { const mesh = S.mesh(mat, 'ws:' + site.id + ':' + nm, shadows && nm !== 'glass'); if (mesh) { if (nm === 'glass') mesh.renderOrder = 2; g.add(mesh); } }
     }
     group.add(g); return g;
@@ -234,11 +280,13 @@ export function buildWorksites(scene, gltf, hf, { shadows = false, castle = 30 }
   rebuild(castle);
   const cp = new THREE.Vector3(); let lastT = -9;
   function update(t, camera) {                        // distance LOD, four times a second
+    if (c4a) c4a.update(t, camera);                  // (every frame: the sails turn)
     if (!camera || t - lastT < 0.25) return; lastT = t; camera.getWorldPosition(cp);
     for (const o of state.values()) {
       const d = Math.hypot(cp.x - o.x, cp.z - o.z, cp.y * 0.5);
       o.g.visible = d < WS_FAR; const mn = o.g.userData.minor; if (mn) mn.visible = d < WS_NEAR;
+      for (const r of o.g.userData.smokers || []) r.off = d > 190;       // (smoke only where it can be seen)
     }
   }
-  return { group, rebuild, levels: () => Object.fromEntries([...state].map(([k, o]) => [k, o.lv])), flames, update, sites: () => state };
+  return { group, rebuild, levels: () => Object.fromEntries([...state].map(([k, o]) => [k, o.lv])), flames, smokers, update, sites: () => state, ready: Promise.resolve(true) };
 }

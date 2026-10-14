@@ -4,6 +4,7 @@ import * as L from './layout.js';
 import { hamlets } from './hamlets.js';
 import { wsSolids } from './worksites.js';
 import { defSolids } from './defplan.js';
+import { townSolids } from './town_plan.js';
 
 export function staticSolids() {
   const out = [];
@@ -12,5 +13,6 @@ export function staticSolids() {
   if (L.WINDMILL) out.push([L.WINDMILL.x, L.WINDMILL.z, 9]);
   try { for (const w of wsSolids()) out.push(w); } catch (e) { /* no worksites on this map */ }          // p38: the lumber mill, the mines, the barns, the huts… of the worksites
   try { for (const w of defSolids(30)) out.push(w); } catch (e) { /* no defence field on this map */ }     // p38: the watchtowers, the ballista outposts, the braziers, the fire stones
+  try { for (const w of townSolids(30)) out.push(w); } catch (e) { /* no town plan on this map */ }                  // p41: the civic buildings of the plan (the market hall and stalls, the town hall, the inns, the chapel, the wells; never on a street)
   return out;
 }

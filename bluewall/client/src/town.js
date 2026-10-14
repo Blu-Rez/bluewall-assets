@@ -27,7 +27,10 @@ function phMat(A, k, extra = {}) {
   return new THREE.MeshStandardMaterial({ map: t, normalMap: A.ph[k + '_n'] || null, roughness: 0.95, metalness: 0, vertexColors: true, envMapIntensity: 0.35, ...extra });
 }
 
-export function buildTown(ctx, A, Q, scene) {
+// p41: `plan` = { lots: [{ kind, x, z, ry, w, d }] (every lot of B1's town plan, locked ones too), homes: n (the plan's homes standing at the build level) } — town_plan.js.  With a plan the town shows what planTown
+// plans: the plan's lots are kept free, the church and the market block are NOT built here (the B3 lots replace them: town_build.js), and the generic fill houses are `homes` fewer.  Without a plan (or
+// when it failed) the old town is built unchanged.
+export function buildTown(ctx, A, Q, scene, plan = null) {
   if (!L.TOWN) return { houses: [] };
   const { B, M, height } = ctx, r = rng(4242);
   const T = A.tex || {};
@@ -102,12 +105,13 @@ export function buildTown(ctx, A, Q, scene) {
     for (const p of placed) if (Math.hypot(p.x - x, p.z - z) < p.hd + hd + 1 && overlap(p.C, C)) return false;
     return true;
   }
+  if (plan) for (const p of plan.lots) { const sq = p.kind === 'market'; placed.push({ x: p.x, z: p.z, hd: Math.hypot(sq ? 36 : p.w, sq ? 36 : p.d) / 2, C: corners(p.x, p.z, sq ? 0 : p.ry, (sq ? 36 : p.w) + 1.2, (sq ? 36 : p.d) + 1.2) }); }       // the plan's lots (the market as a 36 m square): no generic house on them, whatever the level
   const add = (h) => { h.C = corners(h.x, h.z, h.ry, h.w + 1.2, h.d + 1.2); h.hd = Math.hypot(h.w, h.d) / 2; placed.push(h); lots.push(h); return h; };
-  const want = ({ low: 90, medium: 125, high: 160, ultra: 190 }[Q.level] || 140) * (L.GROW > 1 ? 1.5 : 1);                 // p35 P4: the bigger town, +50 % houses (more streets to stand on)
+  const want = Math.max(30, ({ low: 90, medium: 125, high: 160, ultra: 190 }[Q.level] || 140) * (L.GROW > 1 ? 1.5 : 1) - (plan ? plan.homes : 0));                 // p35 P4: the bigger town, +50 % houses (more streets to stand on); p41: the plan's homes stand instead of as many generic ones
 
   // special buildings first: church (north quarter), tavern + guild hall at the market
   const churchAt = (() => { const R = ROADS.find((q) => q.name === 'lane118'); if (!R) return null; const [x, z] = R.pts[1]; return { x: x * 0.97 + 16, z: z * 0.97 - 2 }; })();
-  if (churchAt && ok(churchAt.x, churchAt.z, -0.3, 13, 24)) add({ x: churchAt.x, z: churchAt.z, ry: -0.3, w: 13, d: 24, kind: 'church' });
+  if (!plan && churchAt && ok(churchAt.x, churchAt.z, -0.3, 13, 24)) add({ x: churchAt.x, z: churchAt.z, ry: -0.3, w: 13, d: 24, kind: 'church' });
 
   const streets = ROADS.filter((q) => q.kind === 'cobble');
   // p35 P4: every street gets its own share of the quota, so the second ring street is lined with houses too (not only the first ring that comes first)
@@ -291,7 +295,7 @@ export function buildTown(ctx, A, Q, scene) {
   }
 
   // ------------------------------------------------ market: stalls, carts, crates around a well
-  if (MK) {
+  if (MK && !plan) {
     ctx.hex('building_well_blue', MK.x, height(MK.x, MK.z) + 0.08, MK.z, 0.3, 5.2);
     ctx.pick({ x: MK.x, z: MK.z, y0: 0, y1: 6, r: MK.r }, 'market');
     const ring = 9.5, n = 9;

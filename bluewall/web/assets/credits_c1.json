@@ -1,0 +1,88 @@
+[
+  {
+    "id": "building_home_B_blue",
+    "name": "KayKit Medieval Hexagon Pack — building_home_B_blue (the smokehouse: kit piece c1_house)",
+    "author": "Kay Lousberg (KayKit)",
+    "license": "CC0 1.0",
+    "source": "https://kaylousberg.itch.io/kaykit-medieval-hexagon",
+    "pack": "kaykit-medieval-hexagon",
+    "faces": 1393,
+    "animated": false,
+    "cat": "c1"
+  },
+  {
+    "id": "Pot_1",
+    "name": "Fantasy Props MegaKit — Pot_1 (the gold pans: kit piece c1_pan)",
+    "author": "Quaternius",
+    "license": "CC0 1.0",
+    "source": "https://quaternius.com/packs/fantasypropsmegakit.html",
+    "pack": "fantasy-props-megakit",
+    "faces": 1068,
+    "animated": false,
+    "cat": "c1"
+  },
+  {
+    "id": "Table_Large",
+    "name": "Fantasy Props MegaKit — Table_Large (sorting / cleaning tables: kit piece c1_table)",
+    "author": "Quaternius",
+    "license": "CC0 1.0",
+    "source": "https://quaternius.com/packs/fantasypropsmegakit.html",
+    "pack": "fantasy-props-megakit",
+    "faces": 986,
+    "animated": false,
+    "cat": "c1"
+  },
+  {
+    "id": "Chest_Wood",
+    "name": "Fantasy Props MegaKit — Chest_Wood (the strongbox: kit piece c1_chest)",
+    "author": "Quaternius",
+    "license": "CC0 1.0",
+    "source": "https://quaternius.com/packs/fantasypropsmegakit.html",
+    "pack": "fantasy-props-megakit",
+    "faces": 2546,
+    "animated": false,
+    "cat": "c1"
+  },
+  {
+    "id": "Bench",
+    "name": "Fantasy Props MegaKit — Bench (kit piece c1_bench)",
+    "author": "Quaternius",
+    "license": "CC0 1.0",
+    "source": "https://quaternius.com/packs/fantasypropsmegakit.html",
+    "pack": "fantasy-props-megakit",
+    "faces": 404,
+    "animated": false,
+    "cat": "c1"
+  },
+  {
+    "id": "Bucket_Metal",
+    "name": "Fantasy Props MegaKit — Bucket_Metal (kit piece c1_bucketm)",
+    "author": "Quaternius",
+    "license": "CC0 1.0",
+    "source": "https://quaternius.com/packs/fantasypropsmegakit.html",
+    "pack": "fantasy-props-megakit",
+    "faces": 540,
+    "animated": false,
+    "cat": "c1"
+  },
+  {
+    "id": "c1_procedural",
+    "name": "Procedural parts drawn by client/src/c1_proc.js (nets, sluice boxes, brick smoke stack + kiln, drying sheds, fish baskets, gravel heaps) — original geometry, no third-party asset",
+    "author": "Blue Wall (package C1)",
+    "license": "own work",
+    "source": "client/src/c1_proc.js",
+    "faces": 0,
+    "animated": false,
+    "cat": "c1"
+  },
+  {
+    "id": "reused_from_kit_ws",
+    "name": "Pieces of kit_ws.glb reused unchanged by the C1 layouts (ws_hut, ws_fishrack, ws_logpile, ws_barrel, ws_workbench, ws_fishset, ws_farmcrate_empty, ws_stall_empty, ws_cauldron, ws_nugget, ws_goldbars, ws_bucket_wooden_1, ws_sack, ws_fence, ws_watchtower2): credited in credits_new.json / credits.json already",
+    "author": "(see credits_new.json)",
+    "license": "(see credits_new.json)",
+    "source": "web/assets/credits.json",
+    "faces": 0,
+    "animated": false,
+    "cat": "c1"
+  }
+]

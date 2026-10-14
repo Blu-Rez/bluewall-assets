@@ -4,7 +4,7 @@
 // fields, the pasture, the lake, the army camp and the three gem mines.
 import * as L from './layout.js';
 import { planHamlets } from './hamlets.js';
-import { planNomads } from './nomads.js';
+import { planNomads, nomads } from './nomads.js';
 import { spur } from './worksites.js';
 
 export const ROADS = [];          // { name, pts: [[x, z]...], w, kind: 'cobble' | 'dirt', closed }
@@ -64,13 +64,56 @@ export function buildRoads() {
   L.withoutPads(() => planHamlets(ROADS)).forEach((H, i) => ROADS.push({ name: 'hamlet' + i, w: 3.6, kind: 'dirt', pts: H.spur }));
   L.withoutPads(() => planNomads(ROADS));                                                                   // nomad tent camps in the open country (nomads.js; no road of their own)
   for (const s of L.SITES || []) ROADS.push({ name: 'ws_' + s.id, w: 4.4, kind: 'dirt', pts: spur(s) });      // p38: the haul road of every worksite (worksites.js)
-  autoBridges();
+  autoBridges(); addFords();                                                                                // A2: a footbridge every ~FORD_GAP m along the mountain streams (a stream with no crossing is a wall to the ground units)
   return ROADS;
 }
 
+// A2: the mountain streams cut the north plain into pockets (the camp lies between them). A footbridge about every FORD_GAP m, on dry flat banks and clear of
+// the camp, worksites, mines, hamlets (greens and spurs) and nomad camps, keeps the ground routes short (castle.js builds the decks like every river bridge, nav.js sees them).
+const FORD_GAP = 120;      // (ph) metres between the footbridges of one stream
+function addFords() {
+  if (!L.STREAMS || !L.STREAMS.length) return;
+  const zones = [L.PASTURE, L.MUSTER, L.LAIR].filter((z) => z && z.r > 0).map((z) => [z.x, z.z, (z.fr ?? z.r) + 4]);
+  zones.push([L.CAMP.x, L.CAMP.z, L.CAMP.r + 8]);          // (a track may run up to the camp's tents; the camp's own keep-clear ring is wider)
+  for (const q of L.SITES || []) zones.push([q.x, q.z, q.r + 10]);
+  for (const m of L.MINES) zones.push([m.x, m.z, 52]);
+  for (const H of planHamlets(ROADS)) zones.push([H.x, H.z, 34]);
+  for (const N of nomads()) zones.push([N.x, N.z, 28]);
+  const spurs = ROADS.filter((r) => r.name.startsWith('hamlet'));
+  const made = [];          // [x, z] of every footbridge so far (the road bridges are in L.RBRIDGES already)
+  const near = (x, z, list, d) => list.some((b) => Math.hypot(b[0] - x, b[1] - z) < d);
+  let n = 0;
+  for (const S of L.STREAMS) {
+    const P = S.pts, k = S.k || 1, cum = [0]; for (let i = 1; i < P.length; i++) cum.push(cum[i - 1] + Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]));
+    const at = (s) => { let i = 1; while (i < P.length - 1 && cum[i] < s) i++; const a = P[i - 1], b = P[i], l = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, t = Math.max(0, Math.min(1, (s - cum[i - 1]) / l)); return { x: a[0] + (b[0] - a[0]) * t, z: a[1] + (b[1] - a[1]) * t, tx: (b[0] - a[0]) / l, tz: (b[1] - a[1]) / l }; };
+    const total = cum[cum.length - 1], half = Math.max(22, Math.round(20.5 * k)) / 2 + 4;
+    for (let target = 100; target < total - 55; target += FORD_GAP) {
+      let best = null;
+      for (let ds = 0; ds <= 75 && !best; ds += 5) for (const sg of ds ? [-1, 1] : [1]) {
+        const s = target + sg * ds; if (s < 70 || s > total - 50) continue;
+        const c = at(s), nx = -c.tz, nz = c.tx, e0 = [c.x - nx * (half + 4), c.z - nz * (half + 4)], e1 = [c.x + nx * (half + 4), c.z + nz * (half + 4)];
+        if (L.sdTown(c.x, c.z) < 22 || L.fieldD(c.x, c.z) < 1.3) continue;
+        if (made.some((b) => Math.hypot(b[0] - c.x, b[1] - c.z) < 45) || L.RBRIDGES.some((b) => Math.hypot(b.x - c.x, b.z - c.z) < 45)) continue;
+        let ok = true;
+        for (let u = -half - 4; u <= half + 4 && ok; u += 3) { const x = c.x + nx * u, z = c.z + nz * u, h = L.height(x, z); if (h > 45) ok = false; if (Math.abs(u) >= half && (h < 0.7 || L.distPolyline(L.RIVER, x, z) < Math.abs(u) * 0 + 5 * k * 0 + 1.5)) ok = false; }
+        if (!ok) continue;
+        if (Math.abs(L.height(c.x + nx * (half + 2), c.z + nz * (half + 2)) - L.height(c.x - nx * (half + 2), c.z - nz * (half + 2))) > 9) continue;
+        if (zones.some(([zx, zz, zr]) => Math.hypot(zx - c.x, zz - c.z) < zr || Math.hypot(zx - e0[0], zz - e0[1]) < zr - 8 || Math.hypot(zx - e1[0], zz - e1[1]) < zr - 8)) continue;
+        if (spurs.some((r) => r.pts.some((q, i) => i && segDist(c.x, c.z, r.pts[i - 1], q) < 14 || segDist(e0[0], e0[1], r.pts[i - 1] || q, q) < 8 || segDist(e1[0], e1[1], r.pts[i - 1] || q, q) < 8))) continue;
+        best = { c, e0, e1 };
+      }
+      if (!best) continue;
+      made.push([best.c.x, best.c.z]);
+      L.addBridge({ x: +best.c.x.toFixed(1), z: +best.c.z.toFixed(1), nx: +(-best.c.tz).toFixed(4), nz: +best.c.tx.toFixed(4), len: Math.max(22, Math.round(20.5 * k)), wid: 5.5 });      // (a footbridge: the deck runs across the stream)
+      n++;
+    }
+  }
+}
+
 // p38: every road that meets the river gets a stone bridge (deck along the road, long enough for the water + both banks, a little wider than the road)
-function autoBridges() {
-  const R = L.RIVER; if (!R || R.length < 2) return;
+function autoBridges() { bridgesOver(L.RIVER, 1); for (const S of L.STREAMS) bridgesOver(S.pts, S.k || 1); }      // (A2: the mountain streams are bridged like the river; a wider one gets a longer deck)
+function bridgesOver(R, k) {
+  if (!R || R.length < 2) return;
   const inter = (a, b, c, d) => { const rx = b[0] - a[0], rz = b[1] - a[1], sx = d[0] - c[0], sz = d[1] - c[1], den = rx * sz - rz * sx; if (Math.abs(den) < 1e-9) return null; const t = ((c[0] - a[0]) * sz - (c[1] - a[1]) * sx) / den, u = ((c[0] - a[0]) * rz - (c[1] - a[1]) * rx) / den; return t >= 0 && t <= 1 && u >= 0 && u <= 1 ? { x: a[0] + rx * t, z: a[1] + rz * t, u } : null; };
   for (const Rd of ROADS) {
     if (Rd.name.startsWith('hamlet')) continue;
@@ -78,7 +121,7 @@ function autoBridges() {
       const x = inter(Rd.pts[i], Rd.pts[i + 1], R[j], R[j + 1]); if (!x) continue;
       const dx = Rd.pts[i + 1][0] - Rd.pts[i][0], dz = Rd.pts[i + 1][1] - Rd.pts[i][1], l = Math.hypot(dx, dz), rx = R[j + 1][0] - R[j][0], rz = R[j + 1][1] - R[j][1], rl = Math.hypot(rx, rz);
       const sin = Math.max(0.3, Math.sqrt(1 - Math.pow((dx * rx + dz * rz) / (l * rl), 2)));
-      L.addBridge({ x: +x.x.toFixed(1), z: +x.z.toFixed(1), nx: +(dx / l).toFixed(4), nz: +(dz / l).toFixed(4), len: Math.max(22, Math.round(17.5 / sin + 3)), wid: Rd.w >= 5.5 ? 7 : 5.5 });
+      L.addBridge({ x: +x.x.toFixed(1), z: +x.z.toFixed(1), nx: +(dx / l).toFixed(4), nz: +(dz / l).toFixed(4), len: Math.max(22, Math.round((17.5 / sin + 3) * k)), wid: Rd.w >= 5.5 ? 7 : 5.5 });
     }
   }
 }

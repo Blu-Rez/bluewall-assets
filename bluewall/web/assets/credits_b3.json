@@ -1,0 +1,78 @@
+[
+ {
+  "id": "kaykit_medieval_hexagon_1_0",
+  "name": "KayKit Medieval Hexagon Pack 1.0 (buildings: tavern, church, well, market, tower A, home A / B; blue + yellow)",
+  "author": "Kay Lousberg (KayKit)",
+  "license": "CC0 1.0",
+  "source": "https://www.kaylousberg.com",
+  "cat": "civic",
+  "kit": "kit_civic.glb",
+  "models": [
+   "building_church_blue",
+   "building_church_yellow",
+   "building_home_A_blue",
+   "building_home_A_yellow",
+   "building_home_B_blue",
+   "building_home_B_yellow",
+   "building_market_blue",
+   "building_market_yellow",
+   "building_tavern_blue",
+   "building_tavern_yellow",
+   "building_tower_A_blue",
+   "building_tower_A_yellow",
+   "building_well_blue",
+   "building_well_yellow"
+  ],
+  "note": "CC0: credit not required, given anyway. Models were decimated, baked to vertex colours and packed by dev/b3_mkkit.mjs; no model was redrawn."
+ },
+ {
+  "id": "quaternius_fantasy_props_megakit",
+  "name": "Fantasy Props MegaKit (Standard, free) — stall, cart, barrels, crates, bench, table, mugs, books, coins, banner, torch, vases, chest",
+  "author": "Quaternius",
+  "license": "CC0 1.0",
+  "source": "https://quaternius.com",
+  "cat": "civic",
+  "kit": "kit_civic.glb",
+  "models": [
+   "Bag",
+   "Banner_2",
+   "Barrel",
+   "Barrel_Apples",
+   "Bench",
+   "Book_Stack_1",
+   "Bucket_Wooden_1",
+   "Chalice",
+   "Chest_Wood",
+   "Coin_Pile_2",
+   "Crate_Wooden",
+   "FarmCrate_Apple",
+   "FarmCrate_Carrot",
+   "Mug",
+   "Scroll_1",
+   "Stall_Cart_Empty",
+   "Stall_Empty",
+   "Sword_Bronze",
+   "Table_Large",
+   "Torch_Metal",
+   "Vase_2",
+   "Vase_4"
+  ],
+  "note": "CC0: credit not required, given anyway. Models were decimated, baked to vertex colours and packed by dev/b3_mkkit.mjs; no model was redrawn."
+ },
+ {
+  "id": "quaternius_medieval_village_megakit",
+  "name": "Medieval Village MegaKit (Standard, free) — exterior stairs, plinth, stone pillar, wooden post",
+  "author": "Quaternius",
+  "license": "CC0 1.0",
+  "source": "https://quaternius.com",
+  "cat": "civic",
+  "kit": "kit_civic.glb",
+  "models": [
+   "Corner_Exterior_Brick",
+   "Corner_Exterior_Wood",
+   "Stairs_Exterior_Platform",
+   "Stairs_Exterior_Straight"
+  ],
+  "note": "CC0: credit not required, given anyway. Models were decimated, baked to vertex colours and packed by dev/b3_mkkit.mjs; no model was redrawn."
+ }
+]

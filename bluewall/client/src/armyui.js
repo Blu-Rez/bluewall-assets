@@ -470,5 +470,7 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
   }, 1000);
 
   const emblem = () => { open(); showEmblems(); };
-  return { open, close, readiness: () => (A() ? A().ready : 0), update() { if (S.open && !Object.keys(S.pend).length && !S.hold) render(); else updateBtn(); }, attack, emblem };
+  // T1 (context sheet): train one soldier through the SAME path a card tap takes (rules check + batching + request), and the reason it would be refused
+  const whyU = (u) => { const a = A(); if (!a || !a.fam) return 'Not available'; const w = whyNot('u', u, a); return w ? (WHY[w] || 'Not possible') : null; };
+  return { open, close, trainOne: (u) => addOne('u', u), why: whyU, readiness: () => (A() ? A().ready : 0), update() { if (S.open && !Object.keys(S.pend).length && !S.hold) render(); else updateBtn(); }, attack, emblem };
 }

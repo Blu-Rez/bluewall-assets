@@ -14,10 +14,12 @@ export const MODELS = ['ez_pine_a', 'ez_pine_b', 'ez_pine_c', 'ez_oak_a', 'ez_oa
   'sword', 'shield', 'bow', 'torch', 'barrel', 'crate', 'anvil', 'weaponstand', 'dummy', 'cauldron', 'stall', 'cart',
   'banner', 'wagon', 'chest', 'coins', 'kit_village', 'kit_hex'];
 // streamed in after the first frame (creatures, farm, siege camp)
-export const LATE = ['prowler', 'troll', 'ogre', 'cyclops', 'treant', 'werewolf', 'crow', 'eagle', 'horse_m2m_bay', 'horse_m2m_black', 'horse_m2m_grey', 'horse_hq_barded', 'knight_k3', 'cow', 'wolf',
+export const LATE = ['prowler', 'troll', 'u2_ogre', 'cyclops', 'treant', 'werewolf', 'crow', 'eagle', 'horse_m2m_bay', 'horse_m2m_black', 'horse_m2m_grey', 'horse_hq_barded', 'knight_k3', 'cow', 'wolf',
   'windmill2', 'watermill', 'blacksmith', 'watchtower', 'haybale', 'tent_general', 'trebuchet', 'catapult', 'ballista', 'ram',
-  'siege_tower', 'barn', 'silo', 'coop', 'pumpkin', 'corn', 'cabbage', 'kit_ws', 'kit_def', 'an_sheep', 'an_pig',
+  'siege_tower', 'barn', 'silo', 'coop', 'pumpkin', 'corn', 'cabbage', 'kit_ws', 'kit_def', 'kit_homes', 'kit_civic', 'kit_c1', 'kit_c2', 'kit_c3', 'kit_c4', 'an_sheep', 'an_pig',
   'pegasus', 'anims_army', 'helmet2', 'helmet3', 'shield_heater', 'spear', 'claymore', 'shieldmaiden', 'shield_round2'];   // army.js reads these from A.models
+// RP1 (owner-only hero mode, fetched on demand): what the lazy hero module needs from here
+export const heroKit = { base: BASE, v: V, parse: (buf, path) => { const l = new GLTFLoader(); l.setMeshoptDecoder(MeshoptDecoder); return l.parseAsync(buf, path); } };
 // load any packed model by name (web/assets/<name>.glb); cached per name
 const GLB = {};
 export function loadGLB(name) {

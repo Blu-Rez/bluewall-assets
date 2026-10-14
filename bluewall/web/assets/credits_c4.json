@@ -1,0 +1,54 @@
+[
+ {
+  "id": "cartoon_butcher_market_polygonal_912eb640",
+  "name": "Cartoon butcher market Polygonal",
+  "author": "Tykryk",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/cartoon-butcher-market-polygonal-912eb6404d654b63aaee2db6d57232ae",
+  "uid": "912eb6404d654b63aaee2db6d57232ae",
+  "faces": 4497,
+  "animated": false,
+  "thumb": "https://media.sketchfab.com/models/912eb6404d654b63aaee2db6d57232ae/thumbnails/041b44a7b3a04f2f9e754f1598c0bb9a/8716ed68aa0d478cb035ce6c1f48da00.jpeg",
+  "cat": "food",
+  "used_as": "c4_butchershop"
+ },
+ {
+  "id": "scarecrow_bb672e59",
+  "name": "Scarecrow",
+  "author": "Glowbox 3D",
+  "license": "CC-BY 4.0",
+  "source": "https://sketchfab.com/3d-models/scarecrow-bb672e5996254111a7d2e93ed01b5e0c",
+  "uid": "bb672e5996254111a7d2e93ed01b5e0c",
+  "faces": 46917,
+  "animated": false,
+  "thumb": "https://media.sketchfab.com/models/bb672e5996254111a7d2e93ed01b5e0c/thumbnails/d4f712a1af22487ab34fe8c5c99009da/6922ba58061c497c9c7b339546a05ebd.jpeg",
+  "cat": "food",
+  "used_as": "c4_scarecrow"
+ },
+ {
+  "id": "kaykit_medieval_hexagon_windmill_watermill_home_B",
+  "name": "KayKit Medieval Hexagon Pack — windmill, watermill, home B",
+  "author": "Kay Lousberg (KayKit)",
+  "license": "CC0",
+  "source": "https://kaylousberg.itch.io/kaykit-medieval-hexagon",
+  "uid": null,
+  "faces": null,
+  "animated": false,
+  "thumb": null,
+  "cat": "food",
+  "used_as": "c4_windmill_nf, c4_windmill_fan, c4_watermill_nw, c4_wheel, c4_bakery"
+ },
+ {
+  "id": "quaternius_farm_buildings_bigbarn",
+  "name": "Farm Buildings — Big Barn (darkened)",
+  "author": "Quaternius",
+  "license": "CC0",
+  "source": "https://quaternius.com/packs/farmbuildings.html",
+  "uid": null,
+  "faces": null,
+  "animated": false,
+  "thumb": null,
+  "cat": "food",
+  "used_as": "c4_slaughterhall"
+ }
+]
