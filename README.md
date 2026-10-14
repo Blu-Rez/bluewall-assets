@@ -1,0 +1,2 @@
+Install package p51 of Blue Wall (built by the mother chat, 15 Oct 2026 03:30 Tehran). Needs p50 installed (delta on top of it). Contains: castle level 50 (server MAX_LEVEL 50 + client tables; levels 31-50 = placeholders), lamp / flame glare fix, the old EZ-Tree forest + old rocks back (the Tripo ones looked like giant coral), TR2-S4b (mills, mines, farms, fisheries, workshops as Tripo models). Rollback: bash /root/p51/rollback.sh
+On the server:  cd /root && tar xzf p51.tar.gz && bash p51/install.sh
