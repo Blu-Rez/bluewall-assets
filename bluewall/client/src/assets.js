@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+import { REACH } from './reach.js';
 
 export const BASE = (window.BW_ASSETS || '/assets/').replace(/\/?$/, '/');
 /* global __BUILD__ */
@@ -19,7 +20,7 @@ export const LATE = ['prowler', 'troll', 'u2_ogre', 'cyclops', 'treant', 'werewo
   'siege_tower', 'barn', 'silo', 'coop', 'pumpkin', 'corn', 'cabbage', 'kit_ws', 'kit_def', 'kit_homes', 'kit_civic', 'kit_c1', 'kit_c2', 'kit_c3', 'kit_c4', 'an_sheep', 'an_pig',
   'pegasus', 'anims_army', 'helmet2', 'helmet3', 'shield_heater', 'spear', 'claymore', 'shieldmaiden', 'shield_round2'];   // army.js reads these from A.models
 // RP1 (owner-only hero mode, fetched on demand): what the lazy hero module needs from here
-export const heroKit = { base: BASE, v: V, parse: (buf, path) => { const l = new GLTFLoader(); l.setMeshoptDecoder(MeshoptDecoder); return l.parseAsync(buf, path); } };
+export const heroKit = { base: BASE, v: V, reach: REACH, parse: (buf, path) => { const l = new GLTFLoader(); l.setMeshoptDecoder(MeshoptDecoder); return l.parseAsync(buf, path); } };
 // load any packed model by name (web/assets/<name>.glb); cached per name
 const GLB = {};
 export function loadGLB(name) {
@@ -105,7 +106,7 @@ export function parts(gltf) {
 // p29: far meadow cells draw a growing share of their instances (grass blades there are sub-pixel anyway): the cells' instance order is shuffled once,
 // then `m.count` is lowered by distance (continuously, so there is no visible step). Look at the default view stays the same, tris go down.
 const LOD = [];
-export function meadowLod(cam, near = 180, far = 380, fmin = 0.4) {
+export function meadowLod(cam, near = 180 * REACH.k, far = 380 * REACH.k, fmin = 0.4 * Math.min(1, REACH.k * 1.5)) {      // (RP1B: REACH.k = 1 everywhere but in the owner's hero mode)
   const p = cam.position, off = typeof window !== 'undefined' && window.__bwNoLod;     // (dev switch for before/after measurements)
   for (const m of LOD) {
     if (off) { if (m.count !== m.userData.lodN) m.count = m.userData.lodN; continue; }

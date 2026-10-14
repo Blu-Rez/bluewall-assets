@@ -40,6 +40,7 @@ import { setEmblem } from './textures.js';
 import { setGateName } from './her_flags.js';
 import { setShieldCrest } from './gear_shield.js';
 import { DS, DU } from './destruct.js';
+import { REACH } from './reach.js';                                   // RP1B: the owner's hero mode lowers draw distance / pixel ratio / update rate here (all neutral = 1 for everyone else)
 
 const VERSION = '4.0';
 const PRESETS = {
@@ -82,7 +83,7 @@ async function start(opts) {
   // hard-to-notice steps (render scale, shadow / mirror refresh); resting (idle, panels, hidden) cools it back. "Cool mode" (settings) is the manual, stronger version.
   const GOV = { lvl: 0, active: 0, win: 0, wn: 0, base: 0, since: 0, steps: 0 }, GOVK = [1, 0.95, 0.9, 0.82];
   const cool = () => !!settings.coolMode;
-  const dpr = () => { let b = Math.min(window.devicePixelRatio || 1, Q.dpr); if (cool()) b = Math.min(b, 1); return Math.max(0.75, b * (+settings.resScale || 1) * DYN.s * (cool() ? 0.9 : GOVK[GOV.lvl])); };
+  const dpr = () => { let b = Math.min(window.devicePixelRatio || 1, Q.dpr); if (cool()) b = Math.min(b, 1); return Math.max(0.75, b * (+settings.resScale || 1) * DYN.s * REACH.dpr * (cool() ? 0.9 : GOVK[GOV.lvl])); };
   renderer.setPixelRatio(dpr());
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.2;
@@ -127,7 +128,7 @@ async function start(opts) {
   const useComposer = () => {
     if (!composer) return false;
     if (opts.dev && window.__bwPath) return window.__bwPath === 'c';
-    if (cool()) return false;
+    if (cool() || REACH.nobloom) return false;
     const want = P.night > 0.25;
     if (OLD || !lateReady) return want;
     if (want && pathReady.screen && !pathReady.rt) return false;            // the bloom path is not built yet: stay on the plain one
@@ -216,6 +217,7 @@ async function start(opts) {
   ctl.onFirstTouch = () => { audio.start(); };
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), hit = new THREE.Vector3(), sph = new THREE.Sphere();
   const sheets = createSheetUI(root, { econ, ui, audio, upgrade, army: armyUI, afterCollect: () => badgeTick() });       // T1 (bsheet.js)
+  const SHEET_MAP = { keep: 'keep', wall: 'wall', gate: 'wall', tower: 'wall', barracks: 'barracks', forge: 'forge', training: 'training', stable: 'stable', workshop: 'workshop', lair: 'lair', archer: 'towers', vault_ruby: 'vault_ruby', vault_emerald: 'vault_emerald', vault_turq: 'vault_turq' };   // (RP1B: shared with the hero mode's door button)
   ctl.onTap = (x, y) => {
     if (ui.settingsOpen) return;
     ndc.set((x / root.clientWidth) * 2 - 1, -(y / root.clientHeight) * 2 + 1);
@@ -229,7 +231,7 @@ async function start(opts) {
     for (const p of world.picks) {
       if (ray.ray.intersectBox(p.box, hit)) { const d = hit.distanceTo(camera.position); if (d < bd) { bd = d; best = p.id; } }
     }
-    const SM = { keep: 'keep', wall: 'wall', gate: 'wall', tower: 'wall', barracks: 'barracks', forge: 'forge', training: 'training', stable: 'stable', workshop: 'workshop', lair: 'lair', archer: 'towers', vault_ruby: 'vault_ruby', vault_emerald: 'vault_emerald', vault_turq: 'vault_turq' };
+    const SM = SHEET_MAP;
     if (best && sheets.tap(best, SM)) return;                  // T1: the building's own sheet (exact id -> SM -> prefix ws: home: civic: mine_ vault_); an id without one keeps the old behaviour below
     sheets.close();
     if (best && SM[best]) { upgrade.focus(SM[best]); return; }
@@ -401,12 +403,12 @@ async function start(opts) {
   if (opts.owner || opts.rpg) {
     const hb = document.createElement('button'); hb.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l4.6 4.2L12 5.5l3.9 7.2 4.6-4.2-1.8 10H5.3z"/><path d="M5.8 21h12.4"/></svg>'; hb.className = 'rp-open';
     hb.style.cssText = 'position:absolute;z-index:6;left:10px;top:' + (opts.rpgTop || 'calc(env(safe-area-inset-top,0px) + 150px)') + ';width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1.5px solid rgba(205,214,224,.5);background:radial-gradient(circle at 50% 35%,rgba(66,74,84,.62),rgba(22,26,32,.72));box-shadow:0 0 12px rgba(61,245,224,.25);color:#e6ecf2';
-    const mkHero = async (q) => { hero = (await import(/* @vite-ignore */ new URL(heroKit.base + 'rpg/rpg.js' + (q || heroKit.v), document.baseURI).href)).create({ THREE, renderer, scene, camera, root, ctl, world, L, buildNav, bridgesFromLayout, staticSolids, createLoadView, base: new URL(heroKit.base, document.baseURI).href, v: heroKit.v, parseGLB: heroKit.parse, dev: !!opts.dev }); if (opts.dev) window.__rp = hero.dev; return hero; };
+    const mkHero = async (q) => { hero = (await import(/* @vite-ignore */ new URL(heroKit.base + 'rpg/rpg.js' + (q || heroKit.v), document.baseURI).href)).create({ THREE, renderer, scene, camera, root, ctl, world, L, buildNav, bridgesFromLayout, staticSolids, createLoadView, base: new URL(heroKit.base, document.baseURI).href, v: heroKit.v, parseGLB: heroKit.parse, reach: REACH, resize: wantResize, sheets, SM: SHEET_MAP, dev: !!opts.dev }); if (opts.dev) window.__rp = hero.dev; return hero; };
     hb.onclick = async () => { if (hero) return hero.openPick(); hb.disabled = true; try { (await mkHero()).openPick(); } catch (e) { console.warn('hero', e); } hb.disabled = false; };
     if (opts.dev) window.__rpLoad = async (q) => { if (hero) { hero.exit(); hero.closePick(); } return mkHero(q); };
     root.appendChild(hb); setInterval(() => { hb.style.display = (hero && hero.active) || (battle && battle.active) || root.classList.contains('wel') ? 'none' : ''; }, 400);
   }
-  let coachBat = false;
+  let coachBat = false, hdt = 0;
   const perf = { acc: 0, n: 0, checked: 0 }, fpsm = { n: 0, t: 0, max: 0 };
   const loop = (now) => {
     raf = requestAnimationFrame(loop);
@@ -430,7 +432,7 @@ async function start(opts) {
       ctl.shake = settings.shake ? (world.shake.out || 0) : 0;
       if (!inHero) ctl.update(dt);
       P = sample(hourNow());
-      P.fogD *= Math.min(1, Math.max(0.6, 400 / Math.max(1, ctl.dist)));                 // p38: far out the haze must not swallow the (bigger) valley
+      P.fogD *= Math.min(1, Math.max(0.6, 400 / Math.max(1, ctl.dist))) * REACH.fog;     // p38: far out the haze must not swallow the (bigger) valley  (RP1B: REACH.fog = 1 except in hero mode)
     }
     if (opts.dev && window.__bw && window.__bw.ov) Object.assign(P, window.__bw.ov);                     // (dev only: live tuning of the time-of-day numbers)
     if (!inBattle && world.key && world.key.shadow && world.key.castShadow) {        // home: the sun's shadow box (±110 m) follows the view in 20 m steps, so the stable, the pasture, the camp get shadows too (re-drawn only when it steps)
@@ -441,14 +443,14 @@ async function start(opts) {
     world.setTime(P, Date.now());
     renderer.toneMappingExposure = P.exposure * (world.exposureMul ? world.exposureMul(inBattle) : 1);
     if (bloom) bloom.strength = P.bloom;
-    pe('main:time'); if (!uw) world.update(t, dt, camera); pb();
+    pe('main:time'); hdt += dt; if (!uw && (!inHero || REACH.upd < 2 || frames % REACH.upd === 0)) { world.update(t, inHero ? Math.min(hdt, 0.1) : dt, camera); hdt = 0; } else if (!inHero || uw) hdt = 0; pb();      // (RP1B: in hero mode the world may update every 2nd drawn frame, with the time it missed)
     if (inBattle) battle.frame(now, dt);
     if (inHero) hero.frame(now, dt);
     pe('battle');                                                           // (the attack plays on this very map: sim, camera, units, destruction)
     // shadows: refresh every 3rd drawn frame (every 2nd on ultra): the sun/moon move slowly and it is the biggest steady GPU cost
-    if (renderer.shadowMap.enabled) { renderer.shadowMap.autoUpdate = false; if (frames % (cool() ? 6 : (Q.level === 'ultra' ? (slow && !inBattle ? 3 : 2) : (slow || panelUp) && !inBattle ? 5 : 3) + (slow || panelUp ? 0 : GOV.lvl)) === 0) renderer.shadowMap.needsUpdate = true; }
+    if (renderer.shadowMap.enabled) { renderer.shadowMap.autoUpdate = false; if (frames % (cool() ? 6 : (Q.level === 'ultra' ? (slow && !inBattle ? 3 : 2) : (slow || panelUp) && !inBattle ? 5 : 3) + (slow || panelUp ? 0 : GOV.lvl) + REACH.sh) === 0) renderer.shadowMap.needsUpdate = true; }
     // behind the loading screen nobody sees the frames: draw a third of them (the explicit warm-up renders still draw everything)
-    if (!(inBattle && battle.loading) && (lateReady || frames % 3 === 0)) { if (hud.on) gpu.begin(renderer.shadowMap.needsUpdate ? 's' : 'p'); pb(); if (uw) renderer.render(hero.scene, camera); else { refl.update(dt, { battle: inBattle }); pe('refl'); if (useComposer()) composer.render(); else renderer.render(scene, camera); } if (opts.dev && window.__bwLumOn) lumSample(); pe('render(submit)'); if (hud.on) gpu.end(); }
+    if (!(inBattle && battle.loading) && (lateReady || frames % 3 === 0)) { if (hud.on) gpu.begin(renderer.shadowMap.needsUpdate ? 's' : 'p'); pb(); if (uw) renderer.render(hero.scene, camera); else { refl.update(dt, { battle: inBattle || REACH.norefl }); pe('refl'); if (useComposer()) composer.render(); else renderer.render(scene, camera); } if (opts.dev && window.__bwLumOn) lumSample(); pe('render(submit)'); if (hud.on) gpu.end(); }
     // dynamic resolution: keep up with the frame cap (60, or 30 when slow). A resize re-allocates the render targets (a hitch of its own), so:
     // change only after two bad windows in a row, in steps of 0.1, ignore the window that contains the resize, and after a drop stay down for a minute.
     dyn.acc += dt; dyn.n++;
@@ -467,7 +469,7 @@ async function start(opts) {
         if (Math.abs(ns - DYN.s) > 0.01) { DYN.s = ns; dyn.skip = 1; wantResize(); }
       }
     }
-    if (hud.on) hud.frame(dt, () => { const sz = renderer.getDrawingBufferSize(new THREE.Vector2()); return { dpr: renderer.getPixelRatio(), basedpr: Math.min(window.devicePixelRatio || 1, Q.dpr), dyn: DYN.s, w: sz.x, h: sz.y, preset: Q.level, shadow: renderer.shadowMap.enabled ? '1/' + (cool() ? 6 : (Q.level === 'ultra' ? (slow && !inBattle ? 3 : 2) : (slow || panelUp) && !inBattle ? 5 : 3) + (slow || panelUp ? 0 : GOV.lvl)) : 'off', refl: refl.enabled && !refl.off ? 'on' : 'off', bloom: composer && P.night > 0.25 && !cool() ? 'on' : (composer ? 'idle' : 'off'), cap: slow ? 30 : 60, cool: cool() ? 'on' : 'off', gov: GOV.lvl }; });
+    if (hud.on) hud.frame(dt, () => { const sz = renderer.getDrawingBufferSize(new THREE.Vector2()); return { dpr: renderer.getPixelRatio(), basedpr: Math.min(window.devicePixelRatio || 1, Q.dpr), dyn: DYN.s, w: sz.x, h: sz.y, preset: Q.level, shadow: renderer.shadowMap.enabled ? '1/' + (cool() ? 6 : (Q.level === 'ultra' ? (slow && !inBattle ? 3 : 2) : (slow || panelUp) && !inBattle ? 5 : 3) + (slow || panelUp ? 0 : GOV.lvl) + REACH.sh) : 'off', refl: refl.enabled && !refl.off ? 'on' : 'off', bloom: composer && P.night > 0.25 && !cool() ? 'on' : (composer ? 'idle' : 'off'), cap: slow ? 30 : 60, cool: cool() ? 'on' : 'off', gov: GOV.lvl }; });
     // governor: count full-rate play time; judge the average frame time over 30 s windows
     {
       if (slow || panelUp || document.hidden) { GOV.active = Math.max(0, GOV.active - dt * 2); GOV.win = 0; GOV.wn = 0; }

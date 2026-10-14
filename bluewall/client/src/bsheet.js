@@ -349,5 +349,8 @@ export function createSheetUI(mount, { econ, ui, audio, upgrade, army, afterColl
   dlg.addEventListener('click', (e) => { const d = e.target.closest('[data-d]'); if (d) { click(); answer(d.dataset.d === '1'); } else if (e.target === dlg) answer(false); });
   if (econ && econ.on) econ.on(() => { if (S.open) later(); });
 
-  return { tap: (id, SM) => open(id, SM), open, close, isOpen: () => S.open, update: later };
+  const can = (id, SM) => { const r = resolveSheet(id, SM); if (!r || r.spec.label) return false; try { return !(r.spec.ok && !r.spec.ok(r.id, c)); } catch (e) { return false; } };     // RP1B: does this id have a real sheet right now? (the hero mode's door button asks, it never opens one that would not open)
+  // RP1B: the town lots (cottages / civic buildings) with the footprint the town plan gives them at the player's castle level — the hero mode's door button asks here, read each time (a plan or level change is followed)
+  const lots = () => { const lv = castleLv(c), out = []; try { for (const l of homeLots(lv)) out.push({ id: 'home:' + l.id, x: l.x, z: l.z, ry: l.ry || 0, w: l.w, d: l.d, r: l.r }); for (const l of civicLots(lv)) out.push({ id: 'civic:' + l.id, x: l.x, z: l.z, ry: l.ry || 0, w: l.w, d: l.d, r: l.r }); } catch (e) { /* plan not ready */ } return out; };
+  return { tap: (id, SM) => open(id, SM), open, can, lots, close, isOpen: () => S.open, update: later };
 }

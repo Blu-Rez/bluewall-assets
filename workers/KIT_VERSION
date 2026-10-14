@@ -1,4 +1,5 @@
-kit = p45 INSTALLED on the owner's server (14 Oct 2026 14:29 Tehran) + TR2-S2 MERGED (14 Oct 2026 ~18:20, NOT installed yet; it will ship inside the next package, p46).
+kit = p45 INSTALLED on the owner's server (14 Oct 2026 14:29 Tehran) + TR2-S2 MERGED (14 Oct 2026 ~18:20) + RP1B MERGED (14 Oct 2026 ~20:30). Neither is installed yet; both ship inside the next package, p46.
 TR2-S2 = tiers.js (level cap 30 today, 50 when the server sends max_level 50; 9 material tiers) + tr2lib.js loader (shared Tripo material, destruct-compatible bake, lazy tiers) + web/assets/tr2/swap.json. Nothing visible changes at cap 30.
-Gate: GATE_W: ALL OK (noRoute 667; gate now has the tr2_tiers_test line). workers/pkg/deployed.sha256 = server state after p45 (unchanged).
-Next in the queue: RP1B (hero round 2), then TR2-S3 (castle from Tripo) -> p46.
+RP1B = hero mode round 2 (owner only): reach.js (REACH knobs, neutral = 1) + web/assets/rpg/rpg_diet.js (diet + quality governor) + reach map / wall climb / wade / swim (stand-in poses) / door button -> the same T1 sheet; bsheet.js gained can()/lots(); main.js carries the RP1B hooks (marked // RP1B:). Test: bash dev/rp1b_test.sh -> RP1B OK (about 10 min; NOT in gate_w). t1_test now allows 60 changed lines in main.js.
+Gate: GATE_W: ALL OK (noRoute 667). workers/pkg/deployed.sha256 = server state after p45 (unchanged).
+Open: hero-mode frame target (<=150 calls / <=400k tris) not reached -> RP1C. In flight: TR2 S3/S4, RP3 underworld, RP4 combat, RP0U army, RP0B clips, UI1 sheets, VO1 voice.
