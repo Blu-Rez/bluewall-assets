@@ -1,0 +1,2 @@
+Install package p49 of Blue Wall (built by the mother chat, 15 Oct 2026). Supersedes p48 (never installed). Contains: RP0B hero clips (33 per hero) + RP3 underworld hub + RP4 combat (R1+R2) + RP1B/RP1C hero culling, door orbs, governor + UI1 sheets in look C + TR2 castle (S3), houses/civic (S4a), animals/people (S4d) + the NEW Mobina (model + half-body card). Rollback: bash /root/p49/rollback.sh
+On the server:  cd /root && tar xzf p49.tar.gz && bash p49/install.sh
