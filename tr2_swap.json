@@ -1,0 +1,7358 @@
+{
+ "convention": "ry = degrees about +Y (three.js rotation.y, counter-clockwise from above) that brings the model FRONT to +Z; walls/gates: length axis Z becomes X. Packs: node pivots are base-centre, no yaw. | packs (S1c): `packs[pack/node]` = {ry, dim 'h'|'w', target_m, k (= target / model size along dim, AFTER ry), size_m}; node pivots are base-centre; apply ry first, then uniform k. Wall-mount lamps: ry puts the lamp side on +Z and the wall plate on -Z.",
+ "models": {
+  "animal_calf": {
+   "cat": "animals",
+   "tris": 5000,
+   "size": [
+    0.335,
+    0.727,
+    0.981
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_camel": {
+   "cat": "animals",
+   "tris": 6000,
+   "size": [
+    0.249,
+    0.721,
+    0.981
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_cow": {
+   "cat": "animals",
+   "tris": 5996,
+   "size": [
+    0.501,
+    0.583,
+    0.979
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_dog": {
+   "cat": "animals",
+   "tris": 4998,
+   "size": [
+    0.334,
+    0.677,
+    0.979
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_donkey": {
+   "cat": "animals",
+   "tris": 4998,
+   "size": [
+    0.252,
+    0.79,
+    0.979
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_horse_black": {
+   "cat": "animals",
+   "tris": 5000,
+   "size": [
+    0.204,
+    0.735,
+    0.976
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_horse_brown": {
+   "cat": "animals",
+   "tris": 4999,
+   "size": [
+    0.206,
+    0.728,
+    0.978
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_horse_white": {
+   "cat": "animals",
+   "tris": 5000,
+   "size": [
+    0.212,
+    0.74,
+    0.978
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_lamb": {
+   "cat": "animals",
+   "tris": 4000,
+   "size": [
+    0.381,
+    0.823,
+    0.982
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_pig": {
+   "cat": "animals",
+   "tris": 4500,
+   "size": [
+    0.358,
+    0.488,
+    0.98
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_sheep": {
+   "cat": "animals",
+   "tris": 5000,
+   "size": [
+    0.355,
+    0.687,
+    0.98
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "animal_wolf": {
+   "cat": "animals",
+   "tris": 5000,
+   "size": [
+    0.28,
+    0.616,
+    0.979
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "birds": {
+   "cat": "animals",
+   "tris": 8997,
+   "size": [
+    0.707,
+    0.315,
+    0.357
+   ],
+   "seen": false,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "poultry_fish_pack": {
+   "cat": "animals",
+   "tris": 12512,
+   "size": [
+    0.94,
+    0.317,
+    0.35
+   ],
+   "seen": false,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "bridge_moat": {
+   "cat": "bridges",
+   "tris": 5989,
+   "size": [
+    0.856,
+    0.822,
+    0.982
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "drawbridge ramp on +X; passage along X; towers side by side along Z"
+  },
+  "bridge_stone_0": {
+   "cat": "bridges",
+   "tris": 5000,
+   "size": [
+    0.379,
+    0.339,
+    0.981
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "span along Z, symmetric"
+  },
+  "bridge_stone_1": {
+   "cat": "bridges",
+   "tris": 5000,
+   "size": [
+    0.331,
+    0.246,
+    0.978
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "span along Z, symmetric"
+  },
+  "water_gate": {
+   "cat": "bridges",
+   "tris": 5986,
+   "size": [
+    0.522,
+    0.841,
+    0.979
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "portcullis passage along X"
+  },
+  "castle_gate_diamond_black": {
+   "cat": "castle",
+   "tris": 5998,
+   "size": [
+    0.321,
+    0.592,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_diamond_blue": {
+   "cat": "castle",
+   "tris": 5993,
+   "size": [
+    0.337,
+    0.593,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_diamond_green": {
+   "cat": "castle",
+   "tris": 5999,
+   "size": [
+    0.34,
+    0.578,
+    0.981
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_diamond_ice": {
+   "cat": "castle",
+   "tris": 5995,
+   "size": [
+    0.358,
+    0.597,
+    0.981
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_diamond_red": {
+   "cat": "castle",
+   "tris": 5998,
+   "size": [
+    0.339,
+    0.592,
+    0.985
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_gold": {
+   "cat": "castle",
+   "tris": 5992,
+   "size": [
+    0.312,
+    0.583,
+    0.982
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_iron": {
+   "cat": "castle",
+   "tris": 5992,
+   "size": [
+    0.339,
+    0.578,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_stone": {
+   "cat": "castle",
+   "tris": 5996,
+   "size": [
+    0.337,
+    0.578,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_gate_wood": {
+   "cat": "castle",
+   "tris": 6000,
+   "size": [
+    0.336,
+    0.595,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "passage along X, both X faces have the arch; length along Z -> after ry: length along X, passage along Z"
+  },
+  "castle_keep_stone_1": {
+   "cat": "castle",
+   "tris": 18175,
+   "size": [
+    0.733,
+    0.772,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door/iwan on +X"
+  },
+  "castle_keep_stone_2": {
+   "cat": "castle",
+   "tris": 17946,
+   "size": [
+    0.813,
+    0.862,
+    0.981
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door/iwan on +X; D7 = keep_2 at all levels"
+  },
+  "castle_tower_medium_diamond_black": {
+   "cat": "castle",
+   "tris": 5000,
+   "size": [
+    0.553,
+    0.981,
+    0.555
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_diamond_blue": {
+   "cat": "castle",
+   "tris": 4999,
+   "size": [
+    0.564,
+    0.98,
+    0.568
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_diamond_green": {
+   "cat": "castle",
+   "tris": 4999,
+   "size": [
+    0.549,
+    0.981,
+    0.567
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_diamond_ice": {
+   "cat": "castle",
+   "tris": 4998,
+   "size": [
+    0.563,
+    0.98,
+    0.562
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_diamond_red": {
+   "cat": "castle",
+   "tris": 4998,
+   "size": [
+    0.552,
+    0.98,
+    0.553
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_gold": {
+   "cat": "castle",
+   "tris": 4999,
+   "size": [
+    0.555,
+    0.979,
+    0.563
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_iron": {
+   "cat": "castle",
+   "tris": 4967,
+   "size": [
+    0.568,
+    0.981,
+    0.576
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_stone": {
+   "cat": "castle",
+   "tris": 4998,
+   "size": [
+    0.567,
+    0.981,
+    0.568
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_medium_wood": {
+   "cat": "castle",
+   "tris": 4996,
+   "size": [
+    0.575,
+    0.979,
+    0.581
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_diamond_black": {
+   "cat": "castle",
+   "tris": 3999,
+   "size": [
+    0.776,
+    0.978,
+    0.759
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_diamond_blue": {
+   "cat": "castle",
+   "tris": 4000,
+   "size": [
+    0.819,
+    0.979,
+    0.748
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_diamond_green": {
+   "cat": "castle",
+   "tris": 4000,
+   "size": [
+    0.779,
+    0.978,
+    0.744
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_diamond_ice": {
+   "cat": "castle",
+   "tris": 3998,
+   "size": [
+    0.775,
+    0.979,
+    0.742
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_diamond_red": {
+   "cat": "castle",
+   "tris": 3996,
+   "size": [
+    0.783,
+    0.978,
+    0.75
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_gold": {
+   "cat": "castle",
+   "tris": 3999,
+   "size": [
+    0.791,
+    0.978,
+    0.744
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_iron": {
+   "cat": "castle",
+   "tris": 3999,
+   "size": [
+    0.795,
+    0.977,
+    0.768
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_stone": {
+   "cat": "castle",
+   "tris": 3999,
+   "size": [
+    0.773,
+    0.978,
+    0.74
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_short_wood": {
+   "cat": "castle",
+   "tris": 4000,
+   "size": [
+    0.805,
+    0.98,
+    0.764
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door on +X"
+  },
+  "castle_tower_stone_1": {
+   "cat": "castle",
+   "tris": 5999,
+   "size": [
+    0.512,
+    0.983,
+    0.536
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "legacy (not in the 9 tiers): probably unused"
+  },
+  "castle_tower_stone_2": {
+   "cat": "castle",
+   "tris": 6000,
+   "size": [
+    0.493,
+    0.981,
+    0.527
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "legacy (not in the 9 tiers): probably unused"
+  },
+  "castle_tower_tall_diamond_black": {
+   "cat": "castle",
+   "tris": 6000,
+   "size": [
+    0.308,
+    0.981,
+    0.31
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_diamond_blue": {
+   "cat": "castle",
+   "tris": 6000,
+   "size": [
+    0.311,
+    0.982,
+    0.311
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_diamond_green": {
+   "cat": "castle",
+   "tris": 5999,
+   "size": [
+    0.3,
+    0.978,
+    0.3
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_diamond_ice": {
+   "cat": "castle",
+   "tris": 5994,
+   "size": [
+    0.306,
+    0.98,
+    0.307
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_diamond_red": {
+   "cat": "castle",
+   "tris": 5997,
+   "size": [
+    0.311,
+    0.976,
+    0.31
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_gold": {
+   "cat": "castle",
+   "tris": 5999,
+   "size": [
+    0.307,
+    0.978,
+    0.311
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_iron": {
+   "cat": "castle",
+   "tris": 5959,
+   "size": [
+    0.311,
+    0.978,
+    0.312
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_stone": {
+   "cat": "castle",
+   "tris": 5999,
+   "size": [
+    0.308,
+    0.983,
+    0.312
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_tower_tall_wood": {
+   "cat": "castle",
+   "tris": 5998,
+   "size": [
+    0.311,
+    0.975,
+    0.312
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "tall tower: 4-fold look, small pyramid cap"
+  },
+  "castle_wall_diamond_black": {
+   "cat": "castle",
+   "tris": 1999,
+   "size": [
+    0.125,
+    0.764,
+    0.976
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3"
+  },
+  "castle_wall_diamond_blue": {
+   "cat": "castle",
+   "tris": 1999,
+   "size": [
+    0.263,
+    0.694,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3"
+  },
+  "castle_wall_diamond_green": {
+   "cat": "castle",
+   "tris": 2144,
+   "size": [
+    0.133,
+    0.708,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3",
+   "ship": "castle/castle_wall_diamond_green/castle_wall_diamond_green.glb"
+  },
+  "castle_wall_diamond_ice": {
+   "cat": "castle",
+   "tris": 2000,
+   "size": [
+    0.188,
+    0.739,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3"
+  },
+  "castle_wall_diamond_red": {
+   "cat": "castle",
+   "tris": 2000,
+   "size": [
+    0.208,
+    0.707,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3"
+  },
+  "castle_wall_gold": {
+   "cat": "castle",
+   "tris": 2000,
+   "size": [
+    0.165,
+    0.613,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3"
+  },
+  "castle_wall_iron": {
+   "cat": "castle",
+   "tris": 2358,
+   "size": [
+    0.206,
+    0.655,
+    0.973
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3",
+   "ship": "castle/castle_wall_iron/castle_wall_iron.glb"
+  },
+  "castle_wall_stone": {
+   "cat": "castle",
+   "tris": 1999,
+   "size": [
+    0.2,
+    0.526,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3"
+  },
+  "castle_wall_stone_b": {
+   "cat": "castle",
+   "tris": 2000,
+   "size": [
+    0.177,
+    0.647,
+    0.979
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3"
+  },
+  "castle_wall_wood": {
+   "cat": "castle",
+   "tris": 3432,
+   "size": [
+    0.225,
+    0.742,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length along Z -> after ry: length along X, a face toward +Z (both faces alike); outer side decided in S3",
+   "ship": "castle/castle_wall_wood/castle_wall_wood.glb"
+  },
+  "armory_0": {
+   "cat": "civic",
+   "tris": 8329,
+   "size": [
+    0.827,
+    0.963,
+    0.972
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "armory_1": {
+   "cat": "civic",
+   "tris": 6349,
+   "size": [
+    0.967,
+    0.407,
+    0.518
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "ambiguous: arcade on both long sides, doors on the short ends"
+  },
+  "bakery": {
+   "cat": "civic",
+   "tris": 7992,
+   "size": [
+    0.799,
+    0.77,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "barn_0": {
+   "cat": "civic",
+   "tris": 4998,
+   "size": [
+    0.631,
+    0.29,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "barn_1": {
+   "cat": "civic",
+   "tris": 5853,
+   "size": [
+    0.979,
+    0.717,
+    0.83
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "ambiguous: long timber facade ±Z, gable ends ±X"
+  },
+  "brewhouse": {
+   "cat": "civic",
+   "tris": 8808,
+   "size": [
+    0.727,
+    0.843,
+    0.954
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "ship": "civic/brewhouse/brewhouse.glb"
+  },
+  "butcher": {
+   "cat": "civic",
+   "tris": 7985,
+   "size": [
+    0.881,
+    0.771,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "camp_0": {
+   "cat": "civic",
+   "tris": 5992,
+   "size": [
+    0.979,
+    0.457,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "diorama tile, near-symmetric"
+  },
+  "camp_1": {
+   "cat": "civic",
+   "tris": 5985,
+   "size": [
+    0.98,
+    0.597,
+    0.962
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "diorama tile (banner side)"
+  },
+  "cannon_house_0": {
+   "cat": "civic",
+   "tris": 5997,
+   "size": [
+    0.825,
+    0.829,
+    0.972
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "cannon_house_1": {
+   "cat": "civic",
+   "tris": 5994,
+   "size": [
+    0.56,
+    0.466,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "civic_hall_0": {
+   "cat": "civic",
+   "tris": 3994,
+   "size": [
+    0.978,
+    0.734,
+    0.658
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "ship": "civic/civic_hall_0/civic_hall_0.glb"
+  },
+  "civic_hall_1": {
+   "cat": "civic",
+   "tris": 3996,
+   "size": [
+    0.744,
+    0.761,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "ship": "civic/civic_hall_1/civic_hall_1.glb"
+  },
+  "clock_tower": {
+   "cat": "civic",
+   "tris": 5455,
+   "size": [
+    0.246,
+    0.958,
+    0.233
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "clock on all four faces"
+  },
+  "coop_0": {
+   "cat": "civic",
+   "tris": 3998,
+   "size": [
+    0.98,
+    0.712,
+    0.694
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "coop_1": {
+   "cat": "civic",
+   "tris": 4000,
+   "size": [
+    0.979,
+    0.908,
+    0.956
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "granary_0": {
+   "cat": "civic",
+   "tris": 4993,
+   "size": [
+    0.979,
+    0.663,
+    0.65
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "granary_1": {
+   "cat": "civic",
+   "tris": 4993,
+   "size": [
+    0.982,
+    0.593,
+    0.936
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "jetty": {
+   "cat": "civic",
+   "tris": 6088,
+   "size": [
+    0.973,
+    0.342,
+    0.282
+   ],
+   "seen": true,
+   "front": "?",
+   "ry": 0,
+   "note": "runs along Z; shore end must be decided in S4b"
+  },
+  "jeweller": {
+   "cat": "civic",
+   "tris": 7982,
+   "size": [
+    0.871,
+    0.978,
+    0.772
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "market_hall": {
+   "cat": "civic",
+   "tris": 10318,
+   "size": [
+    0.977,
+    0.287,
+    0.395
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "long arcaded face; open ends on ±X",
+   "ship": "civic/market_hall/market_hall.glb"
+  },
+  "mint": {
+   "cat": "civic",
+   "tris": 7999,
+   "size": [
+    0.893,
+    0.828,
+    0.96
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "shrine_0": {
+   "cat": "civic",
+   "tris": 5998,
+   "size": [
+    0.79,
+    0.983,
+    0.71
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "shrine_1": {
+   "cat": "civic",
+   "tris": 6000,
+   "size": [
+    0.83,
+    0.979,
+    0.841
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "open arches on all four sides"
+  },
+  "silo": {
+   "cat": "civic",
+   "tris": 4998,
+   "size": [
+    0.863,
+    0.979,
+    0.713
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "smokehouse": {
+   "cat": "civic",
+   "tris": 6996,
+   "size": [
+    0.629,
+    0.981,
+    0.731
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "stable_0": {
+   "cat": "civic",
+   "tris": 4996,
+   "size": [
+    0.979,
+    0.491,
+    0.74
+   ],
+   "seen": true,
+   "front": "-Z",
+   "ry": 180,
+   "note": "open stalls face -Z, plain back +Z"
+  },
+  "stable_1": {
+   "cat": "civic",
+   "tris": 4997,
+   "size": [
+    0.977,
+    0.307,
+    0.859
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "U-shaped courtyard: check open side in S4a"
+  },
+  "tavern_0": {
+   "cat": "civic",
+   "tris": 12514,
+   "size": [
+    0.809,
+    0.941,
+    0.95
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "ship": "civic/tavern_0/tavern_0.glb"
+  },
+  "tavern_1": {
+   "cat": "civic",
+   "tris": 12759,
+   "size": [
+    0.859,
+    0.937,
+    0.976
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "ship": "civic/tavern_1/tavern_1.glb"
+  },
+  "treasury_0": {
+   "cat": "civic",
+   "tris": 5997,
+   "size": [
+    0.976,
+    0.909,
+    0.892
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "treasury_1": {
+   "cat": "civic",
+   "tris": 5995,
+   "size": [
+    0.915,
+    0.777,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "watermill": {
+   "cat": "civic",
+   "tris": 7995,
+   "size": [
+    0.976,
+    0.747,
+    0.83
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "wheel on -Z side: re-yaw by the water side in S4b"
+  },
+  "well_abanbar": {
+   "cat": "civic",
+   "tris": 5999,
+   "size": [
+    0.977,
+    0.469,
+    0.817
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "well_qanat": {
+   "cat": "civic",
+   "tris": 3992,
+   "size": [
+    0.9,
+    0.754,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "windlass; near-symmetric"
+  },
+  "well_stone": {
+   "cat": "civic",
+   "tris": 3994,
+   "size": [
+    0.765,
+    0.98,
+    0.918
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "symmetric along X"
+  },
+  "def_ballista": {
+   "cat": "defense",
+   "tris": 4994,
+   "size": [
+    0.986,
+    0.657,
+    0.844
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "check the aiming side in S6 (weapon on a wall-top platform)"
+  },
+  "def_catapult": {
+   "cat": "defense",
+   "tris": 4987,
+   "size": [
+    0.975,
+    0.649,
+    0.732
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "check the aiming side in S6 (weapon on a wall-top platform)"
+  },
+  "def_firepot": {
+   "cat": "defense",
+   "tris": 2998,
+   "size": [
+    0.983,
+    0.549,
+    0.661
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "check the aiming side in S6 (weapon on a wall-top platform)"
+  },
+  "def_oil": {
+   "cat": "defense",
+   "tris": 3000,
+   "size": [
+    0.979,
+    0.757,
+    0.855
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "check the aiming side in S6 (weapon on a wall-top platform)"
+  },
+  "def_scorpion": {
+   "cat": "defense",
+   "tris": 3499,
+   "size": [
+    0.883,
+    0.733,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "check the aiming side in S6 (weapon on a wall-top platform)"
+  },
+  "def_tesla": {
+   "cat": "defense",
+   "tris": 4999,
+   "size": [
+    0.873,
+    0.971,
+    0.872
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0
+  },
+  "house_cottage_0": {
+   "cat": "houses",
+   "tris": 5000,
+   "size": [
+    0.823,
+    0.725,
+    0.981
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_cottage_1": {
+   "cat": "houses",
+   "tris": 5000,
+   "size": [
+    0.98,
+    0.895,
+    0.714
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_cottage_2": {
+   "cat": "houses",
+   "tris": 4999,
+   "size": [
+    0.914,
+    0.803,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_craftsman_0": {
+   "cat": "houses",
+   "tris": 6473,
+   "size": [
+    0.767,
+    0.978,
+    0.854
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_craftsman_0_alt": {
+   "cat": "houses",
+   "tris": 9778,
+   "size": [
+    0.932,
+    0.937,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_craftsman_1": {
+   "cat": "houses",
+   "tris": 7748,
+   "size": [
+    0.968,
+    0.9,
+    0.913
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_craftsman_1_alt": {
+   "cat": "houses",
+   "tris": 9973,
+   "size": [
+    0.616,
+    0.956,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_craftsman_2": {
+   "cat": "houses",
+   "tris": 7410,
+   "size": [
+    0.976,
+    0.968,
+    0.967
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_craftsman_2_alt": {
+   "cat": "houses",
+   "tris": 7943,
+   "size": [
+    0.636,
+    0.836,
+    0.939
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_generic_a": {
+   "cat": "houses",
+   "tris": 3000,
+   "size": [
+    0.961,
+    0.741,
+    0.686
+   ],
+   "seen": true,
+   "front": "-Z",
+   "ry": 180
+  },
+  "house_generic_b": {
+   "cat": "houses",
+   "tris": 3935,
+   "size": [
+    0.976,
+    0.921,
+    0.872
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_generic_c": {
+   "cat": "houses",
+   "tris": 4232,
+   "size": [
+    0.923,
+    0.785,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_generic_d": {
+   "cat": "houses",
+   "tris": 3000,
+   "size": [
+    0.539,
+    0.492,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_merchant_0": {
+   "cat": "houses",
+   "tris": 5000,
+   "size": [
+    0.76,
+    0.927,
+    0.593
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_merchant_1": {
+   "cat": "houses",
+   "tris": 4988,
+   "size": [
+    0.715,
+    0.978,
+    0.924
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_merchant_2": {
+   "cat": "houses",
+   "tris": 4998,
+   "size": [
+    0.958,
+    0.884,
+    0.918
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_noble_0": {
+   "cat": "houses",
+   "tris": 5996,
+   "size": [
+    0.406,
+    0.721,
+    0.979
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_noble_1": {
+   "cat": "houses",
+   "tris": 5995,
+   "size": [
+    0.482,
+    0.559,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "house_noble_2": {
+   "cat": "houses",
+   "tris": 5981,
+   "size": [
+    0.799,
+    0.817,
+    0.979
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "coal_mine_0": {
+   "cat": "mines",
+   "tris": 5989,
+   "size": [
+    0.982,
+    0.503,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "coal_mine_1": {
+   "cat": "mines",
+   "tris": 5991,
+   "size": [
+    0.899,
+    0.742,
+    0.979
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "dia_mine_black": {
+   "cat": "mines",
+   "tris": 4993,
+   "size": [
+    0.936,
+    0.757,
+    0.976
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "dia_mine_blue": {
+   "cat": "mines",
+   "tris": 4998,
+   "size": [
+    0.947,
+    0.772,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "dia_mine_green": {
+   "cat": "mines",
+   "tris": 4999,
+   "size": [
+    0.925,
+    0.754,
+    0.979
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "dia_mine_ice": {
+   "cat": "mines",
+   "tris": 4998,
+   "size": [
+    0.958,
+    0.781,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "dia_mine_red": {
+   "cat": "mines",
+   "tris": 4993,
+   "size": [
+    0.969,
+    0.781,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "farm_field_1": {
+   "cat": "mines",
+   "tris": 4061,
+   "size": [
+    0.97,
+    0.306,
+    0.881
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "no front"
+  },
+  "farm_field_2": {
+   "cat": "mines",
+   "tris": 3808,
+   "size": [
+    0.976,
+    0.304,
+    0.846
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "no front"
+  },
+  "fishing_hut_1": {
+   "cat": "mines",
+   "tris": 9201,
+   "size": [
+    0.552,
+    0.607,
+    0.956
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "door on +Z, boat/dock on +X",
+   "ship": "mines/fishing_hut_1/fishing_hut_1.glb"
+  },
+  "fishing_hut_2": {
+   "cat": "mines",
+   "tris": 6960,
+   "size": [
+    0.974,
+    0.392,
+    0.582
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "ambiguous: open pavilion long face"
+  },
+  "gem_mine_turquoise": {
+   "cat": "mines",
+   "tris": 6000,
+   "size": [
+    0.927,
+    0.752,
+    0.975
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "iron_mine_0": {
+   "cat": "mines",
+   "tris": 5995,
+   "size": [
+    0.979,
+    0.518,
+    0.91
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "iron_mine_1": {
+   "cat": "mines",
+   "tris": 5996,
+   "size": [
+    0.828,
+    0.773,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "iron_mine_2": {
+   "cat": "mines",
+   "tris": 6000,
+   "size": [
+    0.979,
+    0.741,
+    0.928
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "lumber_mill_0": {
+   "cat": "mines",
+   "tris": 6623,
+   "size": [
+    0.969,
+    0.68,
+    0.922
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "lumber_mill_1": {
+   "cat": "mines",
+   "tris": 5992,
+   "size": [
+    0.973,
+    0.498,
+    0.952
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "lumber_mill_2": {
+   "cat": "mines",
+   "tris": 6410,
+   "size": [
+    0.974,
+    0.283,
+    0.612
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "oil_refinery_0": {
+   "cat": "mines",
+   "tris": 7992,
+   "size": [
+    0.52,
+    0.85,
+    0.966
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "oil_refinery_1": {
+   "cat": "mines",
+   "tris": 6995,
+   "size": [
+    0.644,
+    0.697,
+    0.983
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "oil_well_0": {
+   "cat": "mines",
+   "tris": 5981,
+   "size": [
+    0.884,
+    0.739,
+    0.982
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "no front"
+  },
+  "oil_well_1": {
+   "cat": "mines",
+   "tris": 4988,
+   "size": [
+    0.399,
+    0.708,
+    0.966
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "no front"
+  },
+  "oil_well_2": {
+   "cat": "mines",
+   "tris": 6000,
+   "size": [
+    0.98,
+    0.533,
+    0.787
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "no front"
+  },
+  "rice_paddy_1": {
+   "cat": "mines",
+   "tris": 2982,
+   "size": [
+    0.978,
+    0.229,
+    0.903
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "no front"
+  },
+  "rice_paddy_2": {
+   "cat": "mines",
+   "tris": 3769,
+   "size": [
+    0.973,
+    0.269,
+    0.953
+   ],
+   "seen": true,
+   "front": "sym",
+   "ry": 0,
+   "note": "no front"
+  },
+  "stone_quarry_0": {
+   "cat": "mines",
+   "tris": 7490,
+   "size": [
+    0.971,
+    0.676,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "stone_quarry_1": {
+   "cat": "mines",
+   "tris": 5000,
+   "size": [
+    0.968,
+    0.657,
+    0.973
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "stone_quarry_2": {
+   "cat": "mines",
+   "tris": 5358,
+   "size": [
+    0.88,
+    0.654,
+    0.964
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "windmill_asbad_1": {
+   "cat": "mines",
+   "tris": 4954,
+   "size": [
+    0.355,
+    0.52,
+    0.977
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "windmill_asbad_2": {
+   "cat": "mines",
+   "tris": 4988,
+   "size": [
+    0.47,
+    0.978,
+    0.512
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90
+  },
+  "windmill_tower": {
+   "cat": "mines",
+   "tris": 3999,
+   "size": [
+    0.693,
+    0.983,
+    0.548
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "ship": "mines/windmill_tower/windmill_tower.glb"
+  },
+  "bushes": {
+   "cat": "nature",
+   "tris": 6069,
+   "size": [
+    1.003,
+    0.208,
+    0.216
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "cliffs": {
+   "cat": "nature",
+   "tris": 6998,
+   "size": [
+    0.915,
+    0.654,
+    0.568
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "crops": {
+   "cat": "nature",
+   "tris": 9102,
+   "size": [
+    1.738,
+    0.29,
+    0.318
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "flowers": {
+   "cat": "nature",
+   "tris": 8590,
+   "size": [
+    1.675,
+    0.303,
+    0.282
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "grass": {
+   "cat": "nature",
+   "tris": 3826,
+   "size": [
+    0.725,
+    0.862,
+    0.648
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "ground_cover": {
+   "cat": "nature",
+   "tris": 10288,
+   "size": [
+    2.018,
+    0.31,
+    0.334
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "plants_desert": {
+   "cat": "nature",
+   "tris": 5506,
+   "size": [
+    0.958,
+    0.26,
+    0.276
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "rocks_boulder": {
+   "cat": "nature",
+   "tris": 6000,
+   "size": [
+    1.105,
+    0.245,
+    0.249
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "rocks_ore": {
+   "cat": "nature",
+   "tris": 6000,
+   "size": [
+    1.193,
+    0.28,
+    0.251
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "rocks_sandstone": {
+   "cat": "nature",
+   "tris": 6000,
+   "size": [
+    1.143,
+    0.44,
+    0.282
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "rocks_small": {
+   "cat": "nature",
+   "tris": 5998,
+   "size": [
+    2.1,
+    0.221,
+    0.331
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "trees_broadleaf": {
+   "cat": "nature",
+   "tris": 7990,
+   "size": [
+    1.133,
+    0.38,
+    0.31
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "trees_conifer": {
+   "cat": "nature",
+   "tris": 7127,
+   "size": [
+    1.088,
+    0.538,
+    0.328
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "trees_orchard": {
+   "cat": "nature",
+   "tris": 7984,
+   "size": [
+    0.798,
+    0.401,
+    0.284
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "trees_season": {
+   "cat": "nature",
+   "tris": 7998,
+   "size": [
+    1.058,
+    0.333,
+    0.252
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "trees_special": {
+   "cat": "nature",
+   "tris": 9368,
+   "size": [
+    1.108,
+    0.374,
+    0.253
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "villager_boy": {
+   "cat": "people",
+   "tris": 3000,
+   "size": [
+    1.268,
+    2,
+    0.438
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "villager_girl": {
+   "cat": "people",
+   "tris": 3000,
+   "size": [
+    1.246,
+    2,
+    0.475
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "villager_littlegirl": {
+   "cat": "people",
+   "tris": 2998,
+   "size": [
+    1.24,
+    2,
+    0.513
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "villager_man": {
+   "cat": "people",
+   "tris": 3000,
+   "size": [
+    1.211,
+    2,
+    0.485
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "villager_oldman": {
+   "cat": "people",
+   "tris": 3000,
+   "size": [
+    1.221,
+    2,
+    0.437
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "villager_oldwoman": {
+   "cat": "people",
+   "tris": 3000,
+   "size": [
+    1.288,
+    2,
+    0.493
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "villager_woman": {
+   "cat": "people",
+   "tris": 2998,
+   "size": [
+    1.206,
+    2,
+    0.435
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "villager_youngman": {
+   "cat": "people",
+   "tris": 3000,
+   "size": [
+    1.175,
+    2,
+    0.407
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "faces +Z (verified; people posed at walk t=0.6 s)"
+  },
+  "construction_pack": {
+   "cat": "props",
+   "tris": 13829,
+   "size": [
+    0.976,
+    0.259,
+    0.252
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_candles": {
+   "cat": "props",
+   "tris": 12762,
+   "size": [
+    1.165,
+    0.418,
+    0.242
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_fantasy": {
+   "cat": "props",
+   "tris": 14378,
+   "size": [
+    1.131,
+    0.576,
+    0.185
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_hand": {
+   "cat": "props",
+   "tris": 14108,
+   "size": [
+    1.162,
+    0.367,
+    0.196
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_house_oil": {
+   "cat": "props",
+   "tris": 14552,
+   "size": [
+    1.029,
+    0.326,
+    0.213
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_persian_shrine": {
+   "cat": "props",
+   "tris": 14539,
+   "size": [
+    1.192,
+    0.441,
+    0.231
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_torches_braziers": {
+   "cat": "props",
+   "tris": 13793,
+   "size": [
+    1.262,
+    0.494,
+    0.219
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_tower_gate": {
+   "cat": "props",
+   "tris": 12286,
+   "size": [
+    1.207,
+    0.402,
+    0.209
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "lamps_wall_street": {
+   "cat": "props",
+   "tris": 14695,
+   "size": [
+    0.986,
+    0.528,
+    0.194
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "market_stalls": {
+   "cat": "props",
+   "tris": 11986,
+   "size": [
+    1.002,
+    0.261,
+    0.245
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "oil_pipes_pack": {
+   "cat": "props",
+   "tris": 7997,
+   "size": [
+    0.789,
+    0.26,
+    0.268
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "oil_tanks_pack": {
+   "cat": "props",
+   "tris": 7488,
+   "size": [
+    1.043,
+    0.474,
+    0.323
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "props_camp": {
+   "cat": "props",
+   "tris": 11995,
+   "size": [
+    1.273,
+    0.422,
+    0.3
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "props_mining": {
+   "cat": "props",
+   "tris": 15364,
+   "size": [
+    1.168,
+    0.273,
+    0.292
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "props_street": {
+   "cat": "props",
+   "tris": 11208,
+   "size": [
+    1.816,
+    0.353,
+    0.282
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "props_town": {
+   "cat": "props",
+   "tris": 15702,
+   "size": [
+    1.977,
+    0.226,
+    0.451
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "trap_spike_pit": {
+   "cat": "traps",
+   "tris": 3000,
+   "size": [
+    0.969,
+    0.499,
+    0.98
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "traps_blast": {
+   "cat": "traps",
+   "tris": 11508,
+   "size": [
+    1.007,
+    0.296,
+    0.3
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "traps_floor2": {
+   "cat": "traps",
+   "tris": 9000,
+   "size": [
+    1.018,
+    0.134,
+    0.314
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "traps_mech": {
+   "cat": "traps",
+   "tris": 12650,
+   "size": [
+    1.033,
+    0.355,
+    0.344
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "soldier_a": {
+   "cat": "units",
+   "tris": 3000,
+   "size": [
+    1.163,
+    2,
+    0.53
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "soldier_b": {
+   "cat": "units",
+   "tris": 3000,
+   "size": [
+    1.14,
+    2,
+    0.484
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_arrows_quivers": {
+   "cat": "weapons",
+   "tris": 7458,
+   "size": [
+    0.847,
+    0.615,
+    0.169
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_axes_double": {
+   "cat": "weapons",
+   "tris": 8994,
+   "size": [
+    0.549,
+    0.638,
+    0.218
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_axes_single": {
+   "cat": "weapons",
+   "tris": 10402,
+   "size": [
+    0.59,
+    0.6,
+    0.155
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_bows": {
+   "cat": "weapons",
+   "tris": 9434,
+   "size": [
+    1.123,
+    0.667,
+    0.194
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_daggers_1": {
+   "cat": "weapons",
+   "tris": 10800,
+   "size": [
+    0.692,
+    0.613,
+    0.139
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_daggers_2": {
+   "cat": "weapons",
+   "tris": 10798,
+   "size": [
+    0.761,
+    0.601,
+    0.144
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_exotic": {
+   "cat": "weapons",
+   "tris": 8961,
+   "size": [
+    0.837,
+    0.568,
+    0.164
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_hammers_big": {
+   "cat": "weapons",
+   "tris": 9000,
+   "size": [
+    0.843,
+    0.624,
+    0.181
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_hammers_maces": {
+   "cat": "weapons",
+   "tris": 10799,
+   "size": [
+    0.936,
+    0.562,
+    0.169
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_polearms": {
+   "cat": "weapons",
+   "tris": 10783,
+   "size": [
+    0.577,
+    0.744,
+    0.167
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_shields": {
+   "cat": "weapons",
+   "tris": 10718,
+   "size": [
+    0.825,
+    0.368,
+    0.259
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_spears": {
+   "cat": "weapons",
+   "tris": 10595,
+   "size": [
+    0.606,
+    0.725,
+    0.153
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_staffs_basic": {
+   "cat": "weapons",
+   "tris": 10800,
+   "size": [
+    0.591,
+    0.716,
+    0.128
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_staffs_magic": {
+   "cat": "weapons",
+   "tris": 10621,
+   "size": [
+    0.865,
+    0.68,
+    0.146
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_swords_long": {
+   "cat": "weapons",
+   "tris": 10797,
+   "size": [
+    0.602,
+    0.701,
+    0.157
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_swords_medium": {
+   "cat": "weapons",
+   "tris": 10800,
+   "size": [
+    0.665,
+    0.697,
+    0.151
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_swords_short": {
+   "cat": "weapons",
+   "tris": 10794,
+   "size": [
+    0.62,
+    0.611,
+    0.15
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_swords_tiers_a": {
+   "cat": "weapons",
+   "tris": 7200,
+   "size": [
+    0.458,
+    0.699,
+    0.182
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_swords_tiers_b": {
+   "cat": "weapons",
+   "tris": 9000,
+   "size": [
+    0.617,
+    0.653,
+    0.165
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "weapons_swords_xlong": {
+   "cat": "weapons",
+   "tris": 8998,
+   "size": [
+    0.551,
+    0.742,
+    0.182
+   ],
+   "seen": false,
+   "note": "pack / not directional"
+  },
+  "castle_wall_corner_stone": {
+   "cat": "castle",
+   "tris": 4500,
+   "size": [
+    0.966,
+    0.709,
+    0.967
+   ],
+   "seen": true,
+   "front": "-X",
+   "ry": 90,
+   "note": "corner at (+X,-Z), arms -X and +Z in the file; ry 90 -> corner (-X,-Z), arms +X and +Z, outer faces -X/-Z",
+   "ship": true,
+   "source": "TR1_gaps1"
+  },
+  "castle_wall_corner_stone_b": {
+   "cat": "castle",
+   "tris": 3499,
+   "size": [
+    0.913,
+    0.623,
+    0.978
+   ],
+   "seen": true,
+   "front": "-X",
+   "ry": 90,
+   "note": "same L as A (thin wall, turquoise band on the outer faces): ry 90 -> corner (-X,-Z), arms +X/+Z",
+   "ship": true,
+   "source": "TR1_gaps1"
+  },
+  "def_hedgehog": {
+   "cat": "defense",
+   "tris": 1998,
+   "size": [
+    0.98,
+    0.813,
+    0.921
+   ],
+   "seen": true,
+   "front": "+Z",
+   "ry": 0,
+   "note": "five spokes + one tall spike (not 3 crossed beams as in the card), symmetric",
+   "ship": true,
+   "source": "TR1_gaps1"
+  },
+  "def_watchtower": {
+   "cat": "defense",
+   "tris": 4986,
+   "size": [
+    0.359,
+    0.973,
+    0.38
+   ],
+   "seen": true,
+   "front": "ladder -Z",
+   "ry": 180,
+   "note": "ladder on -Z -> ry 180 puts the ladder on +Z",
+   "ship": true,
+   "source": "TR1_gaps1"
+  },
+  "gold_mine_0": {
+   "cat": "mines",
+   "tris": 5970,
+   "size": [
+    0.894,
+    0.68,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "tunnel mouth on +X; rock outcrop base",
+   "ship": true,
+   "source": "TR1_gaps1"
+  },
+  "gold_panning_0": {
+   "cat": "mines",
+   "tris": 7901,
+   "size": [
+    0.979,
+    0.411,
+    0.939
+   ],
+   "seen": true,
+   "front": "-X",
+   "ry": 90,
+   "note": "shed opens toward -X (barrels in front), sluice runs toward +X; diorama base plate; front -X -> ry 90 (ambiguous)",
+   "ship": true,
+   "source": "TR1_gaps1"
+  },
+  "greenhouse_0": {
+   "cat": "mines",
+   "tris": 6993,
+   "size": [
+    0.98,
+    0.459,
+    0.552
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "door in the +X gable end; long axis X",
+   "ship": true,
+   "source": "TR1_gaps1"
+  },
+  "livestock_pen_0": {
+   "cat": "mines",
+   "tris": 4977,
+   "size": [
+    0.979,
+    0.413,
+    0.961
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "gate on +X, roofed shelter on -X",
+   "ship": true,
+   "source": "TR1_gaps1"
+  },
+  "masonry_0": {
+   "cat": "mines",
+   "tris": 7966,
+   "size": [
+    0.788,
+    0.588,
+    0.98
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "open arched front +X",
+   "ship": true,
+   "source": "TR1_gaps1"
+  },
+  "river_quay": {
+   "cat": "castle",
+   "tris": 4494,
+   "size": [
+    0.313,
+    0.386,
+    0.981
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "length axis Z; both long faces carry iron rings, the turquoise band is on the +X face = water side; ry -90 -> length along X, water side +Z; parapet/bollards on the top edges",
+   "ship": true,
+   "source": "TR1_gaps1"
+  },
+  "smelter_0": {
+   "cat": "mines",
+   "tris": 5978,
+   "size": [
+    0.878,
+    0.786,
+    0.978
+   ],
+   "seen": true,
+   "front": "+X",
+   "ry": -90,
+   "note": "furnace front, bellows and ingot rack on +X; stairs on the left",
+   "ship": true,
+   "source": "TR1_gaps1"
+  }
+ },
+ "packs": {
+  "birds/dove": {
+   "cat": "animals",
+   "pack": "birds",
+   "node": "dove",
+   "role": "bird (flight pose, wingspan; faces +X)",
+   "tris": 2999,
+   "size_lib": [
+    0.167,
+    0.279,
+    0.278
+   ],
+   "ry": -90,
+   "dim": "w",
+   "target_m": 1.1,
+   "k": 3.957,
+   "size_m": [
+    1.1,
+    1.1,
+    0.66
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "x1.5 of real for readability"
+  },
+  "birds/crow": {
+   "cat": "animals",
+   "pack": "birds",
+   "node": "crow",
+   "role": "bird (flight pose)",
+   "tris": 3000,
+   "size_lib": [
+    0.206,
+    0.283,
+    0.34
+   ],
+   "ry": -90,
+   "dim": "w",
+   "target_m": 1.2,
+   "k": 3.529,
+   "size_m": [
+    1.2,
+    1.0,
+    0.73
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "birds/eagle": {
+   "cat": "animals",
+   "pack": "birds",
+   "node": "eagle",
+   "role": "bird (flight pose)",
+   "tris": 2998,
+   "size_lib": [
+    0.213,
+    0.315,
+    0.357
+   ],
+   "ry": -90,
+   "dim": "w",
+   "target_m": 2.0,
+   "k": 5.602,
+   "size_m": [
+    2.0,
+    1.76,
+    1.19
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "poultry_fish_pack/fish_small": {
+   "cat": "animals",
+   "pack": "poultry_fish_pack",
+   "node": "fish_small",
+   "role": "fish, head +Z",
+   "tris": 956,
+   "size_lib": [
+    0.055,
+    0.099,
+    0.265
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 0.5,
+   "k": 1.887,
+   "size_m": [
+    0.1,
+    0.19,
+    0.5
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "x1.5 of real"
+  },
+  "poultry_fish_pack/chick": {
+   "cat": "animals",
+   "pack": "poultry_fish_pack",
+   "node": "chick",
+   "role": "chick, faces -Z in the file -> ry 180",
+   "tris": 1784,
+   "size_lib": [
+    0.119,
+    0.16,
+    0.137
+   ],
+   "ry": 180,
+   "dim": "h",
+   "target_m": 0.35,
+   "k": 2.188,
+   "size_m": [
+    0.26,
+    0.35,
+    0.3
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "x2 of real"
+  },
+  "poultry_fish_pack/trout": {
+   "cat": "animals",
+   "pack": "poultry_fish_pack",
+   "node": "trout",
+   "role": "fish, head +Z",
+   "tris": 2364,
+   "size_lib": [
+    0.068,
+    0.137,
+    0.35
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 0.9,
+   "k": 2.571,
+   "size_m": [
+    0.17,
+    0.35,
+    0.9
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "poultry_fish_pack/rooster": {
+   "cat": "animals",
+   "pack": "poultry_fish_pack",
+   "node": "rooster",
+   "role": "rooster, faces -Z in the file -> ry 180",
+   "tris": 2498,
+   "size_lib": [
+    0.142,
+    0.317,
+    0.284
+   ],
+   "ry": 180,
+   "dim": "h",
+   "target_m": 0.95,
+   "k": 2.997,
+   "size_m": [
+    0.43,
+    0.95,
+    0.85
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "x2 of real"
+  },
+  "poultry_fish_pack/carp": {
+   "cat": "animals",
+   "pack": "poultry_fish_pack",
+   "node": "carp",
+   "role": "fish, head +Z",
+   "tris": 2412,
+   "size_lib": [
+    0.102,
+    0.168,
+    0.303
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 1.1,
+   "k": 3.63,
+   "size_m": [
+    0.37,
+    0.61,
+    1.1
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "poultry_fish_pack/hen": {
+   "cat": "animals",
+   "pack": "poultry_fish_pack",
+   "node": "hen",
+   "role": "hen, faces +Z",
+   "tris": 2498,
+   "size_lib": [
+    0.154,
+    0.285,
+    0.261
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.8,
+   "k": 2.807,
+   "size_m": [
+    0.43,
+    0.8,
+    0.73
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "x2 of real"
+  },
+  "bushes/rose": {
+   "cat": "nature",
+   "pack": "bushes",
+   "node": "rose",
+   "role": "bush",
+   "tris": 2219,
+   "size_lib": [
+    0.185,
+    0.199,
+    0.208
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.8,
+   "k": 9.045,
+   "size_m": [
+    1.67,
+    1.8,
+    1.88
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "bushes/boxwood": {
+   "cat": "nature",
+   "pack": "bushes",
+   "node": "boxwood",
+   "role": "bush",
+   "tris": 1200,
+   "size_lib": [
+    0.226,
+    0.194,
+    0.216
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.6,
+   "k": 8.247,
+   "size_m": [
+    1.86,
+    1.6,
+    1.78
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "bushes/thorny": {
+   "cat": "nature",
+   "pack": "bushes",
+   "node": "thorny",
+   "role": "bush",
+   "tris": 1450,
+   "size_lib": [
+    0.198,
+    0.192,
+    0.197
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 2.6,
+   "k": 13.542,
+   "size_m": [
+    2.68,
+    2.6,
+    2.67
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "bushes/round": {
+   "cat": "nature",
+   "pack": "bushes",
+   "node": "round",
+   "role": "bush",
+   "tris": 1200,
+   "size_lib": [
+    0.214,
+    0.208,
+    0.215
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 3.2,
+   "k": 15.385,
+   "size_m": [
+    3.29,
+    3.2,
+    3.31
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "cliffs/spire": {
+   "cat": "nature",
+   "pack": "cliffs",
+   "node": "spire",
+   "role": "rock spire",
+   "tris": 3498,
+   "size_lib": [
+    0.315,
+    0.589,
+    0.28
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 14,
+   "k": 23.769,
+   "size_m": [
+    7.49,
+    14.0,
+    6.66
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "cliffs/cliff": {
+   "cat": "nature",
+   "pack": "cliffs",
+   "node": "cliff",
+   "role": "mountain wall (ws_rockA/B 10.6-11.3 m high, 13-14 m wide)",
+   "tris": 3500,
+   "size_lib": [
+    0.54,
+    0.654,
+    0.568
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 12,
+   "k": 18.349,
+   "size_m": [
+    9.91,
+    12.0,
+    10.42
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "crops/pumpkins": {
+   "cat": "nature",
+   "pack": "crops",
+   "node": "pumpkins",
+   "role": "crop clump",
+   "tris": 1470,
+   "size_lib": [
+    0.324,
+    0.235,
+    0.298
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 1.5,
+   "k": 4.63,
+   "size_m": [
+    1.5,
+    1.09,
+    1.38
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "crops/wheat_sheaf": {
+   "cat": "nature",
+   "pack": "crops",
+   "node": "wheat_sheaf",
+   "role": "crop clump",
+   "tris": 2014,
+   "size_lib": [
+    0.195,
+    0.261,
+    0.195
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.5,
+   "k": 5.747,
+   "size_m": [
+    1.12,
+    1.5,
+    1.12
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "crops/hay_bale": {
+   "cat": "nature",
+   "pack": "crops",
+   "node": "hay_bale",
+   "role": "crop clump",
+   "tris": 1149,
+   "size_lib": [
+    0.265,
+    0.24,
+    0.283
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 1.7,
+   "k": 6.007,
+   "size_m": [
+    1.59,
+    1.44,
+    1.7
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "crops/cabbage": {
+   "cat": "nature",
+   "pack": "crops",
+   "node": "cabbage",
+   "role": "crop clump",
+   "tris": 1498,
+   "size_lib": [
+    0.24,
+    0.217,
+    0.318
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 1.1,
+   "k": 3.459,
+   "size_m": [
+    0.83,
+    0.75,
+    1.1
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "crops/corn": {
+   "cat": "nature",
+   "pack": "crops",
+   "node": "corn",
+   "role": "crop clump",
+   "tris": 1476,
+   "size_lib": [
+    0.198,
+    0.29,
+    0.297
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 2.4,
+   "k": 8.276,
+   "size_m": [
+    1.64,
+    2.4,
+    2.46
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "crops/carrots": {
+   "cat": "nature",
+   "pack": "crops",
+   "node": "carrots",
+   "role": "crop clump",
+   "tris": 1495,
+   "size_lib": [
+    0.216,
+    0.212,
+    0.274
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.8,
+   "k": 3.774,
+   "size_m": [
+    0.82,
+    0.8,
+    1.03
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "flowers/lavender": {
+   "cat": "nature",
+   "pack": "flowers",
+   "node": "lavender",
+   "role": "flower clump (daisy/poppy: stylised, paper-like petals)",
+   "tris": 1882,
+   "size_lib": [
+    0.241,
+    0.266,
+    0.25
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.8,
+   "k": 3.008,
+   "size_m": [
+    0.72,
+    0.8,
+    0.75
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "flowers/crocus": {
+   "cat": "nature",
+   "pack": "flowers",
+   "node": "crocus",
+   "role": "flower clump (daisy/poppy: stylised, paper-like petals)",
+   "tris": 1200,
+   "size_lib": [
+    0.206,
+    0.232,
+    0.243
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.45,
+   "k": 1.94,
+   "size_m": [
+    0.4,
+    0.45,
+    0.47
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "flowers/tulip": {
+   "cat": "nature",
+   "pack": "flowers",
+   "node": "tulip",
+   "role": "flower clump (daisy/poppy: stylised, paper-like petals)",
+   "tris": 1200,
+   "size_lib": [
+    0.246,
+    0.303,
+    0.282
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.8,
+   "k": 2.64,
+   "size_m": [
+    0.65,
+    0.8,
+    0.74
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "flowers/daisy": {
+   "cat": "nature",
+   "pack": "flowers",
+   "node": "daisy",
+   "role": "flower clump (daisy/poppy: stylised, paper-like petals)",
+   "tris": 2032,
+   "size_lib": [
+    0.251,
+    0.251,
+    0.252
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.7,
+   "k": 2.789,
+   "size_m": [
+    0.7,
+    0.7,
+    0.7
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "flowers/poppy": {
+   "cat": "nature",
+   "pack": "flowers",
+   "node": "poppy",
+   "role": "flower clump (daisy/poppy: stylised, paper-like petals)",
+   "tris": 1200,
+   "size_lib": [
+    0.231,
+    0.259,
+    0.259
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.8,
+   "k": 3.089,
+   "size_m": [
+    0.71,
+    0.8,
+    0.8
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "flowers/narcissus": {
+   "cat": "nature",
+   "pack": "flowers",
+   "node": "narcissus",
+   "role": "flower clump (daisy/poppy: stylised, paper-like petals)",
+   "tris": 1076,
+   "size_lib": [
+    0.2,
+    0.273,
+    0.218
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.8,
+   "k": 2.93,
+   "size_m": [
+    0.59,
+    0.8,
+    0.64
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "ground_cover/mushroom_brown": {
+   "cat": "nature",
+   "pack": "ground_cover",
+   "node": "mushroom_brown",
+   "role": "ground cover",
+   "tris": 886,
+   "size_lib": [
+    0.238,
+    0.228,
+    0.256
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.55,
+   "k": 2.412,
+   "size_m": [
+    0.57,
+    0.55,
+    0.62
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "ground_cover/reed": {
+   "cat": "nature",
+   "pack": "ground_cover",
+   "node": "reed",
+   "role": "ground cover",
+   "tris": 1793,
+   "size_lib": [
+    0.327,
+    0.31,
+    0.245
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 2.2,
+   "k": 7.097,
+   "size_m": [
+    2.32,
+    2.2,
+    1.74
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "ground_cover/clover": {
+   "cat": "nature",
+   "pack": "ground_cover",
+   "node": "clover",
+   "role": "ground cover",
+   "tris": 1797,
+   "size_lib": [
+    0.276,
+    0.209,
+    0.312
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.4,
+   "k": 1.914,
+   "size_m": [
+    0.53,
+    0.4,
+    0.6
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "ground_cover/grass_tall": {
+   "cat": "nature",
+   "pack": "ground_cover",
+   "node": "grass_tall",
+   "role": "ground cover",
+   "tris": 2391,
+   "size_lib": [
+    0.358,
+    0.289,
+    0.334
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.1,
+   "k": 3.806,
+   "size_m": [
+    1.36,
+    1.1,
+    1.27
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "ground_cover/fern": {
+   "cat": "nature",
+   "pack": "ground_cover",
+   "node": "fern",
+   "role": "ground cover",
+   "tris": 1795,
+   "size_lib": [
+    0.275,
+    0.239,
+    0.286
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.9,
+   "k": 3.766,
+   "size_m": [
+    1.04,
+    0.9,
+    1.08
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "ground_cover/mushroom_red": {
+   "cat": "nature",
+   "pack": "ground_cover",
+   "node": "mushroom_red",
+   "role": "ground cover",
+   "tris": 1626,
+   "size_lib": [
+    0.243,
+    0.26,
+    0.235
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.65,
+   "k": 2.5,
+   "size_m": [
+    0.61,
+    0.65,
+    0.59
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "plants_desert/grass_dry": {
+   "cat": "nature",
+   "pack": "plants_desert",
+   "node": "grass_dry",
+   "role": "desert plant",
+   "tris": 1198,
+   "size_lib": [
+    0.18,
+    0.213,
+    0.168
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.0,
+   "k": 4.695,
+   "size_m": [
+    0.85,
+    1.0,
+    0.79
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "plants_desert/camelthorn": {
+   "cat": "nature",
+   "pack": "plants_desert",
+   "node": "camelthorn",
+   "role": "desert plant",
+   "tris": 1658,
+   "size_lib": [
+    0.117,
+    0.26,
+    0.256
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.1,
+   "k": 4.231,
+   "size_m": [
+    0.5,
+    1.1,
+    1.08
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "plants_desert/agave": {
+   "cat": "nature",
+   "pack": "plants_desert",
+   "node": "agave",
+   "role": "desert plant",
+   "tris": 1200,
+   "size_lib": [
+    0.303,
+    0.244,
+    0.276
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.3,
+   "k": 5.328,
+   "size_m": [
+    1.61,
+    1.3,
+    1.47
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "plants_desert/cactus_barrel": {
+   "cat": "nature",
+   "pack": "plants_desert",
+   "node": "cactus_barrel",
+   "role": "desert plant",
+   "tris": 1450,
+   "size_lib": [
+    0.179,
+    0.18,
+    0.183
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.8,
+   "k": 4.444,
+   "size_m": [
+    0.8,
+    0.8,
+    0.81
+   ],
+   "budget": 99999,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_boulder/slab": {
+   "cat": "nature",
+   "pack": "rocks_boulder",
+   "node": "slab",
+   "role": "rock/boulder (ws_boulderA 4 m)",
+   "tris": 1500,
+   "size_lib": [
+    0.216,
+    0.21,
+    0.249
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 3.4,
+   "k": 13.655,
+   "size_m": [
+    2.95,
+    2.87,
+    3.4
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_boulder/slate": {
+   "cat": "nature",
+   "pack": "rocks_boulder",
+   "node": "slate",
+   "role": "rock/boulder (ws_boulderA 4 m)",
+   "tris": 1500,
+   "size_lib": [
+    0.263,
+    0.245,
+    0.223
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 3.6,
+   "k": 13.688,
+   "size_m": [
+    3.6,
+    3.35,
+    3.05
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_boulder/mossy": {
+   "cat": "nature",
+   "pack": "rocks_boulder",
+   "node": "mossy",
+   "role": "rock/boulder (ws_boulderA 4 m)",
+   "tris": 1500,
+   "size_lib": [
+    0.216,
+    0.215,
+    0.226
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 3.6,
+   "k": 15.929,
+   "size_m": [
+    3.44,
+    3.42,
+    3.6
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_boulder/granite": {
+   "cat": "nature",
+   "pack": "rocks_boulder",
+   "node": "granite",
+   "role": "rock/boulder (ws_boulderA 4 m)",
+   "tris": 1500,
+   "size_lib": [
+    0.229,
+    0.237,
+    0.219
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 3.8,
+   "k": 16.594,
+   "size_m": [
+    3.8,
+    3.93,
+    3.63
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_ore/crystal_blue": {
+   "cat": "nature",
+   "pack": "rocks_ore",
+   "node": "crystal_blue",
+   "role": "rock/ore heap at mines",
+   "tris": 1500,
+   "size_lib": [
+    0.22,
+    0.28,
+    0.212
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 3.2,
+   "k": 14.545,
+   "size_m": [
+    3.2,
+    4.07,
+    3.08
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_ore/gold": {
+   "cat": "nature",
+   "pack": "rocks_ore",
+   "node": "gold",
+   "role": "rock/ore heap at mines",
+   "tris": 1500,
+   "size_lib": [
+    0.24,
+    0.248,
+    0.211
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 3.4,
+   "k": 14.167,
+   "size_m": [
+    3.4,
+    3.51,
+    2.99
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_ore/iron": {
+   "cat": "nature",
+   "pack": "rocks_ore",
+   "node": "iron",
+   "role": "rock/ore heap at mines",
+   "tris": 1500,
+   "size_lib": [
+    0.295,
+    0.239,
+    0.236
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 3.4,
+   "k": 11.525,
+   "size_m": [
+    3.4,
+    2.75,
+    2.72
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_ore/coal": {
+   "cat": "nature",
+   "pack": "rocks_ore",
+   "node": "coal",
+   "role": "rock/ore heap at mines",
+   "tris": 1500,
+   "size_lib": [
+    0.258,
+    0.224,
+    0.251
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 3.4,
+   "k": 13.178,
+   "size_m": [
+    3.4,
+    2.95,
+    3.31
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_sandstone/limestone": {
+   "cat": "nature",
+   "pack": "rocks_sandstone",
+   "node": "limestone",
+   "role": "rock/desert",
+   "tris": 1500,
+   "size_lib": [
+    0.25,
+    0.277,
+    0.211
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 5.0,
+   "k": 20.0,
+   "size_m": [
+    5.0,
+    5.54,
+    4.22
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_sandstone/pillar": {
+   "cat": "nature",
+   "pack": "rocks_sandstone",
+   "node": "pillar",
+   "role": "rock/desert",
+   "tris": 1500,
+   "size_lib": [
+    0.187,
+    0.44,
+    0.191
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 8.0,
+   "k": 18.182,
+   "size_m": [
+    3.4,
+    8.0,
+    3.47
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": "width 9 m would be too wide: pillar sized by HEIGHT 8 m"
+  },
+  "rocks_sandstone/layered": {
+   "cat": "nature",
+   "pack": "rocks_sandstone",
+   "node": "layered",
+   "role": "rock/desert",
+   "tris": 1500,
+   "size_lib": [
+    0.242,
+    0.263,
+    0.282
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 5.0,
+   "k": 17.73,
+   "size_m": [
+    4.29,
+    4.66,
+    5.0
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_sandstone/red": {
+   "cat": "nature",
+   "pack": "rocks_sandstone",
+   "node": "red",
+   "role": "rock/desert",
+   "tris": 1500,
+   "size_lib": [
+    0.284,
+    0.318,
+    0.218
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 5.0,
+   "k": 17.606,
+   "size_m": [
+    5.0,
+    5.6,
+    3.84
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_small/flat": {
+   "cat": "nature",
+   "pack": "rocks_small",
+   "node": "flat",
+   "role": "rock/small scatter",
+   "tris": 1000,
+   "size_lib": [
+    0.342,
+    0.085,
+    0.331
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 1.8,
+   "k": 5.263,
+   "size_m": [
+    1.8,
+    0.45,
+    1.74
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_small/speckled": {
+   "cat": "nature",
+   "pack": "rocks_small",
+   "node": "speckled",
+   "role": "rock/small scatter",
+   "tris": 1000,
+   "size_lib": [
+    0.275,
+    0.191,
+    0.272
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 1.3,
+   "k": 4.727,
+   "size_m": [
+    1.3,
+    0.9,
+    1.29
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_small/angular": {
+   "cat": "nature",
+   "pack": "rocks_small",
+   "node": "angular",
+   "role": "rock/small scatter",
+   "tris": 1000,
+   "size_lib": [
+    0.282,
+    0.22,
+    0.254
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 1.3,
+   "k": 4.61,
+   "size_m": [
+    1.3,
+    1.01,
+    1.17
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_small/mossy": {
+   "cat": "nature",
+   "pack": "rocks_small",
+   "node": "mossy",
+   "role": "rock/small scatter",
+   "tris": 998,
+   "size_lib": [
+    0.305,
+    0.19,
+    0.27
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 1.4,
+   "k": 4.59,
+   "size_m": [
+    1.4,
+    0.87,
+    1.24
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_small/round": {
+   "cat": "nature",
+   "pack": "rocks_small",
+   "node": "round",
+   "role": "rock/small scatter",
+   "tris": 1000,
+   "size_lib": [
+    0.301,
+    0.221,
+    0.285
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 1.3,
+   "k": 4.319,
+   "size_m": [
+    1.3,
+    0.95,
+    1.23
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "rocks_small/split": {
+   "cat": "nature",
+   "pack": "rocks_small",
+   "node": "split",
+   "role": "rock/small scatter",
+   "tris": 1000,
+   "size_lib": [
+    0.295,
+    0.191,
+    0.253
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 1.4,
+   "k": 4.746,
+   "size_m": [
+    1.4,
+    0.91,
+    1.2
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": ""
+  },
+  "trees_broadleaf/poplar": {
+   "cat": "nature",
+   "pack": "trees_broadleaf",
+   "node": "poplar",
+   "role": "tree/broad group",
+   "tris": 2000,
+   "size_lib": [
+    0.096,
+    0.38,
+    0.099
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 18,
+   "k": 47.368,
+   "size_m": [
+    4.55,
+    18.0,
+    4.69
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_broadleaf/walnut": {
+   "cat": "nature",
+   "pack": "trees_broadleaf",
+   "node": "walnut",
+   "role": "tree/broad group",
+   "tris": 2000,
+   "size_lib": [
+    0.26,
+    0.224,
+    0.253
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 12,
+   "k": 53.571,
+   "size_m": [
+    13.93,
+    12.0,
+    13.55
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_broadleaf/plane": {
+   "cat": "nature",
+   "pack": "trees_broadleaf",
+   "node": "plane",
+   "role": "tree/broad group",
+   "tris": 1998,
+   "size_lib": [
+    0.326,
+    0.257,
+    0.31
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 16,
+   "k": 62.257,
+   "size_m": [
+    20.3,
+    16.0,
+    19.3
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_broadleaf/oak": {
+   "cat": "nature",
+   "pack": "trees_broadleaf",
+   "node": "oak",
+   "role": "tree/broad group",
+   "tris": 1992,
+   "size_lib": [
+    0.271,
+    0.235,
+    0.251
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 14,
+   "k": 59.574,
+   "size_m": [
+    16.14,
+    14.0,
+    14.95
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_conifer/cedar": {
+   "cat": "nature",
+   "pack": "trees_conifer",
+   "node": "cedar",
+   "role": "tree/pine group",
+   "tris": 2588,
+   "size_lib": [
+    0.343,
+    0.428,
+    0.328
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 18,
+   "k": 42.056,
+   "size_m": [
+    14.43,
+    18.0,
+    13.79
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_conifer/cypress": {
+   "cat": "nature",
+   "pack": "trees_conifer",
+   "node": "cypress",
+   "role": "tree/pine group",
+   "tris": 542,
+   "size_lib": [
+    0.089,
+    0.538,
+    0.09
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 16,
+   "k": 29.74,
+   "size_m": [
+    2.65,
+    16.0,
+    2.68
+   ],
+   "budget": 1500,
+   "over_budget": false,
+   "note": "very slim"
+  },
+  "trees_conifer/spruce": {
+   "cat": "nature",
+   "pack": "trees_conifer",
+   "node": "spruce",
+   "role": "tree/pine group",
+   "tris": 2000,
+   "size_lib": [
+    0.263,
+    0.433,
+    0.25
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 17,
+   "k": 39.261,
+   "size_m": [
+    10.33,
+    17.0,
+    9.82
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_conifer/pine": {
+   "cat": "nature",
+   "pack": "trees_conifer",
+   "node": "pine",
+   "role": "tree/pine group",
+   "tris": 1997,
+   "size_lib": [
+    0.214,
+    0.479,
+    0.232
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 19,
+   "k": 39.666,
+   "size_m": [
+    8.49,
+    19.0,
+    9.2
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": "thin crown on a tall trunk"
+  },
+  "trees_orchard/olive": {
+   "cat": "nature",
+   "pack": "trees_orchard",
+   "node": "olive",
+   "role": "tree/garden-desert",
+   "tris": 2000,
+   "size_lib": [
+    0.259,
+    0.295,
+    0.284
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 8,
+   "k": 27.119,
+   "size_m": [
+    7.02,
+    8.0,
+    7.7
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_orchard/pomegranate": {
+   "cat": "nature",
+   "pack": "trees_orchard",
+   "node": "pomegranate",
+   "role": "tree/garden-desert",
+   "tris": 2000,
+   "size_lib": [
+    0.209,
+    0.272,
+    0.226
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 5,
+   "k": 18.382,
+   "size_m": [
+    3.84,
+    5.0,
+    4.15
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_orchard/date_palm_young": {
+   "cat": "nature",
+   "pack": "trees_orchard",
+   "node": "date_palm_young",
+   "role": "tree/garden-desert",
+   "tris": 1998,
+   "size_lib": [
+    0.075,
+    0.193,
+    0.198
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 6,
+   "k": 31.088,
+   "size_m": [
+    2.33,
+    6.0,
+    6.16
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_orchard/date_palm": {
+   "cat": "nature",
+   "pack": "trees_orchard",
+   "node": "date_palm",
+   "role": "tree/garden-desert",
+   "tris": 1986,
+   "size_lib": [
+    0.075,
+    0.401,
+    0.265
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 14,
+   "k": 34.913,
+   "size_m": [
+    2.62,
+    14.0,
+    9.25
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_season/apple": {
+   "cat": "nature",
+   "pack": "trees_season",
+   "node": "apple",
+   "role": "tree/garden",
+   "tris": 1998,
+   "size_lib": [
+    0.267,
+    0.31,
+    0.248
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 8,
+   "k": 25.806,
+   "size_m": [
+    6.89,
+    8.0,
+    6.4
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_season/fir_snow": {
+   "cat": "nature",
+   "pack": "trees_season",
+   "node": "fir_snow",
+   "role": "tree/winter pine (already snowy: winter only)",
+   "tris": 2000,
+   "size_lib": [
+    0.223,
+    0.333,
+    0.21
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 17,
+   "k": 51.051,
+   "size_m": [
+    11.38,
+    17.0,
+    10.72
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_season/dead_tree": {
+   "cat": "nature",
+   "pack": "trees_season",
+   "node": "dead_tree",
+   "role": "tree/dead (bare winter, ruins)",
+   "tris": 2000,
+   "size_lib": [
+    0.152,
+    0.329,
+    0.252
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 11,
+   "k": 33.435,
+   "size_m": [
+    5.08,
+    11.0,
+    8.43
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_season/maple_autumn": {
+   "cat": "nature",
+   "pack": "trees_season",
+   "node": "maple_autumn",
+   "role": "tree/autumn (already red: autumn only)",
+   "tris": 2000,
+   "size_lib": [
+    0.236,
+    0.311,
+    0.228
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 13,
+   "k": 41.801,
+   "size_m": [
+    9.86,
+    13.0,
+    9.53
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_special/birch": {
+   "cat": "nature",
+   "pack": "trees_special",
+   "node": "birch",
+   "role": "tree/special (river = willow)",
+   "tris": 2000,
+   "size_lib": [
+    0.182,
+    0.37,
+    0.192
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 14,
+   "k": 37.838,
+   "size_m": [
+    6.89,
+    14.0,
+    7.26
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_special/almond": {
+   "cat": "nature",
+   "pack": "trees_special",
+   "node": "almond",
+   "role": "tree/special (river = willow)",
+   "tris": 1994,
+   "size_lib": [
+    0.255,
+    0.325,
+    0.228
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 8,
+   "k": 24.615,
+   "size_m": [
+    6.28,
+    8.0,
+    5.61
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_special/tamarisk": {
+   "cat": "nature",
+   "pack": "trees_special",
+   "node": "tamarisk",
+   "role": "tree/special (river = willow)",
+   "tris": 2000,
+   "size_lib": [
+    0.242,
+    0.321,
+    0.253
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 9,
+   "k": 28.037,
+   "size_m": [
+    6.79,
+    9.0,
+    7.09
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "trees_special/willow": {
+   "cat": "nature",
+   "pack": "trees_special",
+   "node": "willow",
+   "role": "tree/special (river = willow)",
+   "tris": 3374,
+   "size_lib": [
+    0.249,
+    0.374,
+    0.253
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 13,
+   "k": 34.759,
+   "size_m": [
+    8.66,
+    13.0,
+    8.79
+   ],
+   "budget": 1500,
+   "over_budget": true,
+   "note": ""
+  },
+  "construction_pack/materials_pile": {
+   "cat": "props",
+   "pack": "construction_pack",
+   "node": "materials_pile",
+   "role": "construction: pile (old ws_stoneblocks 3.6 m)",
+   "tris": 3358,
+   "size_lib": [
+    0.244,
+    0.143,
+    0.199
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 4.5,
+   "k": 18.443,
+   "size_m": [
+    4.5,
+    2.64,
+    3.67
+   ],
+   "budget": 3000,
+   "over_budget": true,
+   "note": ""
+  },
+  "construction_pack/scaffold": {
+   "cat": "props",
+   "pack": "construction_pack",
+   "node": "scaffold",
+   "role": "construction: scaffold (old ws_scaffold 4.9 h x 8)",
+   "tris": 3473,
+   "size_lib": [
+    0.153,
+    0.259,
+    0.155
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 5.5,
+   "k": 21.236,
+   "size_m": [
+    3.25,
+    5.5,
+    3.29
+   ],
+   "budget": 3000,
+   "over_budget": true,
+   "note": ""
+  },
+  "construction_pack/wall_half": {
+   "cat": "props",
+   "pack": "construction_pack",
+   "node": "wall_half",
+   "role": "construction stage C (old ws_stageC 8 x 6.8 x 7.8)",
+   "tris": 3499,
+   "size_lib": [
+    0.187,
+    0.257,
+    0.252
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 7.5,
+   "k": 29.762,
+   "size_m": [
+    5.57,
+    7.65,
+    7.5
+   ],
+   "budget": 3000,
+   "over_budget": true,
+   "note": "ladder on one side, no front"
+  },
+  "construction_pack/foundation_scaffold": {
+   "cat": "props",
+   "pack": "construction_pack",
+   "node": "foundation_scaffold",
+   "role": "construction stage A/B (old ws_stageA 6 x 1.6, stageB 6.3 x 3.9)",
+   "tris": 3499,
+   "size_lib": [
+    0.212,
+    0.238,
+    0.221
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 6.5,
+   "k": 29.412,
+   "size_m": [
+    6.24,
+    7.0,
+    6.5
+   ],
+   "budget": 3000,
+   "over_budget": true,
+   "note": ""
+  },
+  "lamps_candles/candle_lantern_box": {
+   "cat": "props",
+   "pack": "lamps_candles",
+   "node": "candle_lantern_box",
+   "role": "candle lantern",
+   "tris": 2500,
+   "size_lib": [
+    0.149,
+    0.301,
+    0.131
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.7,
+   "k": 2.326,
+   "size_m": [
+    0.35,
+    0.7,
+    0.3
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_candles/candlestick_iron": {
+   "cat": "props",
+   "pack": "lamps_candles",
+   "node": "candlestick_iron",
+   "role": "candlestick",
+   "tris": 1364,
+   "size_lib": [
+    0.113,
+    0.381,
+    0.108
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.0,
+   "k": 2.625,
+   "size_m": [
+    0.3,
+    1.0,
+    0.28
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_candles/chandelier_crown": {
+   "cat": "props",
+   "pack": "lamps_candles",
+   "node": "chandelier_crown",
+   "role": "crown chandelier (hall)",
+   "tris": 2498,
+   "size_lib": [
+    0.313,
+    0.314,
+    0.242
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.6,
+   "k": 5.096,
+   "size_m": [
+    1.59,
+    1.6,
+    1.23
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_candles/candelabra_floor": {
+   "cat": "props",
+   "pack": "lamps_candles",
+   "node": "candelabra_floor",
+   "role": "floor candelabra",
+   "tris": 2500,
+   "size_lib": [
+    0.101,
+    0.418,
+    0.151
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.8,
+   "k": 4.306,
+   "size_m": [
+    0.43,
+    1.8,
+    0.65
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_candles/candelabra_table": {
+   "cat": "props",
+   "pack": "lamps_candles",
+   "node": "candelabra_table",
+   "role": "table candelabra",
+   "tris": 2064,
+   "size_lib": [
+    0.098,
+    0.271,
+    0.181
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.5,
+   "k": 1.845,
+   "size_m": [
+    0.18,
+    0.5,
+    0.33
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "tiny"
+  },
+  "lamps_candles/candle_pillar": {
+   "cat": "props",
+   "pack": "lamps_candles",
+   "node": "candle_pillar",
+   "role": "pillar candle",
+   "tris": 1836,
+   "size_lib": [
+    0.091,
+    0.295,
+    0.092
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.9,
+   "k": 3.051,
+   "size_m": [
+    0.28,
+    0.9,
+    0.28
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_fantasy/lamp_glass_jar": {
+   "cat": "props",
+   "pack": "lamps_fantasy",
+   "node": "lamp_glass_jar",
+   "role": "bracket jar lamp",
+   "tris": 2497,
+   "size_lib": [
+    0.141,
+    0.409,
+    0.161
+   ],
+   "ry": 325,
+   "dim": "h",
+   "target_m": 1.2,
+   "k": 2.934,
+   "size_m": [
+    0.61,
+    1.2,
+    0.62
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "WALL-MOUNT: plate at -145 deg (up-left) in the file"
+  },
+  "lamps_fantasy/lamp_rune_stone": {
+   "cat": "props",
+   "pack": "lamps_fantasy",
+   "node": "lamp_rune_stone",
+   "role": "rune stone lamp",
+   "tris": 2499,
+   "size_lib": [
+    0.144,
+    0.44,
+    0.143
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.6,
+   "k": 3.636,
+   "size_m": [
+    0.52,
+    1.6,
+    0.52
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_fantasy/lamp_gem_ruby": {
+   "cat": "props",
+   "pack": "lamps_fantasy",
+   "node": "lamp_gem_ruby",
+   "role": "ruby lamp",
+   "tris": 2500,
+   "size_lib": [
+    0.156,
+    0.454,
+    0.152
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.5,
+   "k": 3.304,
+   "size_m": [
+    0.52,
+    1.5,
+    0.5
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_fantasy/lamp_ice_crystal": {
+   "cat": "props",
+   "pack": "lamps_fantasy",
+   "node": "lamp_ice_crystal",
+   "role": "ice crystal lamp",
+   "tris": 1964,
+   "size_lib": [
+    0.093,
+    0.47,
+    0.114
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.5,
+   "k": 3.191,
+   "size_m": [
+    0.3,
+    1.5,
+    0.36
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_fantasy/lamp_skull": {
+   "cat": "props",
+   "pack": "lamps_fantasy",
+   "node": "lamp_skull",
+   "role": "skull lamp on a post",
+   "tris": 2500,
+   "size_lib": [
+    0.191,
+    0.488,
+    0.185
+   ],
+   "ry": 225,
+   "dim": "h",
+   "target_m": 2.2,
+   "k": 4.508,
+   "size_m": [
+    1.2,
+    2.2,
+    1.2
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "free-standing, skull toward (+X,-Z) in the file"
+  },
+  "lamps_fantasy/lamp_staff_crystal": {
+   "cat": "props",
+   "pack": "lamps_fantasy",
+   "node": "lamp_staff_crystal",
+   "role": "crystal staff lamp",
+   "tris": 2418,
+   "size_lib": [
+    0.106,
+    0.576,
+    0.107
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 2.5,
+   "k": 4.34,
+   "size_m": [
+    0.46,
+    2.5,
+    0.46
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_hand/lamp_hand_storm": {
+   "cat": "props",
+   "pack": "lamps_hand",
+   "node": "lamp_hand_storm",
+   "role": "hand lantern",
+   "tris": 2479,
+   "size_lib": [
+    0.125,
+    0.367,
+    0.144
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.55,
+   "k": 1.499,
+   "size_m": [
+    0.19,
+    0.55,
+    0.22
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "carried / hook"
+  },
+  "lamps_hand/lamp_hand_horn": {
+   "cat": "props",
+   "pack": "lamps_hand",
+   "node": "lamp_hand_horn",
+   "role": "hand lantern",
+   "tris": 2414,
+   "size_lib": [
+    0.149,
+    0.354,
+    0.142
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.55,
+   "k": 1.554,
+   "size_m": [
+    0.23,
+    0.55,
+    0.22
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_hand/lamp_hand_oil": {
+   "cat": "props",
+   "pack": "lamps_hand",
+   "node": "lamp_hand_oil",
+   "role": "hand lantern",
+   "tris": 1784,
+   "size_lib": [
+    0.109,
+    0.32,
+    0.113
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.5,
+   "k": 1.562,
+   "size_m": [
+    0.17,
+    0.5,
+    0.18
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_hand/lamp_hand_cloth": {
+   "cat": "props",
+   "pack": "lamps_hand",
+   "node": "lamp_hand_cloth",
+   "role": "paper lantern",
+   "tris": 2434,
+   "size_lib": [
+    0.197,
+    0.319,
+    0.196
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.5,
+   "k": 1.567,
+   "size_m": [
+    0.31,
+    0.5,
+    0.31
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_hand/lamp_hand_cage": {
+   "cat": "props",
+   "pack": "lamps_hand",
+   "node": "lamp_hand_cage",
+   "role": "hand lantern",
+   "tris": 2500,
+   "size_lib": [
+    0.148,
+    0.345,
+    0.148
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.55,
+   "k": 1.594,
+   "size_m": [
+    0.24,
+    0.55,
+    0.24
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_hand/lamp_hand_persian": {
+   "cat": "props",
+   "pack": "lamps_hand",
+   "node": "lamp_hand_persian",
+   "role": "hand lantern",
+   "tris": 2497,
+   "size_lib": [
+    0.133,
+    0.365,
+    0.116
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.55,
+   "k": 1.507,
+   "size_m": [
+    0.2,
+    0.55,
+    0.17
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_house_oil/lamp_oil_stone": {
+   "cat": "props",
+   "pack": "lamps_house_oil",
+   "node": "lamp_oil_stone",
+   "role": "oil lamp (indoor / door step)",
+   "tris": 2500,
+   "size_lib": [
+    0.118,
+    0.198,
+    0.176
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.5,
+   "k": 2.525,
+   "size_m": [
+    0.3,
+    0.5,
+    0.44
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "tiny: invisible at the game camera, building panel only"
+  },
+  "lamps_house_oil/lamp_oil_genie": {
+   "cat": "props",
+   "pack": "lamps_house_oil",
+   "node": "lamp_oil_genie",
+   "role": "oil lamp",
+   "tris": 2500,
+   "size_lib": [
+    0.122,
+    0.169,
+    0.213
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.45,
+   "k": 2.663,
+   "size_m": [
+    0.32,
+    0.45,
+    0.57
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "tiny"
+  },
+  "lamps_house_oil/lamp_oil_pedestal": {
+   "cat": "props",
+   "pack": "lamps_house_oil",
+   "node": "lamp_oil_pedestal",
+   "role": "oil lamp pedestal",
+   "tris": 2500,
+   "size_lib": [
+    0.104,
+    0.326,
+    0.104
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.9,
+   "k": 2.761,
+   "size_m": [
+    0.29,
+    0.9,
+    0.29
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_house_oil/lamp_oil_multiwick": {
+   "cat": "props",
+   "pack": "lamps_house_oil",
+   "node": "lamp_oil_multiwick",
+   "role": "oil lamp",
+   "tris": 2500,
+   "size_lib": [
+    0.164,
+    0.199,
+    0.154
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.55,
+   "k": 2.764,
+   "size_m": [
+    0.45,
+    0.55,
+    0.43
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "tiny"
+  },
+  "lamps_house_oil/lamp_oil_chiragh": {
+   "cat": "props",
+   "pack": "lamps_house_oil",
+   "node": "lamp_oil_chiragh",
+   "role": "oil lamp",
+   "tris": 2500,
+   "size_lib": [
+    0.091,
+    0.198,
+    0.161
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.45,
+   "k": 2.273,
+   "size_m": [
+    0.21,
+    0.45,
+    0.37
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "tiny"
+  },
+  "lamps_house_oil/lamp_oil_clay": {
+   "cat": "props",
+   "pack": "lamps_house_oil",
+   "node": "lamp_oil_clay",
+   "role": "oil lamp",
+   "tris": 2052,
+   "size_lib": [
+    0.131,
+    0.111,
+    0.172
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.35,
+   "k": 3.153,
+   "size_m": [
+    0.41,
+    0.35,
+    0.54
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "tiny"
+  },
+  "lamps_persian_shrine/lamp_dome_brass": {
+   "cat": "props",
+   "pack": "lamps_persian_shrine",
+   "node": "lamp_dome_brass",
+   "role": "bracket dome lamp (shrine / chapel)",
+   "tris": 2482,
+   "size_lib": [
+    0.171,
+    0.328,
+    0.14
+   ],
+   "ry": 264,
+   "dim": "h",
+   "target_m": 1.1,
+   "k": 3.354,
+   "size_m": [
+    0.53,
+    1.1,
+    0.62
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "WALL-MOUNT: plate on -X (-84 deg) in the file"
+  },
+  "lamps_persian_shrine/lamp_golden_temple": {
+   "cat": "props",
+   "pack": "lamps_persian_shrine",
+   "node": "lamp_golden_temple",
+   "role": "temple lamp stand",
+   "tris": 2500,
+   "size_lib": [
+    0.11,
+    0.441,
+    0.124
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.8,
+   "k": 4.082,
+   "size_m": [
+    0.45,
+    1.8,
+    0.51
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_persian_shrine/atashdan": {
+   "cat": "props",
+   "pack": "lamps_persian_shrine",
+   "node": "atashdan",
+   "role": "fire altar (shrine)",
+   "tris": 2500,
+   "size_lib": [
+    0.172,
+    0.342,
+    0.231
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.7,
+   "k": 4.971,
+   "size_m": [
+    0.85,
+    1.7,
+    1.15
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "open fire bowl"
+  },
+  "lamps_persian_shrine/lamp_tile_holder": {
+   "cat": "props",
+   "pack": "lamps_persian_shrine",
+   "node": "lamp_tile_holder",
+   "role": "tiled lamp stand",
+   "tris": 2499,
+   "size_lib": [
+    0.109,
+    0.421,
+    0.119
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.4,
+   "k": 3.325,
+   "size_m": [
+    0.36,
+    1.4,
+    0.4
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_persian_shrine/lamp_mosque_hanging": {
+   "cat": "props",
+   "pack": "lamps_persian_shrine",
+   "node": "lamp_mosque_hanging",
+   "role": "bracket hanging lamp",
+   "tris": 2126,
+   "size_lib": [
+    0.171,
+    0.369,
+    0.137
+   ],
+   "ry": 156,
+   "dim": "h",
+   "target_m": 1.3,
+   "k": 3.523,
+   "size_m": [
+    0.75,
+    1.3,
+    0.69
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "WALL-MOUNT: bar along X, wall on +Z (+24 deg)"
+  },
+  "lamps_persian_shrine/lamp_star_bronze": {
+   "cat": "props",
+   "pack": "lamps_persian_shrine",
+   "node": "lamp_star_bronze",
+   "role": "hanging star lamp",
+   "tris": 2432,
+   "size_lib": [
+    0.16,
+    0.265,
+    0.171
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.9,
+   "k": 3.396,
+   "size_m": [
+    0.54,
+    0.9,
+    0.58
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_torches_braziers/torch_pole": {
+   "cat": "props",
+   "pack": "lamps_torches_braziers",
+   "node": "torch_pole",
+   "role": "torch on a pole",
+   "tris": 2500,
+   "size_lib": [
+    0.097,
+    0.491,
+    0.098
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 3.2,
+   "k": 6.517,
+   "size_m": [
+    0.63,
+    3.2,
+    0.64
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_torches_braziers/fire_basket_pole": {
+   "cat": "props",
+   "pack": "lamps_torches_braziers",
+   "node": "fire_basket_pole",
+   "role": "fire basket on a pole",
+   "tris": 2500,
+   "size_lib": [
+    0.13,
+    0.494,
+    0.125
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 3.4,
+   "k": 6.883,
+   "size_m": [
+    0.89,
+    3.4,
+    0.86
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_torches_braziers/fire_bowl_stone": {
+   "cat": "props",
+   "pack": "lamps_torches_braziers",
+   "node": "fire_bowl_stone",
+   "role": "stone fire bowl",
+   "tris": 2500,
+   "size_lib": [
+    0.221,
+    0.333,
+    0.219
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.5,
+   "k": 4.505,
+   "size_m": [
+    1.0,
+    1.5,
+    0.99
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_torches_braziers/brazier_tripod": {
+   "cat": "props",
+   "pack": "lamps_torches_braziers",
+   "node": "brazier_tripod",
+   "role": "tripod brazier",
+   "tris": 2499,
+   "size_lib": [
+    0.212,
+    0.356,
+    0.216
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.7,
+   "k": 4.775,
+   "size_m": [
+    1.01,
+    1.7,
+    1.03
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_torches_braziers/torch_wall": {
+   "cat": "props",
+   "pack": "lamps_torches_braziers",
+   "node": "torch_wall",
+   "role": "wall sconce torch (old ctx.torch sconce)",
+   "tris": 2160,
+   "size_lib": [
+    0.223,
+    0.376,
+    0.19
+   ],
+   "ry": 229,
+   "dim": "h",
+   "target_m": 1.1,
+   "k": 2.926,
+   "size_m": [
+    0.85,
+    1.1,
+    0.86
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "WALL-MOUNT: plate toward +Z-ish (-49 deg) in the file; ry puts the torch on +Z"
+  },
+  "lamps_torches_braziers/torch_hand": {
+   "cat": "props",
+   "pack": "lamps_torches_braziers",
+   "node": "torch_hand",
+   "role": "hand torch (villager / wall hook)",
+   "tris": 1634,
+   "size_lib": [
+    0.079,
+    0.47,
+    0.077
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.9,
+   "k": 1.915,
+   "size_m": [
+    0.15,
+    0.9,
+    0.15
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_tower_gate/chandelier_hall": {
+   "cat": "props",
+   "pack": "lamps_tower_gate",
+   "node": "chandelier_hall",
+   "role": "hanging chandelier (hall / gate house)",
+   "tris": 2500,
+   "size_lib": [
+    0.214,
+    0.292,
+    0.209
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 2.0,
+   "k": 6.849,
+   "size_m": [
+    1.47,
+    2.0,
+    1.43
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_tower_gate/beacon_cauldron": {
+   "cat": "props",
+   "pack": "lamps_tower_gate",
+   "node": "beacon_cauldron",
+   "role": "beacon cauldron on a block (tower top / gate)",
+   "tris": 2500,
+   "size_lib": [
+    0.185,
+    0.262,
+    0.192
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 2.0,
+   "k": 7.634,
+   "size_m": [
+    1.41,
+    2.0,
+    1.47
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_tower_gate/lantern_watchtower": {
+   "cat": "props",
+   "pack": "lamps_tower_gate",
+   "node": "lantern_watchtower",
+   "role": "bracket lantern for towers",
+   "tris": 2500,
+   "size_lib": [
+    0.185,
+    0.348,
+    0.171
+   ],
+   "ry": 210,
+   "dim": "h",
+   "target_m": 1.5,
+   "k": 4.31,
+   "size_m": [
+    1.06,
+    1.5,
+    1.04
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "WALL-MOUNT, plate on +Z (-30 deg) in the file"
+  },
+  "lamps_tower_gate/lantern_signal": {
+   "cat": "props",
+   "pack": "lamps_tower_gate",
+   "node": "lantern_signal",
+   "role": "signal lantern",
+   "tris": 2492,
+   "size_lib": [
+    0.214,
+    0.355,
+    0.194
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.1,
+   "k": 3.099,
+   "size_m": [
+    0.66,
+    1.1,
+    0.6
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_tower_gate/beacon_basket_pole": {
+   "cat": "props",
+   "pack": "lamps_tower_gate",
+   "node": "beacon_basket_pole",
+   "role": "beacon basket on a pole (tower top)",
+   "tris": 2294,
+   "size_lib": [
+    0.169,
+    0.402,
+    0.169
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 3.4,
+   "k": 8.458,
+   "size_m": [
+    1.43,
+    3.4,
+    1.43
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_wall_street/lamp_pedestal_small": {
+   "cat": "props",
+   "pack": "lamps_wall_street",
+   "node": "lamp_pedestal_small",
+   "role": "pedestal lamp (door / steps)",
+   "tris": 2499,
+   "size_lib": [
+    0.092,
+    0.362,
+    0.091
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.8,
+   "k": 4.972,
+   "size_m": [
+    0.46,
+    1.8,
+    0.45
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_wall_street/lamp_gate_hanging": {
+   "cat": "props",
+   "pack": "lamps_wall_street",
+   "node": "lamp_gate_hanging",
+   "role": "bracket lamp under a gate arch / wall",
+   "tris": 2500,
+   "size_lib": [
+    0.158,
+    0.424,
+    0.194
+   ],
+   "ry": 197,
+   "dim": "h",
+   "target_m": 1.6,
+   "k": 3.774,
+   "size_m": [
+    0.78,
+    1.6,
+    0.87
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "WALL-MOUNT: plate on +Z in the file; ry brings the lamp side to +Z (plate to -Z = the wall)"
+  },
+  "lamps_wall_street/lamp_stone_pillar": {
+   "cat": "props",
+   "pack": "lamps_wall_street",
+   "node": "lamp_stone_pillar",
+   "role": "stone pillar lamp (shrine / garden)",
+   "tris": 2500,
+   "size_lib": [
+    0.137,
+    0.438,
+    0.134
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 3.0,
+   "k": 6.849,
+   "size_m": [
+    0.94,
+    3.0,
+    0.92
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_wall_street/lamp_post": {
+   "cat": "props",
+   "pack": "lamps_wall_street",
+   "node": "lamp_post",
+   "role": "street post (= old cv_lamp 4.4 m)",
+   "tris": 2196,
+   "size_lib": [
+    0.091,
+    0.528,
+    0.089
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 4.4,
+   "k": 8.333,
+   "size_m": [
+    0.76,
+    4.4,
+    0.74
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "lamps_wall_street/lamp_street_arm": {
+   "cat": "props",
+   "pack": "lamps_wall_street",
+   "node": "lamp_street_arm",
+   "role": "street post with arm",
+   "tris": 2500,
+   "size_lib": [
+    0.103,
+    0.483,
+    0.175
+   ],
+   "ry": 180,
+   "dim": "h",
+   "target_m": 5.0,
+   "k": 10.352,
+   "size_m": [
+    1.07,
+    5.0,
+    1.81
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "arm + lantern toward -Z in the file -> ry 180: arm toward +Z"
+  },
+  "lamps_wall_street/lamp_wall_bracket": {
+   "cat": "props",
+   "pack": "lamps_wall_street",
+   "node": "lamp_wall_bracket",
+   "role": "wall bracket lantern",
+   "tris": 2500,
+   "size_lib": [
+    0.106,
+    0.364,
+    0.165
+   ],
+   "ry": 180,
+   "dim": "h",
+   "target_m": 1.2,
+   "k": 3.297,
+   "size_m": [
+    0.35,
+    1.2,
+    0.54
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "WALL-MOUNT, plate on +Z in the file"
+  },
+  "market_stalls/stall_spice": {
+   "cat": "props",
+   "pack": "market_stalls",
+   "node": "stall_spice",
+   "role": "market stall (old cv_stall 2.7 x 3.9 x 1.4)",
+   "tris": 2996,
+   "size_lib": [
+    0.226,
+    0.257,
+    0.231
+   ],
+   "ry": -90,
+   "dim": "h",
+   "target_m": 3.6,
+   "k": 14.008,
+   "size_m": [
+    3.24,
+    3.6,
+    3.17
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "counter + awning face +X"
+  },
+  "market_stalls/stall_pottery": {
+   "cat": "props",
+   "pack": "market_stalls",
+   "node": "stall_pottery",
+   "role": "market stall",
+   "tris": 2997,
+   "size_lib": [
+    0.206,
+    0.261,
+    0.197
+   ],
+   "ry": -90,
+   "dim": "h",
+   "target_m": 3.6,
+   "k": 13.793,
+   "size_m": [
+    2.72,
+    3.6,
+    2.84
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "front +X"
+  },
+  "market_stalls/stall_cloth": {
+   "cat": "props",
+   "pack": "market_stalls",
+   "node": "stall_cloth",
+   "role": "market stall",
+   "tris": 2999,
+   "size_lib": [
+    0.184,
+    0.257,
+    0.237
+   ],
+   "ry": -90,
+   "dim": "h",
+   "target_m": 3.6,
+   "k": 14.008,
+   "size_m": [
+    3.32,
+    3.6,
+    2.58
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "front +X"
+  },
+  "market_stalls/stall_produce": {
+   "cat": "props",
+   "pack": "market_stalls",
+   "node": "stall_produce",
+   "role": "market stall",
+   "tris": 2994,
+   "size_lib": [
+    0.206,
+    0.253,
+    0.245
+   ],
+   "ry": -90,
+   "dim": "h",
+   "target_m": 3.6,
+   "k": 14.229,
+   "size_m": [
+    3.49,
+    3.6,
+    2.93
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "front +X"
+  },
+  "oil_pipes_pack/pump_station": {
+   "cat": "props",
+   "pack": "oil_pipes_pack",
+   "node": "pump_station",
+   "role": "oil pump station (old c3_pump 7 x 8 x 7.5)",
+   "tris": 1999,
+   "size_lib": [
+    0.186,
+    0.26,
+    0.268
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 5.0,
+   "k": 18.657,
+   "size_m": [
+    3.47,
+    4.85,
+    5.0
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "flywheel faces +Z / -Z"
+  },
+  "oil_pipes_pack/valve_t": {
+   "cat": "props",
+   "pack": "oil_pipes_pack",
+   "node": "valve_t",
+   "role": "pipe valve T",
+   "tris": 2000,
+   "size_lib": [
+    0.154,
+    0.215,
+    0.221
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 1.8,
+   "k": 8.145,
+   "size_m": [
+    1.25,
+    1.75,
+    1.8
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "branch/opening direction free"
+  },
+  "oil_pipes_pack/elbow": {
+   "cat": "props",
+   "pack": "oil_pipes_pack",
+   "node": "elbow",
+   "role": "pipe elbow",
+   "tris": 1998,
+   "size_lib": [
+    0.117,
+    0.21,
+    0.145
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.4,
+   "k": 6.667,
+   "size_m": [
+    0.78,
+    1.4,
+    0.97
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "opening toward +Z"
+  },
+  "oil_pipes_pack/straight": {
+   "cat": "props",
+   "pack": "oil_pipes_pack",
+   "node": "straight",
+   "role": "straight pipe",
+   "tris": 2000,
+   "size_lib": [
+    0.152,
+    0.132,
+    0.248
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 3.0,
+   "k": 12.097,
+   "size_m": [
+    1.84,
+    1.6,
+    3.0
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "axis Z"
+  },
+  "oil_tanks_pack/tank_wood": {
+   "cat": "props",
+   "pack": "oil_tanks_pack",
+   "node": "tank_wood",
+   "role": "oil tank (old c3_watertower 8.6 m)",
+   "tris": 2500,
+   "size_lib": [
+    0.284,
+    0.474,
+    0.251
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 6.0,
+   "k": 12.658,
+   "size_m": [
+    3.59,
+    6.0,
+    3.18
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "oil_tanks_pack/tank_copper": {
+   "cat": "props",
+   "pack": "oil_tanks_pack",
+   "node": "tank_copper",
+   "role": "oil tank",
+   "tris": 2488,
+   "size_lib": [
+    0.296,
+    0.434,
+    0.266
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 5.5,
+   "k": 12.673,
+   "size_m": [
+    3.75,
+    5.5,
+    3.37
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "oil_tanks_pack/tank_brick": {
+   "cat": "props",
+   "pack": "oil_tanks_pack",
+   "node": "tank_brick",
+   "role": "oil tank, ladder on +X",
+   "tris": 2500,
+   "size_lib": [
+    0.343,
+    0.458,
+    0.323
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 5.5,
+   "k": 12.009,
+   "size_m": [
+    4.12,
+    5.5,
+    3.88
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "props_camp/tent": {
+   "cat": "props",
+   "pack": "props_camp",
+   "node": "tent",
+   "role": "camp tent (entrance triangle faces +X)",
+   "tris": 2998,
+   "size_lib": [
+    0.466,
+    0.335,
+    0.3
+   ],
+   "ry": -90,
+   "dim": "w",
+   "target_m": 4.2,
+   "k": 9.013,
+   "size_m": [
+    2.7,
+    3.02,
+    4.2
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "front +X"
+  },
+  "props_camp/dummy": {
+   "cat": "props",
+   "pack": "props_camp",
+   "node": "dummy",
+   "role": "training dummy (arms spread along Z, faces +X)",
+   "tris": 3000,
+   "size_lib": [
+    0.157,
+    0.422,
+    0.24
+   ],
+   "ry": -90,
+   "dim": "h",
+   "target_m": 2.2,
+   "k": 5.213,
+   "size_m": [
+    1.25,
+    2.2,
+    0.82
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "props_camp/cooking_pot": {
+   "cat": "props",
+   "pack": "props_camp",
+   "node": "cooking_pot",
+   "role": "cooking pot on a tripod",
+   "tris": 3000,
+   "size_lib": [
+    0.273,
+    0.418,
+    0.266
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.5,
+   "k": 3.589,
+   "size_m": [
+    0.98,
+    1.5,
+    0.95
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "props_camp/anvil": {
+   "cat": "props",
+   "pack": "props_camp",
+   "node": "anvil",
+   "role": "anvil on a block (old c3_anvil 0.95 m)",
+   "tris": 2997,
+   "size_lib": [
+    0.197,
+    0.255,
+    0.172
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 1.0,
+   "k": 3.922,
+   "size_m": [
+    0.77,
+    1.0,
+    0.67
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "horn direction free"
+  },
+  "props_mining/winch": {
+   "cat": "props",
+   "pack": "props_mining",
+   "node": "winch",
+   "role": "mine winch",
+   "tris": 3500,
+   "size_lib": [
+    0.211,
+    0.273,
+    0.23
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 3.2,
+   "k": 11.722,
+   "size_m": [
+    2.47,
+    3.2,
+    2.7
+   ],
+   "budget": 3000,
+   "over_budget": true,
+   "note": "wheel face on +Z / -Z"
+  },
+  "props_mining/sack": {
+   "cat": "props",
+   "pack": "props_mining",
+   "node": "sack",
+   "role": "ore sack (old ws_sack 0.4 x 0.7 x 1)",
+   "tris": 2536,
+   "size_lib": [
+    0.113,
+    0.133,
+    0.124
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.8,
+   "k": 6.015,
+   "size_m": [
+    0.68,
+    0.8,
+    0.75
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "props_mining/sacks_pair": {
+   "cat": "props",
+   "pack": "props_mining",
+   "node": "sacks_pair",
+   "role": "two ore sacks (same scale as sack)",
+   "tris": 3500,
+   "size_lib": [
+    0.135,
+    0.158,
+    0.229
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 0.95,
+   "k": 6.013,
+   "size_m": [
+    0.81,
+    0.95,
+    1.38
+   ],
+   "budget": 3000,
+   "over_budget": true,
+   "note": ""
+  },
+  "props_mining/ingots": {
+   "cat": "props",
+   "pack": "props_mining",
+   "node": "ingots",
+   "role": "ingot stack (old c3_goldbars 1.3 m)",
+   "tris": 2328,
+   "size_lib": [
+    0.215,
+    0.11,
+    0.2
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 1.3,
+   "k": 6.047,
+   "size_m": [
+    1.3,
+    0.67,
+    1.21
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "props_mining/cart": {
+   "cat": "props",
+   "pack": "props_mining",
+   "node": "cart",
+   "role": "mine cart",
+   "tris": 3500,
+   "size_lib": [
+    0.254,
+    0.237,
+    0.292
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 2.6,
+   "k": 8.904,
+   "size_m": [
+    2.26,
+    2.11,
+    2.6
+   ],
+   "budget": 3000,
+   "over_budget": true,
+   "note": "long side along X (wheels visible from +Z); rails direction decided in S4b"
+  },
+  "props_street/lantern": {
+   "cat": "props",
+   "pack": "props_street",
+   "node": "lantern",
+   "role": "small street lamp with arm",
+   "tris": 1564,
+   "size_lib": [
+    0.074,
+    0.315,
+    0.143
+   ],
+   "ry": 180,
+   "dim": "h",
+   "target_m": 3.4,
+   "k": 10.794,
+   "size_m": [
+    0.8,
+    3.4,
+    1.54
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "arm toward -Z in the file -> ry 180"
+  },
+  "props_street/trough": {
+   "cat": "props",
+   "pack": "props_street",
+   "node": "trough",
+   "role": "stone water trough",
+   "tris": 2500,
+   "size_lib": [
+    0.355,
+    0.204,
+    0.258
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 2.6,
+   "k": 7.324,
+   "size_m": [
+    2.6,
+    1.49,
+    1.89
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "open long side +Z"
+  },
+  "props_street/flag": {
+   "cat": "props",
+   "pack": "props_street",
+   "node": "flag",
+   "role": "flag on a pole (old p_flag 2.6 m)",
+   "tris": 1254,
+   "size_lib": [
+    0.25,
+    0.353,
+    0.077
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 2.8,
+   "k": 7.932,
+   "size_m": [
+    1.98,
+    2.8,
+    0.61
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "cloth face on +Z"
+  },
+  "props_street/table_stool": {
+   "cat": "props",
+   "pack": "props_street",
+   "node": "table_stool",
+   "role": "table with stools (old cv_tableset 4.3 m)",
+   "tris": 2500,
+   "size_lib": [
+    0.334,
+    0.15,
+    0.282
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 3.2,
+   "k": 9.581,
+   "size_m": [
+    3.2,
+    1.44,
+    2.7
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "props_street/signpost": {
+   "cat": "props",
+   "pack": "props_street",
+   "node": "signpost",
+   "role": "signpost",
+   "tris": 1424,
+   "size_lib": [
+    0.166,
+    0.329,
+    0.108
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 2.4,
+   "k": 7.295,
+   "size_m": [
+    1.21,
+    2.4,
+    0.79
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "props_street/bench": {
+   "cat": "props",
+   "pack": "props_street",
+   "node": "bench",
+   "role": "bench (old cv_bench 4.2 m)",
+   "tris": 1966,
+   "size_lib": [
+    0.337,
+    0.189,
+    0.207
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 2.6,
+   "k": 7.715,
+   "size_m": [
+    2.6,
+    1.46,
+    1.6
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "sits facing +Z, backrest on -Z"
+  },
+  "props_town/sacks": {
+   "cat": "props",
+   "pack": "props_town",
+   "node": "sacks",
+   "role": "sack cluster",
+   "tris": 3000,
+   "size_lib": [
+    0.316,
+    0.209,
+    0.275
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 1.6,
+   "k": 5.063,
+   "size_m": [
+    1.6,
+    1.06,
+    1.39
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "props_town/chest": {
+   "cat": "props",
+   "pack": "props_town",
+   "node": "chest",
+   "role": "treasure chest (old cv_chest 1.6 m)",
+   "tris": 2786,
+   "size_lib": [
+    0.187,
+    0.218,
+    0.229
+   ],
+   "ry": -90,
+   "dim": "w",
+   "target_m": 1.4,
+   "k": 6.114,
+   "size_m": [
+    1.4,
+    1.33,
+    1.14
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "front +X"
+  },
+  "props_town/crates": {
+   "cat": "props",
+   "pack": "props_town",
+   "node": "crates",
+   "role": "crate stack (old p_crates 1.9 m)",
+   "tris": 2920,
+   "size_lib": [
+    0.307,
+    0.219,
+    0.297
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 2.4,
+   "k": 7.818,
+   "size_m": [
+    2.4,
+    1.71,
+    2.32
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "props_town/wagon": {
+   "cat": "props",
+   "pack": "props_town",
+   "node": "wagon",
+   "role": "wagon (old c4_cart1 4.8 m)",
+   "tris": 3000,
+   "size_lib": [
+    0.319,
+    0.189,
+    0.245
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 4.2,
+   "k": 13.166,
+   "size_m": [
+    4.2,
+    2.49,
+    3.23
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "length axis X; front not clear"
+  },
+  "props_town/handcart": {
+   "cat": "props",
+   "pack": "props_town",
+   "node": "handcart",
+   "role": "handcart (old p_barrow 1.5 m)",
+   "tris": 1850,
+   "size_lib": [
+    0.287,
+    0.175,
+    0.451
+   ],
+   "ry": 180,
+   "dim": "w",
+   "target_m": 2.0,
+   "k": 4.435,
+   "size_m": [
+    1.27,
+    0.78,
+    2.0
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "wheel toward -Z in the file -> ry 180 (wheel toward +Z)"
+  },
+  "props_town/barrels": {
+   "cat": "props",
+   "pack": "props_town",
+   "node": "barrels",
+   "role": "barrel cluster (old p_barrel 0.9 m each)",
+   "tris": 2146,
+   "size_lib": [
+    0.262,
+    0.226,
+    0.275
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 2.2,
+   "k": 8.0,
+   "size_m": [
+    2.1,
+    1.81,
+    2.2
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "traps_blast/net": {
+   "cat": "traps",
+   "pack": "traps_blast",
+   "node": "net",
+   "role": "net trap between two posts",
+   "tris": 2611,
+   "size_lib": [
+    0.1,
+    0.296,
+    0.238
+   ],
+   "ry": -90,
+   "dim": "w",
+   "target_m": 4.2,
+   "k": 17.647,
+   "size_m": [
+    4.2,
+    5.22,
+    1.76
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "net plane faces +X"
+  },
+  "traps_blast/firepit": {
+   "cat": "traps",
+   "pack": "traps_blast",
+   "node": "firepit",
+   "role": "fire pit trap (old df_firestone 3.6)",
+   "tris": 3499,
+   "size_lib": [
+    0.315,
+    0.132,
+    0.3
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 3.6,
+   "k": 11.429,
+   "size_m": [
+    3.6,
+    1.51,
+    3.43
+   ],
+   "budget": 3000,
+   "over_budget": true,
+   "note": "NO fire in the model: game adds it"
+  },
+  "traps_blast/landmine": {
+   "cat": "traps",
+   "pack": "traps_blast",
+   "node": "landmine",
+   "role": "landmine (old df_mine 2.2)",
+   "tris": 3500,
+   "size_lib": [
+    0.249,
+    0.139,
+    0.255
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 2.4,
+   "k": 9.412,
+   "size_m": [
+    2.34,
+    1.31,
+    2.4
+   ],
+   "budget": 3000,
+   "over_budget": true,
+   "note": ""
+  },
+  "traps_blast/powder_barrel": {
+   "cat": "traps",
+   "pack": "traps_blast",
+   "node": "powder_barrel",
+   "role": "powder barrel (old df_keg 2.4 h)",
+   "tris": 1898,
+   "size_lib": [
+    0.162,
+    0.275,
+    0.163
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 2.4,
+   "k": 8.727,
+   "size_m": [
+    1.41,
+    2.4,
+    1.42
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "traps_floor2/caltrops": {
+   "cat": "traps",
+   "pack": "traps_floor2",
+   "node": "caltrops",
+   "role": "caltrops",
+   "tris": 3000,
+   "size_lib": [
+    0.298,
+    0.123,
+    0.275
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 2.6,
+   "k": 8.725,
+   "size_m": [
+    2.6,
+    1.07,
+    2.4
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "traps_floor2/spiked_board": {
+   "cat": "traps",
+   "pack": "traps_floor2",
+   "node": "spiked_board",
+   "role": "spiked board (old df_bear2 3.2)",
+   "tris": 3000,
+   "size_lib": [
+    0.29,
+    0.13,
+    0.308
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 3.0,
+   "k": 9.74,
+   "size_m": [
+    2.82,
+    1.27,
+    3.0
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "traps_floor2/bear_trap": {
+   "cat": "traps",
+   "pack": "traps_floor2",
+   "node": "bear_trap",
+   "role": "bear trap (old df_bear 2.4)",
+   "tris": 3000,
+   "size_lib": [
+    0.31,
+    0.134,
+    0.314
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 2.4,
+   "k": 7.643,
+   "size_m": [
+    2.37,
+    1.02,
+    2.4
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": ""
+  },
+  "traps_mech/crossbow": {
+   "cat": "traps",
+   "pack": "traps_mech",
+   "node": "crossbow",
+   "role": "crossbow trap (old df_crossbow 3.9)",
+   "tris": 2338,
+   "size_lib": [
+    0.312,
+    0.193,
+    0.32
+   ],
+   "ry": -90,
+   "dim": "w",
+   "target_m": 4.2,
+   "k": 13.125,
+   "size_m": [
+    4.2,
+    2.53,
+    4.09
+   ],
+   "budget": 3000,
+   "over_budget": false,
+   "note": "aims +X"
+  },
+  "traps_mech/spiked_log": {
+   "cat": "traps",
+   "pack": "traps_mech",
+   "node": "spiked_log",
+   "role": "swinging spiked log (old df_swing 4.6)",
+   "tris": 3499,
+   "size_lib": [
+    0.151,
+    0.293,
+    0.344
+   ],
+   "ry": 0,
+   "dim": "w",
+   "target_m": 4.0,
+   "k": 11.628,
+   "size_m": [
+    1.76,
+    3.41,
+    4.0
+   ],
+   "budget": 3000,
+   "over_budget": true,
+   "note": "frame spans Z, swings along X"
+  },
+  "traps_mech/spiked_ball": {
+   "cat": "traps",
+   "pack": "traps_mech",
+   "node": "spiked_ball",
+   "role": "swinging spiked ball (old df_spikeball 3.2 h)",
+   "tris": 3499,
+   "size_lib": [
+    0.296,
+    0.335,
+    0.183
+   ],
+   "ry": 0,
+   "dim": "h",
+   "target_m": 3.4,
+   "k": 10.149,
+   "size_m": [
+    3.0,
+    3.4,
+    1.86
+   ],
+   "budget": 3000,
+   "over_budget": true,
+   "note": ""
+  },
+  "traps_mech/saw": {
+   "cat": "traps",
+   "pack": "traps_mech",
+   "node": "saw",
+   "role": "saw trap, blade plane faces +X",
+   "tris": 3314,
+   "size_lib": [
+    0.095,
+    0.355,
+    0.237
+   ],
+   "ry": -90,
+   "dim": "h",
+   "target_m": 2.8,
+   "k": 7.887,
+   "size_m": [
+    1.87,
+    2.8,
+    0.75
+   ],
+   "budget": 3000,
+   "over_budget": true,
+   "note": ""
+  }
+ },
+ "pack_files": {
+  "birds": {
+   "cat": "animals",
+   "kb": 219,
+   "tris": 8997,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 3
+  },
+  "poultry_fish_pack": {
+   "cat": "animals",
+   "kb": 287,
+   "tris": 12512,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 6
+  },
+  "bushes": {
+   "cat": "nature",
+   "kb": 242,
+   "tris": 6069,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "cliffs": {
+   "cat": "nature",
+   "kb": 188,
+   "tris": 6998,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 2
+  },
+  "crops": {
+   "cat": "nature",
+   "kb": 330,
+   "tris": 9102,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 6
+  },
+  "flowers": {
+   "cat": "nature",
+   "kb": 322,
+   "tris": 8590,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 6
+  },
+  "ground_cover": {
+   "cat": "nature",
+   "kb": 283,
+   "tris": 10288,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 6
+  },
+  "plants_desert": {
+   "cat": "nature",
+   "kb": 245,
+   "tris": 5506,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "rocks_boulder": {
+   "cat": "nature",
+   "kb": 232,
+   "tris": 6000,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "rocks_ore": {
+   "cat": "nature",
+   "kb": 213,
+   "tris": 6000,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "rocks_sandstone": {
+   "cat": "nature",
+   "kb": 214,
+   "tris": 6000,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "rocks_small": {
+   "cat": "nature",
+   "kb": 220,
+   "tris": 5998,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 6
+  },
+  "trees_broadleaf": {
+   "cat": "nature",
+   "kb": 279,
+   "tris": 7990,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "trees_conifer": {
+   "cat": "nature",
+   "kb": 283,
+   "tris": 7127,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "trees_orchard": {
+   "cat": "nature",
+   "kb": 298,
+   "tris": 7984,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "trees_season": {
+   "cat": "nature",
+   "kb": 319,
+   "tris": 7998,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "trees_special": {
+   "cat": "nature",
+   "kb": 243,
+   "tris": 9368,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "construction_pack": {
+   "cat": "props",
+   "kb": 332,
+   "tris": 13829,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "lamps_candles": {
+   "cat": "props",
+   "kb": 263,
+   "tris": 12762,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 6
+  },
+  "lamps_fantasy": {
+   "cat": "props",
+   "kb": 318,
+   "tris": 14378,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 6
+  },
+  "lamps_hand": {
+   "cat": "props",
+   "kb": 339,
+   "tris": 14108,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 6
+  },
+  "lamps_house_oil": {
+   "cat": "props",
+   "kb": 293,
+   "tris": 14552,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 6
+  },
+  "lamps_persian_shrine": {
+   "cat": "props",
+   "kb": 332,
+   "tris": 14539,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 6
+  },
+  "lamps_torches_braziers": {
+   "cat": "props",
+   "kb": 247,
+   "tris": 13793,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 6
+  },
+  "lamps_tower_gate": {
+   "cat": "props",
+   "kb": 257,
+   "tris": 12286,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 5
+  },
+  "lamps_wall_street": {
+   "cat": "props",
+   "kb": 323,
+   "tris": 14695,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 6
+  },
+  "market_stalls": {
+   "cat": "props",
+   "kb": 303,
+   "tris": 11986,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "oil_pipes_pack": {
+   "cat": "props",
+   "kb": 224,
+   "tris": 7997,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "oil_tanks_pack": {
+   "cat": "props",
+   "kb": 217,
+   "tris": 7488,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 3
+  },
+  "props_camp": {
+   "cat": "props",
+   "kb": 276,
+   "tris": 11995,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "props_mining": {
+   "cat": "props",
+   "kb": 318,
+   "tris": 15364,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 5
+  },
+  "props_street": {
+   "cat": "props",
+   "kb": 284,
+   "tris": 11208,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 6
+  },
+  "props_town": {
+   "cat": "props",
+   "kb": 329,
+   "tris": 15702,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 6
+  },
+  "traps_blast": {
+   "cat": "traps",
+   "kb": 264,
+   "tris": 11508,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  },
+  "traps_floor2": {
+   "cat": "traps",
+   "kb": 241,
+   "tris": 9000,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 3
+  },
+  "traps_mech": {
+   "cat": "traps",
+   "kb": 300,
+   "tris": 12650,
+   "tex": [
+    1024,
+    1024
+   ],
+   "nodes": 4
+  }
+ }
+}
