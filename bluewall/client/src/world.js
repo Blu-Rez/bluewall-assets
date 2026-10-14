@@ -21,7 +21,7 @@ import { buildCastle } from './castle.js';
 import { buildBuildings } from './buildings.js';
 import { buildTown } from './town.js';
 import { startTownPlan, planLots, homeLots, castleLevel } from './town_plan.js';              // p41: B1's town plan -> the town (town_build.js: B2 homes + B3 civic lots)
-import { registerTownTargets, createPlannedTown } from './town_build.js';
+import { registerTownTargets, createPlannedTown, warmTown } from './town_build.js';       // TR2-S4a: warmTown
 import { b1Dev } from './b1_dev.js';
 import { buildMines } from './mines.js';
 import { buildMilitary } from './military.js';
@@ -234,6 +234,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     } catch (e) { console.warn('townplan', e); tplan = null; }
     ctx.town = buildTown(ctx, A, Q, scene, tplan);
     if (tplan) try { ctx.townTids = registerTownTargets(ctx, lv0); } catch (e) { console.warn('town targets', e); ctx.townTids = new Map(); }
+    if (tplan) warmTown().catch(() => {});                          // TR2-S4a: the Tripo houses / civic models + atlases load while the rest of the world is built
     ctx.mines = buildMines(ctx, A, Q, scene, anim);
     ctx.military = buildMilitary(ctx, { scene, A, Q });
   }

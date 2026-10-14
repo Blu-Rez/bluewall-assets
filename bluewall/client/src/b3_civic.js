@@ -127,6 +127,7 @@ const BUILD = {
 };
 
 export function civicPieces(kind, lv, seed = 1) {
+  if (tr2On()) return civicTr2(kind, lv, seed);
   const f = BUILD[kind]; if (!f || lv <= 0) return [];
   const R = rng(((seed | 0) * 2654435761 ^ (kind.length * 40503 + lv * 97)) >>> 0 || 7);
   return f(Math.max(1, Math.min(LEVEL_CAP, Math.round(lv))), R);
@@ -135,6 +136,7 @@ export function civicPieces(kind, lv, seed = 1) {
 // circles [x, z, r] (lot-local) of the standing buildings, at the given level (nav / the layout editor's overlap check)
 const SOLID_R = { church_b: 6.4, church_y: 6.4, tavern_b: 5.4, tavern_y: 5.4, hall_b: 4.2, hall_y: 4.2, wing_b: 4.4, wing_y: 4.4, tower_b: 3.6, tower_y: 3.6, markethall_b: 6.2, markethall_y: 6.2, well_b: 2.0, well_y: 2.0, cross: 1.7, stall: 1.6, stall_veg: 1.6, stall_wine: 1.6, stall_pots: 1.6, stall_rich: 2.4 };
 export function civicSolids(kind, lv, seed = 1) {
+  if (tr2On()) return civicTr2Solids(kind, lv, seed);
   const out = [];
   for (const p of civicPieces(kind, lv, seed)) { const r = SOLID_R[p.n.replace(/^cv_/, '')]; if (r) out.push([p.x, p.z, r3(r * p.s)]); }
   return out;
@@ -144,3 +146,84 @@ export function civicNames() {
   for (const k of Object.keys(BUILD)) for (const lv of LEGACY_TIER_AT.slice()) for (const seed of [1, 2, 3]) for (const p of civicPieces(k, lv, seed)) set.add(p.n);
   return [...set].sort();
 }
+
+// ================================================================================================================================================================================================
+// TR2-S4a — the Tripo civic buildings.  While the TR2 mode is on (town_build.js switches it on when the game loads; node tests set globalThis.__BW_CIVIC_TR2 = 1) civicPieces / civicSolids return these
+// instead of the kit pieces — nothing else changes for the callers (town_plan.js civicBuild / civicLotSolids / townSolids, nav, town_build.js):
+//   piece name n = tr2 spec ('civic_hall_0|w20' = model + largest horizontal side in m, 'props_street/lantern' = pack node), x / z lot-local (front = +z), ry in radians, s = 1.
+// D8: one model per kind at every level (the library has no tier variants of civic buildings): what grows with the level is the number of market stalls and the yard dressing, as before.
+// Models: chapel = shrine_0 (the imamzadeh with the turquoise cone) · townhall = civic_hall_0 · tavern = tavern_0 · market = market_hall at the back + stalls (market_stalls pack) round a stone well ·
+// well = well_stone / well_qanat / well_abanbar by seed.  Footprints of the lots stay CIVIC_KINDS w x d (the planner is untouched).
+let TR2_ON = false;
+export const setCivicTr2 = (on) => { TR2_ON = !!on; };
+export const tr2On = () => TR2_ON || !!globalThis.__BW_CIVIC_TR2;
+const STALLS = ['stall_spice', 'stall_pottery', 'stall_cloth', 'stall_produce'];
+const Q = (n, x, z, ry = 0) => ({ n, x: r3(x), z: r3(z), ry: r3(ry), s: 1 });
+// nav circles [dx, dz, r] in the piece's own frame (before its ry): from the model sizes at the target scale (hall 13.5 x 20, shrine 10.8 x 12, tavern 12 x 9.8, market hall 18 x 7.3, wells 4.2 / 5, stall 3.2)
+const SOL = { civic_hall_0: [[0, -6, 5], [0, 0, 5], [0, 6, 5]], shrine_0: [[0, 0, 6]], tavern_0: [[-3.2, 0, 4.8], [3.2, 0, 4.8]], market_hall: [[-4.8, 0, 4], [4.8, 0, 4]], well_stone: [[0, 0, 2.2]], well_qanat: [[0, 0, 2.2]], well_abanbar: [[0, 0, 2.6]],
+  stall_spice: [[0, 0, 1.8]], stall_pottery: [[0, 0, 1.8]], stall_cloth: [[0, 0, 1.8]], stall_produce: [[0, 0, 1.8]] };
+const WELLS = ['well_stone|w4.2', 'well_qanat|w4.2', 'well_abanbar|w5'];
+const BUILD2 = {
+  well(lv, R) {
+    const o = [], t = civicTier(lv);
+    o.push(Q(WELLS[Math.min(2, Math.floor(R() * 3))], 0, 0, 0));
+    if (t >= 3) o.push(Q('props_street/lantern', 2.5, 2.2, 0));
+    if (t >= 5) o.push(Q('props_street/flag', -2.6, 1.8, 0));
+    return o;
+  },
+  chapel(lv) {
+    const o = [Q('shrine_0|h15', 0, -6, 0)], t = civicTier(lv);
+    if (t >= 1) { o.push(Q('props_street/lantern', -3.4, 6.5, 0)); o.push(Q('props_street/lantern', 3.4, 6.5, 0)); }
+    if (t >= 2) { o.push(Q('props_street/bench', -4.8, 9.5, Math.PI)); o.push(Q('props_street/bench', 4.8, 9.5, Math.PI)); }
+    if (t >= 3) { o.push(Q('props_street/flag', -6.8, 4, 0)); o.push(Q('props_street/flag', 6.8, 4, 0)); }
+    if (t >= 4) { o.push(Q('props_street/lantern', -3.4, 12, 0)); o.push(Q('props_street/lantern', 3.4, 12, 0)); }
+    return o;
+  },
+  townhall(lv) {
+    const o = [Q('civic_hall_0|w20', 0, -0.5, 0)], t = civicTier(lv);
+    if (t >= 1) { o.push(Q('props_street/flag', -8.6, 10.2, 0)); o.push(Q('props_street/flag', 8.6, 10.2, 0)); }
+    if (t >= 2) { o.push(Q('props_street/lantern', -5.4, 10.4, 0)); o.push(Q('props_street/lantern', 5.4, 10.4, 0)); }
+    if (t >= 3) { o.push(Q('props_town/chest', 7.2, 10.2, 0)); }
+    return o;
+  },
+  tavern(lv) {
+    const o = [Q('tavern_0|w12', -3.4, -4.4, 0), Q('props_street/table_stool', -3.6, 5.8, 0), Q('props_town/barrels', 6.4, -3.4, 0)], t = civicTier(lv);
+    if (t >= 1) { o.push(Q('props_street/lantern', 2.0, 2.8, 0)); o.push(Q('props_street/table_stool', 3.4, 7.4, 0)); }
+    if (t >= 2) { o.push(Q('props_street/flag', -8.8, 3.2, 0)); o.push(Q('props_town/barrels', 7.4, 1.2, 0.5)); }
+    if (t >= 3) o.push(Q('props_street/table_stool', 8.6, 6.8, Math.PI / 2));
+    if (t >= 4) o.push(Q('props_street/lantern', 6.2, 5.0, 0));
+    if (t >= 5) o.push(Q('props_street/flag', 9.4, 3.6, 0));
+    return o;
+  },
+  market(lv, R) {
+    const o = [Q('well_stone|w5', 0, 0, 0), Q('market_hall|w18', 0, -11.4, 0)], t = civicTier(lv);
+    const n = N(lv, 4, RING_SLOTS.length);
+    for (let r = 0; r < n; r++) {                                                                      // fixed slots (a stall never moves when the market levels up), the main street stays open at +z, the back is the hall's
+      const j = (r * RING_STEP) % RING_SLOTS.length, sl = RING_SLOTS[j];
+      o.push(Q('market_stalls/' + STALLS[j % STALLS.length], sl.x, sl.z, face(sl.x, sl.z) + (R() - 0.5) * 0.12));
+    }
+    if (t >= 1) for (const a of [60, 120, 240, 300]) o.push(Q('props_street/lantern', Math.sin(a * DEG) * 14.2, Math.cos(a * DEG) * 14.2, 0));
+    if (t >= 2) for (const a of [35, 325]) o.push(Q('props_street/flag', Math.sin(a * DEG) * 14.4, Math.cos(a * DEG) * 14.4, face(Math.sin(a * DEG), Math.cos(a * DEG))));
+    if (t >= 3) for (const [x, z] of [[-5.8, 2.4], [5.8, 2.4]]) o.push(Q('props_street/table_stool', x, z, Math.PI / 2));
+    if (t >= 4) for (const a of [90, 270]) o.push(Q('props_street/flag', Math.sin(a * DEG) * 14.4, Math.cos(a * DEG) * 14.4, face(Math.sin(a * DEG), Math.cos(a * DEG))));
+    return o;
+  },
+};
+export function civicTr2(kind, lv, seed = 1) {
+  const f = BUILD2[kind]; if (!f || lv <= 0) return [];
+  const R = rng(((seed | 0) * 2654435761 ^ (kind.length * 40503 + lv * 97 + 31)) >>> 0 || 7);
+  return f(Math.max(1, Math.min(LEVEL_CAP, Math.round(lv))), R);
+}
+export function civicTr2Solids(kind, lv, seed = 1) {
+  const out = [];
+  for (const p of civicTr2(kind, lv, seed)) {
+    const key = p.n.split('|')[0].split('/').pop(), c = Math.cos(p.ry), sn = Math.sin(p.ry);
+    for (const [dx, dz, r] of SOL[key] || []) out.push([r3(p.x + dx * c + dz * sn), r3(p.z - dx * sn + dz * c), r3(r)]);
+  }
+  return out;
+}
+export const civicTr2Files = () => {
+  const set = new Set();
+  for (const k of Object.keys(BUILD2)) for (const lv of [1, 6, 12, 18, 24, 30]) for (const seed of [1, 2, 3, 4, 5, 6]) for (const p of civicTr2(k, lv, seed)) set.add(p.n);
+  return [...set].sort();
+};

@@ -1,0 +1,31 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#222">
+<script>window.BW_ASSETS = '/assets/';</script>
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
+<canvas id=out></canvas>
+<script type=module>
+// S4a browser proof.  ?stage=models | lots   (see s4a.py)
+import * as THREE from 'three';
+import { tr2 } from '/src/tr2lib.js';
+const q = new URLSearchParams(location.search), STAGE = q.get('stage') || 'models', SET = q.get('set') || 'houses';
+const RES = window.__res = { stage: STAGE, errors: [], info: {} };
+const cv = document.getElementById('out'), c2 = cv.getContext('2d');
+const R = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true }); R.setPixelRatio(1); R.outputColorSpace = THREE.SRGBColorSpace; R.toneMapping = THREE.ACESFilmicToneMapping;
+const mkScene = () => {
+  const sc = new THREE.Scene(); sc.background = new THREE.Color(0x9fb4cc);
+  sc.add(new THREE.HemisphereLight(0xdfe8ff, 0x5a6048, 1.7));
+  const dl = new THREE.DirectionalLight(0xfff0d8, 2.4); dl.position.set(-40, 70, 60); sc.add(dl);
+  const g = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshStandardMaterial({ color: 0x73845a, roughness: 1 })); g.rotation.x = -Math.PI / 2; sc.add(g);
+  return sc;
+};
+const rect = (sc, w, d, col = 0xff3030) => { const pts = [[-w / 2, -d / 2], [w / 2, -d / 2], [w / 2, d / 2], [-w / 2, d / 2]].map(([x, z]) => new THREE.Vector3(x, 0.05, z)); const l = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: col })); sc.add(l); const f = new THREE.Mesh(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-1.2, 0.06, d / 2 + 0.3), new THREE.Vector3(1.2, 0.06, d / 2 + 0.3), new THREE.Vector3(0, 0.06, d / 2 + 2)]), new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide })); sc.add(f); };   // yellow triangle = +Z = the front (the street)
+const cam = (w, h, d, el, az, ty = 3, fov = 40) => { const c = new THREE.PerspectiveCamera(fov, w / h, 0.5, 1500); const e = el * Math.PI / 180, a = az * Math.PI / 180; c.position.set(Math.sin(a) * Math.cos(e) * d, Math.sin(e) * d + ty, Math.cos(a) * Math.cos(e) * d); c.lookAt(0, ty, 0); return c; };
+const label = (t, x, y, w) => { c2.fillStyle = 'rgba(10,16,28,.85)'; c2.fillRect(x, y, w, 18); c2.fillStyle = '#e8eef8'; c2.font = '12px sans-serif'; c2.fillText(t, x + 5, y + 13); };
+window.__api = { THREE, tr2, R, mkScene, rect, cam, label, c2, cv, RES };
+try {
+  const swap = await (await fetch('/assets/tr2/swap.json')).json();
+  await tr2.init({ swap, base: '/assets/tr2/' });
+  const mod = await import('/stage_' + STAGE + '.js?' + Date.now());
+  await mod.run(window.__api, { SET, q });
+} catch (e) { RES.errors.push(String(e && e.stack || e)); console.error(e); }
+window.__snap = cv.toDataURL('image/png'); window.__done = true;
+</script>

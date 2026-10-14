@@ -130,6 +130,31 @@ export function bakePieces(scene, gltf, list, { shadows = true, tag = 'kit' } = 
   return { meshes, materials: [...byMat.keys()] };
 }
 
+
+// TR2-S4a: the same bake for Tripo pieces (tr2atlas.js).  list: [{ n: 'house_cottage_0|w6.6', matrix, bid }] -> one merged mesh per material (all atlas pieces = ONE mesh = one draw call), every vertex carries
+// its battle target id `aB` (destruct.js) exactly like bakePieces.  Returns { meshes, missing }.
+export function bakeTr2(scene, atlas, list, { shadows = true, tag = 'tr2' } = {}) {
+  const byMat = new Map(), missing = new Set();
+  for (const { n, matrix, bid = 0 } of list) {
+    let parts; try { parts = atlas.get(n); } catch (e) { missing.add(n); continue; }
+    for (const { geometry, material } of parts) {
+      if (!byMat.has(material)) byMat.set(material, []);
+      const g = geometry.clone().applyMatrix4(matrix);
+      const ab = new Float32Array(g.attributes.position.count); if (bid) ab.fill(bid); g.setAttribute('aB', new THREE.BufferAttribute(ab, 1));
+      byMat.get(material).push(g);
+    }
+  }
+  if (missing.size) console.warn(tag + ': missing Tripo pieces', [...missing]);
+  const meshes = [];
+  for (const [mat, geos] of byMat) {
+    const geo = mergeGeometries(geos, false); if (!geo) continue;
+    geo.computeBoundingSphere(); patchDestruct(mat);
+    const mesh = new THREE.Mesh(geo, mat); mesh.castShadow = shadows; mesh.receiveShadow = true; if (shadows) mesh.customDepthMaterial = plainDepthMaterial();
+    mesh.name = tag + ':' + (mat.name || 'tr2'); scene.add(mesh); meshes.push(mesh);
+  }
+  return { meshes, missing: [...missing] };
+}
+
 export function bakeVillage(scene, gltf, houses, { shadows = true } = {}) {
   const H = new THREE.Matrix4(), Lm = new THREE.Matrix4(), q = new THREE.Quaternion(), up = new THREE.Vector3(0, 1, 0);
   const list = [], chimneys = [];

@@ -5,9 +5,27 @@
 //                                     rebuild() is cheap to call: it only does work when the castle level changed what stands (a lot unlocked, a house tier 1 / 6 / 12 / 18 / 24 / 30).
 //                                     New meshes are made next to the old ones (hidden) and swapped in when the last chunk is done, so the town never shows half a rebuild.
 import * as THREE from 'three';
-import { bakePieces } from './village.js';
-import { HOME_KINDS, homePieces, homeSmoke, homeTier } from './b2_homes.js';
+import { bakePieces, bakeTr2 } from './village.js';
+import { HOME_KINDS, homePieces, homeSmoke, homeTier, homeTr2, homeTr2Files } from './b2_homes.js';
+import { setCivicTr2, civicTr2Files } from './b3_civic.js';
+import { tr2 } from './tr2lib.js';
+import { buildAtlas, specOf, fileOfSpec } from './tr2atlas.js';
 import { homeLots, civicLots, civicBuild, toWorld, townTargetSpecs } from './town_plan.js';
+
+// TR2-S4a: the town is built from the Tripo models (web/assets/tr2/).  Their pieces are packed into two texture atlases (houses + yard props / civic buildings + props) => ONE material each, so a chunk of 40 houses is ONE
+// draw call.  The kit path (kit_homes / kit_civic) stays as the fallback: when the models cannot be loaded the old town is built unchanged.
+setCivicTr2(true);                                                // civicPieces / civicSolids return the Tripo footprints (b3_civic.js) — nav and the visuals agree
+let WARM = null;
+export function warmTown() {                                      // fetch + parse the models and build the atlases once (world.js calls this during the loading screen, createPlannedTown awaits it)
+  return WARM || (WARM = (async () => {
+    await tr2.init();
+    const homeNames = homeTr2Files(), civicNames = civicTr2Files();
+    const files = [...new Set([...homeNames, ...civicNames].map((n) => fileOfSpec(specOf(n).spec)))];
+    await tr2.load(files);
+    const bad = files.filter((f) => !tr2.has(f)); if (bad.length) throw new Error('tr2 town: not loaded: ' + bad.join(','));
+    return { homes: buildAtlas(tr2, homeNames, { name: 'homes', width: 2112 }), civic: buildAtlas(tr2, civicNames, { name: 'civic', width: 2112 }), files };
+  })().catch((e) => { WARM = null; throw e; }));
+}
 
 const CHUNK = 40, UP = new THREE.Vector3(0, 1, 0);
 const Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3(), M4 = () => new THREE.Matrix4();
@@ -20,8 +38,8 @@ export function registerTownTargets(ctx, level) {
   return tids;
 }
 
-export function createPlannedTown({ scene, kitHomes, kitCivic, height, shadows, ctx, tids = new Map(), level, civicCap = 30 }) {
-  const st = { sig: null, group: null, staging: null, queue: [], smoke: [], pend: [], picked: new Set() };
+export function createPlannedTown({ scene, kitHomes, kitCivic, height, shadows, ctx, tids = new Map(), level, civicCap = 30, tr2: useTr2 = true }) {
+  const st = { sig: null, group: null, staging: null, queue: [], smoke: [], pend: [], picked: new Set(), atlas: null, loading: null, fail: false };
   // the ground a lot stands on: the lowest of its corners and middle (like the old houses: a plinth never floats), never below the water line
   const ground = (l) => { const c = Math.cos(l.ry), s = Math.sin(l.ry), hw = l.w / 2, hd = l.d / 2; let y = height(l.x, l.z); for (const [a, b] of [[-hw, -hd], [hw, -hd], [hw, hd], [-hw, hd]]) y = Math.min(y, height(l.x + a * c + b * s, l.z - a * s + b * c)); return Math.max(0.2, y); };
   const dispose = (g) => { if (!g) return; g.parent && g.parent.remove(g); g.traverse((o) => { if (o.geometry) o.geometry.dispose(); }); };   // (the kit's materials are shared: never disposed)
@@ -35,18 +53,37 @@ export function createPlannedTown({ scene, kitHomes, kitCivic, height, shadows, 
     for (const s of st.smoke) s.off = true; st.smoke = smoke; st.pend = [];
   }
   function rebuild() {
+    if (useTr2 && !st.atlas && !st.fail) {                              // the Tripo models are still on their way: nothing is built (and nothing is queued) until they are here
+      if (!st.loading) st.loading = warmTown().then((a) => { st.atlas = a; st.sig = null; rebuild(); }).catch((e) => { console.warn('tr2 town (fallback: the kit town)', e); st.fail = true; st.sig = null; rebuild(); });
+      return false;
+    }
+    const T2 = !!st.atlas;
     const lv = level(), homes = homeLots(lv), civic = civicLots(lv).map((c) => ({ ...c, lv: Math.min(c.lv, civicCap) }));
     const sig = [homes.map((h) => h.id).join(','), homeTier(lv), civic.map((c) => c.id + ':' + c.lv).join(','), shadows ? 1 : 0].join('|');
     if (sig === st.sig) return false;
     st.sig = sig; st.queue.length = 0; if (st.staging) { dispose(st.staging); st.staging = null; } for (const q of st.pend) q.off = true;          // (a rebuild still under way is dropped, with its smoke)
     const group = st.staging = new THREE.Group(); group.name = 'planned-town'; group.visible = !st.group; scene.add(group);       // the very first build stays under the hidden bucket until it is revealed
     const smoke = st.pend = [];
-    if (kitCivic && civic.length) st.queue.push(() => {
+    if (T2 && civic.length) st.queue.push(() => {
       const list = [];
-      for (const lot of civic) { const y = ground(lot), bid = tids.get(lot.id) || 0; for (const p of civicBuild(lot)) list.push({ name: p.n, matrix: place(p.x, y, p.z, p.ry, p.s), bid }); }
+      for (const lot of civic) { const y = ground(lot), bid = tids.get(lot.id) || 0; for (const p of civicBuild(lot)) list.push({ n: p.n, matrix: place(p.x, y, p.z, p.ry, p.s), bid }); }
+      bakeTr2(group, st.atlas.civic, list, { shadows, tag: 'civic-tr2' });
+    });
+    if (T2) { const cell = (l) => Math.floor(l.x / 80) * 1000 + Math.floor(l.z / 80), sorted = homes.slice().sort((a, b) => cell(a) - cell(b));       // chunks are spatially coherent: far chunks are culled
+      for (let i = 0; i < sorted.length; i += CHUNK) {
+        const chunk = sorted.slice(i, i + CHUNK);
+        st.queue.push(() => {
+          const list = [];
+          for (const lot of chunk) { const y = ground(lot), bid = tids.get(lot.id) || 0; for (const p of homeTr2(lot.kind, lv, lot.seed).pieces) { const w = toWorld(lot, p); list.push({ n: w.n, matrix: place(w.x, y, w.z, w.ry, w.s), bid }); } }
+          bakeTr2(group, st.atlas.homes, list, { shadows, tag: 'homes-tr2' });
+        });
+      } }
+    if (!T2 && kitCivic && civic.length) st.queue.push(() => {
+      const list = []; setCivicTr2(false);
+      try { for (const lot of civic) { const y = ground(lot), bid = tids.get(lot.id) || 0; for (const p of civicBuild(lot)) list.push({ name: p.n, matrix: place(p.x, y, p.z, p.ry, p.s), bid }); } } finally { setCivicTr2(true); }
       bakePieces(group, kitCivic, list, { shadows, tag: 'civic' });
     });
-    if (kitHomes) for (let i = 0; i < homes.length; i += CHUNK) {
+    if (!T2 && kitHomes) for (let i = 0; i < homes.length; i += CHUNK) {
       const chunk = homes.slice(i, i + CHUNK);
       st.queue.push(() => {
         const list = [];

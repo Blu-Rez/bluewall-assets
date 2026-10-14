@@ -108,3 +108,37 @@ function plan(kind, lv, seed) {
 }
 export const homePieces = (kind, lv, seed = 0) => plan(kind, lv, seed).pieces;
 export const homeSmoke = (kind, lv, seed = 0) => plan(kind, lv, seed).smoke;
+
+// ================================================================================================================================================================================================
+// TR2-S4a — the Tripo houses (library keys house_<kind>_0..2 in web/assets/tr2/): ONE model per kind and variant (D8: no tier variants exist), the variant picked by the lot's seed (a lot keeps its house when it
+// levels up), the yard dressing from the Tripo prop packs (props_town / props_street) grows with the 6 legacy tiers exactly like the old p_* pieces did.  Piece names are tr2 specs: 'house_cottage_1|w6.6' =
+// model + target size (the loader scales so the LARGEST horizontal side is 6.6 m); pack nodes 'props_town/barrels' use the node's own size (tr2/swap.json).  Pure data: runs in node (dev/tr2_s4a_test.sh).
+//   homeTr2(kind, lv, seed) -> { pieces: [{ n, x, z, ry, s }] (lot-local: x right, z toward the street, ry in radians), variant, smoke: [{ x, y, z }] }
+// HOME_TR2[kind].v[i] = [key, width, height, depth] in metres AFTER the target scale (measured with tr2.info; the test compares them with the lot); the body stands `0.5 m` inside the back edge of the lot so the
+// front yard (z > 0) keeps room for the props.
+export const HOME_TR2 = {
+  cottage:   { w: 6.6,  v: [['house_cottage_0', 6.6, 4.9, 5.5], ['house_cottage_1', 4.8, 6.0, 6.6], ['house_cottage_2', 6.6, 5.4, 6.2]] },
+  craftsman: { w: 7.8,  v: [['house_craftsman_0', 7.8, 8.9, 7.0], ['house_craftsman_1', 7.4, 7.3, 7.8], ['house_craftsman_2', 7.8, 7.8, 7.7]] },
+  merchant:  { w: 7.4,  v: [['house_merchant_0', 5.8, 9.0, 7.4], ['house_merchant_1', 7.4, 7.8, 5.7], ['house_merchant_2', 7.1, 6.8, 7.4]] },
+  noble:     { w: 10.5, v: [['house_noble_0', 10.5, 7.7, 4.4], ['house_noble_1', 10.5, 6.0, 5.2], ['house_noble_2', 10.5, 8.6, 8.6]] },
+};
+// yard dressing: [tier, pack node, x, z, ryDeg, side]  (side 1: x flips with the seed's mirror; 0 fixed).  A few cheap pieces only (each prop node is 1.2-3 k tris: the town budget decides, not taste).
+const TR2_DRESS = {
+  cottage:   [[2, 'props_town/barrels', -3.0, 3.3, 0, 1], [4, 'props_town/handcart', 3.1, 3.3, 20, 1], [5, 'props_street/flag', 3.9, 0.6, 0, 1]],
+  craftsman: [[1, 'props_town/crates', -3.3, 3.9, -10, 1], [3, 'props_town/barrels', 3.4, 3.9, 0, 1], [5, 'props_street/flag', 4.0, 1.6, 0, 1]],
+  merchant:  [[1, 'props_town/sacks', -2.4, 4.7, 15, 1], [3, 'props_town/handcart', 2.6, 4.7, 0, 1], [5, 'props_street/flag', 3.3, 2.6, 0, 1]],
+  noble:     [[1, 'props_street/lantern', -3.4, 5.2, 0, 0], [1, 'props_street/lantern', 3.4, 5.2, 0, 0], [3, 'props_street/flag', -5.0, 4.4, 0, 0], [4, 'props_street/flag', 5.0, 4.4, 0, 0]],
+};
+const DRESS_OK = /^props_street\/(flag|lantern)$/, DRESS_CAP = 2;
+export function homeTr2(kind, lv, seed = 0) {
+  const k = HOME_TR2[kind]; if (!k) throw new Error('b2_homes: unknown kind ' + kind);
+  const R = rng(((hashSeed(seed) ^ Math.imul(KIND_SALT[kind], 0x9e3779b1)) ^ 0x51ed27) >>> 0);
+  const vi = Math.min(k.v.length - 1, Math.floor(R() * k.v.length)), mir = R() < 0.5 ? -1 : 1, tier = homeTier(lv), dress = TR2_DRESS[kind];
+  const jit = dress.map(() => [(R() - 0.5) * 0.3, (R() - 0.5) * 0.3, (R() - 0.5) * 16]);              // drawn for EVERY entry, shown or not: a house that levels up keeps its props where they were
+  const [key, , , depth] = k.v[vi], d = HOME_KINDS[kind].d, zc = -d / 2 + 0.5 + depth / 2, r3 = (v) => Math.round(v * 1000) / 1000;
+  const P = [{ n: key + '|w' + k.w, x: 0, z: r3(zc), ry: 0, s: 1 }];
+  let shown = 0;                                                                                          // budget (measured, TR2_progress): a barrel / crate / sack / cart costs 1.9-3 k tris = a whole cottage; only the flag (1.25 k) and the lantern (1.56 k) are drawn, at most DRESS_CAP per lot
+  dress.forEach(([t, n, dx, dz, ry, side], i) => { if (t > tier || !DRESS_OK.test(n) || shown >= DRESS_CAP) return; shown++; const q = jit[i]; P.push({ n, x: r3(dx * (side ? mir : 1) + q[0]), z: r3(dz + q[1]), ry: r3((ry + q[2]) * DEG), s: 1 }); });
+  return { pieces: P, variant: key, smoke: [] };
+}
+export const homeTr2Files = () => { const s = new Set(); for (const k of Object.keys(HOME_TR2)) for (const v of HOME_TR2[k].v) s.add(v[0]); for (const d of Object.values(TR2_DRESS)) for (const e of d) if (DRESS_OK.test(e[1])) s.add(e[1]); return [...s].sort(); };
