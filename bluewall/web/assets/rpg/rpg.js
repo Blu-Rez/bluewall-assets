@@ -11,6 +11,9 @@ const EDGE_SOFT = 16, EDGE_R = 420;                                        // RP
 const HERO_H = 1.75, MODEL_H = 0.98, SC = HERO_H / MODEL_H;
 const R_BODY = 0.45, WALK = 1.18, RUN = 4.39, SPRINT_K = 1.28, STRIDE_W = 2.75, STRIDE_R = 5.49;
 const GRAV = 22, JUMP_V = 7;
+// HOTFIX47: Telegram's fullscreen header sits ABOVE env(safe-area-inset-top): the game's own UI adds --tg-content-safe-area-inset-top, the hero HUD did not -> the exit button was under the header.
+const TOP = 'max(env(safe-area-inset-top,0px),calc(var(--tg-safe-area-inset-top,0px) + var(--tg-content-safe-area-inset-top,0px)))', BOT = 'max(env(safe-area-inset-bottom,0px),calc(var(--tg-safe-area-inset-bottom,0px) + var(--tg-content-safe-area-inset-bottom,0px)))';
+let CLIMB_ON = false;                                                                // HOTFIX47: wall climbing is OFF until the castle has real stairs / a climb clip (owner: the stand-in pose looks terrible); dev.setClimb(true) turns it on for the tests
 const WSURF = -0.75, SWIM_DEEP = 0.95, SWIM_V = 1.9, CLIMB_V = 1.5;           // RP1B: the water surface of the moat / rivers / lake (nav.js: «the surface sits at -0.75»), the depth at which she swims, swim and climb speeds
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
 const wrapPi = (a) => { a = (a + Math.PI) % (Math.PI * 2); if (a < 0) a += Math.PI * 2; return a - Math.PI; };
@@ -28,9 +31,9 @@ const CSS = `
 .rp-b::after{content:"";position:absolute;inset:5px;border-radius:50%;border:1px solid rgba(205,214,224,.18)}
 .rp-b svg{width:46%;height:46%;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px rgba(61,245,224,.7))}
 .rp-b.on{transform:scale(.92);color:#3df5e0;border-color:#3df5e0;box-shadow:0 0 20px rgba(61,245,224,.65),inset 0 0 16px rgba(61,245,224,.22)}
-.rp-perf{position:absolute;z-index:43;top:calc(env(safe-area-inset-top,0px) + 8px);right:8px;min-width:46px;padding:4px 7px;border-radius:7px;background:rgba(5,15,25,.62);color:#aef;font:11px/1.35 ui-monospace,Menlo,monospace;white-space:pre;direction:ltr;text-align:left}
+.rp-perf{position:absolute;z-index:43;top:calc(${TOP} + 8px);right:8px;min-width:46px;padding:4px 7px;border-radius:7px;background:rgba(5,15,25,.62);color:#aef;font:11px/1.35 ui-monospace,Menlo,monospace;white-space:pre;direction:ltr;text-align:left}
 .rp-pick{position:absolute;inset:0;z-index:90;background:radial-gradient(120% 90% at 50% 0%,#12354a 0%,#07111d 70%);display:flex;flex-direction:column;align-items:center;justify-content:safe center;color:#e8fffb;overflow:auto}
-.rp-pick h2{margin:calc(env(safe-area-inset-top,0px) + 14px) 0 2px;font-size:21px;font-weight:900}
+.rp-pick h2{margin:calc(${TOP} + 14px) 0 2px;font-size:21px;font-weight:900}
 .rp-pick p{margin:0 0 10px;font-size:12px;opacity:.7}
 .rp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px 10px;width:min(92vw,820px);padding:6px 0 28px}
 @media (orientation:landscape){.rp-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}}
@@ -39,7 +42,7 @@ const CSS = `
 .rp-art{aspect-ratio:4/5;border-radius:13px;overflow:hidden}.rp-art img{display:block;width:100%;height:100%;object-fit:cover}
 .rp-em{position:absolute;left:50%;bottom:-19px;width:38px;height:38px;margin-left:-19px;border-radius:50%;background:rgba(6,12,20,.92);border:1.5px solid var(--ac);box-shadow:0 0 12px var(--ac);display:flex;align-items:center;justify-content:center}
 .rp-em img{width:23px;height:23px;object-fit:contain;filter:drop-shadow(0 0 4px var(--ac))}
-.rp-x{position:absolute;left:12px;top:calc(env(safe-area-inset-top,0px) + 10px);width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(205,214,224,.5);background:radial-gradient(circle at 50% 35%,rgba(66,74,84,.62),rgba(22,26,32,.72));box-shadow:0 0 12px rgba(61,245,224,.2);display:flex;align-items:center;justify-content:center;color:#e6ecf2;padding:0}
+.rp-x{position:absolute;left:12px;top:calc(${TOP} + 10px);width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(205,214,224,.5);background:radial-gradient(circle at 50% 35%,rgba(66,74,84,.62),rgba(22,26,32,.72));box-shadow:0 0 12px rgba(61,245,224,.2);display:flex;align-items:center;justify-content:center;color:#e6ecf2;padding:0}
 .rp-x svg{width:46%;height:46%;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;filter:drop-shadow(0 0 4px rgba(61,245,224,.7))}
 
 `;
@@ -372,7 +375,7 @@ export function create(H) {
     if (S.layer === 'climb') climbStep(dt, wantX / wl, wantZ / wl, m);
     else if (S.layer === 'top') topStep(dt, wantX / wl, wantZ / wl, m);
     else {
-      if (S.where === 'home' && S.grounded && S.sw === 0 && S.st === 'loco' && m > 0.3) {           // pushing into a wall face for a moment = she starts to climb it
+      if (CLIMB_ON && S.where === 'home' && S.grounded && S.sw === 0 && S.st === 'loco' && m > 0.3) {           // pushing into a wall face for a moment = she starts to climb it
         const f = wallFace(wantX / wl, wantZ / wl); if (f) { if ((S.cHold += dt) > 0.18) startClimb(f); } else S.cHold = 0;
       } else S.cHold = 0;
     if (S.where === 'home') {                                                       // soft stop at the map edge: the outward speed fades over the last EDGE_SOFT metres
@@ -482,14 +485,14 @@ export function create(H) {
       b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up);
       hudEl.appendChild(b); return b;
     };
-    const sb = 'calc(env(safe-area-inset-bottom,0px) + ';
+    const sb = `calc(${BOT} + `;
     mk('jump', `right:22px;bottom:${sb}92px);width:78px;height:78px`, (d) => { if (d) S.reqJump = true; });
     mk('dodge', `right:110px;bottom:${sb}56px);width:62px;height:62px`, (d) => { if (d) S.reqDodge = true; });
     mk('sprint', `right:30px;bottom:${sb}186px);width:58px;height:58px`, (d) => { S.sprint = d; }, true);
-    mk('cam', 'left:12px;top:calc(env(safe-area-inset-top,0px) + 58px);width:46px;height:46px', (d) => { if (d) setMode(S.mode === 'third' ? 'first' : 'third'); });
-    mk('exit', 'left:12px;top:calc(env(safe-area-inset-top,0px) + 6px);width:42px;height:42px', (d) => { if (d) exit(); });
+    mk('cam', `left:12px;top:calc(${TOP} + 58px);width:46px;height:46px`, (d) => { if (d) setMode(S.mode === 'third' ? 'first' : 'third'); });
+    mk('exit', `left:12px;top:calc(${TOP} + 6px);width:42px;height:42px`, (d) => { if (d) exit(); });
     mk('act', `right:30px;bottom:${sb}256px);width:62px;height:62px;display:none`, (d) => { if (d) useNear(); });
-    mk('gate', 'left:12px;top:calc(env(safe-area-inset-top,0px) + 116px);width:46px;height:46px', (d) => { if (d && S.where === 'home' && !S.busy2) toGate(); });
+    mk('gate', `left:12px;top:calc(${TOP} + 116px);width:46px;height:46px`, (d) => { if (d && S.where === 'home' && !S.busy2) toGate(); });
     perfEl = el('div', 'rp-perf rp-k'); perfEl.style.pointerEvents = 'auto'; perfEl.addEventListener('pointerdown', (e) => { e.stopPropagation(); stats.open = !stats.open; stats.txt = ''; drawPerf(); }); hudEl.appendChild(perfEl);
     // pointers: left half = joystick, right half = look
     let joy = null, lk = null; const R = 56;
@@ -644,6 +647,7 @@ export function create(H) {
       return bad;
     },
     // proof: climb a wall piece (index among the wall boxes), walk its wall-walk to both ends, climb down the other side; returns what happened + camera violations
+    setClimb: (v) => { CLIMB_ON = !!v; },                                              // HOTFIX47
     climbTest: (k = 0, side = 1) => {
       const walls = S.boxes.filter((b) => wallOf(b)).sort((a, b) => b.hw - a.hw), b = walls[k]; if (!b) return { ok: false, why: 'no wall ' + k };
       const out = { wall: k, hw: +b.hw.toFixed(1), h: b.h, T: +(b.hd * 2).toFixed(1), log: [] }; let cam = 0, camBad = []; const step = () => { update(1 / 30); placeCamera(1 / 30); const cb = api.dev.camCheck(); if (cb.length) { cam++; if (camBad.length < 4) camBad.push(cb.join('+') + '@' + S.layer + ' y' + S.y.toFixed(1)); } };

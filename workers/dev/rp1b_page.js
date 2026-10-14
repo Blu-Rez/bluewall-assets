@@ -37,7 +37,9 @@
   chk('the camera was never inside a wall / building / the ground during those walks', camViol === 0, camViol + ' violating frames');
 
   // ---------------------------------------------------------------- 3 walls: climb up, walk on top, climb down on the other side (camera stays out of the stone)
+  rp.setClimb(true);   // HOTFIX47: climbing is off in the shipped build; the wall tests switch it on
   for (const [k, side] of [[0, 1], [1, -1]]) { const c = rp.climbTest(k, side); chk('wall #' + k + ': climbs up, walks the wall-walk and comes down (' + (c.hw ? 'len ' + Math.round(c.hw * 2) + ' m, h ' + c.h : '') + ')', c.top && c.walked && c.walked.leftTop === 0 && c.down === true && c.cam === 0, 'climb ' + c.tClimb + ' s, walked u ' + (c.walked ? c.walked.u.join('..') : '-') + ', camera violations ' + c.cam); }
+  rp.setClimb(false);
 
   // ---------------------------------------------------------------- 4 water: wade the shallows, swim the deep, haul out onto the far shore
   const lake = (() => { let best = null; for (let x = -220; x <= -60; x += 4) for (let z = 220; z <= 380; z += 4) { const d = depth(x, z); if (d > 1.4 && (!best || d > best.d)) best = { x, z, d }; } return best; })();
