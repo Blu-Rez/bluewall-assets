@@ -57,9 +57,9 @@ export function create(H) {
     x: 0, y: 0, z: 0, vx: 0, vz: 0, vy: 0, grounded: true, yaw: 0, pitch: 0.18, camYaw: 0, body: 0,
     st: 'loco', stT: 0, dodgeCool: 0, cool: 0, phase: 0, speed: 0, sprint: false,
     inp: { x: 0, y: 0 }, keys: new Set(), pivot: new T.Vector3(), camD: 3.6, burst: { x: 0, z: 0 },
-    saved: null, models: {}, hero: null, door: null, under: null, nav: null, boxes: [], discs: [], solids: [], hdiscs: [], cache: 0, unT: 0.5, stuck: 0, layer: 0, top: null, climb: null, sw: 0, near: null, nearT: 0, sheetOn: false, cHold: 0, dHold: 0, lean: 0, climbV: 0,
+    saved: null, models: {}, hero: null, door: null, under: null, nav: null, boxes: [], discs: [], solids: [], hdiscs: [], cache: 0, unT: 0.5, stuck: 0, layer: 0, top: null, climb: null, sw: 0, near: null, nearT: 0, sheetOn: false, cHold: 0, dHold: 0, lean: 0, climbV: 0, auto: null, act: null, joyOn: false, nearK: '',
   };
-  let hudEl = null, pickEl = null, perfEl = null, styleEl = null, joyEl = null, knobEl = null, btns = {}, diet = null;
+  let hudEl = null, pickEl = null, perfEl = null, styleEl = null, joyEl = null, knobEl = null, btns = {}, diet = null, cull = null, doors = null;
   const stats = { f: [], t: 0, n: 0, fps: 0, p95: 0, calls: 0, tris: 0, progs: 0, pr: 0, txt: '', open: true };
 
   // ------------------------------------------------------------------ collision data (home map)
@@ -202,8 +202,8 @@ export function create(H) {
     const model = gltf.scene, grp = new T.Group(); model.scale.setScalar(SC); grp.add(model);
     model.traverse((o) => { if (o.isMesh || o.isSkinnedMesh) { o.frustumCulled = false; o.castShadow = true; o.receiveShadow = true; } });
     const mixer = new T.AnimationMixer(model), acts = {};
-    for (const n of ['idle', 'walk', 'run', 'jump', 'fall', 'land', 'dodge', 'swim', 'climb']) {
-      const clip = gltf.animations.find((a) => a.name === n); if (!clip) { if (n !== 'swim' && n !== 'climb') console.warn('rpg: no clip', n); continue; }       // (swim / climb: used when the model has them, a stand-in pose otherwise)
+    for (const n of ['idle', 'walk', 'run', 'jump', 'fall', 'land', 'dodge', 'swim', 'climb', 'interact']) {
+      const clip = gltf.animations.find((a) => a.name === n); if (!clip) { if (n !== 'swim' && n !== 'climb' && n !== 'interact') console.warn('rpg: no clip', n); continue; }       // (swim / climb: used when the model has them, a stand-in pose otherwise)
       const a = mixer.clipAction(clip); a.timeScale = 0; a.setEffectiveWeight(0); a.play(); acts[n] = { a, d: clip.duration, w: 0 };
     }
     const head = model.getObjectByName('Head') || model.getObjectByName('head');
@@ -214,7 +214,9 @@ export function create(H) {
     const h = S.hero, A = h.acts; if (!A.idle) return;
     for (const n in A) A[n].tw = 0;
     const v = S.speed;
-    if (S.layer === 'climb' && S.climb) {                                                            // climbing: the real `climb` clip when the model has one, else the walk cycle paced to her hands
+    if (S.act && (S.speed > 0.3 || !A.interact)) S.act = null;
+    if (S.act && S.layer === 0 && S.sw !== 2) { const c = A.interact; c.tw = 1; c.a.time = Math.min(c.d - 0.001, S.act.t); S.act.t += dt; if (S.act.t >= c.d) S.act = null; A.idle.a.time = (A.idle.a.time + dt) % A.idle.d; }      // RP1C: the `interact` clip at a door
+    else if (S.layer === 'climb' && S.climb) {                                                            // climbing: the real `climb` clip when the model has one, else the walk cycle paced to her hands
       const cv = Math.abs(S.climb.vy), mv = clamp(cv / 0.4, 0, 1), cl = A.climb;
       if (cl) { cl.tw = mv > 0.02 ? 1 : 0; cl.a.time = (cl.a.time + dt * Math.sign(S.climb.vy || 1) * mv + cl.d) % cl.d; A.idle.tw = mv > 0.02 ? 0 : 1; }
       else { if (A.walk) { A.walk.tw = mv; S.phase = (S.phase + ((cv * 1.5) / STRIDE_W) * dt) % 1; A.walk.a.time = S.phase * A.walk.d; } A.idle.tw = 1 - mv; }
@@ -321,23 +323,67 @@ export function create(H) {
     }
     return best;
   }
-  function useNear() {                                                                // the round button: turn to the building, open its sheet (walking stops until it is closed)
-    const n = S.near; if (!n || !H.sheets || S.sheetOn) return false;
-    S.vx = S.vz = 0; S.inp.x = S.inp.y = 0; S.body = S.camYaw = Math.atan2(n.x - S.x, n.z - S.z);      // (no talk / bow clip in the model's 7 loaded: she only turns)
-    if (!H.sheets.open(n.id, H.SM)) return false;
-    S.sheetOn = true; if (hudEl) hudEl.classList.add('rp-sheet'); return true;
+  function openDoor(id, x, z) {                                                         // turn to the building and open its sheet (the SAME T1 sheet as a strategic tap); the `interact` clip plays behind it
+    if (!H.sheets || S.sheetOn) return false;
+    S.vx = S.vz = 0; S.inp.x = S.inp.y = 0; S.auto = null; S.body = S.camYaw = Math.atan2(x - S.x, z - S.z);
+    if (!H.sheets.open(id, H.SM)) return false;
+    S.sheetOn = true; S.act = S.hero && S.hero.acts.interact ? { t: 0 } : null; if (hudEl) hudEl.classList.add('rp-sheet'); return true;
+  }
+  function useNear() { const n = S.near; if (!n) return false; return openDoor(n.id, n.x, n.z); }      // the round button
+  // RP1C: tap a door orb / icon in the 3D view -> she walks there by herself (a local BFS over the free cells, 1 m, the proof walkTo's rules; steered through S.inp), the sheet opens on arrival.
+  // The joystick (moved) or a movement key cancels it.
+  function planLocal(tx, tz) {
+    const wd = homeWorld, sx = S.x, sz = S.z, half = Math.ceil(Math.hypot(tx - sx, tz - sz) / 2 + 16), N = half * 2, x0 = (sx + tx) / 2 - half, z0 = (sz + tz) / 2 - half, idx = (i, j) => j * N + i, par = new Int32Array(N * N);
+    const si = Math.floor(sx - x0), sj = Math.floor(sz - z0), ti = Math.floor(tx - x0), tj = Math.floor(tz - z0); if (Math.min(si, sj, ti, tj) < 0 || Math.max(si, sj, ti, tj) >= N) return null;
+    const clr = (x, z) => free(x + 1, z, wd) && free(x - 1, z, wd) && free(x, z + 1, wd) && free(x, z - 1, wd); let q, found = false;
+    for (let pass = 0; pass < 2 && !found; pass++) {
+      par.fill(-2); q = [idx(si, sj)]; par[idx(si, sj)] = -1;
+      for (let h = 0; h < q.length && !found; h++) {
+        const k = q[h], i = k % N, j = (k / N) | 0, x = x0 + i + 0.5, z = z0 + j + 0.5;
+        for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]) {
+          const ni = i + di, nj = j + dj; if (ni < 0 || nj < 0 || ni >= N || nj >= N || par[idx(ni, nj)] !== -2) continue; const nx = x0 + ni + 0.5, nz = z0 + nj + 0.5, gl = Math.hypot(di, dj), g0 = wd.ground(x, z), g1 = wd.ground(nx, nz);
+          if (!free(nx, nz, wd) || g1 - g0 > 0.75 * gl || g0 - g1 > 1.6 * gl || (di && dj && (!free(x + di, z, wd) || !free(x, z + dj, wd)))) continue;
+          if (pass === 0 && !(ni === ti && nj === tj) && !clr(nx, nz)) continue;
+          par[idx(ni, nj)] = k; q.push(idx(ni, nj)); if (ni === ti && nj === tj) { found = true; break; }
+        }
+      }
+    }
+    if (!found) return null; const pts = []; for (let k = idx(ti, tj); k >= 0; k = par[k]) pts.push([x0 + (k % N) + 0.5, z0 + ((k / N) | 0) + 0.5]); return pts.reverse();
+  }
+  function autoStep(dt) {
+    const A = S.auto; if (!A) return;
+    if (S.sheetOn || S.where !== 'home' || S.layer !== 0 || S.sw || S.joyOn || S.paused) { if (!S.joyOn) S.inp.x = S.inp.y = 0; S.auto = null; return; }       // (a finger on the stick owns S.inp; any other reason to stop: she stops)
+    A.t += dt; const gd = Math.hypot(A.gx - S.x, A.gz - S.z);
+    if (gd < 0.9 || A.t > A.max) { const a = A; S.auto = null; S.inp.x = S.inp.y = 0; if (gd < 2.4) openDoor(a.id, a.fx, a.fz); return; }
+    const P = A.pts;
+    if ((A.lt -= dt) <= 0) {                                                                                                  // every 0.2 s: the path point closest to her, then the farthest of the next 5 she can walk to in a straight line
+      A.lt = 0.2; let best = A.wi, bd = 1e9; for (let k = A.wi; k < Math.min(P.length, A.wi + 12); k++) { const d = Math.hypot(P[k][0] - S.x, P[k][1] - S.z); if (d < bd) { bd = d; best = k; } } if (bd < 2.5) A.wi = Math.min(P.length - 1, best + 1);
+      let li = Math.min(P.length - 1, A.wi); for (let k = Math.min(P.length - 1, A.wi + 5); k > A.wi; k--) { const px = P[k][0], pz = P[k][1], n = Math.ceil(Math.hypot(px - S.x, pz - S.z) / 0.5); let ok = true; for (let m = 1; m <= n && ok; m++) ok = free(S.x + ((px - S.x) * m) / n, S.z + ((pz - S.z) * m) / n, homeWorld); if (ok) { li = k; break; } } A.li = li;
+    }
+    if ((A.pt += dt) >= 2.5) { A.pt = 0; if (Math.hypot(S.x - A.lx, S.z - A.lz) < 0.5) { S.auto = null; S.inp.x = S.inp.y = 0; return; } A.lx = S.x; A.lz = S.z; }       // no progress for 2.5 s: she gives up (stuck)
+    const L = P[A.li] || [A.gx, A.gz], dx = L[0] - S.x, dz = L[1] - S.z, l = Math.hypot(dx, dz) || 1;
+    S.camYaw += wrapPi(Math.atan2(dx, dz) - S.camYaw) * Math.min(1, dt * 2.4);                                                 // (the camera swings round behind her)
+    const sy = Math.sin(S.camYaw), cy = Math.cos(S.camYaw), sp = gd < 3 ? 0.55 : 0.8; S.inp.y = ((dx * sy + dz * cy) / l) * sp; S.inp.x = ((-dx * cy + dz * sy) / l) * sp;
+  }
+  function tapDoor(cx, cy) {                                                                                                   // a finger landed (tap) at client x, y: is it on a door orb / icon?
+    if (!doors || S.sheetOn || S.where !== 'home' || S.layer !== 0 || S.sw) return false;
+    const it = doors.tap(cx, cy); if (!it) return false; const d = Math.hypot(it.gx - S.x, it.gz - S.z);
+    if (d < 1.3) return openDoor(it.id, it.fx, it.fz);
+    const pts = planLocal(it.gx, it.gz); if (!pts && d > 20) return false;
+    S.auto = { id: it.id, gx: it.gx, gz: it.gz, fx: it.fx, fz: it.fz, pts: pts || [[S.x, S.z], [it.gx, it.gz]], wi: 1, li: 1, t: 0, max: 10 + d * 0.9, lt: 0, pt: 0, lx: S.x, lz: S.z }; return true;
   }
   function sheetTick(dt) {
     if (S.sheetOn && !(H.sheets && H.sheets.isOpen())) { S.sheetOn = false; if (hudEl) hudEl.classList.remove('rp-sheet'); }
     S.nearT -= dt; if (S.nearT > 0) return; S.nearT = 0.15;
     S.near = S.sheetOn ? S.near : nearSheet();
-    if (btns.act) btns.act.style.display = S.near && !S.sheetOn ? 'flex' : 'none';
+    if (btns.act) { const on = S.near && !S.sheetOn; btns.act.style.display = on ? 'flex' : 'none'; if (on && doors && S.nearK !== S.near.id) { S.nearK = S.near.id; btns.act.innerHTML = doors.iconSVG(doors.kindOf(S.near.id)); } }      // (RP1C: the button wears the same icon as the door's)
   }
 
   // ------------------------------------------------------------------ one tick of the hero (physics + state)
   function update(dt) {
     if (!S.hero) return;
     const wd = W(); S.cool = Math.max(0, S.cool - dt); S.dodgeCool = Math.max(0, S.dodgeCool - dt);
+    if (S.auto) autoStep(dt);                                                                          // RP1C: she is walking to a door by herself
     // input -> a vector (x right, y forward), 0..1
     let ix = S.inp.x, iy = S.inp.y; const K = S.keys;
     if (K.has('KeyW') || K.has('ArrowUp')) iy += 1; if (K.has('KeyS') || K.has('ArrowDown')) iy -= 1; if (K.has('KeyD')) ix += 1; if (K.has('KeyA')) ix -= 1;
@@ -495,24 +541,28 @@ export function create(H) {
     mk('gate', `left:12px;top:calc(${TOP} + 116px);width:46px;height:46px`, (d) => { if (d && S.where === 'home' && !S.busy2) toGate(); });
     perfEl = el('div', 'rp-perf rp-k'); perfEl.style.pointerEvents = 'auto'; perfEl.addEventListener('pointerdown', (e) => { e.stopPropagation(); stats.open = !stats.open; stats.txt = ''; drawPerf(); }); hudEl.appendChild(perfEl);
     // pointers: left half = joystick, right half = look
-    let joy = null, lk = null; const R = 56;
+    let joy = null, lk = null, tapD = null; const R = 56;
     touch.addEventListener('pointerdown', (e) => {
       e.preventDefault(); touch.setPointerCapture(e.pointerId);
+      if (!joy && !lk && !tapD) tapD = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now() };                    // (RP1C: a short, still touch is a tap — on a door orb it sends her there)
       if (e.clientX < innerWidth * 0.5) { if (joy) return; joy = { id: e.pointerId, x0: e.clientX, y0: e.clientY }; joyEl.style.left = e.clientX + 'px'; joyEl.style.top = e.clientY + 'px'; joyEl.style.display = 'block'; knobEl.style.transform = ''; }
       else if (!lk) lk = { id: e.pointerId, x: e.clientX, y: e.clientY };
     });
     touch.addEventListener('pointermove', (e) => {
-      if (joy && e.pointerId === joy.id) { let dx = e.clientX - joy.x0, dy = e.clientY - joy.y0; const l = Math.hypot(dx, dy), c = Math.min(1, l / R); if (l > 0) { dx /= l; dy /= l; } S.inp.x = dx * c; S.inp.y = -dy * c; knobEl.style.transform = `translate(${dx * c * R * 0.8}px,${dy * c * R * 0.8}px)`; }
+      if (joy && e.pointerId === joy.id) { let dx = e.clientX - joy.x0, dy = e.clientY - joy.y0; const l = Math.hypot(dx, dy), c = Math.min(1, l / R); if (l > 0) { dx /= l; dy /= l; } if (l > 10) S.joyOn = true; S.inp.x = dx * c; S.inp.y = -dy * c; knobEl.style.transform = `translate(${dx * c * R * 0.8}px,${dy * c * R * 0.8}px)`; }
       else if (lk && e.pointerId === lk.id) { S.camYaw -= (e.clientX - lk.x) * 0.006; S.pitch = clamp(S.pitch + (e.clientY - lk.y) * 0.005, -0.75, 1.25); lk.x = e.clientX; lk.y = e.clientY; }
     });
-    const end = (e) => { if (joy && e.pointerId === joy.id) { joy = null; S.inp.x = S.inp.y = 0; joyEl.style.display = 'none'; } else if (lk && e.pointerId === lk.id) lk = null; };
+    const end = (e) => {
+      if (joy && e.pointerId === joy.id) { joy = null; S.inp.x = S.inp.y = 0; S.joyOn = false; joyEl.style.display = 'none'; } else if (lk && e.pointerId === lk.id) lk = null;
+      if (tapD && tapD.id === e.pointerId) { const q = tapD; tapD = null; if (e.type === 'pointerup' && performance.now() - q.t < 450 && Math.hypot(e.clientX - q.x, e.clientY - q.y) < 14) tapDoor(e.clientX, e.clientY); }
+    };
     touch.addEventListener('pointerup', end); touch.addEventListener('pointercancel', end);
     root.appendChild(hudEl);
   }
   const onKey = (e) => {
     if (!api.active) return; const c = e.code;
     if (e.type === 'keydown') {
-      S.keys.add(c);
+      S.keys.add(c); if (S.auto && /^(Key[WASD]|Arrow)/.test(c)) S.auto = null;
       if (c === 'Space') { S.reqJump = true; e.preventDefault(); } else if (c === 'ControlLeft' || c === 'KeyQ' || c === 'KeyE') S.reqDodge = true; else if (c === 'KeyV' || c === 'KeyC') setMode(S.mode === 'third' ? 'first' : 'third'); else if (c === 'Escape') exit();
     } else S.keys.delete(c);
   };
@@ -552,6 +602,8 @@ export function create(H) {
     try {
       ensureHome(); lv.progress(0.05);
       if (!diet) { const dm = await import(/* @vite-ignore */ new URL('rpg_diet.js' + (new URL(import.meta.url).search || V), import.meta.url).href); diet = dm.createDiet(H, S); api.diet = diet; }   // RP1B: the frame-time diet + governor
+      if (!cull && diet) { const cm = await import(/* @vite-ignore */ new URL('cull.js' + (new URL(import.meta.url).search || V), import.meta.url).href); cull = cm.createCull(H, S, diet); api.cull = cull; }   // RP1C: spatial culling of repeated geometry
+      if (!doors) { const dm = await import(/* @vite-ignore */ new URL('doors.js' + (new URL(import.meta.url).search || V), import.meta.url).href); doors = dm.createDoors(H, S, { ground: (x, z) => homeWorld.ground(x, z), free: (x, z) => free(x, z, homeWorld, false) && waterDepth(x, z) < 0.3 }); api.doors = doors; }   // RP1C: the door orbs
       const m = await loadHero(key, lv);
       closePick(); enter(m, key); lv.progress(1); setTimeout(() => lv.hide(), 250);
     } catch (e) { console.warn('hero start', e); lv.setTitle('Error'); lv.progress(1, String(e && e.message || e)); setTimeout(() => lv.hide(), 1800); }
@@ -570,9 +622,13 @@ export function create(H) {
     S.hero.grp.visible = true; scene.add(S.hero.grp); api.active = true; S.hero.mixer.update(0);
     if (m.head) m.head.scale.setScalar(1);
     if (diet) diet.enter();
+    if (cull) cull.enter();
+    if (doors) doors.enter();
   }
   function exit() {
     if (!api.active) return;
+    if (doors) doors.exit(); S.auto = null; S.act = null; S.joyOn = false; S.nearK = '';
+    if (cull) cull.exit();
     if (diet) diet.exit();
     if (S.sheetOn && H.sheets) H.sheets.close(); S.sheetOn = false; S.near = null; if (hudEl) hudEl.classList.remove('rp-sheet');
     api.active = false; window.removeEventListener('keydown', onKey); window.removeEventListener('keyup', onKey); S.keys.clear(); S.inp.x = S.inp.y = 0; S.sprint = false;
@@ -621,6 +677,8 @@ export function create(H) {
     placeCamera(dt);
     camera.updateMatrixWorld();
     if (diet && S.where === 'home') diet.tick(now, S.paused);
+    if (cull && S.where === 'home') cull.tick(now);
+    if (doors) doors.tick(now, dt0);
     if (S.where === 'under' && S.under) { S.under.fill.position.set(S.x, S.y + 2.8, S.z); S.under.update(now / 1000, dt0, camera.position); renderer.toneMappingExposure = 1.25; }
     if (S.where === 'home') sheetTick(dt0); else if (btns.act) btns.act.style.display = 'none';
     if (btns.dodge) { btns.dodge.style.opacity = S.dodgeCool > 0 ? 0.45 : 1; btns.jump.style.opacity = S.grounded ? 1 : 0.55; }
@@ -796,7 +854,9 @@ export function create(H) {
       return cv.toDataURL('image/png');
     },
     start, exit, gates: () => S.boxes.filter((b) => b.type === 'gate').map((b) => [+b.x.toFixed(1), +b.z.toFixed(1), +b.hw.toFixed(1), +b.hd.toFixed(1)]),
-    diet: () => diet, perf: () => ({ ...stats, f: undefined }), stats: () => (S.under ? S.under.stats() : null),
+    peek: (id) => H.sheets && H.sheets.peek ? H.sheets.peek(id, H.SM) : 'no-peek',
+    doors: () => doors, tapDoor, planLocal, openDoor, autoState: () => S.auto && { id: S.auto.id, t: +S.auto.t.toFixed(1), wi: S.auto.wi, n: S.auto.pts.length }, act: () => S.act && { ...S.act },
+    diet: () => diet, cull: () => cull, perf: () => ({ ...stats, f: undefined }), stats: () => (S.under ? S.under.stats() : null),
   };
   return api;
 }
