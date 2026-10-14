@@ -8,6 +8,7 @@ import { toFloatGeo } from './assets.js';
 import { bakeAtlas, cardGeometry, cardFadeShader } from './sc_cards.js';
 import { WIND } from './weather.js';
 import { seasonWeights } from './terrain.js';
+import { S4C } from './tr2_s4c.js';          // TR2-S4c: the shrubs baked into the atlas are Tripo bushes (round / boxwood)
 
 // variants: the leafy EZ-Tree shrub and the dense round Quaternius shrub (its red leaves desaturated and tinted green in the bake)
 const NAMES = [['ez_bush_b', 0], ['bush', 1]];
@@ -40,9 +41,10 @@ function modelParts(gltf, gray) {
 
 // list: [{ x, y, z, s (height, m), ry, w (width factor) }]
 export function buildBushes(renderer, scene, A, list, { season = null, uTime = { value: 0 } } = {}) {
-  const names = NAMES.filter(([k]) => A && A.models[k]);
+  const TRB = S4C.on && S4C.ready ? S4C.bushes() : null;                 // TR2-S4c: [{ parts, half }] height-1 Tripo shrubs (the leaf colour is desaturated and re-tinted like the old 'bush' variant)
+  const names = TRB ? TRB : NAMES.filter(([k]) => A && A.models[k]);
   if (!names.length || !list.length) return null;
-  const V = names.map(([k, gray]) => modelParts(A.models[k], gray));
+  const V = TRB ? TRB.map((v) => ({ half: v.half, parts: v.parts.map((p) => { const m = p.material.clone(); m.color.copy(LEAF2); return { geometry: p.geometry, material: m, leaf: true, onBake: GRAY }; }) })) : names.map(([k, gray]) => modelParts(A.models[k], gray));
   const half = Math.max(...V.map((v) => v.half)) * 1.04, top = 1.03, CELL = 256, W = CELL * 4, H = CELL * 2;
   // atlas rows: variant 0 at the bottom, variant 1 on top (the shader picks one per bush); columns: yaw 0, 60, 120 deg, top view
   const yaws = [0, Math.PI / 3, (2 * Math.PI) / 3];

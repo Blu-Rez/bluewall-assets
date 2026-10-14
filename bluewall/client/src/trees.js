@@ -6,9 +6,10 @@ import { WIND } from './weather.js';
 import { toFloatGeo } from './assets.js';
 import { seasonWeights } from './terrain.js';
 import { bakeAtlas, cardGeometry, cardFadeShader } from './sc_cards.js';
+import { S4C } from './tr2_s4c.js';          // TR2-S4c: the Tripo trees (variant table, season sets) — falls back to the EZ-Tree models when S4C.on is false
 
 // variant -> [target height (m), weight, group]
-const VARIANTS = {
+const OLD_VARIANTS = {
   ez_pine_a: [17, 5, 'pine'], ez_pine_b: [21, 4, 'pine'], ez_pine_c: [13, 4, 'pine'],
   ez_oak_a: [13, 2, 'broad'], ez_oak_b: [16, 1.5, 'broad'], ez_ash_a: [15, 1.5, 'broad'], ez_aspen_a: [14, 1, 'broad'],
   ez_bush_a: [3.2, 1.2, 'bush'], ez_bush_b: [3.6, 1.2, 'bush'],
@@ -36,6 +37,19 @@ function windify(mat, strength = 1) {
   return mat;
 }
 
+// TR2-S4c: a Tripo tree set (tr2_s4c.js treeSet) -> the same { parts, width, depth, height } the EZ variants give; the shared Tripo material is cloned ONCE per pack for the wind shader
+const WIND_MATS = new Map();
+function tripoParts(set) {
+  const out = {};
+  for (const [k, v] of Object.entries(set.parts)) {
+    out[k] = { width: v.width, depth: v.depth, height: v.height, parts: v.parts.map((p) => {
+      let m = WIND_MATS.get(p.material); if (!m) { m = windify(p.material.clone(), 0.6); m.name = 'tr2_tree'; WIND_MATS.set(p.material, m); }
+      return { geometry: p.geometry, material: m, leaf: true };
+    }) };
+  }
+  return out;
+}
+
 function variantParts(gltf, targetH) {
   gltf.scene.updateMatrixWorld(true);
   const box = new THREE.Box3().setFromObject(gltf.scene);
@@ -58,11 +72,12 @@ function variantParts(gltf, targetH) {
 // crossed vertical quads plus a horizontal crown card at mid-crown height. Cards fade as they turn edge-on to the camera (sc_cards.js), so
 // from the top-down camera a far tree is its round crown instead of a flat star / cross, and from the ground the crown card vanishes.
 // Mipmapped (no sparkle in the distance) with the alpha cut-out held up at the small mips; both faces of a card are lit alike.
-function bakeImpostor(renderer, v, group) {
+function bakeImpostor(renderer, v, group, light = 1) {
   const W = 384, H = 512, half = Math.max(v.width, v.depth) / 2 * 1.05, top = v.height * 1.02;
-  const tex = bakeAtlas(renderer, [{ parts: v.parts, half, top, views: [{ yaw: 0, rect: [2, 2, 252, 508] }, { top: true, rect: [258, 386, 124, 124] }] }], W, H);
+  const tex = bakeAtlas(renderer, [{ parts: v.parts, half, top, views: [{ yaw: 0, rect: [2, 2, 252, 508] }, { top: true, rect: [258, 386, 124, 124] }] }], W, H, light);
   const side = [2 / W, 2 / H, 254 / W, 510 / H], crown = [258 / W, 386 / H, 382 / W, 510 / H];
-  const g = cardGeometry([{ yaw: 0, rect: side, half, top }, { yaw: Math.PI / 2, rect: side, half, top }, { h: true, y: top * (group === 'pine' ? 0.42 : 0.6), half, rect: crown }], 'up');
+  const wide = light > 1 ? (group === 'pine' ? 1.45 : 1) : 1;      // TR2-S4c: the library crowns are slimmer than the old EZ ones: the far cards are drawn a little wider so the far forest keeps its mass
+  const g = cardGeometry([{ yaw: 0, rect: side, half: half * wide, top }, { yaw: Math.PI / 2, rect: side, half: half * wide, top }, { h: true, y: top * (group === 'pine' ? (light > 1 ? 0.15 : 0.42) : light > 1 ? 0.55 : 0.6), half: group === 'pine' && light > 1 ? half * 0.95 : half * wide, rect: crown }], 'up');
   const mat = windify(new THREE.MeshStandardMaterial({ map: tex, alphaTest: 0.42, side: THREE.DoubleSide, roughness: 1 }), 0.6);
   const wind = mat.onBeforeCompile;
   mat.onBeforeCompile = (sh, r) => {
@@ -70,22 +85,24 @@ function bakeImpostor(renderer, v, group) {
     cardFadeShader(sh, 0.1, 0.4);
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <normal_fragment_begin>', '#include <normal_fragment_begin>\n#ifdef DOUBLE_SIDED\n  normal *= faceDirection;\n#endif')
-      .replace('#include <alphatest_fragment>', `{ vec2 tz = vMapUv * vec2(${W}.0, ${H}.0); float lod = log2(max(1.0, max(length(dFdx(tz)), length(dFdy(tz))))); diffuseColor.a *= 1.0 + lod * 0.32; }\n#include <alphatest_fragment>`);
+      .replace('#include <alphatest_fragment>', `{ vec2 tz = vMapUv * vec2(${W}.0, ${H}.0); float lod = log2(max(1.0, max(length(dFdx(tz)), length(dFdy(tz))))); diffuseColor.a *= 1.0 + lod * ${S4C.on && S4C.ready ? '0.6' : '0.32'}; }\n#include <alphatest_fragment>`);
   };
   mat.customProgramCacheKey = () => 'bwimp2';
   return { geometry: g, material: mat };
 }
 
 export function buildTrees(renderer, scene, A, near, far, Q, rnd, season = null) {
-  const names = Object.keys(VARIANTS).filter((k) => A.models[k]);
+  const TRI = S4C.on && S4C.ready ? S4C.treeSet(season) : null;         // TR2-S4c
+  const VARIANTS = TRI ? TRI.VAR : OLD_VARIANTS;
+  const names = Object.keys(VARIANTS).filter((k) => TRI || A.models[k]);
   if (!names.length) return null;
-  const V = {};
-  for (const k of names) V[k] = variantParts(A.models[k], VARIANTS[k][0]);
+  const V = TRI ? tripoParts(TRI) : {};
+  if (!TRI) for (const k of names) V[k] = variantParts(A.models[k], VARIANTS[k][0]);
   // seasons: deciduous leaves turn gold/orange/red in autumn and fall in winter; pines get frosty
   const SW = seasonWeights(season), autumn = SW.w[2], winter = SW.w[3], spring = SW.w[0];
   const bare = winter > 0.55;
   const AUT = ['#e3b23c', '#d9822b', '#c4512e', '#b5402a', '#e8c547', '#8f9a3e'].map((c) => new THREE.Color(c));
-  for (const k of names) {
+  if (!TRI) for (const k of names) {
     const broad = VARIANTS[k][2] !== 'pine';
     for (const p of V[k].parts) {
       if (!p.leaf) continue;
@@ -95,7 +112,8 @@ export function buildTrees(renderer, scene, A, near, far, Q, rnd, season = null)
       } else if (winter > 0.2) p.material.color.lerp(new THREE.Color('#dfe8ef'), winter * SW.snow * 0.5);
     }
   }
-  const leafTint = (i, broad) => {
+  const leafTint = (i, broad, k) => {
+    if (TRI) return TRI.tint(k, i);                                  // TR2-S4c
     const base = new THREE.Color(1, 1, 1).lerp(new THREE.Color().setHSL(0.27 + ((i * 0.618) % 1) * 0.05, 0.25 + ((i * 0.37) % 1) * 0.2, 0.42 + ((i * 0.71) % 1) * 0.16), 0.12);
     if (broad && autumn > 0.05) base.lerp(AUT[(i * 7 + 3) % AUT.length].clone().multiplyScalar(1.5), Math.min(1, autumn * (0.6 + ((i * 0.53) % 1) * 0.6)));
     return base;
@@ -125,7 +143,7 @@ export function buildTrees(renderer, scene, A, near, far, Q, rnd, season = null)
   // already exist, so the draw calls do not grow. Tree ids / counts of the battle targets do not depend on any of this.
   const dynCap = lowTrees ? 0 : Q.level === 'low' ? 0 : Q.level === 'medium' ? 24 : Q.level === 'ultra' ? 56 : 40;
   const impNames = names.filter((k) => VARIANTS[k][2] !== 'bush');
-  for (const k of impNames) imp[k] = bakeImpostor(renderer, V[k], VARIANTS[k][2]);
+  for (const k of impNames) imp[k] = bakeImpostor(renderer, V[k], VARIANTS[k][2], TRI ? TRI.lightOf(VARIANTS[k][2]) : 1);      // (TRI.light: the library textures are darker than the old leaf cards)
   const ib = {}, rest2 = [];
   for (const t of rest) {
     t.m.decompose(P, Qt, S);
@@ -146,8 +164,8 @@ export function buildTrees(renderer, scene, A, near, far, Q, rnd, season = null)
     for (const p of V[k].parts) {
       if (p.skip) continue;
       const im = new THREE.InstancedMesh(p.geometry, p.material, capN);
-      list.forEach((m, i) => { im.setMatrixAt(i, m); if (p.leaf) im.setColorAt(i, leafTint(i, VARIANTS[k][2] !== 'pine')); });
-      if (p.leaf && room) for (let i = list.length; i < capN; i++) im.setColorAt(i, leafTint(i, VARIANTS[k][2] !== 'pine'));
+      list.forEach((m, i) => { im.setMatrixAt(i, m); if (p.leaf) im.setColorAt(i, leafTint(i, VARIANTS[k][2] !== 'pine', k)); });
+      if (p.leaf && room) for (let i = list.length; i < capN; i++) im.setColorAt(i, leafTint(i, VARIANTS[k][2] !== 'pine', k));
       im.count = list.length;
       im.castShadow = !!Q.shadows && (Q.level === 'high' || Q.level === 'ultra'); im.receiveShadow = true;
       if (room) im.frustumCulled = false; else im.computeBoundingSphere();
@@ -157,7 +175,7 @@ export function buildTrees(renderer, scene, A, near, far, Q, rnd, season = null)
   const impM = {}, impO = {};
   for (const [k, list] of Object.entries(ib)) {
     const im = new THREE.InstancedMesh(imp[k].geometry, imp[k].material, list.length);
-    list.forEach((m, i) => { im.setMatrixAt(i, m); im.setColorAt(i, leafTint(i + 11, VARIANTS[k][2] !== 'pine')); });
+    list.forEach((m, i) => { im.setMatrixAt(i, m); im.setColorAt(i, leafTint(i + 11, VARIANTS[k][2] !== 'pine', k)); });
     im.receiveShadow = true; im.castShadow = false; im.computeBoundingSphere(); scene.add(im); meshes.push(im);
     impM[k] = im; impO[k] = im.instanceMatrix.array.slice();
   }

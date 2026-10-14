@@ -7,6 +7,7 @@
 // One InstancedMesh per shape kind. No shadow casters except where the caller asks (the mine boulders, as before).
 import * as THREE from 'three';
 import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
+import { S4C } from './tr2_s4c.js';          // TR2-S4c: the boulders / stones are Tripo models (same kit API, same material effects: moss, snow, earthy skirt)
 
 const lcg = (seed) => { let s = seed >>> 0; return () => ((s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 4294967296); };
 const h3 = (x, y, z) => { const s = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453; return s - Math.floor(s); };
@@ -91,7 +92,7 @@ const LOOKS = {
 // opts: { snow: 0..1, moss: 0..1, glint: bool (aGlint colour: ore sparkles), merged: bool (a baked pile: height above ground from aHg), mossCol, skirt, look }
 export function rockMaterial(T, opts = {}) {
   const LK = LOOKS[opts.look || ROCK_LOOK] || LOOKS.moss;
-  const map = T && (T[LK.map] || T.ph_mossrock || T.ph_rock), nmap = T && (T[LK.n] || T.ph_mossrock_n);
+  const map = opts.tex || (T && (T[LK.map] || T.ph_mossrock || T.ph_rock)), nmap = opts.tex ? null : T && (T[LK.n] || T.ph_mossrock_n);      // (TR2-S4c: opts.tex = a Tripo texture)
   const mat = new THREE.MeshStandardMaterial({ map: map || null, normalMap: nmap || null, normalScale: new THREE.Vector2(1.4, 1.4), vertexColors: true, roughness: 0.92, metalness: 0, envMapIntensity: 0.5, color: opts.color ?? LK.color });
   mat.name = 'sc_rock';
   const U = { uSnow: { value: opts.snow || 0 }, uMoss: { value: (opts.moss ?? 1) * LK.moss }, uMossCol: { value: new THREE.Color(opts.mossCol ?? 0x4a5f2a) },          // (ColorManagement: the sRGB hex becomes linear by itself)
@@ -102,7 +103,7 @@ export function rockMaterial(T, opts = {}) {
     Object.assign(sh.uniforms, U);
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', `#include <common>\nvarying float vUp; varying float vHg; varying vec3 vRp;${glint ? '\nattribute vec3 aGlint; varying vec3 vGlint;' : ''}${merged ? '\nattribute float aHg;' : ''}`)
-      .replace('#include <uv_vertex>', `#include <uv_vertex>
+      .replace('#include <uv_vertex>', opts.tex ? '#include <uv_vertex>' : `#include <uv_vertex>
 #ifdef USE_INSTANCING
   { float iS = length(instanceMatrix[0].xyz); vec2 iO = fract(instanceMatrix[3].xz * 0.0173) * 9.0;
   #ifdef USE_MAP
@@ -158,7 +159,7 @@ float scN(vec3 p) { vec3 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f)
   }`);
     }
   };
-  mat.customProgramCacheKey = () => 'sc_rock' + (glint ? 'g' : '') + (merged ? 'm' : '');
+  mat.customProgramCacheKey = () => 'sc_rock' + (glint ? 'g' : '') + (merged ? 'm' : '') + (opts.tex ? 't' : '');
   return mat;
 }
 
@@ -167,7 +168,7 @@ export function rockMeshes(scene, mat, kinds, { cast = false, receive = true, na
   const out = [];
   for (const k of kinds) {
     if (!k.list.length) continue;
-    const im = new THREE.InstancedMesh(k.geo, mat, k.list.length); im.name = name;
+    const im = new THREE.InstancedMesh(k.geo, k.mat || mat, k.list.length); im.name = name;
     k.list.forEach((m, i) => im.setMatrixAt(i, m));
     if (k.colors) k.colors.forEach((c, i) => im.setColorAt(i, c));
     if (k.glint) { const a = new Float32Array(k.list.length * 3); k.glint.forEach((c, i) => { a[i * 3] = c.r; a[i * 3 + 1] = c.g; a[i * 3 + 2] = c.b; }); im.geometry = k.geo.clone(); im.geometry.setAttribute('aGlint', new THREE.InstancedBufferAttribute(a, 3)); }
@@ -187,19 +188,22 @@ export function rockTint(r, c = new THREE.Color()) {
 // One kit per world: buildForest() fills it with the rock groups of the open country, scatterFlora() adds the meadow rocks near the
 // castle and finally builds it (one InstancedMesh per kind; every instance is in the `scatter` list the battle clears zones from).
 export const ROCKS = { kit: null };
-const KINDS = ['boulder', 'crag', 'stone'];                    // (a slab is a flattened boulder: one draw call less)
+const KINDS0 = ['boulder', 'crag', 'stone'];                   // (a slab is a flattened boulder: one draw call less)
 export function rockKit(T, Q, { snow = 0 } = {}) {
   const low = Q.level === 'low', det = low ? 1 : 2;
-  const geo = { boulder: rockGeometry(3, det, 'boulder'), crag: rockGeometry(12, det, 'crag'), stone: rockGeometry(5, 1, 'stone') };
+  const TR = S4C.on && S4C.ready ? S4C.rocks() : null;                      // TR2-S4c: { geo, tex } of the Tripo rocks (unit rock 2 m across, a fifth buried)
+  const geo = TR ? TR.geo : { boulder: rockGeometry(3, det, 'boulder'), crag: rockGeometry(12, det, 'crag'), stone: rockGeometry(5, 1, 'stone') };
   const mat = rockMaterial(T, { snow });
+  const KINDS = TR ? Object.keys(TR.geo) : KINDS0, MATS = {};
+  if (TR) for (const k of KINDS) { const t = TR.tex[k]; MATS[k] = MATS[t.uuid] || (MATS[t.uuid] = rockMaterial(T, { snow, tex: t, moss: 0.5 })); }
   const L0 = Object.fromEntries(KINDS.map((k) => [k, { list: [], colors: [] }]));
   const bases = [];                                             // { x, z, r } of the bigger rocks (the meadow grows a tuft at their foot)
   const kit = {
     mat, geo, bases,
-    add(kind, m, c) { const k = L0[kind] ? kind : 'boulder'; L0[k].list.push(m); L0[k].colors.push(c.clone()); },
+    add(kind, m, c) { let k = L0[kind] ? kind : 'boulder'; if (k === 'stone' && L0.stone2 && (L0.stone.list.length + L0.stone2.list.length) % 2) k = 'stone2'; L0[k].list.push(m); L0[k].colors.push(c.clone()); },
     build(scene) {
       if (kit.meshes) return kit.meshes;
-      kit.meshes = rockMeshes(scene, mat, KINDS.map((k) => ({ geo: geo[k], list: L0[k].list, colors: L0[k].colors })), { cast: false, receive: true });
+      kit.meshes = rockMeshes(scene, mat, KINDS.map((k) => ({ geo: geo[k], list: L0[k].list, colors: L0[k].colors, mat: MATS[k] })), { cast: false, receive: true });
       return kit.meshes;
     },
   };

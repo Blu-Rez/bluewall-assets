@@ -54,6 +54,7 @@ import { buildUnits } from './units.js';
 import { bakeVillage, bakePieces, livePiece } from './village.js';
 import { buildWheat } from './crops.js';
 import { buildTrees, TREE_TIME } from './trees.js';
+import { S4C } from './tr2_s4c.js';                                   // TR2-S4c: Tripo trees / rocks / bushes / lamps / props / meadow (falls back to the old models; `?s4c=0` = old look)
 import { rockKit, rockGroup, ROCKS } from './sc_rocks.js';
 import { bushKit, BUSH } from './sc_bush.js';
 import { groundShadows } from './sc_shadow.js';
@@ -75,6 +76,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
   const A = await loadAssets((f) => progress(0.02 + f * 0.42, 'Loading models…'));
   await TL.preload();                                                     // TR2-S4d: Tripo animals + villagers (never throws; TL.ready() false → the old models stay)
   if (L.MAP === 'day') applyFortTextures(M, A);
+  await S4C.load();                                                      // TR2-S4c: the 13 Tripo packs (≈ 2.4 MB) before the castle (lamps) and the forest (trees, rocks, bushes) are built
   // tier skins (wood / stone / iron / gold / diamond / crystal by structure level, skin.js) — must be set before anything is batched
   applySkin(M.stone, 0); applySkin(M.stoneDark, 1); applySkin(M.roof, 2); applySkin(M.gold, 3); applySkin(M.rune, 4);
   progress(0.46, 'Painting the sky…'); await tick();
@@ -146,13 +148,14 @@ export async function buildWorld(renderer, scene, Q, progress) {
     },
     pick(b, id) { picks.push({ id, box: new THREE.Box3(new THREE.Vector3(b.x - b.r, b.y0, b.z - b.r), new THREE.Vector3(b.x + b.r, b.y1, b.z + b.r)) }); },
     torch(x, y, z, o = {}) {
-      flames.add(x, y + 0.35, z, o.big ? 2.6 : o.forge ? 3.0 : 1.5, o.forge ? [1, 0.42, 0.12] : [1, 0.62, 0.25], B.tagB);
-      if (o.post) {
+      const T4 = S4C.on && (o.post || o.sconce) ? S4C.lamp(B, height(x, z), x, y, z, o, ctx.targets) : null;      // TR2-S4c: a Tripo post lamp / wall torch (baked, falls with its wall); returns the flame anchor
+      flames.add(T4 ? T4.x : x, T4 ? T4.y : y + 0.35, T4 ? T4.z : z, o.big ? 2.6 : o.forge ? 3.0 : 1.5, o.forge ? [1, 0.42, 0.12] : [1, 0.62, 0.25], B.tagB);      // TR2-S4c: flame anchor from the Tripo lamp when there is one
+      if (o.post && !T4) {      // TR2-S4c
         const gy = height(x, z);
         B.add(new THREE.CylinderGeometry(0.1, 0.14, y - gy, 6), M.wood, mat4(x, gy + (y - gy) / 2, z), { tint: 0x5a3a22 });
         B.add(new THREE.CylinderGeometry(0.28, 0.14, 0.35, 8), M.metal, mat4(x, y, z));
       }
-      if (o.sconce) B.add(new THREE.BoxGeometry(0.25, 0.7, 0.25), M.metal, mat4(x, y - 0.25, z, o.ry || 0));
+      if (o.sconce && !T4) B.add(new THREE.BoxGeometry(0.25, 0.7, 0.25), M.metal, mat4(x, y - 0.25, z, o.ry || 0));      // TR2-S4c
       if (o.pool) pools.add(x, height(x, z) + 0.06, z, o.big ? 7.5 : o.forge ? 8 : 5.2);
       if (o.light && lightBudget > 0) {
         lightBudget--;
@@ -311,7 +314,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     }
     return nb.mesh;
   })();
-  for (const [k, list] of Object.entries(instLists)) instance(scene, A.models[k], list, { cast: !!Q.shadows });
+  for (const [k, list] of Object.entries(instLists)) if (!(S4C.on && S4C.props(scene, k, list, !!Q.shadows))) instance(scene, A.models[k], list, { cast: !!Q.shadows });      // TR2-S4c: barrels / crates / carts / stalls from the library
   { // wheat: green in spring, golden in summer, harvested (stubble + hay) in autumn and winter
     const S = season();
     if (S.s === 0 || S.s === 1 || (S.s === 2 && S.p < 0.12)) {
@@ -770,7 +773,7 @@ function buildForest(scene, height, Q, inner, DAY, A, renderer) {
   groundShadows(scene, hamlets().flatMap((H) => H.houses.map((h) => ({ x: h.x, z: h.z, w: h.w, d: h.d, ry: h.ry }))), height);
   // realistic EZ-Tree trees near, baked impostors far
   let ez = null;
-  if (A && A.models.ez_pine_a) {
+  if (A && (A.models.ez_pine_a || S4C.on)) {                                   // TR2-S4c: the Tripo trees do not need the EZ models
     for (const m of leafList) trees.near.push({ m, d: 1, group: 'broad' });
     ez = buildTrees(renderer, scene, A, trees.near, trees.far, Q, r, season()); trees.near = []; trees.far = [];
   }
@@ -887,7 +890,7 @@ function scatterFlora(scene, height, Q, A, DAY, shore) {
   const base = { grass: 560, grasst: 90, grassw: 120, flower3: 52, flower4: 26, bush: 36, bushf: 22, fern: 40, clover: 76, rock1: 22, rock2: 22, rock3: 20, pebble1: 40, pebble2: 40, mushroom: 0, plant: 20 };   // (denser meadows: the open country must not look bare)
   const SWf = seasonWeights(season()), wint = SWf.w[3], spr = SWf.w[0], aut = SWf.w[2];
   const sk = (k) => (/^flower|clover/.test(k) ? Math.max(0, 1 + spr * 1.2 - aut * 0.6 - wint) : /^grass|fern|plant/.test(k) ? 1 - wint * 0.7 : 1);
-  const want = Object.fromEntries(Object.entries(base).map(([k, v]) => [k, Math.round(v * q * sk(k))]));
+  const want = Object.fromEntries(Object.entries(base).map(([k, v]) => [k, Math.round(v * q * sk(k) * (S4C.on && S4C.meadowScale[k] || 1))]));      // TR2-S4c: the Tripo flower / clover / fern clumps are denser meshes: fewer of them (same look, tris budget)
   const R = { grass: 115, grasst: 130, grassw: 120, flower3: 110, flower4: 110, bush: 130, bushf: 110, fern: 140, clover: 100, rock1: 150, rock2: 150, rock3: 150, pebble1: 90, pebble2: 90, mushroom: 140, plant: 120 };
   for (const [k, n] of Object.entries(want)) {
     let placed = 0;
@@ -924,7 +927,7 @@ function scatterFlora(scene, height, Q, A, DAY, shore) {
     for (const [k, chance, o0, o1, sz, sv] of BANK) {
       if (!A.models[k]) continue;
       for (const [x, z, dx, dz] of shore) {
-        if (rb() > chance * q) continue;
+        if (rb() > chance * q * (S4C.on && S4C.meadowScale[k] || 1)) continue;                    // TR2-S4c
         const off = o0 + rb() * (o1 - o0), lat = (rb() - 0.5) * 2.4, px = x + dx * off - dz * lat, pz = z + dz * off + dx * lat, h = height(px, pz);
         if (h < LVb - 0.25 || h > LVb + 4 || roadEdge(px, pz) < 1.2 || L.fieldD(px, pz) < 1.1) continue;
         const big = (sz + rb() * sv) * (k.startsWith('bush') ? 1.1 : 1);
@@ -946,5 +949,5 @@ function scatterFlora(scene, height, Q, A, DAY, shore) {
     kit.build(scene);
   }
   if (bk) bk.build(scene);
-  for (const [k, list] of Object.entries(lists)) instance(scene, A.models[k], list, { cast: !!Q.shadows && Q.level !== 'medium' && k.startsWith('rock'), receive: true, chunk: 110, lod: true });
+  for (const [k, list] of Object.entries(lists)) instance(scene, (S4C.on && S4C.meadow(k)) || A.models[k], list, { cast: !!Q.shadows && Q.level !== 'medium' && k.startsWith('rock'), receive: true, chunk: 110, lod: true });      // TR2-S4c: flower3/4, clover, fern from the library
 }
