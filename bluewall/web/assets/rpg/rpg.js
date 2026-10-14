@@ -207,7 +207,7 @@ export function create(H) {
       const a = mixer.clipAction(clip); a.timeScale = 0; a.setEffectiveWeight(0); a.play(); acts[n] = { a, d: clip.duration, w: 0 };
     }
     const head = model.getObjectByName('Head') || model.getObjectByName('head');
-    return (S.models[key] = { grp, model, mixer, acts, head });
+    return (S.models[key] = { grp, model, mixer, acts, head, clips: gltf.animations }); // RP4: + clips (slash_a/b/c, heavy, block, hit, knockdown, death, cast)
   }
   const setW = (name, w) => { const o = S.hero.acts[name]; if (o) o.tw = w; };
   function animate(dt) {
@@ -350,6 +350,7 @@ export function create(H) {
     let target = 0; if (m > 0) target = m < 0.55 ? WALK * (m / 0.55) : WALK + (RUN - WALK) * ((m - 0.55) / 0.45); if (sprint && m > 0.5) target *= SPRINT_K;
     S.stT += dt;
     const air = !S.grounded;
+    const cb = S.cmb && S.cmb.pre(dt, S, wantX, wantZ, m); // RP4: combat tick; true = it owns the hero (attack / roll / hurt / skill): no host locomotion
     let dep = 0;                                                                     // RP1B: wade (< 0.95 m: slower) / swim (deeper: a slow crawl, no jump / dodge)
     if (S.where === 'home' && S.layer === 0) { dep = waterDepth(S.x, S.z); const w0 = S.sw; S.sw = (S.grounded || S.y <= WSURF + 0.5) && dep > (w0 === 2 ? SWIM_DEEP - 0.2 : SWIM_DEEP) ? 2 : dep > 0.12 ? 1 : 0; } else S.sw = 0;
     if (S.sw === 1) target *= 1 - 0.45 * clamp(dep / SWIM_DEEP, 0, 1);
@@ -358,7 +359,7 @@ export function create(H) {
       const t = S.stT, sb = 1.5 + 5.0 * Math.pow(Math.max(0, 1 - t / 0.6), 2);
       S.vx = S.burst.x * sb; S.vz = S.burst.z * sb;
       if (S.stT >= 1.7 / 1.9) { S.st = 'loco'; S.stT = 0; }
-    } else {
+    } else if (!cb) { // RP4:
       const ml = Math.hypot(wantX, wantZ) || 1, tvx = (wantX / ml) * target, tvz = (wantZ / ml) * target, acc = (air ? 5 : 16) * dt;
       S.vx += clamp(tvx - S.vx, -acc, acc); S.vz += clamp(tvz - S.vz, -acc, acc);
     }
@@ -412,6 +413,7 @@ export function create(H) {
     // place the model
     const g = S.hero.grp; g.position.set(S.x, S.y, S.z); g.rotation.y = S.body;
     animate(dt);
+    if (S.cmb) S.cmb.post(dt); // RP4: blend the combat clip over the locomotion pose
   }
 
   // ------------------------------------------------------------------ the camera
@@ -512,7 +514,7 @@ export function create(H) {
   const onKey = (e) => {
     if (!api.active) return; const c = e.code;
     if (e.type === 'keydown') {
-      S.keys.add(c);
+      S.keys.add(c); if (S.cmb && S.cmb.key(c)) e.preventDefault(); // RP4: J attack, K dodge, U / I skills, L lock, O next target
       if (c === 'Space') { S.reqJump = true; e.preventDefault(); } else if (c === 'ControlLeft' || c === 'KeyQ' || c === 'KeyE') S.reqDodge = true; else if (c === 'KeyV' || c === 'KeyC') setMode(S.mode === 'third' ? 'first' : 'third'); else if (c === 'Escape') exit();
     } else S.keys.delete(c);
   };
@@ -575,6 +577,7 @@ export function create(H) {
     if (!api.active) return;
     if (diet) diet.exit();
     if (S.sheetOn && H.sheets) H.sheets.close(); S.sheetOn = false; S.near = null; if (hudEl) hudEl.classList.remove('rp-sheet');
+    if (S.cmb) { S.cmb.dispose(); S.cmb = null; } // RP4:
     api.active = false; window.removeEventListener('keydown', onKey); window.removeEventListener('keyup', onKey); S.keys.clear(); S.inp.x = S.inp.y = 0; S.sprint = false;
     const sv = S.saved; S.hero.grp.removeFromParent(); if (S.hero.head) S.hero.head.scale.setScalar(1);
     if (S.door) scene.remove(S.door.grp);
@@ -589,11 +592,12 @@ export function create(H) {
     try {
       const mod = await import(/* @vite-ignore */ new URL('rpg_under.js' + (new URL(import.meta.url).search || V), import.meta.url).href); lv.progress(0.35, 'Building…'); if (dev && window.__rpHold) await new Promise((res) => setTimeout(res, window.__rpHold));
       await new Promise((r) => setTimeout(r, 30));
-      const u = mod.buildUnder(T); S.under = u; lv.progress(0.7, 'Lighting…');
+      const u = await mod.buildUnder(T, { parse: H.parseGLB, base: BASE + 'rpg/under/', v: V }); S.under = u; lv.progress(0.7, 'Lighting…');   // RP3: async + the library pieces (parse/base/v)
       u.scene.add(S.hero.grp);
       underWorld = {
         ground: (x, z) => u.hgt(x, z), boxes: () => [], discs: () => u.colliders, inside: () => true, clampXZ: u.clampXZ, portal: u.portal,
       };
+      try { S.cmb = await (await import(/* @vite-ignore */ new URL('combat.js' + (new URL(import.meta.url).search || V), import.meta.url).href)).attach(u, S.hero, { THREE: T, camera, root, base: BASE + 'rpg/', v: V, parseGLB: H.parseGLB, btns, dev, pixelRatio: renderer.getPixelRatio(), hgt: u.hgt, spawn: 3, hostMove: (dx, dz) => { const n = Math.max(1, Math.ceil(Math.hypot(dx, dz) / 0.2)); for (let i = 0; i < n; i++) tryMove(dx / n, dz / n); } }); } catch (e) { console.warn('rp4', e); } // RP4: combat core (lazy module) + 3 placeholder enemies, owner test only
       S.where = 'under'; S.layer = 0; S.sw = 0; S.x = u.spawn.x; S.z = u.spawn.z; S.y = u.hgt(S.x, S.z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; S.camYaw = u.spawn.yaw; S.body = u.spawn.yaw; S.snap = true; S.camD = 3.6;
       S.hero.grp.position.set(S.x, S.y, S.z); u.update(0, 0, camera.position); placeCamera(0);
       try { if (renderer.compileAsync) await renderer.compileAsync(u.scene, camera); else renderer.compile(u.scene, camera); } catch (e) { /* first draw compiles instead */ }
@@ -605,6 +609,7 @@ export function create(H) {
     if (S.busy2) return; S.busy2 = true; S.cool = 3;
     const lv = H.createLoadView(root, { title: 'RETURN', sub: 'To the castle…', z: 300 }); lv.el.classList.add('rp-k'); lv.show(); lv.progress(0.3);
     await new Promise((r) => setTimeout(r, 120));
+    if (S.cmb) { S.cmb.dispose(); S.cmb = null; } // RP4:
     scene.add(S.hero.grp); S.where = 'home'; underWorld = null;
     const d = S.door; if (d) { S.x = d.x + d.nx * 2.6; S.z = d.z + d.nz * 2.6; S.camYaw = Math.atan2(d.nx, d.nz); S.body = S.camYaw; } else { S.x = L.GATE.x - L.GATE.nx * 9; S.z = L.GATE.z - L.GATE.nz * 9; }
     S.y = homeGround(S.x, S.z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; S.snap = true; S.camD = 3.6; S.hero.grp.position.set(S.x, S.y, S.z);
@@ -620,6 +625,7 @@ export function create(H) {
     ctl.target.set(S.x, S.y + 1, S.z);                                                                  // (the sun's shadow box follows ctl.target)
     placeCamera(dt);
     camera.updateMatrixWorld();
+    if (S.cmb) S.cmb.frame(dt, now); // RP4: camera framing + shake, particles, enemies, HUD
     if (diet && S.where === 'home') diet.tick(now, S.paused);
     if (S.where === 'under' && S.under) { S.under.fill.position.set(S.x, S.y + 2.8, S.z); S.under.update(now / 1000, dt0, camera.position); renderer.toneMappingExposure = 1.25; }
     if (S.where === 'home') sheetTick(dt0); else if (btns.act) btns.act.style.display = 'none';
