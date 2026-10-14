@@ -230,3 +230,18 @@ All: 1 material, WebP texture ≤1K, meshopt+quantised (needs MeshoptDecoder), y
 | weapons | weapons_swords_tiers_a | 7200 | 221 |  |
 | weapons | weapons_swords_tiers_b | 9000 | 265 |  |
 | weapons | weapons_swords_xlong | 8998 | 241 | claymore vs zweihander named by guard size |
+
+## Added 14 Oct 2026 (TR1 gaps1 via TR2_S2; tris/kb after TR2 slimming)
+| category | key | tris | KB | note |
+|---|---|---|---|---|
+| castle | castle_wall_corner_stone | 4500 | 160 | TR1 gaps1 #9: wall corner, stone (ry 90 in tr2_swap.json) |
+| castle | castle_wall_corner_stone_b | 3499 | 153 | TR1 gaps1 #9: wall corner / end cap, stone, variant b (ry 90) |
+| castle | river_quay | 4494 | 169 | TR1 gaps1 #8: river quay piece, ~6 m, flat ends (ry -90) |
+| mines | masonry_0 | 7966 | 232 | TR1 gaps1: stonemason (ry -90) |
+| mines | greenhouse_0 | 6993 | 241 | TR1 gaps1: greenhouse (ry -90) |
+| mines | gold_panning_0 | 7901 | 272 | TR1 gaps1: gold panning (ry 90, front ambiguous) |
+| mines | livestock_pen_0 | 4977 | 178 | TR1 gaps1: livestock pen, no animals (ry -90) |
+| mines | smelter_0 | 5978 | 200 | TR1 gaps1: smelter (ry -90) |
+| mines | gold_mine_0 | 5970 | 213 | TR1 gaps1: gold mine (ry -90) |
+| defense | def_watchtower | 4986 | 197 | TR1 gaps1: watchtower (ry 180) |
+| defense | def_hedgehog | 1998 | 135 | TR1 gaps1: hedgehog / spike obstacle (ry 0) |

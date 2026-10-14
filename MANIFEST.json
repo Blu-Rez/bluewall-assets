@@ -1580,5 +1580,82 @@
   "tris": 7943,
   "kb": 329,
   "note": "older version"
+ },
+ {
+  "category": "castle",
+  "key": "castle_wall_corner_stone",
+  "tris": 4500,
+  "kb": 160,
+  "note": "TR1 gaps1 #9: wall corner, stone (ry 90 in tr2_swap.json)"
+ },
+ {
+  "category": "castle",
+  "key": "castle_wall_corner_stone_b",
+  "tris": 3499,
+  "kb": 153,
+  "note": "TR1 gaps1 #9: wall corner / end cap, stone, variant b (ry 90)"
+ },
+ {
+  "category": "castle",
+  "key": "river_quay",
+  "tris": 4494,
+  "kb": 169,
+  "note": "TR1 gaps1 #8: river quay piece, ~6 m, flat ends (ry -90)"
+ },
+ {
+  "category": "mines",
+  "key": "masonry_0",
+  "tris": 7966,
+  "kb": 232,
+  "note": "TR1 gaps1: stonemason (ry -90)"
+ },
+ {
+  "category": "mines",
+  "key": "greenhouse_0",
+  "tris": 6993,
+  "kb": 241,
+  "note": "TR1 gaps1: greenhouse (ry -90)"
+ },
+ {
+  "category": "mines",
+  "key": "gold_panning_0",
+  "tris": 7901,
+  "kb": 272,
+  "note": "TR1 gaps1: gold panning (ry 90, front ambiguous)"
+ },
+ {
+  "category": "mines",
+  "key": "livestock_pen_0",
+  "tris": 4977,
+  "kb": 178,
+  "note": "TR1 gaps1: livestock pen, no animals (ry -90)"
+ },
+ {
+  "category": "mines",
+  "key": "smelter_0",
+  "tris": 5978,
+  "kb": 200,
+  "note": "TR1 gaps1: smelter (ry -90)"
+ },
+ {
+  "category": "mines",
+  "key": "gold_mine_0",
+  "tris": 5970,
+  "kb": 213,
+  "note": "TR1 gaps1: gold mine (ry -90)"
+ },
+ {
+  "category": "defense",
+  "key": "def_watchtower",
+  "tris": 4986,
+  "kb": 197,
+  "note": "TR1 gaps1: watchtower (ry 180)"
+ },
+ {
+  "category": "defense",
+  "key": "def_hedgehog",
+  "tris": 1998,
+  "kb": 135,
+  "note": "TR1 gaps1: hedgehog / spike obstacle (ry 0)"
  }
 ]
