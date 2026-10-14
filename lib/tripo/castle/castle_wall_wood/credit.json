@@ -1,0 +1,10 @@
+{
+ "name": "castle_wall_wood",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "procedural geometry in castle.js (6 tier shader looks)",
+ "tris": 3432,
+ "kb": 289,
+ "note": "wall tier: wood (3.4k tris)",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

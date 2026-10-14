@@ -1,0 +1,10 @@
+{
+ "name": "castle_tower_stone_2",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "procedural geometry in castle.js (6 tier shader looks)",
+ "tris": 6000,
+ "kb": 285,
+ "note": "tower conical roof",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

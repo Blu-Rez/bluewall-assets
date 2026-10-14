@@ -1,0 +1,9 @@
+{
+ "name": "castle_gate_gold",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "procedural geometry in castle.js (6 tier shader looks)",
+ "tris": 5992,
+ "kb": 283,
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

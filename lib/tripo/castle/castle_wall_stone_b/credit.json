@@ -1,0 +1,10 @@
+{
+ "name": "castle_wall_stone_b",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "procedural wall (castle.js)",
+ "tris": 2000,
+ "kb": 162,
+ "note": "new stone wall in the same shape/style recipe as the 8 other tiers (#322), light grey stone with turquoise band; the older castle_wall_stone stays in the library, pick one",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

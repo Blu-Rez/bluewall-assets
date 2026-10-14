@@ -1,0 +1,10 @@
+{
+ "name": "castle_keep_stone_1",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "procedural geometry in castle.js (6 tier shader looks)",
+ "tris": 18175,
+ "kb": 914,
+ "note": "keep, 4 conical towers",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

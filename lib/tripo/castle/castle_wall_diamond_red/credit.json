@@ -1,0 +1,10 @@
+{
+ "name": "castle_wall_diamond_red",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "procedural geometry in castle.js (6 tier shader looks)",
+ "tris": 2000,
+ "kb": 221,
+ "note": "wall tier: diamond red",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

@@ -1,0 +1,10 @@
+{
+ "name": "castle_wall_diamond_black",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "procedural geometry in castle.js (6 tier shader looks)",
+ "tris": 1999,
+ "kb": 219,
+ "note": "wall tier: diamond black (crenels noisy)",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

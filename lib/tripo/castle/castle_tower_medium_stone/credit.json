@@ -1,0 +1,9 @@
+{
+ "name": "castle_tower_medium_stone",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "procedural geometry in castle.js (6 tier shader looks)",
+ "tris": 4998,
+ "kb": 170,
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}

@@ -1,0 +1,10 @@
+{
+ "name": "castle_wall_iron",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "procedural geometry in castle.js (6 tier shader looks)",
+ "tris": 2358,
+ "kb": 212,
+ "note": "wall tier: iron",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4)"
+}
