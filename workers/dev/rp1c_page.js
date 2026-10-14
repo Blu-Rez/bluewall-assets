@@ -74,7 +74,7 @@
 
   // ---------------------------------------------------------------- 4 leaving hero mode leaves nothing
   { R.render(sc, cam); const k0 = mem(); D.exit(); C.exit(); const k1 = mem(); C.enter(); D.enter(); R.render(sc, cam); const k2 = mem(); D.exit(); C.exit(); const k3 = mem(); C.enter(); D.enter(); nums.own_gpu = [k0, k1, k2, k3];
-    chk('own resources: culling proxies + door orbs / icons: enter + draw + exit gives back the GPU geometry / texture counts exit gave before (+-2: the world's own streaming of castle / town LOD cells moves them by one; the proxies' own footprint with-vs-with must stay within 1 geometry, i.e. nothing accumulates)', Math.abs(k3[0] - k1[0]) <= 2 && Math.abs(k3[1] - k1[1]) <= 2 && Math.abs(k2[0] - k0[0]) <= 1 && Math.abs(k2[1] - k0[1]) <= 2, 'with ' + k0.join('/') + ', without ' + k1.join('/') + ', with again ' + k2.join('/') + ', without again ' + k3.join('/')); }
+    chk('own resources: culling proxies + door orbs / icons: enter + draw + exit gives back the GPU geometry / texture counts exit gave before (+-2: the world own streaming of castle / town LOD cells moves them by one; the proxies own footprint with-vs-with must stay within 1 geometry, i.e. nothing accumulates)', Math.abs(k3[0] - k1[0]) <= 2 && Math.abs(k3[1] - k1[1]) <= 2 && Math.abs(k2[0] - k0[0]) <= 1 && Math.abs(k2[1] - k0[1]) <= 2, 'with ' + k0.join('/') + ', without ' + k1.join('/') + ', with again ' + k2.join('/') + ', without again ' + k3.join('/')); }
   const shadowHooked = R.shadowMap.render !== pre.shadowRender;
   chk('exit prep: while hero mode is on the shadow pass is hooked (and only then)', shadowHooked);
   rp.pause(false); await rp.exit(); await wait(2500);
