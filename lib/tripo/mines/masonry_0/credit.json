@@ -1,0 +1,8 @@
+{
+ "name": "masonry_0",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "tris": 7966,
+ "kb": 232,
+ "status": "TR1 shopping sheet gaps1 (14 Oct 2026); slimmed from ~17k tris / 2K JPEG with slim_uv.mjs (UV-aware), 1K WebP; front/ry in tr2_swap.json"
+}
