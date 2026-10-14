@@ -11,6 +11,7 @@ import * as THREE from 'three';
 import * as L from './layout.js';
 import { season } from './tod.js';
 import { PX } from './fx.js';
+import * as TL from './tr2_life.js';                                    // TR2-S4d: Tripo carp for the leaping fish
 
 const TAU = Math.PI * 2;
 export const JETTY_ANG = 0.42;                 // where on the lake shore the jetty stands (radians round the lake, 0 = east)
@@ -301,7 +302,8 @@ export function buildWaterLife(api) {
     }
   }
   // the leaping fish (a solid, silvery one) — shown only while it is in the air
-  const leap = new THREE.Mesh(leaperGeometry(), new THREE.MeshStandardMaterial({ color: 0xb9c4c8, roughness: 0.32, metalness: 0.45, emissive: 0x0a1418 }));
+  const carpT = TL.gltfLike('poultry_fish_pack/carp', { w: 1.5 });                                    // TR2-S4d: the Tripo carp when the library is loaded (head +Z like the old one)
+  const leap = carpT ? carpT.scene : new THREE.Mesh(leaperGeometry(), new THREE.MeshStandardMaterial({ color: 0xb9c4c8, roughness: 0.32, metalness: 0.45, emissive: 0x0a1418 }));
   leap.name = 'leaping-fish'; leap.visible = false; root.add(leap);
 
   // ---------------------------------------------------------------- rings / splashes / wakes: one instanced quad

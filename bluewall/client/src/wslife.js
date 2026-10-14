@@ -14,12 +14,13 @@ import { peasantHeadProp } from './peasanthead.js';
 import { mergeSkinned } from './creature.js';
 import { axeProp, AXE_GRIP } from './gear_axe.js';
 import { crowdShadows, cowPatch, coatPatch, smoothSkinned, measure, prepHorse, scaleK } from './pas_life.js';
+import * as TL from './tr2_life.js';                                   // TR2-S4d: Tripo animals + villagers
 import { sites, counts, wsLevel, tierOf, inClip } from './worksites.js';
 import { planStores } from './stores.js';
 import * as C1 from './c1_kinds.js';       // C1: workers / carts of the panning + smokehouse sites
 import * as C2 from './c2_kinds.js';       // C2: workers / carts of the sawmill / masonry / smelter sites
 
-const PS = 1.75 * 0.95;                         // the people's scale (pas_life.js)
+const PS0 = 1.75 * 0.95;                        // the people's scale (pas_life.js); the Tripo villagers are calibrated to metres: scale 1
 const rnd = (() => { let s = 90210; return () => { s = (s * 16807) % 2147483647; return s / 2147483647; }; })();
 const R2 = (a, b) => a + (b - a) * rnd();
 const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a));
@@ -187,12 +188,21 @@ function toolProp(kind) {
 export function buildWsLife(group, height, opt) {
   const { models = {}, kit = null, shadows = false } = opt;
   const anims = models.anims, root = new THREE.Group(); root.name = 'wslife'; group.add(root);
+  // TR2-S4d: villagers + animals of the Tripo library when it is loaded (tr2_life.js), else the old crowds below
+  const TP = TL.ready() && ['villager_man', 'villager_woman', 'villager_youngman', 'villager_oldman'].every(TL.has);
+  const TA = TL.ready() && ['animal_cow', 'animal_horse_white', 'animal_horse_brown', 'animal_horse_black', 'animal_sheep', 'animal_pig'].every(TL.has);
+  const PS = TP ? 1 : PS0;
   const kinds = {}, agents = [], animals = [], carts = [], boats = [], alive = { people: false, animals: false };
   const MOVE = 1.35;                                          // m/s a worker walks at
   let castle = opt.castle || 30, populated = false;
 
   // ---- step 1: the people (4 kinds), 2: the animals (cow, horse, sheep, pig), 3: boats / carts meshes, 4: populate
   const makePeople = () => {
+    if (TP) {                                                              // no tools in the hands and no work / sit clips: every clip but Walk_Loop is the frozen frame (tr2_life.js)
+      const mkT = (key, cap, fem) => { const k = TL.people(key, { capacity: cap, fps: 15, lod2: { cloth: fem ? 0x7d5b4a : 0x6e5a42, legs: fem ? 0x4a3a30 : 0x3b3129, h: 1.8 } }); if (k) { crowdShadows(k, shadows); root.add(k.group); } return k; };
+      kinds.man = mkT('villager_man', 110, false); kinds.woman = mkT('villager_woman', 60, true); kinds.axe = kinds.pick = mkT('villager_youngman', 100, false); kinds.rod = mkT('villager_oldman', 24, false);
+      alive.people = !!(kinds.man && kinds.woman && kinds.axe && kinds.rod); return;
+    }
     if (!anims || !models.peasant_m || !models.peasant_f) return;
     const base = ['Idle_Loop', 'Walk_Loop'], lod2 = (cloth, legs) => ({ cloth, legs, h: 1.8 });
     const mk = (m, fem, extra, clips, cap, props = []) => { const k = createKind({ gltf: m, anims, clips: [...base, ...clips], capacity: cap, fps: 15, props: [peasantHeadProp(fem, fem ? 1 : 0), ...props], lod2: lod2(fem ? 0x7d5b4a : 0x6e5a42, fem ? 0x4a3a30 : 0x3b3129) }); k.people = true; crowdShadows(k, shadows); root.add(k.group); return k; };
@@ -205,6 +215,12 @@ export function buildWsLife(group, height, opt) {
   };
   const sizeOf = {};
   const makeAnimals = () => {
+    if (TA) {                                                              // static Tripo animals (tr2_life.js): the clip names only pick a procedural gait
+      const fa = (spec, len, cap) => { const k = TL.fauna(spec, { len, capacity: cap, shadows }); if (k) root.add(k.group); return k; };
+      kinds.cow = fa('animal_cow', 3.3, 40); kinds.horse = TL.horses({ len: 3.4, capacity: 40, shadows }); if (kinds.horse) root.add(kinds.horse.group);
+      kinds.sheep = fa('animal_sheep', 1.6, 40); kinds.pig = fa('animal_pig', 1.8, 40);
+      alive.animals = !!(kinds.cow && kinds.horse && kinds.sheep && kinds.pig); return;
+    }
     const animKind = (src, clips, cap, patch) => {
       const k = createKind({ gltf: { scene: src, animations: src.userData.pasClips }, anims: { animations: src.userData.pasClips }, clips, capacity: cap, fps: 20 });
       if (patch) patch(k); crowdShadows(k, shadows); root.add(k.group); return k;
@@ -270,8 +286,8 @@ export function buildWsLife(group, height, opt) {
       const k = kinds[pen.sp]; if (!k || left <= 0) continue;
       const n = Math.min(pen.max, Math.ceil(left / Math.max(1, pens.filter((q) => q.max > 0).length))); left -= n;
       for (let i = 0; i < n; i++) {
-        const lx = pen.cx + (rnd() * 2 - 1) * pen.hw * 0.85, lz = pen.cz + (rnd() * 2 - 1) * pen.hd * 0.85, [wx, wz] = toW(site, lx, lz), sc = k.fit.k * R2(0.92, 1.08);
-        const p = k.add({ x: wx, y: height(wx, wz), z: wz, yaw: rnd() * 6.28, scale: pen.sp === 'cow' ? scaleK(sc, (rnd() * 5) | 0) : pen.sp === 'horse' ? scaleK(sc, (rnd() * 3) | 0) : sc }); p.cr = 3; p.lift = k.fit.y * (sc / k.fit.k);
+        const lx = pen.cx + (rnd() * 2 - 1) * pen.hw * 0.85, lz = pen.cz + (rnd() * 2 - 1) * pen.hd * 0.85, [wx, wz] = toW(site, lx, lz), sc = k.fit.k * R2(0.92, 1.08), cv = pen.sp === 'cow' ? (rnd() * 5) | 0 : pen.sp === 'horse' ? (rnd() * 3) | 0 : 0;
+        const p = k.add({ x: wx, y: height(wx, wz), z: wz, yaw: rnd() * 6.28, scale: k.static ? sc : pen.sp === 'cow' || pen.sp === 'horse' ? scaleK(sc, cv) : sc, coat: cv }); p.cr = 3; p.lift = k.fit.y * (sc / k.fit.k);
         p.y += p.lift; const an = { p, S, sp: pen.sp, pen, k, state: 'stand', t: R2(1, 6), clip: null, walks: pen.sp === 'cow' || pen.sp === 'horse', tx: 0, tz: 0, lx, lz };
         const first = pen.sp === 'sheep' || pen.sp === 'pig' ? 'Idle' : (rnd() < 0.6 ? (k.has('Eating') ? 'Eating' : 'Idle') : 'Idle'); p.play(first, { fade: false, offset: rnd() * 2 }); an.clip = first; an.state = first === 'Eating' ? 'graze' : 'stand';
         S.animals.push(an); animals.push(an);
@@ -298,7 +314,7 @@ export function buildWsLife(group, height, opt) {
     for (let i = 0; i < n; i++) {
       const speed = R2(1.9, 2.4), cycle = (rt.len * 2) / speed + 2 * R2(6, 10);
       const o = { S, rt, speed, wait: 7, cycle, off: (i / n) * cycle + R2(0, 12), cartName, loadName, nLoad, x: 0, z: 0, yaw: 0, mode: '', horse: null, driver: null, cx: 0, cz: 0 };
-      if (kinds.horse) { const k = kinds.horse, sc = k.fit.k; o.horse = k.add({ x: 0, y: -999, z: 0, yaw: 0, scale: scaleK(sc, (rnd() * 3) | 0) }); o.horse.cr = 3; o.horse.lift = k.fit.y; }
+      if (kinds.horse) { const k = kinds.horse, sc = k.fit.k; const cv = (rnd() * 3) | 0; o.horse = k.add({ x: 0, y: -999, z: 0, yaw: 0, scale: k.static ? sc : scaleK(sc, cv), coat: cv }); o.horse.cr = 3; o.horse.lift = k.fit.y; }
       if (alive.people) { o.driver = kinds.man.add({ x: 0, y: -999, z: 0, yaw: 0, scale: PS }); o.driver.cr = 2.4; }
       S.carts.push(o); carts.push(o);
     }
@@ -428,7 +444,7 @@ export function buildWsLife(group, height, opt) {
     for (const a of agents) { if (a.fixed) continue; const o = a.S.site; if (Math.hypot(cam.x - o.x, cam.z - o.z) < WORK_DIST) stepAgent(a, sim, t); }
     for (const a of animals) { const o = a.S.site; if (Math.hypot(cam.x - o.x, cam.z - o.z) < WORK_DIST) stepAnimal(a, sim); }
     drawCarts(t); drawBoats(t);
-    for (const k of Object.values(kinds)) if (k.update) k.update(t, camera, { lodDist: 70, lod2Dist: k.people ? 150 : 1e9, maxDist: FAR_DIST });
+    for (const k of new Set(Object.values(kinds))) if (k.update) k.update(t, camera, { lodDist: 70, lod2Dist: k.people ? 150 : 1e9, maxDist: FAR_DIST });      // (a Set: axe / pick share one Tripo kind)
   }
   const steps = [makePeople, makeAnimals, makeMeshes, () => refresh(castle)];
   return { steps, update, refresh, root, kinds, agents, animals, carts, boats, stats: () => ({ agents: agents.length, animals: animals.length, carts: carts.length, boats: boats.length }), group: root, tradesOf };

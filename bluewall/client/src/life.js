@@ -15,6 +15,7 @@ import { buildModelDragon } from './dragon_model.js';
 import { roadPoints } from './terrain.js';
 import { road } from './roads.js';
 import { buildPastureLife } from './pas_life.js';
+import * as TL from './tr2_life.js';                       // TR2-S4d: Tripo animals (eagles, crows, hens, dogs, wolves, the pasture) when loaded; the old models stay as the fallback
 
 const v3 = new THREE.Vector3();
 const HS = 1.335;                                         // Mesh2Motion horses: bind box is long (tail straight back), scale lengths by this
@@ -112,6 +113,7 @@ export function buildLife(sceneRoot, height, Q, hooks) {
       }
     },
     eagle(g) {
+      if (TL.ready() && TL.has('birds')) g = TL.gltfLike('birds/eagle', { w: 4 }) || g;       // TR2-S4d: the Tripo eagle (static gliding pose: no wing beat — it circles like the old one)
       for (let i = 0; i < 2; i++) {
         const c = makeCreature(g, { length: 5 }); if (!c) continue;
         scene.add(c.root); loop(c, /.*/, 0.8); dayOnly.push(c.root);
@@ -123,6 +125,20 @@ export function buildLife(sceneRoot, height, Q, hooks) {
     // one that three.js no longer reads (they were white dots "circling" in the air). Now: black crows that walk and peck on the ground of the harvested fields.
     crow(g) {
       const F0 = L.FIELDS, cr = Math.cos(F0.rot), sr = Math.sin(F0.rot), flock = [];
+      const TG = TL.ready() && TL.has('birds') ? TL.gltfLike('birds/crow', { w: 2 }) : null;
+      if (TG) {                                                  // TR2-S4d: the Tripo crow only exists in a wings-spread pose, so the flock glides in loose circles over the fields instead of walking on them
+        for (let i = 0; i < 6; i++) {
+          const c = makeCreature(TG, { length: 1.8 }); if (!c) break;
+          scene.add(c.root); dayOnly.push(c.root); c.root.userData.bwCull = 380;
+          const ph = i * 1.05, r = 22 + (i % 3) * 12, dir = i % 2 ? 1 : -1, sp = 0.26 + (i % 3) * 0.04, alt = 16 + (i % 3) * 5;
+          updaters.push((t) => {
+            if (!c.root.visible || c.root.userData.bwFar) return;
+            const a = dir * (t * sp + ph), x = F0.x + Math.cos(a) * r, z = F0.z + Math.sin(a) * r;
+            c.root.position.set(x, height(x, z) + alt + Math.sin(t * 0.7 + i) * 1.5, z); c.root.rotation.set(0, Math.atan2(-dir * Math.sin(a), dir * Math.cos(a)), -dir * 0.3);
+          });
+        }
+        return;
+      }
       const spot = (px, pz) => {
         for (let k = 0; k < 8; k++) { const u = (Math.random() - 0.5) * (F0.w - 8), w = (Math.random() - 0.5) * (F0.d - 8), x = F0.x + u * cr - w * sr, z = F0.z + u * sr + w * cr; if (px === undefined || Math.hypot(x - px, z - pz) < 13) return [x, z]; }
         return [F0.x, F0.z];
@@ -151,7 +167,42 @@ export function buildLife(sceneRoot, height, Q, hooks) {
       });
     },
     // hens (there is no chicken model in the assets): ONE vertex-coloured instanced mesh (1 draw + 1 shadow draw), tinted per bird, walking and pecking around the coop
+    // TR2-S4d: hens / rooster / chicks of the Tripo library (static models: the same walk-and-peck brain, the body bobs and pitches as a whole)
+    _hensT(cx, cz, bx) {
+      const inside = (x, z) => x > bx.min.x && x < bx.max.x && z > bx.min.z && z < bx.max.z, yx = bx.min.x - 7, yz = cz + 3, h0 = height(yx, yz), flat = (x, z) => Math.abs(height(x, z) - h0) < 1.0;
+      const grp = new THREE.Group(); grp.name = 'hens'; scene.add(grp); dayOnly.push(grp);
+      const PK = 'poultry_fish_pack/', D = { hen: TL.dyn(PK + 'hen', 8, { h: 0.8, parent: grp }), rooster: TL.dyn(PK + 'rooster', 2, { h: 0.95, parent: grp }), chick: TL.dyn(PK + 'chick', 4, { h: 0.35, parent: grp }) };
+      if (!D.hen || !D.rooster || !D.chick) return false;
+      const plan = [['hen', 1.0], ['hen', 1.0], ['hen', 1.05], ['hen', 0.97], ['hen', 1.0], ['hen', 1.03], ['rooster', 1.1], ['hen', 0.95], ['chick', 1.0], ['chick', 0.9], ['chick', 1.05]];
+      const M = new THREE.Matrix4(), Eu = new THREE.Euler(), Qn = new THREE.Quaternion(), Sc = new THREE.Vector3(), cnt = { hen: 0, rooster: 0, chick: 0 };
+      const ring = () => { for (let k = 0; k < 20; k++) { const a = Math.random() * 6.28, d = 1.5 + Math.random() * 8, x = yx + Math.cos(a) * d, z = yz + Math.sin(a) * d; if (!inside(x, z) && flat(x, z)) return [x, z]; } return [yx, yz]; };
+      const hens = plan.map(([kind, size]) => { const [x, z] = ring(); return { kind, slot: cnt[kind]++, x, z, ry: Math.random() * 6.28, tx: x, tz: z, walk: false, tm: Math.random() * 4, ph: Math.random() * 6.28, size: size * (kind === 'chick' ? 1.1 : 1.15) }; });
+      const pick = (h) => { for (let k = 0; k < 8; k++) { const [x, z] = ring(); if (Math.hypot(x - h.x, z - h.z) < 7) { h.tx = x; h.tz = z; return; } } const [x, z] = ring(); h.tx = x; h.tz = z; };
+      updaters.push((t, dt) => {
+        if (!grp.visible || (camRef && Math.hypot(camRef.position.x - cx, camRef.position.z - cz) > 300)) return;
+        for (const h of hens) {
+          h.tm -= dt; let pitch = 0, bob = 0, roll = 0;
+          if (!h.walk && h.tm <= 0) { pick(h); h.walk = true; h.tm = 14; }
+          if (h.walk) {
+            const dx = h.tx - h.x, dz = h.tz - h.z, d = Math.hypot(dx, dz);
+            if (d < 0.4 || h.tm <= 0) { h.walk = false; h.tm = 2.5 + Math.random() * 6; }
+            else {
+              let da = Math.atan2(dx, dz) - h.ry; while (da > Math.PI) da -= 6.283; while (da < -Math.PI) da += 6.283;
+              h.ry += da * Math.min(1, dt * 5); const st = 1.1 * dt * Math.max(0, Math.cos(da)), nx = h.x + Math.sin(h.ry) * st, nz = h.z + Math.cos(h.ry) * st;
+              if (inside(nx, nz) || !flat(nx, nz)) { h.walk = false; h.tm = 1 + Math.random() * 3; } else { h.x = nx; h.z = nz; }
+              const w = t * 9 + h.ph; bob = Math.abs(Math.sin(w)) * 0.02; roll = Math.sin(w) * 0.07; pitch = -0.04 + Math.sin(w * 2) * 0.03;
+            }
+          } else { const p = Math.sin(t * 4.6 + h.ph); pitch = p > 0 ? Math.min(1, p * 1.6) * 0.5 : 0; bob = -pitch * 0.02; }     // (a peck: the whole bird nods)
+          Eu.set(pitch, h.ry, roll, 'YXZ'); Qn.setFromEuler(Eu); Sc.setScalar(h.size / 1.2);
+          M.compose(v3.set(h.x, height(h.x, h.z) + bob * h.size, h.z), Qn, Sc); D[h.kind].set(h.slot, M);
+        }
+        for (const k of Object.keys(D)) D[k].flush(cnt[k]);
+      });
+      return true;
+    },
+    // hens (there is no chicken model in the assets): ONE vertex-coloured instanced mesh (1 draw + 1 shadow draw), tinted per bird, walking and pecking around the coop
     _hens(cx, cz, bx) {
+      if (TL.ready() && TL.has('poultry_fish_pack') && this._hensT(cx, cz, bx)) return;
       const inside = (x, z) => x > bx.min.x && x < bx.max.x && z > bx.min.z && z < bx.max.z, yx = bx.min.x - 7, yz = cz + 3, h0 = height(yx, yz), flat = (x, z) => Math.abs(height(x, z) - h0) < 1.0;     // the level grass yard WEST of the coop (east of it the valley wall rises)
       const parts = [], M = new THREE.Matrix4(), Eu = new THREE.Euler(), Qn = new THREE.Quaternion(), Sc = new THREE.Vector3();
       const add = (geo, col, px, py, pz, sx, sy, sz, rx = 0, rz = 0) => {
@@ -213,7 +264,7 @@ export function buildLife(sceneRoot, height, Q, hooks) {
         try { this._pl = buildPastureLife(scene, height, { bay: G2.bay, black: G2.black, grey: G2.grey, models: hooks.models, creatures, shadows: !!Q.shadows }); } catch (e) { console.warn('pasture', e); this._pl = { update() {}, addCows() {} }; }
         const pl = this._pl; updaters.push((t, dt) => pl.update(t, dt, lastP, camRef));
       }
-      if (G2.cow) try { this._pl.addCows(G2.cow); } catch (e) { console.warn('cows', e); }
+      if (G2.cow || TL.ready()) try { this._pl.addCows(G2.cow); } catch (e) { console.warn('cows', e); }
     },
     // Mounted knights: a UAL "K3" knight (great helm, plume, longsword, navy shield, cape; clip "Ride") seated on the saddle bone of each horse.
     _knights() {
@@ -277,13 +328,15 @@ export function buildLife(sceneRoot, height, Q, hooks) {
     },
     wolf(g) {
       // dogs in town (warm tint) by day, grey wolves at the forest edge at night
-      const dogs = herd(scene, g, 3, { cx: L.PLAZA.x - 6, cz: L.PLAZA.z + 14, r: 14, height, size: 2.2, speed: 2.2, seed: 7,
+      const TD = TL.ready() && TL.has('animal_dog') && TL.has('animal_wolf'), gd = TD ? TL.gltfLike('animal_dog') : g, gwf = TD ? TL.gltfLike('animal_wolf') : g;     // TR2-S4d: static Tripo dog / wolf (a procedural trot below)
+      const dogs = herd(scene, gd, 3, { cx: L.PLAZA.x - 6, cz: L.PLAZA.z + 14, r: 14, height, size: 2.2, speed: 2.2, seed: 7,
         avoid: (x, z) => L.sdPoly(L.OUTER, x, z) > -4 });
       for (const c of dogs.list) c.inner.traverse((o) => { if (o.isMesh) { o.material = o.material.clone(); o.material.color.multiply(new THREE.Color(1.25, 1.0, 0.7)); } });
       updaters.push((t, dt) => dogs.update(dt));
-      const wolves = herd(scene, g, 4, { cx: 60, cz: -300, r: 30, height, size: 2.8, speed: 1.8, seed: 13 });
+      const wolves = herd(scene, gwf, 4, { cx: 60, cz: -300, r: 30, height, size: 2.8, speed: 1.8, seed: 13 });
       for (const c of wolves.list) nightOnly.push(c.root);
       updaters.push((t, dt) => wolves.update(dt));
+      if (TD) for (const hd of [dogs, wolves]) for (const c of hd.list) { const by = c.inner.position.y; updaters.push((t) => { if (c.root.userData.bwFar || !c.root.visible) return; const w = c.state === 'walk', u = t * 8 + c.root.id; c.inner.position.y = by + (w ? Math.abs(Math.sin(u)) * 0.05 : 0); c.inner.rotation.z = w ? Math.sin(u) * 0.03 : 0; }); }     // (no legs to move: a small bob + sway while it walks)
     },
     windmill2(g) {
       hooks.hideWindmill();

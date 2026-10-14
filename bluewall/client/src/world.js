@@ -47,6 +47,7 @@ import { Flames, Pools, Flags, Particles, Decals, fireflies } from './fx.js';
 import { Heraldry } from './her_flags.js';
 import { buildDragon } from './dragon.js';
 import { loadAssets, instance, loadLate, LATE, meadowLod } from './assets.js';
+import * as TL from './tr2_life.js';                                    // TR2-S4d: Tripo animals + villagers
 import { buildLife } from './life.js';
 import { makeGroundY, bridgesFromLayout } from './nav.js';
 import { buildUnits } from './units.js';
@@ -72,6 +73,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
   const M = makeMaterials();
   M.flag.alphaTest = 0.5;
   const A = await loadAssets((f) => progress(0.02 + f * 0.42, 'Loading models…'));
+  await TL.preload();                                                     // TR2-S4d: Tripo animals + villagers (never throws; TL.ready() false → the old models stay)
   if (L.MAP === 'day') applyFortTextures(M, A);
   // tier skins (wood / stone / iron / gold / diamond / crystal by structure level, skin.js) — must be set before anything is batched
   applySkin(M.stone, 0); applySkin(M.stoneDark, 1); applySkin(M.roof, 2); applySkin(M.gold, 3); applySkin(M.rune, 4);

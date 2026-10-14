@@ -23,6 +23,7 @@ import { peasantHeadProp } from './peasanthead.js';
 import { mergeSkinned } from './creature.js';
 import { SPOTS, STABLE_FX } from './pas_stable.js';
 import { ENT, levelOf } from './skin.js';
+import * as TL from './tr2_life.js';                         // TR2-S4d: Tripo animals + villagers
 
 const HS = 1.335, H_LEN = 5.6 * HS;                          // Mesh2Motion horse: bind box (tail straight back) -> a 5.6 m horse
 const COW_LEN = 4.9;
@@ -187,41 +188,54 @@ export function buildPastureLife(group, height, opt) {
   const PA = L.PASTURE, R = { s: 4711 }, rnd = () => { R.s = (R.s * 16807) % 2147483647; return R.s / 2147483647; };
   const kinds = [], animals = [], people = [], yard = [], acts = [];
   // ---- horses: one kind for the three coats
-  const hsrc = prepHorse(bay);
-  const HCLIPS = ['Idle', 'Eating', 'Walk', 'Trot'].filter((n) => bay.animations.some((a) => a.name === n));
-  const hk = createKind({ gltf: { scene: hsrc, animations: bay.animations }, anims: bay, clips: HCLIPS, capacity: 28, fps: 20 });
-  const coatMap = (g) => { let m = null; g.scene.traverse((o) => { if (!m && o.isMesh && o.material && o.material.name !== 'Tack' && o.material.map) m = o.material.map; }); return m; };
-  coatPatch(hk, [null, coatMap(black), coatMap(grey)]); crowdShadows(hk, shadows);
-  // half the triangles (the index only: every vertex and its skin weights stay, so the baked animation is untouched) — 18 horses on screen
-  // cost ~55k triangles instead of ~110k, and the heavy crowd vertex shader runs on half the vertices that are actually referenced
-  try {
-    MeshoptSimplifier.ready.then(() => {
-      for (const im of hk.group.children) {
-        const g = im.geometry; if (!im.isInstancedMesh || !g.index || g.userData.pasLod) continue;
-        const pos = g.attributes.position, P = new Float32Array(pos.count * 3); for (let i = 0; i < pos.count; i++) { P[i * 3] = pos.getX(i); P[i * 3 + 1] = pos.getY(i); P[i * 3 + 2] = pos.getZ(i); }
-        const src = new Uint32Array(g.index.array), [dst] = MeshoptSimplifier.simplify(src, P, 3, Math.floor(src.length * 0.5 / 3) * 3, 0.012);
-        if (dst && dst.length > src.length * 0.25) { g.setIndex(new THREE.BufferAttribute(pos.count < 65536 ? new Uint16Array(dst) : dst, 1)); g.userData.pasLod = dst.length / 3; }
-      }
-    }).catch(() => {});
-  } catch (e) { /* no simplifier: full detail */ }
-  group.add(hk.group); kinds.push(hk);
-  const HM = measure(hsrc, [['Idle', 0.3], ['Eating', 0.55]], [['Walk', 0.6], ['Trot', 0.45]]);
-  const HK = H_LEN / Math.max(HM.size.x, HM.size.z), HY = -HM.minY * HK;          // scale for a 5.6 m horse, lift so the hooves stand on y
-  const noseI = HM.Idle ? HM.Idle.z * HK : 3.2, noseE = HM.Eating ? HM.Eating.z * HK : 3.5;
-  // the ground speed each gait clip was made for (no sliding hooves): measured, with sane fallbacks
-  const gaitV = { Walk: HM.v.Walk ? THREE.MathUtils.clamp(HM.v.Walk * HK, 1.6, 6) : 3.1, Trot: HM.v.Trot ? THREE.MathUtils.clamp(HM.v.Trot * HK, 3, 12) : 6.4 };
+  // TR2-S4d: the Tripo horses (static models; the clip name only picks a procedural gait) when the library is loaded, else the old Mesh2Motion crowd
+  const TH = TL.ready() && TL.has('animal_horse_white') && TL.has('animal_horse_brown') && TL.has('animal_horse_black') ? TL.horses({ len: H_LEN, capacity: 28, shadows }) : null;
+  let hk, HM = null, HK = 1, HY = 0, noseI = H_LEN * 0.5, noseE = H_LEN * 0.5, gaitV = { Walk: 3.1, Trot: 6.4 };
+  if (TH) { hk = TH; group.add(hk.group); kinds.push(hk); }
+  else {
+    const hsrc = prepHorse(bay);
+    const HCLIPS = ['Idle', 'Eating', 'Walk', 'Trot'].filter((n) => bay.animations.some((a) => a.name === n));
+    hk = createKind({ gltf: { scene: hsrc, animations: bay.animations }, anims: bay, clips: HCLIPS, capacity: 28, fps: 20 });
+    const coatMap = (g) => { let m = null; g.scene.traverse((o) => { if (!m && o.isMesh && o.material && o.material.name !== 'Tack' && o.material.map) m = o.material.map; }); return m; };
+    coatPatch(hk, [null, coatMap(black), coatMap(grey)]); crowdShadows(hk, shadows);
+    // half the triangles (the index only: every vertex and its skin weights stay, so the baked animation is untouched) — 18 horses on screen
+    // cost ~55k triangles instead of ~110k, and the heavy crowd vertex shader runs on half the vertices that are actually referenced
+    try {
+      MeshoptSimplifier.ready.then(() => {
+        for (const im of hk.group.children) {
+          const g = im.geometry; if (!im.isInstancedMesh || !g.index || g.userData.pasLod) continue;
+          const pos = g.attributes.position, P = new Float32Array(pos.count * 3); for (let i = 0; i < pos.count; i++) { P[i * 3] = pos.getX(i); P[i * 3 + 1] = pos.getY(i); P[i * 3 + 2] = pos.getZ(i); }
+          const src = new Uint32Array(g.index.array), [dst] = MeshoptSimplifier.simplify(src, P, 3, Math.floor(src.length * 0.5 / 3) * 3, 0.012);
+          if (dst && dst.length > src.length * 0.25) { g.setIndex(new THREE.BufferAttribute(pos.count < 65536 ? new Uint16Array(dst) : dst, 1)); g.userData.pasLod = dst.length / 3; }
+        }
+      }).catch(() => {});
+    } catch (e) { /* no simplifier: full detail */ }
+    group.add(hk.group); kinds.push(hk);
+    HM = measure(hsrc, [['Idle', 0.3], ['Eating', 0.55]], [['Walk', 0.6], ['Trot', 0.45]]);
+    HK = H_LEN / Math.max(HM.size.x, HM.size.z), HY = -HM.minY * HK;          // scale for a 5.6 m horse, lift so the hooves stand on y
+    noseI = HM.Idle ? HM.Idle.z * HK : 3.2, noseE = HM.Eating ? HM.Eating.z * HK : 3.5;
+    // the ground speed each gait clip was made for (no sliding hooves): measured, with sane fallbacks
+    gaitV = { Walk: HM.v.Walk ? THREE.MathUtils.clamp(HM.v.Walk * HK, 1.6, 6) : 3.1, Trot: HM.v.Trot ? THREE.MathUtils.clamp(HM.v.Trot * HK, 3, 12) : 6.4 };
+  }
   const COATS = { bay: 0, black: 1, grey: 2 };
-  const horse = (coat, s = 1, blob = true) => { const p = hk.add({ x: 0, y: -999, z: 0, yaw: 0, scale: scaleK(HK * s, COATS[coat] || 0) }); p.cr = 5 * s; p.s = s; p.lift = HY * s; if (blob) blobList.push([p, 6.2 * s, 2.5 * s]); return p; };
+  const horse = (coat, s = 1, blob = true) => { const p = hk.add({ x: 0, y: -999, z: 0, yaw: 0, scale: TH ? s : scaleK(HK * s, COATS[coat] || 0), coat: COATS[coat] || 0 }); p.cr = 5 * s; p.s = s; p.lift = HY * s; if (blob) blobList.push([p, 6.2 * s, 2.5 * s]); return p; };
 
   // ---- people (peasant crowds); without the models the yard keeps its animals only
   let pm = null, pf = null;
   const anims = models && models.anims;
   const PCLIPS = ['Idle_Loop', 'Walk_Loop', 'Interact', 'Fixing_Kneeling', 'Sitting_Idle_Loop', 'Idle_Talking_Loop'];
+  // TR2-S4d: Tripo villagers (their `walk` clip + one frozen frame for every other clip name; scale 1 = metres) when the library is loaded
+  const TP = TL.ready() && TL.has('villager_man') && TL.has('villager_woman');
   try {
+    if (TP) {
+      pm = TL.people('villager_man', { capacity: 12, fps: 15, lod2: { cloth: 0x6e5a42, legs: 0x3b3129, h: 1.8 } }); pf = TL.people('villager_woman', { capacity: 8, fps: 15, lod2: { cloth: 0x7d5b4a, legs: 0x4a3a30, h: 1.75 } });
+      for (const k of [pm, pf]) if (k) { crowdShadows(k, shadows); group.add(k.group); kinds.push(k); }
+    } else {
     if (anims && models.peasant_m) { pm = createKind({ gltf: models.peasant_m, anims, clips: PCLIPS, capacity: 12, fps: 15, props: [peasantHeadProp(false, 0)], lod2: { cloth: 0x6e5a42, legs: 0x3b3129, h: 1.8 } }); pm.people = true; crowdShadows(pm, shadows); group.add(pm.group); kinds.push(pm); }
     if (anims && models.peasant_f) { pf = createKind({ gltf: models.peasant_f, anims, clips: PCLIPS, capacity: 8, fps: 15, props: [peasantHeadProp(true, 1)], lod2: { cloth: 0x7d5b4a, legs: 0x4a3a30, h: 1.75 } }); pf.people = true; crowdShadows(pf, shadows); group.add(pf.group); kinds.push(pf); }
+    }
   } catch (e) { console.warn('pasture people', e); }
-  const PS = 1.75 * 0.95;
+  const PS = TP && pm ? 1 : 1.75 * 0.95;
   const manRate = (v) => { const ws = (pm && pm.stats.walkSpeed) || 1.25; return THREE.MathUtils.clamp(v / (ws * PS), 0.6, 1.5); };   // Walk_Loop playback for a ground speed (no sliding feet)
   const person = (k, x, z, yaw, clip, phase = rnd() * 3) => { const kk = k === 'f' ? pf || pm : pm || pf; if (!kk) return null; const p = kk.add({ x, y: height(x, z), z, yaw, scale: PS, clip, phase }); p.cr = 2.6; yard.push(p); p.homeY = p.y; p.lift = 0; blobList.push([p, 1.7, 1.5]); return p; };
 
@@ -466,7 +480,23 @@ export function buildPastureLife(group, height, opt) {
 
   // ---- cows: their own kind (arrives with its model)
   function addCows(cow) {
-    if (!cow || addCows.done) return; addCows.done = true;
+    const TC = TL.ready() && TL.has('animal_cow') && TL.has('animal_calf');
+    if ((!cow && !TC) || addCows.done) return; addCows.done = true;
+    if (TC) {                                                                                  // TR2-S4d: Tripo cows + a calf (static; procedural gait)
+      const ck = TL.fauna('animal_cow', { len: COW_LEN, capacity: 10, shadows }), kc = TL.fauna('animal_calf', { len: COW_LEN * 0.62, capacity: 4, shadows });
+      if (ck && kc) {
+        group.add(ck.group, kc.group); kinds.push(ck, kc); cowV = 1.6;
+        [[0, 1.0], [1, 1.04], [2, 0.97], [4, 0.95], [3, 1.02], [1, 0.6]].forEach(([coat, s], i) => {
+          const calf = i === 5, p = (calf ? kc : ck).add({ x: 0, y: -999, z: 0, yaw: 0, scale: calf ? 1 : s }); p.cr = 3.5; p.s = s; p.lift = 0; blobList.push([p, 5.0 * s, 2.4 * s]);
+          const a = addAnimal(p, 'cow'); a.rad = 2.0 * s;
+          const xz = calf && animals.length > 1 ? [animals[animals.length - 2].p.x + 3, animals[animals.length - 2].p.z + 2] : spot(a, 'cow') || [PA.x - 6, PA.z + 6];
+          p.x = xz[0]; p.z = xz[1]; p.yaw = rnd() * 6.28; setGround(a); a.state = rnd() < 0.75 ? 'graze' : 'stand'; playA(a, a.state === 'graze' ? 'Eating' : 'Idle');
+          creatures && creatures.push({ id: 'cow', r: 2.4, vis: () => group.visible && p.y > -500, center: () => _v.set(p.x, p.y + 1.6, p.z) });
+        });
+        return;
+      }
+      addCows.done = false; if (!cow) return; addCows.done = true;
+    }
     const src = SkeletonUtils.clone(cow.scene); mergeSkinned(src); smoothSkinned(src);
     const CCL = ['Idle', 'Idle_2', 'Idle_Headlow', 'Eating', 'Walk'].filter((n) => cow.animations.some((a) => a.name === n));
     const ck = createKind({ gltf: { scene: src, animations: cow.animations }, anims: cow, clips: CCL, capacity: 10, fps: 20 });

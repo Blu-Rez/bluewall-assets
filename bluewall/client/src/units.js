@@ -7,6 +7,7 @@ import { cloneSkinned } from './assets.js';
 import { mergeSkinned } from './creature.js';
 import { makeAxe, AXE_GRIP } from './gear_axe.js';
 import { peasantHead } from './peasanthead.js';
+import * as TL from './tr2_life.js';                                  // TR2-S4d: Tripo villagers
 
 const SC = 1.75;                     // gameplay scale for people (readable from the strategy camera)
 
@@ -44,6 +45,15 @@ export function buildUnits(scene, A, height, opts = {}) {
     scene.add(root); units.push(u);
     return u;
   }
+  // TR2-S4d: a Tripo villager as a plain skinned character: its `walk` clip + one frozen frame for every other clip name (no work / talk clips in the library)
+  function makeT(key) {
+    const sk = TL.skinned(key); if (!sk) return null;
+    const acts = { Walk_Loop: sk.mixer.clipAction(sk.walk), Idle_Loop: sk.mixer.clipAction(sk.idle) };
+    scene.add(sk.root);
+    const u = { root: sk.root, mixer: sk.mixer, act: null, name: '', path: null, speed: sk.speed, t: Math.random() * 10, clips: {} };
+    u.play = (name, fade = 0.3) => { const n = name === 'Walk_Loop' ? 'Walk_Loop' : 'Idle_Loop'; if (u.name === n) return; const a = acts[n]; a.reset().play(); if (u.act) u.act.crossFadeTo(a, fade, false); u.act = a; u.name = n; };
+    units.push(u); return u;
+  }
   const place = (u, x, z, ry) => { u.root.position.set(x, height(x, z), z); u.root.rotation.y = ry; };
 
   // ------------------------------------------------ gate guards (sword + shield)
@@ -63,8 +73,9 @@ export function buildUnits(scene, A, height, opts = {}) {
   // ------------------------------------------------ villagers
   const spots = opts.workSpots || [[6, -22], [22, -12], [-20, -4], [16, 18], [-12, 24], [4, 10]];
   spots.forEach(([x, z], k) => {
-    const u = make(k % 2 ? 'peasant_f' : 'peasant_m', SC * 0.95); if (!u) return;
-    { const hb = u.root.getObjectByName('Head'); if (hb) hb.add(peasantHead(k % 2 === 1, k % 3)); }     // the peasant models have no head of their own
+    const TV = TL.ready() && TL.has('villager_man') && TL.has('villager_woman');
+    const u = TV ? makeT(k % 2 ? 'villager_woman' : 'villager_man') : make(k % 2 ? 'peasant_f' : 'peasant_m', SC * 0.95); if (!u) return;
+    if (!TV) { const hb = u.root.getObjectByName('Head'); if (hb) hb.add(peasantHead(k % 2 === 1, k % 3)); }     // the old peasant models have no head of their own (the Tripo villagers do)
     if (k % 3 === 0) { place(u, x, z, Math.random() * 6); u.play('Fixing_Kneeling'); return; }
     if (k % 3 === 1) { place(u, x, z, Math.random() * 6); u.play('Idle_Talking_Loop'); return; }
     const x2 = x * 0.2, z2 = z * 0.2 + 8;
