@@ -1,0 +1,115 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#222">
+<script>window.BW_ASSETS = '/s2assets/';</script>
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
+<canvas id=out></canvas>
+<script type=module>
+import * as THREE from 'three';
+import { tr2 } from '/src/tr2lib.js';
+import { Batcher, mat4 } from '/src/util.js';
+import { patchDestruct, initDestruct, DS, DU } from '/src/destruct.js';
+import { setLevelCap, tierState, pieceTier, singleTier, TIER_KEYS } from '/src/tiers.js';
+
+const q = new URLSearchParams(location.search), STAGE = (q.get('stage') || 'all').split(',');
+const RES = window.__res = { stages: STAGE, errors: [] };
+const log = (...a) => console.log(...a);
+const cv = document.getElementById('out'), c2 = cv.getContext('2d');
+const mkRenderer = (w, h) => { const R = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true }); R.setSize(w, h); R.setPixelRatio(1); R.outputColorSpace = THREE.SRGBColorSpace; R.toneMapping = THREE.ACESFilmicToneMapping; R.shadowMap.enabled = true; R.shadowMap.type = THREE.PCFSoftShadowMap; return R; };
+const mkScene = () => {
+  const sc = new THREE.Scene(); sc.background = new THREE.Color(0x9fb4cc); sc.fog = new THREE.Fog(0x9fb4cc, 150, 420);
+  sc.add(new THREE.HemisphereLight(0xdfe8ff, 0x5a6048, 1.6));
+  const dl = new THREE.DirectionalLight(0xfff0d8, 2.6); dl.position.set(-60, 90, 70); dl.castShadow = true; dl.shadow.mapSize.set(1024, 1024);
+  const sh = dl.shadow.camera; sh.left = -90; sh.right = 90; sh.top = 60; sh.bottom = -60; sh.near = 10; sh.far = 300; sc.add(dl);
+  const g = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), new THREE.MeshStandardMaterial({ color: 0x73845a, roughness: 1 })); g.rotation.x = -Math.PI / 2; g.receiveShadow = true; sc.add(g);
+  return sc;
+};
+const mkCam = (w, h, tx, d, el, az = 0, fov = 42) => { const c = new THREE.PerspectiveCamera(fov, w / h, 0.5, 2000); const e = el * Math.PI / 180, a = az * Math.PI / 180; c.position.set(tx + Math.sin(a) * Math.cos(e) * d, Math.sin(e) * d, Math.cos(a) * Math.cos(e) * d); c.lookAt(tx, 4, 0); return c; };
+const label = (t, x, y, w) => { c2.fillStyle = 'rgba(10,16,28,.8)'; c2.fillRect(x, y, w, 18); c2.fillStyle = '#e8eef8'; c2.font = '12px sans-serif'; c2.fillText(t, x + 5, y + 13); };
+const WALL_H = 9.5, WALL_W = 14;
+
+try {
+  const swap = await (await fetch('/s2assets/tr2/swap.json')).json();
+  await tr2.init({ swap, base: '/s2assets/tr2/' });
+
+  // ================================================================ stage 1: destruct hook on baked Tripo pieces
+  if (STAGE.includes('all') || STAGE.includes('destruct')) {
+    const W = 480, H = 330, R = mkRenderer(W, H), sc = mkScene();
+    await tr2.load(['castle_wall_stone', 'castle_tower_medium_stone']);
+    const B = new Batcher(); B.bid(1);
+    const n = 4, x0 = -(n * WALL_W) / 2;
+    for (let i = 0; i < n; i++) tr2.bake(B, 'castle_wall_stone', mat4(x0 + WALL_W * (i + 0.5), 0, 0, 0), { w: WALL_W });
+    tr2.bake(B, 'castle_tower_medium_stone', mat4(x0, 0, 0, 0), { h: 14 }); tr2.bake(B, 'castle_tower_medium_stone', mat4(-x0, 0, 0, 0), { h: 14 });
+    const meshes = B.build(sc); const seen = new Set(); for (const m of meshes) if (!seen.has(m.material)) { seen.add(m.material); patchDestruct(m.material); }   // = world.js: every static material is patched
+    initDestruct([{ id: 1, x: 0, z: 0, w: n * WALL_W + 8, d: 8, h: 14, rot: 0 }], () => 0);
+    const verts = meshes.reduce((a, m) => a + m.geometry.attributes.position.count, 0), hasAB = meshes.every((m) => m.geometry.attributes.aB && m.geometry.attributes.aB.array.every((v) => v === 1));
+    RES.destruct = { meshes: meshes.length, verts, aB_all_1: hasAB, tris: Math.round(verts / 3), info: tr2.info('castle_wall_stone', { w: WALL_W }) };
+    const steps = [['0 intact', 0, 0, 0], ['damage 0.6', 0, 0.6, 0], ['collapse 0.12 (flash)', 0.12, 0.6, 1], ['collapse 0.3', 0.3, 0.6, 0], ['collapse 0.45', 0.45, 0.6, 0], ['collapse 0.6', 0.6, 0.6, 0], ['collapse 0.7', 0.7, 0.6, 0], ['collapse 1.0 (buried)', 1.0, 0.6, 0]];
+    cv.width = W * 4; cv.height = H * 2 + 0; c2.fillStyle = '#1b2230'; c2.fillRect(0, 0, cv.width, cv.height);
+    const cam = mkCam(W, H, 0, 66, 20, 14);
+    DU.battle.value = 1; const ys = [];
+    steps.forEach((s, i) => {
+      DS.set(1, { collapse: s[1], dmg: s[2], flash: s[3] }); DS.flush(); R.render(sc, cam);
+      const x = (i % 4) * W, y = Math.floor(i / 4) * H; c2.drawImage(R.domElement, x, y); label(s[0], x, y, W);
+      const px = new Uint8Array(4); const gl = R.getContext(); ys.push(i);
+    });
+    // the intact frame after reset must equal the first frame (the hook is reversible)
+    DU.battle.value = 0; DS.reset(); R.render(sc, cam);
+    RES.destruct.programs = R.info.programs.length; RES.destruct.textures = R.info.memory.textures;
+    RES.destruct.sheet = 'destruct';
+    window.__sheetDone = 'destruct';
+    window.__snap = cv.toDataURL('image/png');
+    R.dispose();
+  }
+
+  // ================================================================ stage 2: shader programs + texture memory (fresh renderer per row)
+  if (STAGE.includes('all') || STAGE.includes('progs')) {
+    const names12 = ['castle_wall_wood', 'castle_wall_stone', 'castle_wall_iron', 'castle_gate_wood', 'castle_gate_stone', 'castle_gate_iron', 'castle_tower_short_wood', 'castle_tower_short_stone', 'castle_tower_short_iron', 'castle_tower_tall_wood', 'castle_tower_tall_stone', 'castle_tower_tall_iron'];
+    await tr2.load(names12);
+    const plaster = () => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'); x.fillStyle = '#c9b79a'; x.fillRect(0, 0, 64, 64); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return new THREE.MeshStandardMaterial({ map: t, roughness: 0.95, vertexColors: true, envMapIntensity: 0.25 }); };
+    const base = (sc) => { const B = new Batcher(); B.add(new THREE.BoxGeometry(6, 6, 6), plaster(), mat4(0, 3, 30)); for (const m of B.build(sc)) patchDestruct(m.material); };     // = what the game already has: a patched plain map + vertexColors static mesh
+    const row = (label, build) => {
+      const R = mkRenderer(96, 64), sc = mkScene(), cam = mkCam(96, 64, 0, 120, 25); build(sc); R.render(sc, cam);
+      const r = { label, programs: R.info.programs.length, textures: R.info.memory.textures, geometries: R.info.memory.geometries, calls: R.info.render.calls, tris: R.info.render.triangles, list: R.info.programs.map((p) => p.name + ' ' + (p.cacheKey.includes('bwdestr3d') ? '[destruct depth]' : p.cacheKey.includes('bwdestr3') ? '[destruct]' : '[plain]') + (p.cacheKey.includes('instanc') || /USE_INSTANCING/.test(p.cacheKey) ? ' [instanced]' : '')) };
+      R.dispose(); R.forceContextLoss(); return r;
+    };
+    const bakeN = (sc, list, patch = true) => { const B = new Batcher(); B.bid(2); list.forEach((n, i) => tr2.bake(B, n, mat4(-40 + i * 8, 0, 0, 0), n.includes('tower') ? { h: 12 } : { w: 14 })); const ms = B.build(sc); if (patch) for (const m of ms) patchDestruct(m.material); return ms; };
+    RES.progs = [];
+    RES.progs.push(row('A: baseline = 1 patched plain static material (plaster-like: map + vertexColors)', (sc) => base(sc)));
+    RES.progs.push(row('B: A + 1 Tripo model (castle_wall_wood), batched + destruct patch', (sc) => { base(sc); bakeN(sc, names12.slice(0, 1)); }));
+    RES.progs.push(row('C: A + 12 different Tripo models (12 textures), batched + destruct patch', (sc) => { base(sc); bakeN(sc, names12); }));
+    RES.progs.push(row('D: C but the Tripo meshes WITHOUT the destruct patch (nothing patched at all)', (sc) => { const B = new Batcher(); B.add(new THREE.BoxGeometry(6, 6, 6), plaster(), mat4(0, 3, 30)); B.build(sc); bakeN(sc, names12, false); }));
+    RES.progs.push(row('E: C + one InstancedMesh group of Tripo towers (the tree / rock / lamp path)', (sc) => { base(sc); bakeN(sc, names12); tr2.instances(sc, 'castle_tower_short_stone', Array.from({ length: 20 }, (_, i) => mat4(-60 + i * 6, 0, 22, i)), { h: 8 }); }));
+    RES.progs.push(row('F: E but the instanced towers do not cast shadows (far props)', (sc) => { base(sc); bakeN(sc, names12); tr2.instances(sc, 'castle_tower_short_stone', Array.from({ length: 20 }, (_, i) => mat4(-60 + i * 6, 0, 22, i)), { h: 8, cast: false }); }));
+    RES.stats = tr2.stats();
+  }
+
+  // ================================================================ stage 3: tier sweep 1..50 (cap 50): pieceTier by slot, lazy loading, resident textures, frames
+  if (STAGE.includes('all') || STAGE.includes('tiers')) {
+    setLevelCap(50);
+    const KINDS = ['castle_wall', 'castle_gate', 'castle_tower_short', 'castle_tower_medium', 'castle_tower_tall'];
+    const W = 320, H = 210, SHOW = [1, 7, 13, 19, 26, 29, 32, 38, 44, 50], R = mkRenderer(W, H), cam = mkCam(W, H, 8, 112, 22, 10, 40);
+    cv.width = W * 5; cv.height = H * 2; c2.fillStyle = '#1b2230'; c2.fillRect(0, 0, cv.width, cv.height);
+    RES.tiers = []; let shown = 0, maxTex = 0, maxMB = 0, t0 = performance.now(), cur = [];
+    const sc = mkScene(); R.render(sc, cam); const baseGpu = R.info.memory.textures;        // (shadow map + ground: the part that is not Tripo)
+    for (let level = 1; level <= 50; level++) {
+      const r = await tr2.ensureLevel(level, KINDS);                        // 1. load what this level shows (and the next tier, idle)
+      const B = new Batcher(); B.bid(3); const used = new Set(), st = tierState(level, 50);
+      for (let i = 0; i < 4; i++) { const t = pieceTier(level, i, 50), n = 'castle_wall_' + TIER_KEYS[t]; used.add(n); tr2.bake(B, n, mat4(-42 + i * 14 + 7, 0, 0, 0), { w: 14 }); }
+      { const n = 'castle_gate_' + TIER_KEYS[singleTier(level, 50)]; used.add(n); tr2.bake(B, n, mat4(21 + 8, 0, 0, 0), { w: 16 }); }
+      [['castle_tower_short', 0, -42], ['castle_tower_medium', 1, 14], ['castle_tower_tall', 2, 58]].forEach(([k, i, x]) => { const n = k + '_' + TIER_KEYS[pieceTier(level, i, 50)]; used.add(n); tr2.bake(B, n, mat4(x, 0, -3, 0), { h: k.endsWith('tall') ? 18 : k.endsWith('medium') ? 14 : 10 }); });
+      const ms = B.build(sc); for (const m of ms) patchDestruct(m.material);   // 2. rebuild: the new meshes in, the old ones out
+      for (const m of cur) { sc.remove(m); m.geometry.dispose(); } cur = ms;
+      const dropped = tr2.drop(r.drop);                                     // 3. the old tier is not used by anything now: free its textures
+      R.render(sc, cam);
+      const gpuTex = R.info.memory.textures; let tris = 0; for (const m of ms) tris += m.geometry.attributes.position.count / 3;
+      const stt = tr2.stats(); maxTex = Math.max(maxTex, stt.textures); maxMB = Math.max(maxMB, stt.texMB);
+      RES.tiers.push({ level, lo: TIER_KEYS[st.lo], hi: TIER_KEYS[st.hi], half: st.half, usedTextures: used.size, loaded: r.now.length + ' now / ' + r.soon.length + ' soon', dropped, resident: stt.textures, residentMB: stt.texMB, gpuTextures: gpuTex, gpuTexturesTripo: gpuTex - baseGpu, drawCalls: R.info.render.calls, programs: R.info.programs.length, tris: Math.round(tris) });
+      if (SHOW.includes(level)) { const x = (shown % 5) * W, y = Math.floor(shown / 5) * H; c2.drawImage(R.domElement, x, y); label('cap 50 · level ' + level + ' · ' + TIER_KEYS[st.lo] + (st.half ? ' / ' + TIER_KEYS[st.hi] + ' (half)' : ''), x, y, W); shown++; }
+    }
+    // let the idle loads settle, then count again
+    await new Promise((r) => setTimeout(r, 300)); RES.tiersSummary = { maxResidentTextures: maxTex, maxResidentMB: maxMB, seconds: +((performance.now() - t0) / 1000).toFixed(1), final: tr2.stats() };
+    R.dispose();
+  }
+  RES.ok1 = true;
+} catch (e) { RES.errors.push(String(e && e.stack || e).slice(0, 600)); }
+window.__done = true;
+</script>

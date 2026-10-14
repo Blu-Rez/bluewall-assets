@@ -4,12 +4,13 @@
 // Medieval Village MegaKit models, all CC0; one vertex-colour material), local to the lot: x right, z toward the street (the front), y = ground, ry about +y (three.js: local +z maps to
 // world (sin ry, cos ry)).  Nothing here is hard-wired to a map spot: the town planner (B1) gives every lot { id, kind, x, z, ry, r } and the player may move it later.
 //   CIVIC_KINDS                     { kind: { fa, role, place, unlock (ph), w, d } }        footprint { w, d } in metres (x by z), lot-local, centred on the origin
-//   civicLevel(kind, castle)        0 = locked, 1..30
+//   civicLevel(kind, castle)        0 = locked, 1..CAP (tiers.js LEVEL_CAP, 30 today)
 //   civicTier(lv)                   0..5 = wood stone iron gold diamond crystal (skin.js TIER_AT steps)
 //   civicPieces(kind, lv, seed)     [{ n: 'cv_tavern_b', x, z, ry, s }]  deterministic per seed, bakePieces(scene, kit, list) places them as they are
 //   civicSolids(kind, lv)           [[x, z, r], ...] lot-local circles nothing may walk into (nav)
 //   civicNames()                    every piece name this module can ask for (the test checks them against the kit)
 import { rng } from './noise.js';
+import { LEGACY_TIER_AT, LEVEL_CAP } from './tiers.js';
 
 // unlock levels are placeholders (ph): the economy design (package E1) / the server owner decides
 export const CIVIC_KINDS = {
@@ -19,13 +20,13 @@ export const CIVIC_KINDS = {
   market:   { fa: 'بازار',               role: 'C', place: 'free', unlock: 3, w: 32, d: 32 },     // trade -> tax bonus
   tavern:   { fa: 'میخانه',              role: 'C', place: 'free', unlock: 6, w: 22, d: 20 },     // loyalty
 };
-export const civicLevel = (kind, castle) => (CIVIC_KINDS[kind] && castle >= CIVIC_KINDS[kind].unlock ? Math.max(1, Math.min(30, Math.round(castle))) : 0);
+export const civicLevel = (kind, castle) => (CIVIC_KINDS[kind] && castle >= CIVIC_KINDS[kind].unlock ? Math.max(1, Math.min(LEVEL_CAP, Math.round(castle))) : 0);
 
 // the same steps as the structure looks (skin.js TIER_AT, player-facing 1..30): 1 wood · 6 stone · 12 iron · 18 gold · 24 diamond · 30 crystal
-export const TIER_AT = [1, 6, 12, 18, 24, 30];
+export const TIER_AT = LEGACY_TIER_AT;                              // TR2-S2: the live array of tiers.js
 export const civicTier = (lv) => { let t = 0; for (let i = 0; i < TIER_AT.length; i++) if (lv >= TIER_AT[i]) t = i; return t; };
-const N = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, Math.min(30, lv)) - 1) / 29);     // a at level 1 -> b at level 30
-const kScale = (lv) => 0.8 + 0.2 * (Math.max(1, Math.min(30, lv)) - 1) / 29;                    // the main building grows a little with the level (the rest is MORE of everything)
+const N = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, Math.min(LEVEL_CAP, lv)) - 1) / (LEVEL_CAP - 1));     // a at level 1 -> b at the top level (cap)
+const kScale = (lv) => 0.8 + 0.2 * (Math.max(1, Math.min(LEVEL_CAP, lv)) - 1) / (LEVEL_CAP - 1);                    // the main building grows a little with the level (the rest is MORE of everything)
 const DEG = Math.PI / 180, r3 = (v) => Math.round(v * 1000) / 1000;
 const P = (n, x, z, ry = 0, s = 1) => ({ n: 'cv_' + n, x: r3(x), z: r3(z), ry: r3(ry), s: r3(s) });
 const gold = (t) => (t >= 3 ? 'y' : 'b');                                                          // the gold-roofed twin from the gold tier on (lv 18+)
@@ -44,7 +45,7 @@ const BUILD = {
   // ---------------------------------------------------------------- well: one small stone well; richer ones get a bucket, jars, lamps
   well(lv, R) {
     const o = [], t = civicTier(lv), g = gold(t);
-    o.push(P('well_' + g, 0, 0, 0, 0.9 + 0.2 * (lv / 30)));
+    o.push(P('well_' + g, 0, 0, 0, 0.9 + 0.2 * (lv / LEVEL_CAP)));
     o.push(P('bucket', 1.9, 1.2, R() * 6, 1));
     if (t >= 1) o.push(P('barrel', -2.0, 1.6, R() * 6, 0.9));
     if (t >= 2) { o.push(P('amphora', -2.2, -1.1, R() * 6, 1)); o.push(P('amphora', 2.2, -1.3, R() * 6, 0.9)); }
@@ -104,8 +105,8 @@ const BUILD = {
     const hall = t >= 2;
     // the middle: a well, then the market cross (a pillar on a stone plinth)
     if (t < 2) o.push(P('well_b', 0, 0, 0, 1.2 * ks));
-    else { o.push(P('cross', 0, 0, 0, 0.9 + 0.1 * (lv / 30))); }
-    if (hall) o.push(P('markethall_' + g, 0, -11.4, 0, 0.95 + 0.05 * (lv / 30)));
+    else { o.push(P('cross', 0, 0, 0, 0.9 + 0.1 * (lv / LEVEL_CAP))); }
+    if (hall) o.push(P('markethall_' + g, 0, -11.4, 0, 0.95 + 0.05 * (lv / LEVEL_CAP)));
     // the ring of stalls: fixed slots (a stall never moves when the market levels up), the main street comes in at +z so that bit of the ring stays open and the back is kept for the market hall
     const n = N(lv, 4, RING_SLOTS.length), kinds = t >= 3 ? ['veg', 'wine', 'rich', 'pots'] : ['veg', 'wine', 'pots'];
     for (let r = 0; r < n; r++) {
@@ -128,7 +129,7 @@ const BUILD = {
 export function civicPieces(kind, lv, seed = 1) {
   const f = BUILD[kind]; if (!f || lv <= 0) return [];
   const R = rng(((seed | 0) * 2654435761 ^ (kind.length * 40503 + lv * 97)) >>> 0 || 7);
-  return f(Math.max(1, Math.min(30, Math.round(lv))), R);
+  return f(Math.max(1, Math.min(LEVEL_CAP, Math.round(lv))), R);
 }
 
 // circles [x, z, r] (lot-local) of the standing buildings, at the given level (nav / the layout editor's overlap check)
@@ -140,6 +141,6 @@ export function civicSolids(kind, lv, seed = 1) {
 }
 export function civicNames() {
   const set = new Set();
-  for (const k of Object.keys(BUILD)) for (const lv of [1, 6, 12, 18, 24, 30]) for (const seed of [1, 2, 3]) for (const p of civicPieces(k, lv, seed)) set.add(p.n);
+  for (const k of Object.keys(BUILD)) for (const lv of LEGACY_TIER_AT.slice()) for (const seed of [1, 2, 3]) for (const p of civicPieces(k, lv, seed)) set.add(p.n);
   return [...set].sort();
 }

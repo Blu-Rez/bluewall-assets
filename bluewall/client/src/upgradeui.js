@@ -4,6 +4,7 @@
 //       Buy (structures not built yet) · New (what the next castle levels unlock).
 // All rules live on the server (progress.py); this file only draws /api/state's `prog` and calls /api/upgrade/*.
 import { GEMS } from './ui.js';
+import { LEGACY_TIER_AT, legacyTier } from './tiers.js';
 
 const GEM_KEYS = ['ruby', 'emerald', 'turq'];
 const NAME = {
@@ -26,7 +27,7 @@ const DESC = {
 };
 const CATS = [['all', 'All'], ['town', 'Town'], ['defense', 'Defense'], ['army', 'Army'], ['resource', 'Resources']];
 const TIERS = [['Wood', '#c08a50', '#5a3a1c'], ['Stone', '#c5cbd6', '#4a505c'], ['Iron', '#9db0c8', '#2c3748'], ['Gold', '#ffd35e', '#7a5410'], ['Diamond', '#bff0ff', '#2a6f8f'], ['Crystal', '#62b4ff', '#0b2e78']];
-const tierOf = (lv) => (lv >= 30 ? 5 : lv >= 24 ? 4 : lv >= 18 ? 3 : lv >= 12 ? 2 : lv >= 6 ? 1 : 0);        // (30 levels: the looks start at 1 / 6 / 12 / 18 / 24 / 30, like skin.js)
+const tierOf = (lv) => legacyTier(lv);        // TR2-S2: the looks start at the steps of tiers.js LEGACY_TIER_AT (1 / 6 / 12 / 18 / 24 / 30 at cap 30, like skin.js)
 const WHY = { gems: 'Not enough gems', cap: 'Castle too low', vault: 'Vault too small', locked: 'Locked', busy: 'Busy', queue_full: 'Queue full', max: 'MAX', slow: 'Too fast, try again', bad: 'Not possible', offline: 'Offline preview',
   round: 'Bring every building up first', rush_limit: 'Rush limit reached for today' };
 const fmtH = (s) => { const h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60); return h ? `${h}h${m ? ' ' + m + 'm' : ''}` : `${m}m`; };
@@ -211,7 +212,7 @@ export function createUpgradeUI(mount, { econ, ui, audio } = {}) {
       h = unbuilt.map(([e, r]) => row(e, r, p, 'buy')).join('') || '<div class="bwu-note">Everything is built — upgrade it all!</div>';
     } else {
       const keep = p.b.keep, A = [[3, 'Stable — horses & winged horses'], [4, 'Ballista towers on the walls'], [5, 'Forge — better armour'], [7, 'Siege workshop & a third builder'], [10, 'Dragon lair — dragons!']];
-      const V = [[1, 'Wooden kingdom'], [6, 'Stone walls & towers'], [12, 'Iron plating, banners'], [18, 'Golden trim, glowing runes'], [24, 'Diamond, faceted & icy'], [30, 'Blue Crystal — the legendary Blue Wall']];
+      const V = ['Wooden kingdom', 'Stone walls & towers', 'Iron plating, banners', 'Golden trim, glowing runes', 'Diamond, faceted & icy', 'Blue Crystal — the legendary Blue Wall'].map((t, i) => [LEGACY_TIER_AT[i], t]);
       h = '<div class="bwu-note" style="text-align:left;margin-top:10px">CASTLE UNLOCKS</div>' + A.map(([l, t]) => `<div class="bwu-road${keep >= l ? ' done' : ''}"><b>Castle Lv ${l}</b><span>${t}</span></div>`).join('')
         + '<div class="bwu-note" style="text-align:left;margin-top:16px">LOOK OF EACH STRUCTURE (by its own level)</div>' + V.map(([l, t]) => `<div class="bwu-road"><b>Lv ${l}</b><span>${t}</span></div>`).join('');
     }

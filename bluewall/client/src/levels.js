@@ -3,6 +3,7 @@
 //   createLevels(api) -> { setEntity(id, lv), setMany({id: lv}), setLevel(n) (all structures), get(id), tier(id), LV, update() }
 // api: { scene, M, ctx, TROOF, flags, town, mines, Q }
 import { ENT, setEntityLevel, levelOf, tierOf, TIER_NAME } from './skin.js';
+import { LEVEL_CAP } from './tiers.js';
 
 export function createLevels(api) {
   const { M, ctx, flags } = api;
@@ -23,7 +24,7 @@ export function createLevels(api) {
     tierName: (id) => TIER_NAME[tierOf(levelOf(id))],
     setEntity(id, lv) { setEntityLevel(id, lv); apply(); },
     setMany(o) { for (const [id, lv] of Object.entries(o || {})) if (ENT[id]) setEntityLevel(id, lv); if (o && o.wall != null) setEntityLevel('townwall', o.wall); apply(); },
-    setLevel(n) { n = Math.max(1, Math.min(30, Math.round(+n || 30))); for (const id of Object.keys(ENT)) if (ENT[id] > 0) setEntityLevel(id, n); apply(); },
+    setLevel(n) { n = Math.max(1, Math.min(LEVEL_CAP, Math.round(+n || LEVEL_CAP))); for (const id of Object.keys(ENT)) if (ENT[id] > 0) setEntityLevel(id, n); apply(); },
     update() {},
   };
   return api2;

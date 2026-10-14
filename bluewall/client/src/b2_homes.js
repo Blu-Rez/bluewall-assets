@@ -10,6 +10,7 @@
 // Deterministic per (kind, lv, seed): the same call always returns the same list. The seed picks: roof colour (2 per body), chimney side + type, which side the yard props sit on, a small
 // jitter on every prop, and one extra bit of yard clutter.  Everything that depends on the level is stable when a house levels up (a prop never jumps, it only appears).
 import { rng } from './noise.js';
+import { LEGACY_TIER_AT } from './tiers.js';
 
 // unlock levels are placeholders (ph): the game rules decide.
 export const HOME_KINDS = {
@@ -21,7 +22,7 @@ export const HOME_KINDS = {
 export const HOME_ORDER = ['cottage', 'craftsman', 'merchant', 'noble'];
 
 // the castle tiers (skin.js TIER_AT): wood / stone / iron / gold / diamond / crystal.  The BODY changes at tiers 2 and 4 (lv 12 / 24: roof colour + size + towers), the yard dressing at every tier.
-export const TIER_AT = [1, 6, 12, 18, 24, 30];
+export const TIER_AT = LEGACY_TIER_AT;                              // TR2-S2: the live array of tiers.js (same steps as skin.js, whatever the level cap)
 export const homeTier = (lv) => { lv = +lv || 1; let t = 0; for (let i = 0; i < TIER_AT.length; i++) if (lv >= TIER_AT[i]) t = i; return t; };
 export const homeStage = (lv) => { const t = homeTier(lv); return t >= 4 ? 2 : t >= 2 ? 1 : 0; };
 

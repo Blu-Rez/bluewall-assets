@@ -13,6 +13,7 @@
 // Bridges over the moat are NOT part of a ring (castle.js closes the ring before it builds them): the roads and nav.js list them at every level.
 import * as L from './layout.js';
 import { levelOf } from './skin.js';
+import { LEVEL_CAP } from './tiers.js';
 
 export const RING_IDS = ['inner', 'outer', 'town'];
 // half width of the opening in the wall at each ring's gate (castle.js builds the walls with these; the A1 test walks through them)
@@ -23,8 +24,8 @@ const _w = typeof window !== 'undefined' ? window : {};
 export const INNER_H = +_w.__a1InnerH || 16;
 export const DIMS = { outer: L.WALL.outer, inner: { ...L.WALL.inner, H: INNER_H }, town: L.WALL.town };
 export const GATE_HALF = { outer: 7.5, inner: 4.5, town: 5.2 };
-// the wall's level on the player-facing 1..30 scale (skin.js keeps it stretched to 1..20: to20 = 1 + (lv - 1) * 19 / 29)
-export const wallLevel = () => Math.round(1 + (levelOf('wall') - 1) * 29 / 19);
+// the wall's level on the player-facing 1..30 scale (skin.js keeps it stretched to 1..20: to20 = 1 + (lv - 1) * 19 / (CAP - 1); CAP = tiers.js LEVEL_CAP, 30 today)
+export const wallLevel = () => Math.round(1 + (levelOf('wall') - 1) * (LEVEL_CAP - 1) / 19);
 
 export function createRingTracker(ctx) {
   const fx = ctx.fx || {};

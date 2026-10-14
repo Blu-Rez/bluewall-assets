@@ -1,6 +1,7 @@
 // The kingdom plan: wall polygons, gate, building spots, river.
 // Shared by terrain (flatten / moat / ground paint) and by the builders.
 import { makeNoise, smooth, lerp, clamp } from './noise.js';
+import { LEVEL_CAP } from './tiers.js';
 
 export const NOISE = makeNoise(20261001);
 
@@ -12,9 +13,9 @@ export const WALL = { outer: { H: 9.5, T: 4.2, R: 4.6 }, inner: { H: 7.5, T: 3.2
 // The castle grows OUTWARD: the keep ring (INNER) from level 1, the citadel wall (OUTER, the Blue Wall) from 11, the lower-town wall (TOWN) from 21.
 // RING_ORDER is the one place that says which ring is row 1 / 2 / 3 (a dev page may reorder it before the world is built).
 export const RING_ORDER = ['inner', 'outer', 'town'];
-export const RING_STEP = 10;                                    // a new row every 10 levels: 1-10 one row, 11-20 two, 21-30 three
+export const RING_STEP = 10;                                    // a new row every 10 levels: 1-10 one row, 11-20 two, 21 and up three (D3: the same thresholds at every level cap)
 export const ringsAt = (lv) => {
-  const n = Math.max(1, Math.min(3, 1 + Math.floor((Math.max(1, Math.min(30, Math.round(+lv) || 1)) - 1) / RING_STEP)));
+  const n = Math.max(1, Math.min(3, 1 + Math.floor((Math.max(1, Math.min(LEVEL_CAP, Math.round(+lv) || 1)) - 1) / RING_STEP)));
   const has = { inner: !!INNER, outer: true, town: !!TOWN };     // (the day map has the square fort only)
   return RING_ORDER.filter((r) => has[r]).slice(0, n);
 };

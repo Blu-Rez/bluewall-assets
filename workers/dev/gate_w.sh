@@ -34,6 +34,7 @@ PY
 ( bash /home/claude/dev/t1_test.sh 2>&1 | tail -1 | grep -q "T1 OK" ) && ok "t1_test (building sheets)" || bad "t1_test (building sheets)"
 ( bash /home/claude/dev/ld1_test.sh 2>&1 | tail -1 | grep -q "LD1 OK" ) && ok "ld1_test (loader sword)" || bad "ld1_test (loader sword)"
 ( bash /home/claude/dev/p1_test.sh 2>&1 | tail -1 | grep -q "P1 OK" ) && ok "p1_test (production lots + mills)" || bad "p1_test (production lots + mills)"
+( bash /home/claude/dev/tr2_tiers_test.sh 2>&1 | tail -1 | grep -q "TR2 TIERS OK" ) && ok "tr2_tiers_test (level tiers + cap 50 + loader compiles)" || bad "tr2_tiers_test (level tiers + cap 50 + loader compiles)"
 ( python3 /home/claude/dev/rp1_server_test.py 2>&1 | tail -1 | grep -q "RP1 SERVER OK" ) && ok "rp1_server_test (/assets/rpg/*.js served as JavaScript)" || bad "rp1_server_test (/assets/rpg/*.js served as JavaScript)"
 ( R=/home/claude/bot/bluebot_v2/bluewall/web/assets/rpg; [ -f $R/rpg.js ] && [ -f $R/rpg_under.js ] && [ $(ls $R/*.glb | wc -l) -eq 6 ] && [ $(ls $R/c_*.webp | wc -l) -eq 6 ] && [ $(ls $R/e_*.png | wc -l) -eq 6 ] ) && ok "rp1 files (2 modules + 6 heroes + 6 cards + 6 emblems)" || bad "rp1 files"
 ( node /home/claude/dev/s34/rc_test.mjs 2>/dev/null | grep -q FAIL ) && bad "rc_test (ring control)" || ok "rc_test (ring control)"

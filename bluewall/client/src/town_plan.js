@@ -6,9 +6,10 @@
 //   civicBuild(lot)          [{ n, x, z, ry, s }] WORLD pieces of one civic lot (lot x piece, y added by the builder): pieces that would stand on a street are left out
 //   townSolids(level)        [[x, z, r]] what nav keeps ground units out of (the standing civic pieces)
 //   planLots()               every lot of the level-30 plan as { x, z, ry, w, d } (the old town's generic houses keep clear of them)
-//   castleLevel(lv20)        skin.js stores the castle level stretched to 1..20 (levelOf): back to the player's 1..30
+//   castleLevel(lv20)        skin.js stores the castle level stretched to 1..20 (levelOf): back to the player's 1..CAP (tiers.js; 30 today)
 // Same layout => same plan => same town (b1_townplan.js is deterministic; seeds are hashes of the record ids).
 import { layoutFromGame } from './b1_layout.js';
+import { LEVEL_CAP } from './tiers.js';
 import { planTownSteps } from './b1_townplan.js';
 import { CIVIC_KINDS, civicLevel, civicPieces, civicSolids } from './b3_civic.js';
 import { HOME_KINDS } from './b2_homes.js';
@@ -25,10 +26,10 @@ export function startTownPlan() {
 }
 export function townPlan() { if (!RES) { const st = startTownPlan(); while (!st.step()); } return RES; }
 
-export const castleLevel = (lv20) => { const v = +lv20; if (!(v > 0)) return 30; return Math.max(1, Math.min(30, Math.round(v <= 1 ? v : 1 + (v - 1) * 29 / 19))); };
+export const castleLevel = (lv20) => { const v = +lv20; if (!(v > 0)) return LEVEL_CAP; return Math.max(1, Math.min(LEVEL_CAP, Math.round(v <= 1 ? v : 1 + (v - 1) * (LEVEL_CAP - 1) / 19))); };
 export const hashId = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
 
-const lvl = (level) => Math.max(1, Math.min(30, Math.round(+level || 30)));
+const lvl = (level) => Math.max(1, Math.min(LEVEL_CAP, Math.round(+level || LEVEL_CAP)));
 const HOME = new Set(Object.keys(HOME_KINDS));
 const rec = (p) => ({ id: p.id, kind: p.kind, fa: p.fa, x: p.x, z: p.z, ry: p.ry, w: p.w, d: p.d, r: p.r, quarter: p.quarter, unlockLv: p.unlockLv, seed: hashId(p.id), existing: !!p.existing });
 
@@ -108,7 +109,7 @@ export function civicLotSolids(lot) {
   for (const [lx, lz, r] of civicSolids(lot.kind, lot.lv, lot.seed)) { const wx = lot.x + lx * c + lz * s, wz = lot.z - lx * s + lz * c; if (!onStreet(lot, { x: lx, z: lz }, wx, wz, r)) out.push([+wx.toFixed(2), +wz.toFixed(2), r]); }
   return out;
 }
-export function townSolids(level = 30) { const out = []; for (const lot of civicLots(level)) for (const q of civicLotSolids(lot)) out.push(q); return out; }
+export function townSolids(level = LEVEL_CAP) { const out = []; for (const lot of civicLots(level)) for (const q of civicLotSolids(lot)) out.push(q); return out; }
 
 // the destructible battle targets of the plan's lots at a castle level (the same rule the old town used: one 'house' target per ~26 m block, the chapel stands alone as the 'church'):
 // [{ ids: [lot ids], t: { type, x, z, w, d, h, rot, n, share } }]  — town_build.js registers them with ctx.tgt before initDestruct

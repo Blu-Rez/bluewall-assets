@@ -1,5 +1,4 @@
-kit = p45 (built 14 Oct 2026, INSTALLED on the owner's server the same day — screenshot of the installer, build bluebot_bluewall_p45; package branches pkg/p44 and pkg/p45, p45 contains p44).
-Merged on top of p43: D1 (one death effect) + T1 (building sheets) + LD1b (loading sword) + RP1 (owner hero mode) + P1 (production lots + mills: 10 new worksite kinds on the map, 5 outer sites, town lots) + server.py: /assets/*.js served as JavaScript (RP1 needs it).
-Gate: GATE_W: ALL OK (noRoute 667, limit 700 — every patch that adds targets/solids must be measured). New tests in dev/: p1_test (needs dev/p1_kitext.json, made by dev/p1_kitext.mjs from the kit GLBs).
-T1 rule "worksites.js / town_*.js untouched" retired (P1 owns them). workers/pkg/deployed.sha256 = server state after p45.
-Next in the mother's queue: TR2 stage patches (one at a time, as they arrive in inbox/TR2_*), then the army chat.
+kit = p45 INSTALLED on the owner's server (14 Oct 2026 14:29 Tehran) + TR2-S2 MERGED (14 Oct 2026 ~18:20, NOT installed yet; it will ship inside the next package, p46).
+TR2-S2 = tiers.js (level cap 30 today, 50 when the server sends max_level 50; 9 material tiers) + tr2lib.js loader (shared Tripo material, destruct-compatible bake, lazy tiers) + web/assets/tr2/swap.json. Nothing visible changes at cap 30.
+Gate: GATE_W: ALL OK (noRoute 667; gate now has the tr2_tiers_test line). workers/pkg/deployed.sha256 = server state after p45 (unchanged).
+Next in the queue: RP1B (hero round 2), then TR2-S3 (castle from Tripo) -> p46.

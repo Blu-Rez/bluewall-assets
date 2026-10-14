@@ -15,6 +15,7 @@
 // Deterministic: rng() from noise.js only, fixed iteration orders, no Math.random, no Date in the logic.
 // All numbers marked (ph) are PLACEHOLDERS: unlock levels, counts and footprint sizes belong to the economy / model packages (E1, B2, B3, C*).
 import { rng } from './noise.js';
+import { LEVEL_CAP } from './tiers.js';
 import { HOME_KINDS } from './b2_homes.js';             // p41: the REAL lot footprints of the house families (B2) ...
 import { CIVIC_KINDS } from './b3_civic.js';             // ... and of the civic buildings (B3) replace the (ph) numbers below
 
@@ -44,9 +45,9 @@ export const KINDS = {
   stores:    { fa: 'انبارها',          role: 'T', w: 30,  d: 30,   unlock: 1,  n1: 6,  n30: 6 },
 };
 export const KIND_ORDER = Object.keys(KINDS);
-// how many of a kind stand at a castle level: n1 at the unlock level, growing in a straight line to nMax (the count the layout really had room for) at level 30
-export const countAt = (kind, lv, nMax = KINDS[kind] && KINDS[kind].n30) => { const k = KINDS[kind]; if (!k || lv < k.unlock) return 0; const n1 = Math.min(k.n1, nMax); return Math.min(nMax, Math.round(n1 + (nMax - n1) * (lv - k.unlock) / Math.max(1, 30 - k.unlock))); };
-const unlockOf = (kind, i, nMax) => { for (let lv = KINDS[kind].unlock; lv <= 30; lv++) if (countAt(kind, lv, nMax) > i) return lv; return 30; };
+// how many of a kind stand at a castle level: n1 at the unlock level, growing in a straight line to nMax (the count the layout really had room for) at the top level (LEVEL_CAP, 30 today)
+export const countAt = (kind, lv, nMax = KINDS[kind] && KINDS[kind].n30) => { const k = KINDS[kind]; if (!k || lv < k.unlock) return 0; const n1 = Math.min(k.n1, nMax); return Math.min(nMax, Math.round(n1 + (nMax - n1) * (lv - k.unlock) / Math.max(1, LEVEL_CAP - k.unlock))); };
+const unlockOf = (kind, i, nMax) => { for (let lv = KINDS[kind].unlock; lv <= LEVEL_CAP; lv++) if (countAt(kind, lv, nMax) > i) return lv; return LEVEL_CAP; };
 
 // ------------------------------------------------------------------------------------------------------------------ the affinity table (defaults — «هوشمندانه»)
 // 'edge' = to the market square's EDGE; every other distance is centre to centre; water = the water's edge (river centre line - half width).  HARD = checked by the planner AND by dev/b1_town_test.js.
@@ -404,8 +405,8 @@ export function planTownSteps(layout) {
   const o = { done: false, step() { if (out) return true; const r = g.next(); if (r.done) { out = finish(layout, r.value, t0, tCtx); o.done = true; return true; } return false; }, result: () => out };
   return o;
 }
-export function planTown(layout, castleLevel = 30) {
-  const full = planTownFull(layout), lv = Math.max(1, Math.min(30, Math.round(castleLevel))), seen = {};
+export function planTown(layout, castleLevel = LEVEL_CAP) {
+  const full = planTownFull(layout), lv = Math.max(1, Math.min(LEVEL_CAP, Math.round(castleLevel))), seen = {};
   const out = full.list.filter((p) => { const i = (seen[p.kind] = (seen[p.kind] || 0) + 1) - 1; return i < countAt(p.kind, lv, full.meta.counts[p.kind]); });
   out.meta = full.meta; return out;
 }

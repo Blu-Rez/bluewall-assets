@@ -13,8 +13,9 @@ for (const k of KINDS) { const K = CIVIC_KINDS[k]; ok(K && K.w > 0 && K.d > 0 &&
 ok(civicLevel('tavern', 5) === 0 && civicLevel('tavern', 6) === 6 && civicLevel('well', 1) === 1 && civicLevel('market', 99) === 30, 'civicLevel locks below the unlock level');
 
 sec('tiers follow skin.js');
-const skin = fs.readFileSync(ROOT + '/client/src/skin.js', 'utf8'), m = skin.match(/export const TIER_AT = \[([^\]]*)\]/);
-ok(m && JSON.stringify(m[1].split(',').map(Number)) === JSON.stringify(TIER_AT), 'TIER_AT equals skin.js TIER_AT (' + (m && m[1]) + ')');
+// TR2-S2: skin.js / b2_homes.js / b3_civic.js all export the ONE live LEGACY_TIER_AT array of tiers.js (1 / 6 / 12 / 18 / 24 / 30 at cap 30)
+const skin = fs.readFileSync(ROOT + '/client/src/skin.js', 'utf8'), m = skin.match(/export const TIER_AT = LEGACY_TIER_AT;/);
+ok(m && JSON.stringify(TIER_AT) === JSON.stringify([1, 6, 12, 18, 24, 30]), 'TIER_AT is skin.js TIER_AT (the live array of tiers.js, = [' + TIER_AT + '] at cap 30)');
 ok([1, 5, 6, 11, 12, 17, 18, 23, 24, 29, 30].map(civicTier).join() === '0,0,1,1,2,2,3,3,4,4,5', 'civicTier steps 1 / 6 / 12 / 18 / 24 / 30');
 
 sec('deterministic per seed');

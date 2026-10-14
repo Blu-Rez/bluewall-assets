@@ -3,8 +3,10 @@ import { normEmblem } from './emblems.js';
 // Server truth comes from /api/state and /api/collect (Bearer session token);
 // without a token (dev page) a local simulation with the same rules is used.
 const MINES = ['ruby', 'emerald', 'turq'];
+import { setLevelCap } from './tiers.js';
 import BAL from './balance.json';                              // generated from the server's progress.py (python3 -m bluewall.progress): one source of truth
 const CAP_H = BAL.cap_hours;
+setLevelCap(BAL.max_level || 30);                          // TR2-S2: the structure looks / wall rows / town counts follow the server's cap (tiers.js)
 const MAXL = BAL.max_level || 20;                          // the top castle level (server: progress.MAX_LEVEL, 30 since p35)
 const lvIdx = (lv) => Math.max(1, Math.min(MAXL, lv | 0)) - 1;
 const rate = (m, lv) => BAL.rates[m][lvIdx(lv)];

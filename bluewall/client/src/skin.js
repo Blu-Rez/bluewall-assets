@@ -11,12 +11,13 @@
 // Materials are patched once (applySkin) - the programs compile with everything else on the loading screen.
 import * as THREE from 'three';
 import { patchDepth } from './destruct.js';
+import { LEGACY_TIER_AT, toInternal20 } from './tiers.js';
 
 export const ENT = {
   none: 0, wall: 1, keep: 2, townwall: 3, vault_ruby: 4, vault_emerald: 5, vault_turq: 6, mine_ruby: 7, mine_emerald: 8, mine_turq: 9,
   barracks: 10, stable: 11, training: 12, lair: 13, workshop: 14, forge: 15, towers: 16,
 };
-export const TIER_AT = [1, 6, 12, 18, 24, 30];                 // (in the player-facing 1..30 levels; inside this file the same tiers sit at 1 / 4 / 8 / 12 / 16 / 20)
+export const TIER_AT = LEGACY_TIER_AT;                          // TR2-S2: ONE live array in tiers.js (player-facing levels: 1 / 6 / 12 / 18 / 24 / 30 at cap 30, 1 / 9 / 20 / 30 / 40 / 50 at cap 50); inside this file the same tiers sit at 1 / 4 / 8 / 12 / 16 / 20
 export const TIER_NAME = ['wood', 'stone', 'iron', 'gold', 'diamond', 'crystal'];
 export const tierOf = (lv) => (lv >= 20 ? 5 : lv >= 16 ? 4 : lv >= 12 ? 3 : lv >= 8 ? 2 : lv >= 4 ? 1 : 0);
 
@@ -24,8 +25,8 @@ const LVL = new Float32Array(32).fill(20);          // untagged geometry (id 0) 
 export const uLv = { value: LVL };
 export const levelOf = (id) => LVL[ENT[id] ?? id] ?? 20;
 // p35 (30 levels): the player-facing level runs 1..30 but every look in this file (tier thresholds, GLSL, the min level of each decoration) was authored on 1..20, so the level is
-// stretched once, here: 1 -> 1 ... 30 -> 20  (the tiers then start at 1 / 6 / 12 / 18 / 24 / 30)
-const to20 = (lv) => { lv = Math.max(0, Math.min(30, Math.round(+lv) || 0)); return lv <= 1 ? lv : 1 + (lv - 1) * 19 / 29; };
+// stretched once, here: 1 -> 1 ... CAP -> 20  (at cap 30 the tiers then start at 1 / 6 / 12 / 18 / 24 / 30)
+const to20 = toInternal20;                                   // TR2-S2: 1 -> 1 ... CAP -> 20 (tiers.js; the cap comes from balance.json, 30 today: the old formula bit for bit)
 export function setEntityLevel(id, lv) { const k = typeof id === 'number' ? id : ENT[id]; if (k == null || k < 1) return; LVL[k] = to20(lv); }
 
 const VERT_PARS = `attribute vec2 aTag; uniform float uLv[32]; varying float vTier; varying float vSub; varying vec3 vSkWP; varying vec3 vSkWN; varying float vSkHide;`;
