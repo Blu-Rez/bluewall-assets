@@ -1,0 +1,1584 @@
+[
+ {
+  "category": "castle",
+  "key": "castle_keep_stone_1",
+  "tris": 18175,
+  "kb": 914,
+  "note": "keep, 4 conical towers"
+ },
+ {
+  "category": "castle",
+  "key": "castle_keep_stone_2",
+  "tris": 17946,
+  "kb": 869,
+  "note": "keep, dome + square towers"
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_stone_1",
+  "tris": 5999,
+  "kb": 317,
+  "note": "tower with flag"
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_stone_2",
+  "tris": 6000,
+  "kb": 285,
+  "note": "tower conical roof"
+ },
+ {
+  "category": "castle",
+  "key": "castle_wall_stone",
+  "tris": 1999,
+  "kb": 214,
+  "note": "wall tier: stone"
+ },
+ {
+  "category": "castle",
+  "key": "castle_wall_wood",
+  "tris": 3432,
+  "kb": 289,
+  "note": "wall tier: wood (3.4k tris)"
+ },
+ {
+  "category": "castle",
+  "key": "castle_wall_iron",
+  "tris": 2358,
+  "kb": 212,
+  "note": "wall tier: iron"
+ },
+ {
+  "category": "castle",
+  "key": "castle_wall_gold",
+  "tris": 2000,
+  "kb": 244,
+  "note": "wall tier: gold"
+ },
+ {
+  "category": "castle",
+  "key": "castle_wall_diamond_ice",
+  "tris": 2000,
+  "kb": 248,
+  "note": "wall tier: diamond pale blue"
+ },
+ {
+  "category": "castle",
+  "key": "castle_wall_diamond_green",
+  "tris": 2144,
+  "kb": 253,
+  "note": "wall tier: diamond green (crenels slightly wavy)"
+ },
+ {
+  "category": "castle",
+  "key": "castle_wall_diamond_red",
+  "tris": 2000,
+  "kb": 221,
+  "note": "wall tier: diamond red"
+ },
+ {
+  "category": "castle",
+  "key": "castle_wall_diamond_black",
+  "tris": 1999,
+  "kb": 219,
+  "note": "wall tier: diamond black (crenels noisy)"
+ },
+ {
+  "category": "castle",
+  "key": "castle_wall_diamond_blue",
+  "tris": 1999,
+  "kb": 264,
+  "note": "wall tier: diamond deep blue (crenels noisy)"
+ },
+ {
+  "category": "houses",
+  "key": "house_cottage_0",
+  "tris": 5000,
+  "kb": 300,
+  "note": ""
+ },
+ {
+  "category": "houses",
+  "key": "house_cottage_1",
+  "tris": 5000,
+  "kb": 313,
+  "note": ""
+ },
+ {
+  "category": "houses",
+  "key": "house_cottage_2",
+  "tris": 4999,
+  "kb": 285,
+  "note": ""
+ },
+ {
+  "category": "houses",
+  "key": "house_merchant_0",
+  "tris": 5000,
+  "kb": 299,
+  "note": ""
+ },
+ {
+  "category": "houses",
+  "key": "house_merchant_1",
+  "tris": 4988,
+  "kb": 279,
+  "note": ""
+ },
+ {
+  "category": "houses",
+  "key": "house_merchant_2",
+  "tris": 4998,
+  "kb": 279,
+  "note": ""
+ },
+ {
+  "category": "houses",
+  "key": "house_noble_0",
+  "tris": 5996,
+  "kb": 300,
+  "note": ""
+ },
+ {
+  "category": "houses",
+  "key": "house_noble_1",
+  "tris": 5995,
+  "kb": 326,
+  "note": ""
+ },
+ {
+  "category": "houses",
+  "key": "house_noble_2",
+  "tris": 5981,
+  "kb": 309,
+  "note": ""
+ },
+ {
+  "category": "houses",
+  "key": "house_generic_a",
+  "tris": 3000,
+  "kb": 303,
+  "note": ""
+ },
+ {
+  "category": "houses",
+  "key": "house_generic_b",
+  "tris": 3935,
+  "kb": 267,
+  "note": "roof slightly rough"
+ },
+ {
+  "category": "houses",
+  "key": "house_generic_c",
+  "tris": 4232,
+  "kb": 248,
+  "note": "stairs slightly messy"
+ },
+ {
+  "category": "houses",
+  "key": "house_generic_d",
+  "tris": 3000,
+  "kb": 266,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "civic_hall_0",
+  "tris": 3994,
+  "kb": 824,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "civic_hall_1",
+  "tris": 3996,
+  "kb": 677,
+  "note": ""
+ },
+ {
+  "category": "mines",
+  "key": "windmill_tower",
+  "tris": 3999,
+  "kb": 783,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "treasury_0",
+  "tris": 5997,
+  "kb": 228,
+  "note": "dome treasury"
+ },
+ {
+  "category": "civic",
+  "key": "treasury_1",
+  "tris": 5995,
+  "kb": 262,
+  "note": "cube treasury with turrets (Tripo name: ancientcitygate)"
+ },
+ {
+  "category": "civic",
+  "key": "granary_0",
+  "tris": 4993,
+  "kb": 193,
+  "note": "barrel-vault granary"
+ },
+ {
+  "category": "civic",
+  "key": "granary_1",
+  "tris": 4993,
+  "kb": 203,
+  "note": "two-dome granary"
+ },
+ {
+  "category": "civic",
+  "key": "armory_0",
+  "tris": 8329,
+  "kb": 277,
+  "note": "two-storey armory, 8.3k tris (slightly above 8k)"
+ },
+ {
+  "category": "civic",
+  "key": "armory_1",
+  "tris": 6349,
+  "kb": 240,
+  "note": "long low arsenal"
+ },
+ {
+  "category": "mines",
+  "key": "windmill_asbad_2",
+  "tris": 4988,
+  "kb": 189,
+  "note": "Persian wind tower style"
+ },
+ {
+  "category": "mines",
+  "key": "farm_field_1",
+  "tris": 4061,
+  "kb": 231,
+  "note": "wheat field + scarecrow"
+ },
+ {
+  "category": "mines",
+  "key": "farm_field_2",
+  "tris": 3808,
+  "kb": 214,
+  "note": "mixed farm + shed"
+ },
+ {
+  "category": "mines",
+  "key": "rice_paddy_1",
+  "tris": 2982,
+  "kb": 173,
+  "note": "flooded paddy"
+ },
+ {
+  "category": "mines",
+  "key": "rice_paddy_2",
+  "tris": 3769,
+  "kb": 206,
+  "note": "paddy with footbridge"
+ },
+ {
+  "category": "mines",
+  "key": "fishing_hut_1",
+  "tris": 9201,
+  "kb": 325,
+  "note": "hut on piles, 9.2k tris (above 8k)"
+ },
+ {
+  "category": "mines",
+  "key": "fishing_hut_2",
+  "tris": 6960,
+  "kb": 273,
+  "note": "fish-drying house + jetty, 7k tris"
+ },
+ {
+  "category": "defense",
+  "key": "def_tesla",
+  "tris": 4999,
+  "kb": 211,
+  "note": ""
+ },
+ {
+  "category": "defense",
+  "key": "def_ballista",
+  "tris": 4994,
+  "kb": 189,
+  "note": ""
+ },
+ {
+  "category": "defense",
+  "key": "def_catapult",
+  "tris": 4987,
+  "kb": 189,
+  "note": ""
+ },
+ {
+  "category": "defense",
+  "key": "def_scorpion",
+  "tris": 3499,
+  "kb": 187,
+  "note": ""
+ },
+ {
+  "category": "defense",
+  "key": "def_oil",
+  "tris": 3000,
+  "kb": 144,
+  "note": ""
+ },
+ {
+  "category": "defense",
+  "key": "def_firepot",
+  "tris": 2998,
+  "kb": 164,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "cannon_house_0",
+  "tris": 5997,
+  "kb": 253,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "cannon_house_1",
+  "tris": 5994,
+  "kb": 226,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "camp_0",
+  "tris": 5992,
+  "kb": 222,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "camp_1",
+  "tris": 5985,
+  "kb": 237,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "stable_0",
+  "tris": 4996,
+  "kb": 201,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "stable_1",
+  "tris": 4997,
+  "kb": 214,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "barn_0",
+  "tris": 4998,
+  "kb": 206,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "barn_1",
+  "tris": 5853,
+  "kb": 252,
+  "note": ""
+ },
+ {
+  "category": "mines",
+  "key": "lumber_mill_0",
+  "tris": 6623,
+  "kb": 266,
+  "note": "water-wheel sawmill (alt generation of the same picture: zip file \"wooden sawmill (1)\")"
+ },
+ {
+  "category": "mines",
+  "key": "lumber_mill_1",
+  "tris": 5992,
+  "kb": 258,
+  "note": "log cabin yard (alt generation: zip file \"wooden lumber mill\")"
+ },
+ {
+  "category": "mines",
+  "key": "lumber_mill_2",
+  "tris": 6410,
+  "kb": 275,
+  "note": "open plank shed with saw bench (thin posts)"
+ },
+ {
+  "category": "mines",
+  "key": "stone_quarry_0",
+  "tris": 7490,
+  "kb": 265,
+  "note": "stone pit with crane; lumpy source, 7.5k tris"
+ },
+ {
+  "category": "mines",
+  "key": "stone_quarry_1",
+  "tris": 5000,
+  "kb": 235,
+  "note": ""
+ },
+ {
+  "category": "mines",
+  "key": "stone_quarry_2",
+  "tris": 5358,
+  "kb": 250,
+  "note": "marble quarry with gantry crane"
+ },
+ {
+  "category": "mines",
+  "key": "iron_mine_0",
+  "tris": 5995,
+  "kb": 220,
+  "note": ""
+ },
+ {
+  "category": "mines",
+  "key": "iron_mine_1",
+  "tris": 5996,
+  "kb": 205,
+  "note": ""
+ },
+ {
+  "category": "mines",
+  "key": "iron_mine_2",
+  "tris": 6000,
+  "kb": 253,
+  "note": ""
+ },
+ {
+  "category": "mines",
+  "key": "dia_mine_ice",
+  "tris": 4998,
+  "kb": 207,
+  "note": ""
+ },
+ {
+  "category": "mines",
+  "key": "dia_mine_green",
+  "tris": 4999,
+  "kb": 211,
+  "note": ""
+ },
+ {
+  "category": "mines",
+  "key": "dia_mine_red",
+  "tris": 4993,
+  "kb": 209,
+  "note": ""
+ },
+ {
+  "category": "mines",
+  "key": "dia_mine_black",
+  "tris": 4993,
+  "kb": 208,
+  "note": ""
+ },
+ {
+  "category": "mines",
+  "key": "dia_mine_blue",
+  "tris": 4998,
+  "kb": 199,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_gate_stone",
+  "tris": 5996,
+  "kb": 200,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_gate_wood",
+  "tris": 6000,
+  "kb": 234,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_gate_iron",
+  "tris": 5992,
+  "kb": 213,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_gate_gold",
+  "tris": 5992,
+  "kb": 283,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_gate_diamond_ice",
+  "tris": 5995,
+  "kb": 265,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_gate_diamond_green",
+  "tris": 5999,
+  "kb": 267,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_gate_diamond_red",
+  "tris": 5998,
+  "kb": 211,
+  "note": "(duplicate generation \"red castle (1)\" not used)"
+ },
+ {
+  "category": "castle",
+  "key": "castle_gate_diamond_black",
+  "tris": 5998,
+  "kb": 215,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_gate_diamond_blue",
+  "tris": 5993,
+  "kb": 253,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_short_stone",
+  "tris": 3999,
+  "kb": 161,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_short_wood",
+  "tris": 4000,
+  "kb": 211,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_short_iron",
+  "tris": 3999,
+  "kb": 201,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_short_gold",
+  "tris": 3999,
+  "kb": 226,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_short_diamond_ice",
+  "tris": 3998,
+  "kb": 247,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_short_diamond_green",
+  "tris": 4000,
+  "kb": 229,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_short_diamond_red",
+  "tris": 3996,
+  "kb": 161,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_short_diamond_black",
+  "tris": 3999,
+  "kb": 188,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_short_diamond_blue",
+  "tris": 4000,
+  "kb": 210,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_medium_stone",
+  "tris": 4998,
+  "kb": 170,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_medium_wood",
+  "tris": 4996,
+  "kb": 212,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_medium_iron",
+  "tris": 4967,
+  "kb": 196,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_medium_gold",
+  "tris": 4999,
+  "kb": 215,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_medium_diamond_ice",
+  "tris": 4998,
+  "kb": 275,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_medium_diamond_green",
+  "tris": 4999,
+  "kb": 247,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_medium_diamond_red",
+  "tris": 4998,
+  "kb": 183,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_medium_diamond_black",
+  "tris": 5000,
+  "kb": 192,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_medium_diamond_blue",
+  "tris": 4999,
+  "kb": 227,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_tall_stone",
+  "tris": 5999,
+  "kb": 209,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_tall_wood",
+  "tris": 5998,
+  "kb": 245,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_tall_iron",
+  "tris": 5959,
+  "kb": 205,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_tall_gold",
+  "tris": 5999,
+  "kb": 252,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_tall_diamond_ice",
+  "tris": 5994,
+  "kb": 252,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_tall_diamond_green",
+  "tris": 5999,
+  "kb": 262,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_tall_diamond_red",
+  "tris": 5997,
+  "kb": 200,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_tall_diamond_black",
+  "tris": 6000,
+  "kb": 211,
+  "note": ""
+ },
+ {
+  "category": "castle",
+  "key": "castle_tower_tall_diamond_blue",
+  "tris": 6000,
+  "kb": 248,
+  "note": ""
+ },
+ {
+  "category": "nature",
+  "key": "trees_conifer",
+  "tris": 7127,
+  "kb": 283,
+  "note": "cedar,cypress,spruce,pine"
+ },
+ {
+  "category": "nature",
+  "key": "trees_broadleaf",
+  "tris": 7990,
+  "kb": 279,
+  "note": "poplar,walnut,plane,oak"
+ },
+ {
+  "category": "nature",
+  "key": "trees_orchard",
+  "tris": 7984,
+  "kb": 298,
+  "note": "olive,pomegranate,date_palm_young,date_palm"
+ },
+ {
+  "category": "nature",
+  "key": "trees_special",
+  "tris": 9368,
+  "kb": 243,
+  "note": "willow is sloppy-simplified (3.4k tris, texture smeared); tamarisk/almond colours look alike; birch,almond,tamarisk,willow"
+ },
+ {
+  "category": "nature",
+  "key": "trees_season",
+  "tris": 7998,
+  "kb": 319,
+  "note": "apple,fir_snow,dead_tree,maple_autumn"
+ },
+ {
+  "category": "nature",
+  "key": "bushes",
+  "tris": 6069,
+  "kb": 242,
+  "note": "rose,boxwood,thorny,round"
+ },
+ {
+  "category": "nature",
+  "key": "flowers",
+  "tris": 8590,
+  "kb": 322,
+  "note": "poppy has loose petals; one floating petal removed; lavender,crocus,tulip,daisy,poppy,narcissus"
+ },
+ {
+  "category": "nature",
+  "key": "plants_desert",
+  "tris": 5506,
+  "kb": 245,
+  "note": "grass_dry,camelthorn,agave,cactus_barrel"
+ },
+ {
+  "category": "nature",
+  "key": "grass",
+  "tris": 3826,
+  "kb": 150,
+  "note": "one clump only (pack picture gave 1 object); sloppy-simplified 3.8k tris; grass_golden"
+ },
+ {
+  "category": "nature",
+  "key": "rocks_boulder",
+  "tris": 6000,
+  "kb": 232,
+  "note": "slab,slate,mossy,granite"
+ },
+ {
+  "category": "nature",
+  "key": "rocks_small",
+  "tris": 5998,
+  "kb": 220,
+  "note": "flat,speckled,angular,mossy,round,split"
+ },
+ {
+  "category": "nature",
+  "key": "rocks_sandstone",
+  "tris": 6000,
+  "kb": 214,
+  "note": "limestone,pillar,layered,red"
+ },
+ {
+  "category": "nature",
+  "key": "rocks_ore",
+  "tris": 6000,
+  "kb": 213,
+  "note": "crystal_blue,gold,iron,coal"
+ },
+ {
+  "category": "nature",
+  "key": "cliffs",
+  "tris": 6998,
+  "kb": 188,
+  "note": "spire,cliff"
+ },
+ {
+  "category": "props",
+  "key": "oil_pipes_pack",
+  "tris": 7997,
+  "kb": 224,
+  "note": "pump_station,valve_t,elbow,straight"
+ },
+ {
+  "category": "props",
+  "key": "oil_tanks_pack",
+  "tris": 7488,
+  "kb": 217,
+  "note": "tank_wood,tank_copper,tank_brick"
+ },
+ {
+  "category": "traps",
+  "key": "traps_mech",
+  "tris": 12650,
+  "kb": 300,
+  "note": "crossbow,spiked_log,spiked_ball,saw"
+ },
+ {
+  "category": "traps",
+  "key": "traps_blast",
+  "tris": 11508,
+  "kb": 264,
+  "note": "net,firepit,landmine,powder_barrel"
+ },
+ {
+  "category": "animals",
+  "key": "poultry_fish_pack",
+  "tris": 12512,
+  "kb": 287,
+  "note": "static, unrigged; fish_small,chick,trout,rooster,carp,hen"
+ },
+ {
+  "category": "traps",
+  "key": "trap_spike_pit",
+  "tris": 3000,
+  "kb": 97,
+  "note": "single object (pack picture gave 1 object); retry = traps_floor2 in pics11; spike_pit"
+ },
+ {
+  "category": "civic",
+  "key": "mint",
+  "tris": 7999,
+  "kb": 262,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "jeweller",
+  "tris": 7982,
+  "kb": 252,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "butcher",
+  "tris": 7985,
+  "kb": 255,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "bakery",
+  "tris": 7992,
+  "kb": 224,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "smokehouse",
+  "tris": 6996,
+  "kb": 246,
+  "note": ""
+ },
+ {
+  "category": "mines",
+  "key": "oil_well_0",
+  "tris": 5981,
+  "kb": 227,
+  "note": "wooden derrick with hut"
+ },
+ {
+  "category": "mines",
+  "key": "oil_well_1",
+  "tris": 4988,
+  "kb": 199,
+  "note": "steampunk pump jack"
+ },
+ {
+  "category": "mines",
+  "key": "oil_well_2",
+  "tris": 6000,
+  "kb": 235,
+  "note": "oil field with channel and basin"
+ },
+ {
+  "category": "mines",
+  "key": "oil_refinery_0",
+  "tris": 7992,
+  "kb": 270,
+  "note": "distillation tower with stills"
+ },
+ {
+  "category": "mines",
+  "key": "oil_refinery_1",
+  "tris": 6995,
+  "kb": 257,
+  "note": "alembic distillery hall"
+ },
+ {
+  "category": "mines",
+  "key": "coal_mine_0",
+  "tris": 5989,
+  "kb": 219,
+  "note": "tunnel mouth with carts"
+ },
+ {
+  "category": "mines",
+  "key": "coal_mine_1",
+  "tris": 5991,
+  "kb": 243,
+  "note": "open-pit coal mine"
+ },
+ {
+  "category": "animals",
+  "key": "animal_calf",
+  "tris": 5000,
+  "kb": 128,
+  "note": "static, unrigged"
+ },
+ {
+  "category": "animals",
+  "key": "animal_dog",
+  "tris": 4998,
+  "kb": 144,
+  "note": "static, unrigged"
+ },
+ {
+  "category": "animals",
+  "key": "animal_cow",
+  "tris": 5996,
+  "kb": 184,
+  "note": "static, unrigged"
+ },
+ {
+  "category": "animals",
+  "key": "animal_lamb",
+  "tris": 4000,
+  "kb": 149,
+  "note": "static, unrigged"
+ },
+ {
+  "category": "animals",
+  "key": "animal_sheep",
+  "tris": 5000,
+  "kb": 147,
+  "note": "static, unrigged"
+ },
+ {
+  "category": "animals",
+  "key": "animal_wolf",
+  "tris": 5000,
+  "kb": 173,
+  "note": "static, unrigged"
+ },
+ {
+  "category": "animals",
+  "key": "birds",
+  "tris": 8997,
+  "kb": 219,
+  "note": "flying poses with spread wings, static; dove,crow,eagle"
+ },
+ {
+  "category": "props",
+  "key": "props_mining",
+  "tris": 15364,
+  "kb": 318,
+  "note": "second generation of the same picture (h04) not used; winch,sack,sacks_pair,ingots,cart"
+ },
+ {
+  "category": "traps",
+  "key": "traps_floor2",
+  "tris": 9000,
+  "kb": 241,
+  "note": "retry of traps_floor; this time 3 separate objects; caltrops,spiked_board,bear_trap"
+ },
+ {
+  "category": "nature",
+  "key": "ground_cover",
+  "tris": 10288,
+  "kb": 283,
+  "note": "grass_tall is sloppy-simplified (2.4k); mushroom_brown,reed,clover,grass_tall,fern,mushroom_red"
+ },
+ {
+  "category": "nature",
+  "key": "crops",
+  "tris": 9102,
+  "kb": 330,
+  "note": "pumpkins,wheat_sheaf,hay_bale,cabbage,corn,carrots"
+ },
+ {
+  "category": "props",
+  "key": "props_camp",
+  "tris": 11995,
+  "kb": 276,
+  "note": "tent,dummy,cooking_pot,anvil"
+ },
+ {
+  "category": "props",
+  "key": "construction_pack",
+  "tris": 13829,
+  "kb": 332,
+  "note": "materials_pile,scaffold,wall_half,foundation_scaffold"
+ },
+ {
+  "category": "props",
+  "key": "props_street",
+  "tris": 11208,
+  "kb": 284,
+  "note": "trough has water painted in the texture; lantern,trough,flag,table_stool,signpost,bench"
+ },
+ {
+  "category": "props",
+  "key": "market_stalls",
+  "tris": 11986,
+  "kb": 303,
+  "note": "stall_spice,stall_pottery,stall_cloth,stall_produce"
+ },
+ {
+  "category": "props",
+  "key": "props_town",
+  "tris": 15702,
+  "kb": 329,
+  "note": "sacks,chest,crates,wagon,handcart,barrels"
+ },
+ {
+  "category": "civic",
+  "key": "market_hall",
+  "tris": 10318,
+  "kb": 320,
+  "note": "over budget (10.3k): simplifier cannot go lower without damage"
+ },
+ {
+  "category": "civic",
+  "key": "tavern_0",
+  "tris": 12514,
+  "kb": 352,
+  "note": "over budget (12.5k): base gets lumpy below this; two generations of the same picture (tavern_1)"
+ },
+ {
+  "category": "civic",
+  "key": "tavern_1",
+  "tris": 12759,
+  "kb": 352,
+  "note": "over budget (12.8k); alt generation of tavern_0"
+ },
+ {
+  "category": "civic",
+  "key": "brewhouse",
+  "tris": 8808,
+  "kb": 302,
+  "note": "8.8k, slightly over"
+ },
+ {
+  "category": "civic",
+  "key": "watermill",
+  "tris": 7995,
+  "kb": 278,
+  "note": "tall mill with wheel and hoist"
+ },
+ {
+  "category": "civic",
+  "key": "clock_tower",
+  "tris": 5455,
+  "kb": 257,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "silo",
+  "tris": 4998,
+  "kb": 190,
+  "note": ""
+ },
+ {
+  "category": "civic",
+  "key": "shrine_0",
+  "tris": 5998,
+  "kb": 221,
+  "note": "imamzadeh with conical turquoise dome"
+ },
+ {
+  "category": "civic",
+  "key": "shrine_1",
+  "tris": 6000,
+  "kb": 206,
+  "note": "fire temple (chahartaq)"
+ },
+ {
+  "category": "civic",
+  "key": "jetty",
+  "tris": 6088,
+  "kb": 270,
+  "note": ""
+ },
+ {
+  "category": "bridges",
+  "key": "bridge_stone_0",
+  "tris": 5000,
+  "kb": 184,
+  "note": "single arch"
+ },
+ {
+  "category": "bridges",
+  "key": "bridge_stone_1",
+  "tris": 5000,
+  "kb": 183,
+  "note": "three arches with turquoise band"
+ },
+ {
+  "category": "bridges",
+  "key": "bridge_moat",
+  "tris": 5989,
+  "kb": 233,
+  "note": "drawbridge between two towers"
+ },
+ {
+  "category": "bridges",
+  "key": "water_gate",
+  "tris": 5986,
+  "kb": 222,
+  "note": "gate with grille and steps"
+ },
+ {
+  "category": "mines",
+  "key": "gem_mine_turquoise",
+  "tris": 6000,
+  "kb": 228,
+  "note": ""
+ },
+ {
+  "category": "animals",
+  "key": "animal_donkey",
+  "tris": 4998,
+  "kb": 153,
+  "note": "static, unrigged"
+ },
+ {
+  "category": "animals",
+  "key": "animal_pig",
+  "tris": 4500,
+  "kb": 121,
+  "note": "static, unrigged"
+ },
+ {
+  "category": "animals",
+  "key": "animal_camel",
+  "tris": 6000,
+  "kb": 150,
+  "note": "static, unrigged"
+ },
+ {
+  "category": "people",
+  "key": "villager_girl",
+  "tris": 3000,
+  "kb": 245,
+  "note": "girl with braid and headscarf (pics10 #203) | rigged Biped 78 joints, walk clip only"
+ },
+ {
+  "category": "people",
+  "key": "villager_youngman",
+  "tris": 3000,
+  "kb": 231,
+  "note": "young working man with apron (#207) | rigged Biped 78 joints, walk clip only"
+ },
+ {
+  "category": "people",
+  "key": "villager_oldwoman",
+  "tris": 3000,
+  "kb": 266,
+  "note": "old woman with shawl (#202) | rigged Biped 78 joints, walk clip only"
+ },
+ {
+  "category": "people",
+  "key": "villager_boy",
+  "tris": 3000,
+  "kb": 248,
+  "note": "boy with cap, barefoot (#208) | rigged Biped 78 joints, walk clip only"
+ },
+ {
+  "category": "people",
+  "key": "villager_littlegirl",
+  "tris": 2998,
+  "kb": 273,
+  "note": "little girl (#204) | rigged Biped 78 joints, walk clip only"
+ },
+ {
+  "category": "units",
+  "key": "soldier_a",
+  "tris": 3000,
+  "kb": 301,
+  "note": "soldier in blue/steel armour, clean-shaven | rigged Biped 78 joints, walk clip only"
+ },
+ {
+  "category": "units",
+  "key": "soldier_b",
+  "tris": 3000,
+  "kb": 294,
+  "note": "soldier, mail armour, beard | rigged Biped 78 joints, walk clip only"
+ },
+ {
+  "category": "houses",
+  "key": "house_craftsman_0",
+  "tris": 6473,
+  "kb": 244,
+  "note": "workshop house: open arched ground-floor bay with a work counter, cedar balcony, hanging sign, blue tiled roof"
+ },
+ {
+  "category": "houses",
+  "key": "house_craftsman_1",
+  "tris": 7748,
+  "kb": 274,
+  "note": "blacksmith house/forge: grey-blue stone ground floor, brick chimney, cedar balcony, blue tiled hip roof"
+ },
+ {
+  "category": "houses",
+  "key": "house_craftsman_2",
+  "tris": 7410,
+  "kb": 266,
+  "note": "potter house/workshop: arched opening with clay pots, cedar balcony, blue tiled roof"
+ },
+ {
+  "category": "people",
+  "key": "villager_oldman",
+  "tris": 3000,
+  "kb": 234,
+  "note": "old man with white beard, cap, brown vest (medievalman3dmodel) | rigged Biped 78 joints, walk clip only"
+ },
+ {
+  "category": "people",
+  "key": "villager_man",
+  "tris": 3000,
+  "kb": 230,
+  "note": "adult working man with short beard, cap, brown vest and sash (ancienttunic3dmodel) | rigged Biped 78 joints, walk clip only"
+ },
+ {
+  "category": "people",
+  "key": "villager_woman",
+  "tris": 2998,
+  "kb": 263,
+  "note": "adult woman with headscarf and tunic (traditionaloutfit3dmodel) | rigged Biped 78 joints, walk clip only"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_swords_short",
+  "tris": 10794,
+  "kb": 246,
+  "note": "sword_short_shamshir,sword_short_akinakes,sword_short_seax,sword_short_kopis,sword_short_xiphos,sword_short_gladius"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_swords_medium",
+  "tris": 10800,
+  "kb": 230,
+  "note": "sword_med_viking,sword_med_sabre,sword_med_kilij,sword_med_spatha,sword_med_arming,sword_med_shamshir"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_swords_long",
+  "tris": 10797,
+  "kb": 233,
+  "note": "sword_long_rapier,sword_long_flamberge,sword_long_tachi,sword_long_scimitar,sword_long_bastard,sword_long_longsword"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_swords_xlong",
+  "tris": 8998,
+  "kb": 241,
+  "note": "sword_xl_greatsword,sword_xl_flamberge,sword_xl_nodachi,sword_xl_claymore,sword_xl_zweihander"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_swords_tiers_a",
+  "tris": 7200,
+  "kb": 221,
+  "note": "sword_tier_gold,sword_tier_iron,sword_tier_stone,sword_tier_wood"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_swords_tiers_b",
+  "tris": 9000,
+  "kb": 265,
+  "note": "sword_tier_diamond_blue,sword_tier_diamond_black,sword_tier_diamond_red,sword_tier_diamond_green,sword_tier_diamond_ice"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_axes_single",
+  "tris": 10402,
+  "kb": 233,
+  "note": "axe_felling,axe_francisca,axe_tabar,axe_dane,axe_bearded,axe_hatchet"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_axes_double",
+  "tris": 8994,
+  "kb": 274,
+  "note": "axe2_golden,axe2_crescent,axe2_great,axe2_labrys,axe2_battle"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_hammers_maces",
+  "tris": 10799,
+  "kb": 248,
+  "note": "flail_chain,mace_gurz,mace_morningstar,mace_flanged,hammer_lucerne,hammer_war"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_hammers_big",
+  "tris": 9000,
+  "kb": 257,
+  "note": "club_spiked,club_stone,hammer_smith,hammer_sledge,hammer_maul"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_bows",
+  "tris": 9434,
+  "kb": 217,
+  "note": "crossbow_heavy,crossbow_light,bow_composite,bow_longbow,bow_persian,bow_short"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_arrows_quivers",
+  "tris": 7458,
+  "kb": 245,
+  "note": "quiver_persian,quiver_leather,bolts_pair,arrow_fire,arrow_war,arrows_bundle"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_spears",
+  "tris": 10595,
+  "kb": 203,
+  "note": "spear_lance,spear_javelin,spear_pike,spear_trident,spear_long,spear_short"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_polearms",
+  "tris": 10783,
+  "kb": 236,
+  "note": "polearm_voulge,polearm_poleaxe,polearm_bardiche,polearm_naginata,polearm_glaive,polearm_halberd"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_staffs_basic",
+  "tris": 10800,
+  "kb": 216,
+  "note": "staff_cane,staff_monk,staff_ironshod,staff_quarter,staff_crook,staff_walking"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_staffs_magic",
+  "tris": 10621,
+  "kb": 277,
+  "note": "sceptre_royal,staff_bone,staff_ice,staff_druid,staff_wizard,staff_serpent"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_daggers_1",
+  "tris": 10800,
+  "kb": 250,
+  "note": "knives_throwing,dagger_dirk,dagger_stiletto,dagger_kris,dagger_khanjar,dagger_straight"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_daggers_2",
+  "tris": 10798,
+  "kb": 276,
+  "note": "knife_sica,dagger_jewelled,knife_hunting,knife_bone,knife_tanto,knife_kukri"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_shields",
+  "tris": 10718,
+  "kb": 237,
+  "note": "shield_heater,shield_buckler,shield_kite,shield_spara,shield_round_wood,shield_tower"
+ },
+ {
+  "category": "weapons",
+  "key": "weapons_exotic",
+  "tris": 8961,
+  "kb": 231,
+  "note": "weapon_blowgun,weapon_net,weapon_bolas,weapon_spiked_chain,weapon_sling,weapon_whip"
+ },
+ {
+  "category": "props",
+  "key": "lamps_hand",
+  "tris": 14108,
+  "kb": 339,
+  "note": "lamp_hand_storm,lamp_hand_horn,lamp_hand_oil,lamp_hand_cloth,lamp_hand_cage,lamp_hand_persian"
+ },
+ {
+  "category": "props",
+  "key": "lamps_house_oil",
+  "tris": 14552,
+  "kb": 293,
+  "note": "lamp_oil_stone,lamp_oil_genie,lamp_oil_pedestal,lamp_oil_multiwick,lamp_oil_chiragh,lamp_oil_clay"
+ },
+ {
+  "category": "props",
+  "key": "lamps_candles",
+  "tris": 12762,
+  "kb": 263,
+  "note": "candle_lantern_box,candlestick_iron,chandelier_crown,candelabra_floor,candelabra_table,candle_pillar"
+ },
+ {
+  "category": "props",
+  "key": "lamps_torches_braziers",
+  "tris": 13793,
+  "kb": 247,
+  "note": "torch_pole,fire_basket_pole,fire_bowl_stone,brazier_tripod,torch_wall,torch_hand"
+ },
+ {
+  "category": "props",
+  "key": "lamps_wall_street",
+  "tris": 14695,
+  "kb": 323,
+  "note": "lamp_pedestal_small,lamp_gate_hanging,lamp_stone_pillar,lamp_post,lamp_street_arm,lamp_wall_bracket"
+ },
+ {
+  "category": "props",
+  "key": "lamps_tower_gate",
+  "tris": 12286,
+  "kb": 257,
+  "note": "chandelier_hall,beacon_cauldron,lantern_watchtower,lantern_signal,beacon_basket_pole"
+ },
+ {
+  "category": "props",
+  "key": "lamps_persian_shrine",
+  "tris": 14539,
+  "kb": 332,
+  "note": "lamp_dome_brass,lamp_golden_temple,atashdan,lamp_tile_holder,lamp_mosque_hanging,lamp_star_bronze"
+ },
+ {
+  "category": "props",
+  "key": "lamps_fantasy",
+  "tris": 14378,
+  "kb": 318,
+  "note": "lamp_glass_jar,lamp_rune_stone,lamp_gem_ruby,lamp_ice_crystal,lamp_skull,lamp_staff_crystal"
+ },
+ {
+  "category": "castle",
+  "key": "castle_wall_stone_b",
+  "tris": 2000,
+  "kb": 162,
+  "note": "new stone wall in the same shape/style recipe as the 8 other tiers (#322), light grey stone with turquoise band; the older castle_wall_stone stays in the library, pick one"
+ },
+ {
+  "category": "civic",
+  "key": "coop_0",
+  "tris": 3998,
+  "kb": 177,
+  "note": "wooden hen house with blue tiled roof and ramp (#320)"
+ },
+ {
+  "category": "civic",
+  "key": "coop_1",
+  "tris": 4000,
+  "kb": 156,
+  "note": "round mudbrick hen house with clay dome, blue band and perch holes (#321)"
+ },
+ {
+  "category": "civic",
+  "key": "well_abanbar",
+  "tris": 5999,
+  "kb": 171,
+  "note": "ab-anbar: domed water reservoir with two wind-catcher chimneys and a stair entrance (#209 var 3)"
+ },
+ {
+  "category": "animals",
+  "key": "animal_horse_black",
+  "tris": 5000,
+  "kb": 134,
+  "note": "black horse, static unrigged (#200 edit of the white horse)"
+ },
+ {
+  "category": "civic",
+  "key": "well_stone",
+  "tris": 3994,
+  "kb": 216,
+  "note": "stone well with deep-blue tiled roof, windlass, bucket and clay jar (#209 var 1)"
+ },
+ {
+  "category": "animals",
+  "key": "animal_horse_white",
+  "tris": 5000,
+  "kb": 117,
+  "note": "white horse, static unrigged (#200)"
+ },
+ {
+  "category": "civic",
+  "key": "well_qanat",
+  "tris": 3992,
+  "kb": 175,
+  "note": "qanat well: mudbrick ring, windlass, steps, clay jar (#209 var 2)"
+ },
+ {
+  "category": "animals",
+  "key": "animal_horse_brown",
+  "tris": 4999,
+  "kb": 164,
+  "note": "chestnut/brown horse, static unrigged (#200 edit)"
+ },
+ {
+  "category": "mines",
+  "key": "windmill_asbad_1",
+  "tris": 4954,
+  "kb": 201,
+  "note": "Persian asbad windmill: long row of mudbrick chambers with tall slits, reed sails, buttresses"
+ },
+ {
+  "category": "houses",
+  "key": "house_craftsman_0_alt",
+  "tris": 9778,
+  "kb": 374,
+  "note": "older version"
+ },
+ {
+  "category": "houses",
+  "key": "house_craftsman_1_alt",
+  "tris": 9973,
+  "kb": 391,
+  "note": "older version"
+ },
+ {
+  "category": "houses",
+  "key": "house_craftsman_2_alt",
+  "tris": 7943,
+  "kb": 329,
+  "note": "older version"
+ }
+]
