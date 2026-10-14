@@ -12,7 +12,8 @@ REPO=${REPO:-https://github.com/Blu-Rez/bluewall-assets.git}; BR="inbox/$ID"
 D=$(mktemp -d); cd "$D"; git init -q -b "$BR"; git remote add origin "$REPO"
 cm(){ git commit -q -m "$1" 2>/dev/null || git -c commit.gpgsign=false commit -q -m "$1"; }
 printf 'result of %s, pushed %s\n' "$ID" "$(date -u +%FT%TZ)" > README.md; git add README.md; cm "inbox/$ID"
-n=0; for f in "$@"; do cp -p "$f" "./$(basename "$f")"; git add "$(basename "$f")"; cm "$ID: $(basename "$f")"; n=$((n+1)); done
-git -c push.negotiate=false push -q --force origin "$BR" 2>&1 | grep -vE '^remote:|^$' || true
+push(){ for t in 1 2 3; do git -c push.negotiate=false push -q --force origin "$BR" 2>&1 | grep -vE '^remote:|^$' && true; git ls-remote --heads origin "$BR" | grep -q "$(git rev-parse HEAD)" && return 0; echo "… push retry $t"; sleep 3; done; return 1; }
+push || { echo "❌ push failed (no write access? call add_repo with access=push, then run again)"; exit 1; }
+n=0; for f in "$@"; do cp -p "$f" "./$(basename "$f")"; git add "$(basename "$f")"; cm "$ID: $(basename "$f")"; push || { echo "❌ push of $(basename "$f") failed (413 = too big: split it)"; exit 1; }; n=$((n+1)); done
 git ls-remote --heads origin "$BR" | grep -q "$BR" || { echo "❌ push failed (no write access? call add_repo with access=push, then run again)"; exit 1; }
 echo "✅ pushed $n file(s) to branch $BR — tell the mother chat:  «$ID pushed»"
