@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+@font-face{font-family:"Libre Baskerville";src:url(pub/baskerville-700.woff2) format("woff2");font-weight:700}
+@font-face{font-family:"Libre Baskerville";src:url(pub/baskerville-400.woff2) format("woff2");font-weight:400}
+@font-face{font-family:Vazirmatn;src:url(pub/Vazirmatn-Bold.woff2) format("woff2");font-weight:700}
+html,body{margin:0;height:100%;background:#0a1220;overflow:hidden}
+#bw{position:relative;width:100vw;height:100vh;background:linear-gradient(180deg,#14301c,#0b1a10);--sb:18px;--st:44px;--sl:0px;--sr:0px}
+</style></head><body><div id="bw" class="bw-ui"></div>
+<script>window.BW_ASSETS="assets/";</script><script src="ui1_h.bundle.js"></script>
+<script>
+const NOW = 1000; let READY = 6302;
+const have = { ruby: 1250, emerald: 860, turq: 3400 };
+const nx = (to, ok = true, why, info) => ({ ok, to, cost: { ruby: 1200, emerald: 640 }, dur: 14400, why, info: info || {} });
+const ids = ['keep', 'wall', 'towers', 'forge', 'barracks', 'training', 'stable', 'workshop', 'lair', 'mine_ruby', 'mine_emerald', 'mine_turq', 'vault_ruby', 'vault_emerald', 'vault_turq'];
+const structs = {}; for (const k of ids) structs[k] = { lv: 12, up: null, next: nx(13) };
+const NAME = { keep: 'Castle Keep', wall: 'Blue Wall', towers: 'Ballista Towers', training: 'Training Ground', barracks: 'Barracks', stable: 'Stable', workshop: 'Siege Workshop', lair: 'Dragon Lair', forge: 'Forge', mine_ruby: 'Ruby Mine', mine_emerald: 'Emerald Mine', mine_turq: 'Turquoise Mine', vault_ruby: 'Ruby Vault', vault_emerald: 'Emerald Vault', vault_turq: 'Turquoise Vault' };
+const tierIdx = (lv) => (lv >= 30 ? 5 : lv >= 24 ? 4 : lv >= 18 ? 3 : lv >= 12 ? 2 : lv >= 6 ? 1 : 0);
+const up = { info: (e) => { const r = structs[e]; if (!r) return null; const n = r.next; return { name: NAME[e], desc: 'desc ' + e, r, p: {}, tier: H.TIERS[tierIdx(r.lv)], btn: !r.up && n ? { label: n.ok ? 'Upgrade to Lv ' + n.to : (n.why === 'gems' ? 'Not enough gems' : 'Castle Lv ' + ((n.info && n.info.need_keep) || 14)), dis: !n.ok, cls: '' } : null, have, now: NOW }; }, act: async () => {}, focus: () => {} };
+const mine = (rate, cap) => ({ rate, cap, last: 0 });
+const fam = (cap, used, q) => ({ lv: 12, cap, used, q: q || [] });
+const econ = { st: { level: 30, prog: { b: { keep: 13 } }, gems: have, vault: { ruby: 307956, emerald: 692000, turq: 230000 }, mines: { ruby: mine(1038, 12461), emerald: mine(800, 9000), turq: mine(400, 5000) },
+  army: { fam: { barracks: fam(434, 130, [{ u: 'spear', n: 6, t: 20, fin: NOW + 120 }, { u: 'sword', n: 3, t: 30, fin: NOW + 210 }]), training: fam(300, 90), stable: fam(120, 30), workshop: fam(60, 6), lair: fam(24, 2) }, units: {} } },
+  now: () => NOW, ready: () => READY, room: () => 400000, collect: async () => 0, on: () => {} };
+const army = { trainOne: () => true, why: (u) => (u === 'guard' ? 'Not enough gems' : null) };
+window.__H = { econ, structs, have, NOW, nx, setReady: (v) => { READY = v; }, reset: () => { for (const k of ids) structs[k] = { lv: 12, up: null, next: nx(13) }; have.ruby = 1250; READY = 6302; for (const f of Object.values(econ.st.army.fam)) f.used = Math.min(f.used, f.cap); } };
+const ui = { root: document.getElementById('bw'), toast() {}, haptic() {}, hide() {} };
+window.__sheets = H.createSheetUI(ui.root, { econ, ui, audio: null, upgrade: up, army, afterCollect() {} });
+window.__ready = true;
+</script></body></html>
