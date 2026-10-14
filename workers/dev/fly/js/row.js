@@ -1,0 +1,11 @@
+// row.js: window.__R = { order:[types], gap, face (rad), az (camera azimuth rel. to the unit heading, 0 = in front), el (rad), d (m), ty (look height above the unit's flight height), fwd, lift:true }
+const S=__bw.battle.session, dp=S.sim.deploy, R=window.__R||{}, H=S.H, c=__bw.camera;
+const order=R.order||['dragon3'], gap=R.gap||40, face=R.face??0;
+const cx=R.cx??dp.x, cz=R.cz??dp.z, used=new Set(); let i=0; const picked=[];
+for(const ty of order){ const u=S.sim.units.find(q=>q.type===ty && !used.has(q.id)); if(!u) continue; used.add(u.id); picked.push(u); u.x=cx+(i-(order.length-1)/2)*gap*Math.cos(R.rowAng||0); u.z=cz+(i-(order.length-1)/2)*gap*Math.sin(R.rowAng||0); u.face=face; u.active=true; i++; }
+for(const u of S.sim.units){ if(!used.has(u.id)){ u.x=cx+700+u.id; u.z=cz+700; } }
+S.cam.free=true;
+let ly=0; for(const u of picked){ const v=S.views.views.get(u.id); if(v){ v.yaw=face; v.lx=u.x; v.lz=u.z; if(R.lift!==false) v.ly=v.T.lift; ly=Math.max(ly,v.T.lift); } }
+const g0=H(cx,cz), ty=g0+(R.ty??ly*0.8), d=R.d??150, el=R.el??0.2, a=face+(R.az??0.6);
+c.position.set(cx+Math.sin(a)*d*Math.cos(el), ty+Math.sin(el)*d, cz+Math.cos(a)*d*Math.cos(el)); c.lookAt(cx,ty,cz); c.updateMatrixWorld(true);
+return {n:picked.length, cam:c.position.toArray().map(x=>+x.toFixed(1)), target:[cx,ty,cz], g0};

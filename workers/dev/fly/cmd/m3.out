@@ -1,0 +1,2 @@
+junk ["Object_4|material_0|true|0|true|true|false|true|1|true", "Object_6|material_0|true|0|true|true|false|true|1|true", "Object_8|material_0|true|0|true|true|false|true|1|true", "Object_10|material_0|true|0|true|true|false|true|1|true", "Object_12|material_0|true|0|true|true|false|true|1|true", 15]
+LOGS ["warning THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported."]

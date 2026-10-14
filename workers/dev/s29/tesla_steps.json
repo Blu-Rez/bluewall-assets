@@ -1,0 +1,4 @@
+[
+ {"name":"pos","js":"const tz=__bw.world.tesla; tz.set(4); const out=[]; __bw.scene.traverse(o=>{ if(o.name==='tesla'){ const p=new __bw.THREE.Vector3(); o.getWorldPosition(p); out.push([+p.x.toFixed(1),+p.y.toFixed(1),+p.z.toFixed(1),o.visible]); } }); return out;","shot":false},
+ {"name":"view","js":"const c=__bw.ctl; const P=[]; __bw.scene.traverse(o=>{ if(o.name==='tesla'&&o.visible){ const p=new __bw.THREE.Vector3(); o.getWorldPosition(p); P.push(p);} }); let cx=0,cy=0,cz=0; for(const p of P){cx+=p.x;cy+=p.y;cz+=p.z;} cx/=P.length; cy/=P.length; cz/=P.length; c.minD=20; c.maxR=9999; c.camR=9999; c.target.set(cx,cy,cz); c.dist=170; c.polar=0.85; return {n:P.length,cx,cy,cz,azim:c.azim};","frames":10,"wait":3}
+]

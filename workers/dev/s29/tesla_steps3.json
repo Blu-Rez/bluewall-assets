@@ -1,0 +1,3 @@
+[
+ {"name":"top","js":"__bw.world.tesla.set(4); const P=[]; __bw.scene.traverse(o=>{ if(o.name==='tesla'&&o.visible){ const p=new __bw.THREE.Vector3(); o.getWorldPosition(p); P.push(p);} }); const c=__bw.ctl; c.update=()=>{}; const cam=__bw.camera; let cx=0,cz=0; for(const p of P){cx+=p.x;cz+=p.z;} cx/=P.length; cz/=P.length; cam.position.set(cx,330,cz+0.01); cam.up.set(0,0,-1); cam.lookAt(cx,14,cz); cam.updateMatrixWorld(); cam.updateProjectionMatrix(); const out=P.map(p=>{ const v=p.clone().add(new __bw.THREE.Vector3(0,6,0)).project(cam); return [Math.round((v.x*0.5+0.5)*innerWidth), Math.round((-v.y*0.5+0.5)*innerHeight)]; }); window.__proj=out; return {n:P.length, out, W:innerWidth, H:innerHeight};","frames":10,"wait":3}
+]

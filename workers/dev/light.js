@@ -1,0 +1,1 @@
+(() => { const b = window.__battle; b.cam.intro = 0; b.scene.children[0].visible = false; b.cam.tz = 120; b.cam.dist = 130; b.cam.az = 0; b.sun.intensity = 1.0; b.scene.children.forEach((o) => { if (o.isHemisphereLight) o.intensity = 0.4; }); b.scene.environmentIntensity = 0.25; return 1; })()

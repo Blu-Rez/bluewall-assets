@@ -1,0 +1,48 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#222">
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
+<canvas id=out></canvas>
+<script type=module>
+// u1_sheet.html — numbered candidate sheet WITH pose: each cell = the real model, an optional external clip pack sampled at time t, optional real props on named bones.
+// ?list=<json url>&cols&tw&th   item = { n, label, sub, url, anims: [url], clip, t, props: [{url, bone, pos, rot, s, node}], hide: [node names], yaw, fit: s }
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+const q = new URLSearchParams(location.search), list = await (await fetch(q.get('list'))).json();
+const TW = +q.get('tw') || 320, TH = +q.get('th') || 380, COLS = +q.get('cols') || 4;
+const rows = Math.ceil(list.length / COLS), cv = document.getElementById('out'); cv.width = TW * COLS; cv.height = TH * rows;
+const c2 = cv.getContext('2d'); c2.fillStyle = '#1b2230'; c2.fillRect(0, 0, cv.width, cv.height);
+const R = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true }); R.setSize(TW, TH - 44); R.outputColorSpace = THREE.SRGBColorSpace; R.toneMapping = THREE.ACESFilmicToneMapping;
+const sc = new THREE.Scene(); sc.background = new THREE.Color(0x7d8fa6);
+sc.add(new THREE.HemisphereLight(0xffffff, 0x556070, 1.5)); const dl = new THREE.DirectionalLight(0xfff2dd, 2.6); dl.position.set(3, 5, 4); sc.add(dl);
+const floor = new THREE.Mesh(new THREE.CircleGeometry(1, 40), new THREE.MeshBasicMaterial({ color: 0x56657a })); floor.rotation.x = -Math.PI / 2; sc.add(floor);
+const cam = new THREE.PerspectiveCamera(30, TW / (TH - 44), 0.01, 1e5), ld = new GLTFLoader(); ld.setMeshoptDecoder(MeshoptDecoder);
+const KC = {}; const load = (u) => KC[u] || (KC[u] = ld.loadAsync(u));
+window.__info = [];
+for (let i = 0; i < list.length; i++) {
+  const it = list[i], x = (i % COLS) * TW, y = Math.floor(i / COLS) * TH; let info = { n: it.n, label: it.label };
+  try {
+    const g = await load(it.url);
+    const o = (await import('three/addons/utils/SkeletonUtils.js')).clone(g.scene); sc.add(o);
+    (it.hide || []).forEach((nm) => { const h = o.getObjectByName(nm); if (h) h.visible = false; });
+    for (const p of it.props || []) { const pg = await load(p.url), b = o.getObjectByName(p.bone); if (!b) { info.err = 'no bone ' + p.bone; continue; } const po = (await import('three/addons/utils/SkeletonUtils.js')).clone(p.node ? pg.scene.getObjectByName(p.node) : pg.scene); if (p.pos) po.position.set(...p.pos); if (p.rot) po.rotation.set(...p.rot.map((d) => d * Math.PI / 180)); if (p.s) po.scale.setScalar(p.s); b.add(po); }
+    let clips = g.animations || []; for (const au of it.anims || []) clips = clips.concat((await load(au)).animations);
+    const names = clips.map((c) => c.name); info.clips = names.length;
+    if (it.clip) { const c = clips.find((k) => k.name === it.clip); if (c) { const m = new THREE.AnimationMixer(o); m.clipAction(c).play(); m.setTime(it.t || 0); } else info.err = 'no clip ' + it.clip; }
+    o.rotation.y = it.yaw ?? 0.55; o.updateMatrixWorld(true);
+    let tris = 0; o.traverse((m) => { if (m.isMesh && m.visible) { const ix = m.geometry.index; tris += (ix ? ix.count : m.geometry.attributes.position.count) / 3; } });
+    const bx = new THREE.Box3(); o.traverse((m) => { if (m.isSkinnedMesh) { m.skeleton.update(); } });
+    bx.setFromObject(o, true); const s = bx.getSize(new THREE.Vector3()), cn = bx.getCenter(new THREE.Vector3());
+    const r = (it.fit || 1) * Math.max(s.y * 1.05, s.x * 0.8, s.z * 0.8) || 1, d = r / Math.tan(THREE.MathUtils.degToRad(15));
+    floor.scale.setScalar(r * 0.55); floor.position.set(cn.x, bx.min.y - r * 0.005, cn.z);
+    cam.position.set(cn.x + d * 0.30, cn.y + r * 0.10, cn.z + d * 0.95); cam.lookAt(cn); cam.near = d / 200; cam.far = d * 40; cam.updateProjectionMatrix();
+    R.render(sc, cam); c2.drawImage(R.domElement, x, y + 44); sc.remove(o);
+    const meshes = []; o.traverse((m) => { if (m.isMesh) { const b2 = new THREE.Box3().setFromObject(m, true), z = b2.getSize(new THREE.Vector3()); meshes.push(m.name + ':' + [z.x, z.y, z.z].map((v) => v.toFixed(2)).join('x')); } }); const bones = []; o.traverse((m) => { if (m.isBone) bones.push(m.name); });
+    info = { ...info, meshes: meshes.slice(0, 14), bones: bones.slice(0, 30), tris: Math.round(tris), size: [s.x, s.y, s.z].map((v) => +v.toFixed(2)), clipNames: names.slice(0, 30) };
+  } catch (e) { c2.fillStyle = '#601818'; c2.fillRect(x, y + 44, TW, TH - 44); info.err = String(e).slice(0, 90); }
+  c2.fillStyle = '#0d1424'; c2.fillRect(x, y, TW, 44); c2.fillStyle = '#ffd24a'; c2.font = 'bold 22px sans-serif'; c2.fillText(String(it.n ?? i + 1), x + 8, y + 29);
+  c2.fillStyle = '#fff'; c2.font = '13px sans-serif'; c2.fillText((it.label || '').slice(0, 40), x + 40, y + 17);
+  c2.fillStyle = '#9fd'; c2.font = '12px sans-serif'; c2.fillText(info.err ? '! ' + info.err : (it.sub || '').slice(0, 46) + (info.tris != null ? '  ' + info.tris + ' tris' : ''), x + 40, y + 36);
+  c2.strokeStyle = '#000'; c2.strokeRect(x, y, TW, TH); window.__info.push(info);
+}
+window.__done = true;
+</script>

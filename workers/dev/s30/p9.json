@@ -1,0 +1,4 @@
+[
+{"name":"home1","js":"const c=__bw.ctl, T=__bw.THREE; const camp=__bw.scene.getObjectByName('attackerCamp'); if(!camp) return {camp:false}; const bb=new T.Box3(); camp.traverse(o=>{ if(o.isMesh){ const b=new T.Box3().setFromObject(o); if(isFinite(b.min.x)) bb.union(b);} }); const ct=bb.getCenter(new T.Vector3()); c.target.x=ct.x; c.target.z=ct.z; c.dist=110; return {camp:true,vis:camp.visible,c:[ct.x|0,ct.z|0],size:bb.getSize(new T.Vector3()).toArray().map(v=>v|0), kids:camp.children.length, n:camp.children[0]&&camp.children[0].count};","frames":8,"wait":3,"shot":true},
+{"name":"home2","js":"const c=__bw.ctl; c.dist=70; c.azim=(c.azim||0)+0.9; return {azim:c.azim};","frames":8,"wait":3,"shot":true}
+]

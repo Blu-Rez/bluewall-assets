@@ -1,0 +1,186 @@
+[
+ {
+  "name": "c4_windmill",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_windmill_blue.gltf",
+  "h": 13,
+  "tris": 2200,
+  "err": 0.04,
+  "vcol": "all",
+  "hidden": true
+ },
+ {
+  "name": "c4_windmill_nf",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_windmill_blue.gltf",
+  "ref": "c4_windmill",
+  "only": [
+   "building_windmill_blue",
+   "building_windmill_top_blue"
+  ],
+  "tris": 1800,
+  "err": 0.04,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_windmill_fan",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_windmill_blue.gltf",
+  "ref": "c4_windmill",
+  "only": [
+   "building_windmill_top_fan_blue"
+  ],
+  "tris": 600,
+  "err": 0.04,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_watermill",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_watermill_blue.gltf",
+  "h": 11,
+  "tris": 1700,
+  "err": 0.04,
+  "vcol": "all",
+  "hidden": true
+ },
+ {
+  "name": "c4_watermill_nw",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_watermill_blue.gltf",
+  "ref": "c4_watermill",
+  "only": [
+   "building_watermill_blue"
+  ],
+  "tris": 1300,
+  "err": 0.04,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_wheel",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_watermill_blue.gltf",
+  "ref": "c4_watermill",
+  "only": [
+   "building_watermill_wheel_blue"
+  ],
+  "tris": 500,
+  "err": 0.04,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_bakery",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_home_B_blue.gltf",
+  "h": 9.5,
+  "tris": 1300,
+  "err": 0.04,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_butchershop",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/food/cartoon_butcher_market_polygonal_912eb640/scene.gltf",
+  "w": 8.6,
+  "tris": 2300,
+  "tex": 384,
+  "err": 0.25
+ },
+ {
+  "name": "c4_slaughterhall",
+  "src": "/home/claude/blu-rez/bluewall-assets/v2/farm-buildings/FBX/BigBarn.glb",
+  "w": 12.5,
+  "tris": 2200,
+  "tex": 384,
+  "err": 0.06,
+  "lift": 1.45,
+  "mul": 0.72
+ },
+ {
+  "name": "c4_scarecrow",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/food/scarecrow_bb672e59/scene.gltf",
+  "h": 2.9,
+  "tris": 700,
+  "sloppy": true,
+  "sloppyErr": 0.25,
+  "tex": 256
+ },
+ {
+  "name": "c4_hut",
+  "src": "/home/claude/dev/assets/kit_ws.glb",
+  "pick": "ws_hut",
+  "s": 1,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_sack",
+  "src": "/home/claude/dev/assets/kit_ws.glb",
+  "pick": "ws_sack",
+  "s": 1,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_workbench",
+  "src": "/home/claude/dev/assets/kit_ws.glb",
+  "pick": "ws_workbench",
+  "s": 1,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_stallcart",
+  "src": "/home/claude/dev/assets/kit_ws.glb",
+  "pick": "ws_stall_cart_empty",
+  "s": 1,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_stall",
+  "src": "/home/claude/dev/assets/kit_ws.glb",
+  "pick": "ws_stall_empty",
+  "s": 1,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_crate",
+  "src": "/home/claude/dev/assets/kit_ws.glb",
+  "pick": "ws_crate_wooden",
+  "s": 1,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_barrel",
+  "src": "/home/claude/dev/assets/kit_ws.glb",
+  "pick": "ws_barrel",
+  "s": 1,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_bucket",
+  "src": "/home/claude/dev/assets/kit_ws.glb",
+  "pick": "ws_bucket_wooden_1",
+  "s": 1,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_smallbarn",
+  "src": "/home/claude/dev/assets/kit_ws.glb",
+  "pick": "ws_smallbarn",
+  "s": 1,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_silo",
+  "src": "/home/claude/dev/assets/kit_ws.glb",
+  "pick": "ws_silo",
+  "s": 1,
+  "vcol": "all"
+ },
+ {
+  "name": "c4_cart1",
+  "src": "/home/claude/dev/assets/kit_ws.glb",
+  "pick": "ws_cart1",
+  "s": 1,
+  "vcol": "all",
+  "dropMat": "lamp"
+ },
+ {
+  "name": "c4_cart3",
+  "src": "/home/claude/dev/assets/kit_ws.glb",
+  "pick": "ws_cart3",
+  "s": 1,
+  "vcol": "all",
+  "dropMat": "lamp"
+ }
+]

@@ -1,0 +1,127 @@
+[
+{
+"name": "c3_vault",
+"src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_tower_base_blue.gltf",
+"w": 8,
+"tris": 1100,
+"tex": 384,
+"err": 0.1
+},
+{
+"name": "c3_hall",
+"src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_blacksmith_blue.gltf",
+"w": 11,
+"tris": 1000,
+"tex": 384,
+"err": 0.1,
+"sloppy": true,
+"sloppyErr": 0.25
+},
+{
+"name": "c3_gtower",
+"src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_tower_A_blue.gltf",
+"w": 3.4,
+"tris": 700,
+"tex": 384,
+"err": 1.0,
+"sloppy": true,
+"sloppyErr": 0.25
+},
+{
+"name": "c3_wall",
+"src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/neutral/wall_straight.gltf",
+"w": 4.2,
+"tris": 280,
+"tex": 384,
+"err": 0.15
+},
+{
+"name": "c3_gate",
+"src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/neutral/wall_straight_gate.gltf",
+"w": 4.2,
+"tris": 500,
+"tex": 384,
+"err": 0.15
+},
+{
+"name": "c3_pump",
+"src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_home_A_blue.gltf",
+"w": 7.5,
+"tris": 975,
+"tex": 384,
+"err": 0.06
+},
+{
+"name": "c3_press",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/food/medieval_wine_press_free_706ee74b/scene.gltf",
+"w": 3.4,
+"tris": 700,
+"tex": 256,
+"err": 0.1,
+"sloppy": true,
+"sloppyErr": 0.3,
+"lift": 0.62,
+"mul": 1.5
+},
+{
+"name": "c3_anvil",
+"src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Anvil.gltf",
+"h": 0.95,
+"tris": 300,
+"tex": 256,
+"err": 0.3
+},
+{
+"name": "c3_crate",
+"src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Crate_Metal.gltf",
+"w": 1.2,
+"tris": 300,
+"tex": 256,
+"err": 0.5
+},
+{
+"name": "c3_barrel",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/food/old_barrel_e7b12378/scene.gltf",
+"h": 1.0,
+"tris": 220,
+"tex": 256,
+"err": 0.3,
+"lift": 0.7
+},
+{
+"name": "c3_brazier",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/defense/medieval_braziers_l_lights_l_enviroment_fc5c7544/scene.gltf",
+"w": 3.4,
+"tris": 500,
+"tex": 256,
+"err": 0.2,
+"sloppy": true,
+"sloppyErr": 0.3
+},
+{
+"name": "c3_goldbars",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/gold/gold_bar_pile_ac639a7c/scene.gltf",
+"w": 1.3,
+"tris": 200,
+"tex": 256,
+"err": 0.06
+},
+{
+"name": "c3_coins",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/gold/fantasy_designed_coins_gold_silver_coppe_71a3526b/scene.gltf",
+"w": 1.6,
+"tris": 300,
+"tex": 256,
+"err": 0.1
+},
+{
+"name": "c3_watertower",
+"src": "/home/claude/blu-rez/bluewall-assets/v2/farm-buildings/FBX/WaterTower.glb",
+"w": 2.6,
+"tris": 900,
+"tex": 256,
+"err": 0.08,
+"sloppy": true,
+"sloppyErr": 0.3
+}
+]

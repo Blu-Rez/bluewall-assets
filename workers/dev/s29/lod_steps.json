@@ -1,0 +1,5 @@
+[
+ {"name":"init","js":"window.__bwFixDyn=true; window.__meas = async (N, warm=3) => { const nf=(k)=>new Promise(res=>{const f0=__bw.frames; const iv=setInterval(()=>{ if(__bw.frames>=f0+k){clearInterval(iv);res();} },30);}); await nf(warm); const r=__bw.renderer, info=r.info; info.autoReset=false; info.reset(); const f0=__bw.frames; await nf(N); const n=__bw.frames-f0; return {calls:Math.round(info.render.calls/n), tris:Math.round(info.render.triangles/n)}; }; return 'ok';","shot":false},
+ {"name":"lod_on","js":"window.__bwNoLod=false; await new Promise(r=>setTimeout(r,1500)); const r=await __meas(12); let n=0,tot=0,cur=0; __bw.scene.traverse(o=>{ if(o.userData&&o.userData.lodN){ n++; tot+=o.userData.lodN; cur+=o.count; } }); r.cells=n; r.inst_total=tot; r.inst_now=cur; return r;","frames":4},
+ {"name":"lod_off","js":"window.__bwNoLod=true; await new Promise(r=>setTimeout(r,1500)); return await __meas(12);","frames":4}
+]

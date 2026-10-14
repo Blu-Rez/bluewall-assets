@@ -1,0 +1,50 @@
+{
+ "out": "/home/claude/bot/bluebot_v2/bluewall/web/assets/u1_legionary.glb",
+ "base": "/home/claude/blu-rez/bluewall-assets/kaykit-adventurers/KayKit_Adventurers_2.0_FREE/Characters/gltf/Knight.glb",
+ "props": [
+  {
+   "src": "/home/claude/blu-rez/bluewall-assets/kaykit-adventurers/KayKit_Adventurers_2.0_FREE/Assets/gltf/sword_1handed.gltf",
+   "bone": "handslot.r",
+   "name": "Gladius"
+  },
+  {
+   "src": "/home/claude/blu-rez/bluewall-assets/kaykit-adventurers/KayKit_Adventurers_2.0_FREE/Assets/gltf/shield_square.gltf",
+   "bone": "handslot.l",
+   "name": "Scutum"
+  }
+ ],
+ "packs": [
+  {
+   "src": "/home/claude/blu-rez/bluewall-assets/kaykit-character-animations/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_CombatMelee.glb",
+   "clips": {
+    "Melee_1H_Attack_Slice_Horizontal": "Melee_1H_Attack_Slice_Horizontal",
+    "Melee_1H_Attack_Stab": "Melee_1H_Attack_Stab",
+    "Melee_Blocking": "Melee_Blocking"
+   }
+  },
+  {
+   "src": "/home/claude/blu-rez/bluewall-assets/kaykit-character-animations/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_General.glb",
+   "clips": {
+    "Idle_A": "Idle_A",
+    "Hit_A": "Hit_A",
+    "Death_A": "Death_A"
+   }
+  },
+  {
+   "src": "/home/claude/blu-rez/bluewall-assets/kaykit-character-animations/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_MovementBasic.glb",
+   "clips": {
+    "Walking_A": "Walking_A",
+    "Running_A": "Running_A"
+   }
+  }
+ ],
+ "texture": {
+  "size": 512,
+  "webp": 90
+ },
+ "simplify": 0.9,
+ "simplifyErr": 0.004,
+ "dropNodes": [
+  "Knight_Cape"
+ ]
+}

@@ -1,0 +1,1 @@
+[{"name": "resume", "frames": 3, "wait": 0, "shot": false, "js": "if(window.__raf0){ window.requestAnimationFrame=window.__raf0; const l=window.__pend||[]; window.__pend=[]; for(const cb of l) window.__raf0(cb); window.__raf0=null; } return 'resumed';"}]

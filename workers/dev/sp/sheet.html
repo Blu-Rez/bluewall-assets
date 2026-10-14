@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><title>sheet</title>
+<body style="margin:0;background:linear-gradient(180deg,#0d1b3a,#060d20);color:#cfe3ff;font:600 15px system-ui,sans-serif">
+<div id="r" style="padding:18px 20px;width:760px"></div>
+<script type="module">
+import { orb, crest, KEYS } from './spell_art.js';
+import { swords, attackButton } from './sword_art.js';
+const NAMES = { lightning: 'Lightning', heal: 'Healing', freeze: 'Frost', rage: 'Rage', quake: 'Earthquake' };
+const cell = (k, f, big) => `<div style="text-align:center;width:128px">${f(k, big)}<div style="font-size:13px;opacity:.8;margin-top:2px">${NAMES[k]}</div></div>`;
+const small = (f) => KEYS.map((k) => f(k, 44)).join('');
+document.getElementById('r').innerHTML = `
+<div style="font-size:18px;margin:2px 0 8px">Spells — style A: glass orb</div><div style="display:flex;gap:6px">${KEYS.map((k) => cell(k, orb, 104)).join('')}</div>
+<div style="display:flex;gap:10px;align-items:center;margin:4px 0 14px;opacity:.95"><span style="font-size:12px;opacity:.7;width:90px">in-game size</span>${small(orb)}</div>
+<div style="font-size:18px;margin:10px 0 8px">Spells — style B: crest</div><div style="display:flex;gap:6px">${KEYS.map((k) => cell(k, crest, 104)).join('')}</div>
+<div style="display:flex;gap:10px;align-items:center;margin:4px 0 14px;opacity:.95"><span style="font-size:12px;opacity:.7;width:90px">in-game size</span>${small(crest)}</div>
+<div style="font-size:18px;margin:10px 0 8px">Attack button — two swords</div>
+<div style="display:flex;gap:30px;align-items:center">${swords(150)}${attackButton(150)}<div style="display:flex;flex-direction:column;gap:10px;align-items:center">${attackButton(56)}${attackButton(44)}</div></div>`;
+</script>

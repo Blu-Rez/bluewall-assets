@@ -1,0 +1,10 @@
+[
+ {"url":"/assets/knight_k3.glb","label":"R1 K3 knight (current rider)"},
+ {"url":"/v2/animated-knight/FBX/KnightCharacter.glb","label":"R2 Animated Knight (v2)"},
+ {"url":"/v2/fantasy-army/Army_Free/FBX/Characters/Army_Knight_Blue.glb","label":"R3 Army Knight Blue (v2)"},
+ {"url":"/kk/KayKit_Adventurers_2.0_FREE/Characters/gltf/Knight.glb","label":"R4 KayKit Knight"},
+ {"url":"/v4/sketchfab/heroes/rogue_legacy_knight_4777e0eb/scene.gltf","label":"R5 Rogue Legacy Knight"},
+ {"url":"/v4/sketchfab/heroes/low_poly_dark_knight_mixamo_rigged_7f59a7b0/scene.gltf","label":"R6 Low-poly Dark Knight (Mixamo)"},
+ {"url":"/v4/sketchfab/heroes/3drt_fantasy_warrior_d39a0dee/scene.gltf","label":"R7 3DRT Fantasy Warrior"},
+ {"url":"/v4/sketchfab/heroes/stylized_mini_knight_low_poly_free_358cfc2d/scene.gltf","label":"R8 Stylized Mini Knight"}
+]

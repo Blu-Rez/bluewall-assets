@@ -1,0 +1,15 @@
+{
+ "out": "/home/claude/work/u1_captain.glb",
+ "base": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/heroes/viking_lowpoly_57344ed1/scene.gltf",
+ "keep": [
+  "Idle",
+  "Walk",
+  "Run",
+  "Sword_swing"
+ ],
+ "texture": {
+  "webp": 82,
+  "size": 1024,
+  "rough": 0.8
+ }
+}

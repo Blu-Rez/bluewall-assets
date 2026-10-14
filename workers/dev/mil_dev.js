@@ -1,0 +1,40 @@
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import * as L from '../bot/bluebot_v2/bluewall/client/src/layout.js';
+import { makeMaterials } from '../bot/bluebot_v2/bluewall/client/src/materials.js';
+import { Batcher } from '../bot/bluebot_v2/bluewall/client/src/util.js';
+import { applySkin, setEntityLevel, ENT } from '../bot/bluebot_v2/bluewall/client/src/skin.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { buildMilitary } from '../bot/bluebot_v2/bluewall/client/src/military.js';
+(async () => {
+  L.setMap('night');
+  const ld = new GLTFLoader(); ld.setMeshoptDecoder(MeshoptDecoder);
+  const models = {}; await Promise.all(['catapult', 'ram', 'siege_tower', 'cliff1'].map(async (n) => { try { models[n] = await ld.loadAsync('assets/' + n + '.glb'); } catch (e) { console.warn(n, e); } }));
+  const renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(innerWidth, innerHeight); renderer.setPixelRatio(1); renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  document.body.appendChild(renderer.domElement);
+  const scene = new THREE.Scene(); { const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture; scene.environmentIntensity = 0.8; } scene.background = new THREE.Color(0x8fb4e0); scene.fog = new THREE.Fog(0x8fb4e0, 300, 900);
+  scene.add(new THREE.HemisphereLight(0xdfeaff, 0x556644, 1.5));
+  const sun = new THREE.DirectionalLight(0xfff0d8, 3.2); sun.position.set(120, 180, 90); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, { left: -90, right: 90, top: 90, bottom: -90, near: 10, far: 500 }); sun.target.position.set(0, 0, 0); scene.add(sun, sun.target); window.__sun = sun;
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(3000, 3000), new THREE.MeshStandardMaterial({ color: 0x6b8a4a, roughness: 1 })); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+  const M = makeMaterials(); applySkin(M.stone, 0); applySkin(M.stoneDark, 1); applySkin(M.roof, 2); applySkin(M.gold, 3); applySkin(M.rune, 4);
+  const B = new Batcher(), picks = [], smokers = [];
+  const ctx = { B, M, height: () => 0, levelHooks: [], pick: (b, id) => picks.push({ b, id }), smokeAt: (x, y, z) => { const s = { x, y, z }; smokers.push(s); return s; } };
+  const res = buildMilitary(ctx, { scene, A: { models }, Q: { shadows: true } });
+  B.build(scene);
+  window.__lv = (id, lv) => { setEntityLevel(id, lv); for (const h of ctx.levelHooks) h(); };
+  window.__lvAll = (lv) => { for (const k of Object.keys(ENT)) if (ENT[k] > 0) setEntityLevel(k, lv); for (const h of ctx.levelHooks) h(); };
+  const camera = new THREE.PerspectiveCamera(36, innerWidth / innerHeight, 0.5, 3000);
+  const cam = window.__cam = { x: 0, y: 40, z: 100, tx: 0, ty: 4, tz: 0 };
+  window.__orbit = (id, dist, elev, az, ty = 4) => { const s = res.list.find((q) => q.id === id); cam.x = s.x + Math.sin(s.ry + az) * dist; cam.z = s.z + Math.cos(s.ry + az) * dist; cam.y = elev; cam.tx = s.x; cam.tz = s.z; cam.ty = ty; };
+  window.__sites = res.list; window.__M = M; window.__L = L;
+  let t = 0; const clock = new THREE.Clock();
+  function frame() {
+    t += Math.min(0.05, clock.getDelta());
+    camera.position.set(cam.x, cam.y, cam.z); camera.lookAt(cam.tx, cam.ty, cam.tz);
+    renderer.render(scene, camera); window.__frames = (window.__frames || 0) + 1; requestAnimationFrame(frame);
+  }
+  window.__renderer = renderer; frame(); window.__ready = true;
+})().catch((e) => { window.__err = String(e.stack || e); console.error(e); });

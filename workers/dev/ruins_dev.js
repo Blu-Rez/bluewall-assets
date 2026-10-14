@@ -1,0 +1,17 @@
+import * as THREE from 'three';
+import { createRuins } from '/home/claude/bot/bluebot_v2/bluewall/client/src/ruins.js';
+const W = 1000, H = 640;
+const r = new THREE.WebGLRenderer({ antialias: true }); r.setSize(W, H); r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.2; r.shadowMap.enabled = false;
+document.body.appendChild(r.domElement);
+const sc = new THREE.Scene(); sc.background = new THREE.Color(0x9fb4d8);
+const key = new THREE.DirectionalLight(0xfff0d8, 3.2); key.position.set(-60, 90, 40); sc.add(key); sc.add(new THREE.HemisphereLight(0x8fb0e0, 0x4a5a30, 1.3));
+const g = new THREE.Mesh(new THREE.PlaneGeometry(400, 400).rotateX(-Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0x5a6d34, roughness: 1 })); sc.add(g);
+const R2 = createRuins(sc, () => 0);
+const items = [['vault', -34, 0, 22, 22, 14, 0.3], ['house', -8, 10, 18, 12, 11, 0.1], ['wall', 12, -6, 46, 4, 12, 0.35], ['keep', 4, -34, 30, 30, 46, 0.2], ['tower', 40, 12, 9, 9, 22, 0], ['church', 36, 30, 14, 26, 26, 0.5], ['house', -30, 30, 14, 10, 9, 1.2], ['wall', -52, -22, 40, 4, 12, 1.2]];
+for (const it of items) R2.add(...it);
+const cam = new THREE.PerspectiveCamera(42, W / H, 0.5, 600);
+const view = (x, y, z, tx, ty, tz) => { cam.position.set(x, y, z); cam.lookAt(tx, ty, tz); };
+window.__done = false;
+let t = 0; (function loop() { R2.update(0.05); t += 0.05; if (t > 4) { if (!window.__done) { window.__done = true; } } r.render(sc, cam); requestAnimationFrame(loop); })();
+window.__view = view; window.__scene = sc;
+view(0, 55, 80, 0, 0, -6);

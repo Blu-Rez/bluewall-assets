@@ -1,0 +1,33 @@
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import * as L from '../bot/bluebot_v2/bluewall/client/src/layout.js';
+import { makeMaterials } from '../bot/bluebot_v2/bluewall/client/src/materials.js';
+import { createBattleMode } from '../bot/bluebot_v2/bluewall/client/src/battle.js';
+(async () => {
+  L.setMap('night'); window.__bw = {}; window.THREE = THREE;
+  const Q = new URLSearchParams(location.search);
+  const ld = new GLTFLoader(); ld.setMeshoptDecoder(MeshoptDecoder);
+  const names = ['ranger_m', 'anims', 'anims_army', 'helmet2', 'helmet3', 'spear', 'claymore', 'shield_heater', 'sword', 'shield', 'bow', 'horse_m2m_bay', 'horse_m2m_black', 'knight_k3', 'shieldmaiden', 'hill_giant', 'hammer_double', 'sword_mw', 'shield_round2', 'imp', 'skel_mage', 'skel_staff', 'kk_anims', 'werewolf', 'horse_white', 'troll', 'catapult',
+    'ez_pine_a', 'ez_pine_b', 'ez_pine_c', 'ez_oak_a', 'ez_oak_b', 'ez_ash_a', 'ez_aspen_a', 'rock1', 'rock2', 'rock3', 'cliff1', 'cliff2'];
+  const models = {}; await Promise.all(names.map(async (n) => { try { models[n] = await ld.loadAsync('assets/' + n + '.glb'); } catch (e) { console.warn(n, e); } }));
+  const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' }); renderer.setSize(innerWidth, innerHeight); renderer.setPixelRatio(1);
+  renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.2;
+  renderer.shadowMap.enabled = Q.get('sh') !== '0'; renderer.shadowMap.type = THREE.PCFShadowMap;
+  const root = document.createElement('div'); root.style.cssText = 'position:fixed;inset:0;overflow:hidden'; document.body.appendChild(root); root.appendChild(renderer.domElement);
+  renderer.domElement.style.cssText = 'position:absolute;inset:0;width:100%;height:100%';
+  const army = JSON.parse(Q.get('army') || '{"spear":24,"sword":14,"guard":8,"archer":16,"cavalry":6,"pegasus":4,"baby":2,"dragon":1,"catapult":3,"giant":2}');
+  const econ = { st: { army: { army, forge: +(Q.get('forge') || 8), space: 100 } }, battleEnd: async (id, rep) => { window.__rep = rep; return { ok: true, info: { loot: rep.loot } }; }, scout: async () => ({ ok: false }) };
+  const ui = { root: document.createElement('div'), toast: (m) => console.log('toast', m) };
+  const world = { assets: { models, ph: {} }, mats: makeMaterials() };
+  const audio = null;
+  const mode = createBattleMode({ renderer, root, world, audio, econ, ui });
+  window.__mode = mode; window.__renderer = renderer;
+  const lv = +(Q.get('lv') || 12);
+  const target = { id: 't1', kind: 'bot', name: 'Raven Keep', ratio: 1.1, levels: { keep: lv, wall: lv, towers: lv }, seed: +(Q.get('seed') || 7), power: +(Q.get('power') || 2600), loot: { ruby: 900, emerald: 600, turq: 300 } };
+  window.__info = { start: await mode.start(target) };
+  let last = performance.now(); window.__frames = 0;
+  const loop = (now) => { const dt = (now - last) / 1000; last = now; try { mode.frame(now, dt); } catch (e) { window.__err = String(e.stack || e); console.error(e); } window.__frames++; requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+  window.__ready = true;
+})().catch((e) => { window.__err = String(e.stack || e); console.error(e); });

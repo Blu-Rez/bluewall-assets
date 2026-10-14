@@ -1,0 +1,12 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+@font-face{font-family:Vazirmatn;src:url(pub/Vazirmatn-Bold.woff2) format("woff2");font-weight:700}
+@font-face{font-family:Vazirmatn;src:url(pub/Vazirmatn-Black.woff2) format("woff2");font-weight:900}
+html,body{margin:0;height:100%;background:#050912;overflow:hidden}#game{position:fixed;inset:0}</style></head>
+<body><div id="game"></div>
+<script type="module">
+// pick screen only (no WebGL): the real rpg.js with a stub host
+const m = await import('./assets/rpg/rpg.js?x=' + Date.now());
+const h = m.create({ THREE: { Vector3: class {} }, renderer: {}, scene: {}, camera: {}, root: document.getElementById('game'), ctl: {}, world: {}, L: {}, base: location.origin + '/assets/', v: '' });
+h.openPick(); window.__done = true;
+</script></body></html>

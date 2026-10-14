@@ -1,0 +1,1 @@
+[{"name": "dom", "js": "return [...document.body.children].map(e=>e.tagName+'#'+e.id+'.'+e.className+' '+e.children.length+' '+(e.style.cssText||'').slice(0,60)).concat([__bw.camera.fov, innerWidth, innerHeight, devicePixelRatio])"}]

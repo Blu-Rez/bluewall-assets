@@ -1,0 +1,10 @@
+const B=__bw.battle, S=B.session, sim=S.sim; __bw.pause(true);
+const V=(u)=>S.views.views.get(u.id); const alive=(ty)=>sim.units.filter(u=>u.type===ty&&!u.dead);
+const stOf=(u)=>{ const v=V(u); return v? (v.dead?'dead':v.state):'?'; };
+const focus=(u,d,az)=>{ S.cam.tx=u.x; S.cam.tz=u.z; if(d) S.cam.dist=d; if(az!=null) S.cam.az=az; };
+const draw=(k=3)=>{ S.confirming=true; for(let i=0;i<k;i++) B.frame(performance.now(), 0.4); __bw.renderer.render(__bw.scene, __bw.camera); };
+const summary=()=>{ const o={}; for(const ty of ['legionary','captain']){ const c={}; for(const u of sim.units){ if(u.type!==ty) continue; const s=stOf(u); c[s]=(c[s]||0)+1; } o[ty]=c; } return o; };
+
+const cam=(x,y,z,d,az,el,ly=1.6,fov=null)=>{ S.cam.free=true; const c=__bw.camera; if(fov){ c.fov=fov; c.updateProjectionMatrix(); } c.position.set(x+Math.sin(az)*Math.cos(el)*d, y+Math.sin(el)*d+ly, z+Math.cos(az)*Math.cos(el)*d); c.lookAt(x,y+ly,z); c.updateMatrixWorld(true); };
+const gy=(x,z)=>__bw.world.fastHeight(x,z);
+const shotcam=(x,z,d,az,el,ly,fov)=>{ cam(x,gy(x,z),z,d,az,el,ly,fov); S.confirming=true; __bw.renderer.render(__bw.scene,__bw.camera); };

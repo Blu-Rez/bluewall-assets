@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:transparent}
+.a{display:inline-block;margin:0;padding:0;line-height:0}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+ <!-- metal bevel: light from the top-left; adds specular + soft inner shade to whatever it is applied to -->
+ <filter id="bevel" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+  <feGaussianBlur in="SourceAlpha" stdDeviation="1.1" result="b"/>
+  <feSpecularLighting in="b" surfaceScale="3.2" specularConstant="1.25" specularExponent="26" lighting-color="#fff3d0" result="sp"><feDistantLight azimuth="235" elevation="48"/></feSpecularLighting>
+  <feComposite in="sp" in2="SourceAlpha" operator="in" result="spc"/>
+  <feDiffuseLighting in="b" surfaceScale="2.4" diffuseConstant="1.1" lighting-color="#fff" result="df"><feDistantLight azimuth="235" elevation="55"/></feDiffuseLighting>
+  <feComposite in="df" in2="SourceAlpha" operator="in" result="dfc"/>
+  <feBlend in="SourceGraphic" in2="dfc" mode="multiply" result="m"/>
+  <feComposite in="m" in2="spc" operator="arithmetic" k1="0" k2="1" k3="0.95" k4="0"/>
+ </filter>
+ <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="4" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 -.12"/></filter>
+ <filter id="shadow" x="-20%" y="-30%" width="140%" height="170%"><feGaussianBlur in="SourceAlpha" stdDeviation="1.6"/><feOffset dy="2.2"/><feComponentTransfer><feFuncA type="linear" slope=".6"/></feComponentTransfer></filter>
+ <filter id="erode3" x="-5%" y="-5%" width="110%" height="110%"><feMorphology operator="erode" radius="3.1"/></filter>
+ <filter id="erode16" x="-5%" y="-5%" width="110%" height="110%"><feMorphology operator="erode" radius="1.7"/></filter>
+ <filter id="erode26" x="-5%" y="-5%" width="110%" height="110%"><feMorphology operator="erode" radius="2.9"/></filter>
+ <filter id="erode7" x="-5%" y="-5%" width="110%" height="110%"><feMorphology operator="erode" radius="6.6"/></filter>
+ <filter id="erode5" x="-5%" y="-5%" width="110%" height="110%"><feMorphology operator="erode" radius="5.2"/></filter>
+ <linearGradient id="gold" x1="0" y1="0" x2="0.35" y2="1"><stop offset="0" stop-color="#fff2b8"/><stop offset=".18" stop-color="#f1c658"/><stop offset=".5" stop-color="#a8691a"/><stop offset=".72" stop-color="#e9b744"/><stop offset="1" stop-color="#7a4510"/></linearGradient>
+ <linearGradient id="goldDark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6d3f0c"/><stop offset="1" stop-color="#3a1f05"/></linearGradient>
+ <linearGradient id="red" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8473b"/><stop offset=".45" stop-color="#a4161f"/><stop offset="1" stop-color="#5e0813"/></linearGradient>
+ <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+ <radialGradient id="rivet" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff8d8"/><stop offset=".35" stop-color="#e4b441"/><stop offset="1" stop-color="#6b3c0a"/></radialGradient>
+ <path id="nxt" d="M5,2 H124 Q128,2 131,4.6 L147.4,22.2 Q149.4,25 147.4,27.8 L131,45.4 Q128,48 124,48 H5 Q3.2,48 4.2,46.2 L13,27 Q14,25 13,23 L4.2,3.8 Q3.2,2 5,2 Z"/>
+ <linearGradient id="iron" x1="0" y1="0" x2="0.25" y2="1"><stop offset="0" stop-color="#9aa3b4"/><stop offset=".22" stop-color="#5d6676"/><stop offset=".55" stop-color="#2c323f"/><stop offset=".8" stop-color="#454d5c"/><stop offset="1" stop-color="#1b1f29"/></linearGradient>
+ <linearGradient id="redB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ee5a49"/><stop offset=".4" stop-color="#bf1c26"/><stop offset="1" stop-color="#6a0a16"/></linearGradient>
+</defs></svg>
+
+<div class="a" id="next2"><svg width="150" height="52" viewBox="0 0 150 52">
+ <use href="#nxt" fill="#000" filter="url(#shadow)"/>
+ <g filter="url(#bevel)"><use href="#nxt" fill="url(#gold)"/></g>
+ <use href="#nxt" fill="none" stroke="#2f1805" stroke-width=".7"/>
+ <g filter="url(#erode16)"><use href="#nxt" fill="#17130d"/></g>
+ <g filter="url(#bevel)"><g filter="url(#erode26)"><use href="#nxt" fill="url(#iron)"/></g></g>
+ <g filter="url(#erode7)"><use href="#nxt" fill="#14090a"/></g>
+ <g filter="url(#erode7)"><use href="#nxt" fill="url(#redB)" transform="translate(0 .4)"/></g>
+ <g filter="url(#erode7)"><use href="#nxt" fill="url(#gloss)" style="mix-blend-mode:screen" opacity=".7"/></g>
+ <rect x="0" y="0" width="150" height="52" filter="url(#grain)" opacity=".3" style="mix-blend-mode:multiply"/>
+ <g><circle cx="11.5" cy="9" r="2" fill="url(#rivet)"/><circle cx="11.5" cy="41" r="2" fill="url(#rivet)"/><circle cx="125" cy="9" r="2" fill="url(#rivet)"/><circle cx="125" cy="41" r="2" fill="url(#rivet)"/></g>
+ <g opacity=".55" fill="#14090a"><circle cx="11.5" cy="9.9" r="2.2"/><circle cx="11.5" cy="41.9" r="2.2"/><circle cx="125" cy="9.9" r="2.2"/><circle cx="125" cy="41.9" r="2.2"/></g>
+</svg></div>
+</body></html>

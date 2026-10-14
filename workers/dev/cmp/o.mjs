@@ -1,0 +1,11 @@
+import { planArmy, rankOf } from '/home/claude/bot/bluebot_v2/bluewall/client/src/armyplan.js';
+import DEFS from '/home/claude/bot/bluebot_v2/bluewall/client/src/unitdefs.json';
+import fs from 'fs';
+const d = JSON.parse(fs.readFileSync('/tmp/claude-0/-home-claude/98a5106a-bbfc-5d79-8653-860351b4443e/scratchpad/state30.json'));
+const army = d.army.army;
+const p = planArmy(army, 2, true);
+console.log('types front->back:', p.types.join(' '));
+console.log('shelves:', p.shelves.map((s, i) => 'S' + i + ' [' + s.blocks.map((b) => b.type).join(' ') + ']').join('\n'));
+console.log('back1', p.back1.toFixed(1), 'lat', p.lat0.toFixed(1), p.lat1.toFixed(1));
+const q = planArmy({ spear: 30, sword: 20, archer: 20, cavalry: 8, giant: 2, captain: 1 }, 2, true);
+console.log('small:', q.shelves.map((s) => '[' + s.blocks.map((b) => b.type).join(' ') + ']').join(' | '), 'back1', q.back1.toFixed(1));

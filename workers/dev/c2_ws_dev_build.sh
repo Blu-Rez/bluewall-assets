@@ -1,0 +1,3 @@
+#!/bin/bash
+# builds the C2 preview viewer (dev/c2_ws_dev.js -> c2_ws_dev.bundle.js).  Then:  AIM=0,26 SIM=20 W=700 H=440 python3 dev/c2_wsshot.py /home/claude/work/OUT c2_sawmill:30:0.6:62:0.95:3 ...
+cd /home/claude/bot/bluebot_v2/bluewall/client && NODE_PATH=$PWD/node_modules npx esbuild /home/claude/dev/c2_ws_dev.js --bundle --format=iife --target=es2020 --outfile=/home/claude/dev/c2_ws_dev.bundle.js --log-level=error

@@ -1,0 +1,23 @@
+# p38 — progress (Oct 6, evening ≈ 19:55)
+
+Owner's p38 brief (17:23 + 18:24/18:25 + 19:44): living map — production worksites (wood / stone / iron / gold / oil / food / fish), each opens at its own level and gets BIGGER with the level (MORE fishermen, boats, animals, pens, workers, carts), distinct buildings, bigger/more natural map, **river through the middle**, camera wider, Telegram "Wait/OK", 10 traps + defensive buildings + heroes + better models (Sketchfab via HIS server → GitHub Blu-Rez/bluewall-assets).
+**19:44 rule for the NEXT chat**: every building and wall is movable, each player arranges his own map; only the gem mines on the mountain are fixed, fisheries stay near water → nothing in p38 may be hard-wired to a spot (`worksites.placeRule`, everything reads `sites()`).
+
+## Done (code in client/src; proof in brackets)
+- **River through the town** (layout.js RIVER / water gates / quays / 6 new bridges). `dev/river_test.sh` RIVER OK. Sample image sent.
+- **Worksites** (`worksites.js` data, `wsbuild.js` builder, kit_ws.glb 1.6 MB): 12 sites (lumber ×2, quarry, iron, gold, oil, farm, livestock, slaughter, greenhouse, fishery lake + river); each kind has its own unlock level (placeholders: lumber 1, quarry 2, farm 3, livestock 5, fishery 6, iron 8, slaughter 9, greenhouse 11, gold 14, oil 17 — the real rule is p39 / server); the pieces + counts grow with the level (`counts()`; `ws_test.sh` WS OK; sheet `work/p38_sheet_levels.png`: fishery lv 6 → 15 → 30 = 2 → 5 → 9 boats, livestock lv 5 → 30 = 1 → 4 pens, 9 → 40 animals).
+- **Life** (`wslife.js`): workers with tools (axes, picks, rods), kneeling farmers, animals in pens (cow, sheep, pig, horse), rowboats with fishermen on the river + lake, horse-drawn carts (horse + driver + cart + load) on the haul roads to the storehouses. `wsroute_test.sh` ROUTE OK (12/12 sites have a haul route, one road network).
+- **Storehouses** (`stores.js`: wood, stone, iron, gold treasury, oil, food) in the annulus near the citadel.
+- **Level pads** flat to 0.9 r (fisheries 0.72 r: their water lies at the edge) — fixed the pen floors showing the slope.
+- **Solids**: worksite buildings (`worksites.wsSolids`) + defence buildings (`defplan.defSolids`) closed to ground units (`solids.js`); `nav_test.sh` NAV OK.
+- **Defence field** (`defplan.js` plan, `defbuild.js` builder, kit_def.glb 0.8 MB, 18 pieces): the ten traps (+ grenade) — bear trap, ring trap, spike ball, spike grate, spike pit, saw blade, mine, powder keg, auto crossbow, tesla coil — and the defensive buildings: spike barricade, watchtower, brazier pair at the gate, fire stone, ballista outpost. Planned in front of both town gates (east = the army's way, strongest), only on dry flat ground off the roads, outside the walls, never in the muster plain / camp / worksites / fields. `dev/def_test.sh` DEF OK (positions never move when the level grows; nothing wet / on a road / inside the wall). Opening levels + counts = placeholders (p39 rules).
+- **Bug found + fixed in the battle nav**: `bridgesFromLayout` listed the bridges BEFORE `roads.js` had added the river bridges (autoBridges), so the headless sim's nav knew only the 2 gate bridges (the real game was fine: roads exist before a battle) → the isolated land between the moat and the river (region of ~20 000 m², the whole NW / N wall strip) was unreachable: `bsw.sh` noRoute 3187 / pinned 314, bridge steps 42 k. Now `nav.js` builds the roads first: noRoute **317**, pinned 73, bridge steps 96 k (gate check `< 700`). `basetargets.json` regenerated for the new town (146 targets; old file `dev/basetargets_before_p38.json`).
+- Late-job build times in the running game (`[late] job N`, headless): defence field 87 ms, worksites 206 ms, life steps 1 / 184 / 200 / 35 / 30 ms — each in its own frame (the army job 356 ms is older code).
+- Camera: `cam_test.sh` CAM OK. Credits: 34 new CC-BY lines (`dev/add_credits.py`).
+- Perf (headless, in-game, `dev/p38_perf.py`): worksites + life add (draw calls / tris per frame): overview +62 / +160 k, close to the farm +101 / +346 k, close to the fishery +107 / +364 k, top view +78 / +221 k. Phone not measured.
+
+## Not done / not proven
+- In-game picture of the defence field (rendering now); heroes (models prepared on sheets only — golem, armored king, dark knight, … need rig/clip wiring + server rules → p39); the ten rejected units' real models; distinct buildings, citizens + taxes, layout editor, per-building panels (p39 / p40); real unlock rules + balance (p39); Telegram "Wait/OK" (waiting for his `journalctl … | grep perf` output); phone performance.
+
+## Next
+In-game check of the def field → ONE sample → gate (`dev/gate.sh`) + `dev/instest_bot.sh` → package `bluebot_bluewall_p38` → final report.

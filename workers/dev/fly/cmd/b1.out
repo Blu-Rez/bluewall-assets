@@ -1,0 +1,3 @@
+army 1
+start {"ok": true, "types": ["pegasus", "gryphon", "gryphonknight", "darkrider", "dragon3", "dragon", "baby3", "baby", "spear"], "kinds": ["spear", "e_guard", "e_archer", "pegasus", "dragon", "baby", "dragon3", "baby3", "gryphon", "gryphonknight", "darkrider", "troll_e"], "dp": {"x": 174.36682521905075, "z": 79.48777479448731, "nx": 0.894154236839368, "nz": 0.44775908783876983, "d": 64, "lat": -7}, "vp": [390, 844], "fov": 58}
+LOGS ["warning THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported."]

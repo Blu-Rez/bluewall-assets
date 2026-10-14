@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#050912">
+<title>Blue Wall</title>
+<link rel="preload" href="/pub/cinzel-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/pub/baskerville-700.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:Vazirmatn;src:url(/pub/Vazirmatn-Regular.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(/pub/Vazirmatn-Bold.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(/pub/Vazirmatn-Black.woff2) format("woff2");font-weight:900;font-display:swap}
+@font-face{font-family:"Libre Baskerville";src:url(/pub/baskerville-700.woff2) format("woff2");font-weight:700;font-style:normal;font-display:block}
+@font-face{font-family:"Libre Baskerville";src:url(/pub/baskerville-400.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:Cinzel;src:url(/pub/cinzel-900.woff2) format("woff2");font-weight:900;font-display:block}
+@font-face{font-family:"BW Naskh";src:url(/pub/naskh-400.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"BW Naskh";src:url(/pub/naskh-700.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Noto Sans Tai Viet";src:url(/pub/taiviet.woff2) format("woff2");font-display:swap}
+:root{--bg:#050912;--ink:#dbe8ff;--dim:#7f93b8;--blue:#4aa8ff;--glow:#7cc8ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:Vazirmatn,system-ui,sans-serif;overflow:hidden;overscroll-behavior:none;touch-action:none;user-select:none;-webkit-user-select:none}
+#game{position:fixed;inset:0}
+/* ================= loader: a moonlit night over the Blue Wall (all motion = compositor-only CSS transforms / opacity) ================= */
+#bw-load{position:fixed;inset:0;z-index:1000;overflow:hidden;contain:strict;transition:opacity .7s ease;
+  background:linear-gradient(180deg,#01040b 0%,#030a1b 22%,#081a3b 46%,#123266 62%,#1d4a85 71%,#0d2142 80%,#050b17 90%,#02050b 100%)}
+#bw-load.done{opacity:0;pointer-events:none}
+/* taste alternative B (?look=B or LOOK default): blue hour, an ice-cyan afterglow behind the peaks; same plates, lifted */
+#bw-load.look-b{background:linear-gradient(180deg,#030a1a 0%,#0a1f47 20%,#17407c 32%,#3f78b8 40%,#a9d2f2 46%,#5f93c9 52%,#183a6c 64%,#08142a 82%,#02050b 100%)}
+#bw-load.look-b.land{background:linear-gradient(180deg,#071a3d 0%,#1d4d8c 14%,#8cbfe8 24%,#3d72b0 34%,#0b1d3c 70%,#02050b 100%)}
+.look-b #ld-rays{opacity:.4}.look-b #ld-stars{opacity:.45}.look-b #ld-far{filter:brightness(1.22) saturate(1.1)}.look-b #ld-near{filter:brightness(1.1) saturate(1.06)}.look-b #ld-vig{opacity:.7}
+#bw-load div,#bw-load img,#bw-load svg,#bw-load i{position:absolute;display:block;pointer-events:none;-webkit-user-drag:none}
+#bw-load img{opacity:0;transition:opacity .9s ease}#bw-load img.on{opacity:1}
+.ld-paused,.ld-paused *{animation-play-state:paused!important}
+/* stars: three box-shadow fields twinkling out of phase */
+#ld-stars{left:0;top:0;width:100%;height:62%;overflow:hidden}
+#ld-stars i{left:0;top:0;width:1px;height:1px;border-radius:50%;background:transparent;will-change:opacity}
+#ld-stars .s1{animation:ldTw 3.3s ease-in-out infinite alternate}
+#ld-stars .s2{animation:ldTw 4.7s ease-in-out -2s infinite alternate}
+#ld-stars .s3{animation:ldTw 2.1s ease-in-out -1s infinite alternate}
+@keyframes ldTw{from{opacity:1}to{opacity:.25}}
+/* moon */
+#ld-halo{border-radius:50%;background:radial-gradient(closest-side,rgba(190,215,255,.34),rgba(110,160,240,.16) 32%,rgba(60,110,220,.06) 62%,rgba(30,60,140,0));will-change:opacity;animation:ldBreath 7s ease-in-out infinite alternate}
+#ld-moon{border-radius:50%;background:radial-gradient(circle at 36% 34%,#fdfeff 0,#eef4ff 26%,#d3e0f4 58%,#a9bfe0 88%,#93acd6 100%);
+  box-shadow:0 0 6px 1px rgba(235,245,255,.9),0 0 26px 6px rgba(170,205,255,.55),0 0 70px 22px rgba(90,140,240,.25)}
+#ld-moon:after{content:"";position:absolute;inset:0;border-radius:50%;opacity:.5;
+  background:radial-gradient(ellipse 22% 16% at 60% 38%,rgba(110,130,170,.5),rgba(110,130,170,0)),radial-gradient(ellipse 26% 20% at 42% 62%,rgba(110,130,170,.42),rgba(110,130,170,0)),radial-gradient(ellipse 14% 18% at 31% 44%,rgba(120,140,180,.32),rgba(120,140,180,0)),radial-gradient(ellipse 12% 9% at 68% 66%,rgba(120,140,180,.28),rgba(120,140,180,0)),radial-gradient(circle at 30% 28%,rgba(255,255,255,0) 52%,rgba(50,70,120,.38) 100%)}
+@keyframes ldBreath{from{opacity:.82}to{opacity:1}}
+/* god rays falling from the moon toward the wall */
+#ld-rays{width:0;height:0}
+#ld-rays b{left:0;top:0;width:0;height:0;position:absolute;will-change:opacity;animation:ldRay var(--d) ease-in-out var(--dl) infinite alternate}
+#ld-rays i{left:0;top:0;height:var(--h);width:var(--l);margin-top:calc(var(--h) / -2);transform-origin:0 50%;transform:rotate(var(--a));
+  background:linear-gradient(90deg,rgba(170,205,255,0) 0,rgba(170,205,255,var(--o)) 9%,rgba(120,170,255,calc(var(--o) * .45)) 45%,rgba(90,140,255,0) 100%);
+  -webkit-mask-image:linear-gradient(0deg,transparent,#000 42%,#000 58%,transparent);mask-image:linear-gradient(0deg,transparent,#000 42%,#000 58%,transparent)}
+@keyframes ldRay{from{opacity:.35}to{opacity:1}}
+/* cloud & mist strips: a tileable texture sliding sideways forever */
+.ld-strip{left:0;width:calc(100% + var(--tw));background-repeat:repeat-x;background-size:var(--tw) 100%;will-change:transform;animation:ldSlide var(--d) linear infinite}
+@keyframes ldSlide{from{transform:translateX(0)}to{transform:translateX(calc(var(--tw) * -1))}}
+.ld-strip.rev{animation-direction:reverse}
+/* the world frame: plates + everything pinned onto them (positions in % of the plate) */
+#ld-world{left:0;top:0;transform-origin:0 0}
+#ld-world img{left:0;top:0;width:100%;height:100%}
+#ld-far{will-change:transform;transform-origin:50% 70%;animation:ldKen 38s ease-in-out infinite alternate}
+@keyframes ldKen{from{transform:scale(1) translateX(0)}to{transform:scale(1.035) translateX(-.8%)}}
+#ld-emis{clip-path:ellipse(4% 3% at var(--gx) var(--gy));transition:clip-path .8s ease-out,opacity .9s ease}
+.ld-t{width:var(--s);height:var(--s);margin:calc(var(--s) / -2) 0 0 calc(var(--s) / -2);border-radius:50%;
+  background:radial-gradient(closest-side,rgba(255,236,190,.95),rgba(255,170,80,.55) 22%,rgba(255,120,40,.18) 55%,rgba(255,100,30,0))}
+.ld-tg{left:0;top:0;width:100%;height:100%;will-change:opacity;animation:ldFl var(--d) ease-in-out var(--dl) infinite alternate}
+@keyframes ldFl{0%{opacity:.6}22%{opacity:1}41%{opacity:.74}63%{opacity:.95}80%{opacity:.68}100%{opacity:.9}}
+.ld-em{width:.35em;height:.35em;margin:-.17em 0 0 -.17em;border-radius:50%;background:radial-gradient(closest-side,#fff3c4,#ffb050 50%,rgba(255,120,40,0));opacity:0;will-change:transform,opacity;animation:ldEm var(--d) ease-out var(--dl) infinite}
+@keyframes ldEm{0%{opacity:0;transform:translate(0,0) scale(1)}12%{opacity:1}100%{opacity:0;transform:translate(var(--x),-9em) scale(.4)}}
+.ld-gate{border-radius:50%;background:radial-gradient(closest-side,rgba(255,200,120,.5),rgba(255,140,60,.2) 45%,rgba(255,120,40,0));will-change:opacity;animation:ldBreath 2.8s ease-in-out infinite alternate}
+.ld-fl{transform-origin:0 0;width:var(--w);height:calc(var(--w) * .5)}
+.ld-fl svg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;transform-origin:0 18%;will-change:transform;animation:ldWave var(--d) ease-in-out var(--dl) infinite alternate}
+@keyframes ldWave{0%{transform:skewY(-7deg) scaleX(.9)}50%{transform:skewY(2deg) scaleX(1)}100%{transform:skewY(7deg) scaleX(.94)}}
+#ld-drake{width:7%;will-change:transform,opacity;animation:ldDrake 34s linear 5s infinite;opacity:0}
+#ld-drake img{position:relative;width:100%;height:auto;opacity:.8;filter:none}
+@keyframes ldDrake{0%{transform:translate(-30%,0) rotate(8deg) scale(.7);opacity:0}4%{opacity:.85}38%{transform:translate(620%,-140%) rotate(-4deg) scale(.55);opacity:.8}46%{opacity:0;transform:translate(800%,-190%) rotate(-6deg) scale(.5)}100%{opacity:0;transform:translate(800%,-190%) scale(.5)}}
+/* snow: two tiled sheets falling at different speeds, with a slow sway */
+#ld-snow{left:0;top:0;width:100%;height:100%;overflow:hidden}
+#ld-snow i{left:-10%;width:120%;top:calc(var(--t) * -1);height:calc(100% + var(--t));background-size:var(--t) var(--t);will-change:transform;animation:ldFall var(--d) linear infinite;opacity:var(--o)}
+@keyframes ldFall{from{transform:translateY(0)}to{transform:translateY(var(--t))}}
+#ld-snow b{position:absolute;inset:0;will-change:transform;animation:ldSway 7s ease-in-out infinite alternate}
+@keyframes ldSway{from{transform:translateX(-14px)}to{transform:translateX(14px)}}
+#ld-shade{left:0;right:0;bottom:0;height:34%;background:linear-gradient(180deg,rgba(2,5,12,0),rgba(2,5,12,.55) 45%,rgba(1,3,8,.9))}
+#ld-vig{inset:0;background:radial-gradient(ellipse 85% 70% at 50% 45%,rgba(0,0,0,0) 55%,rgba(0,2,8,.62) 100%)}
+/* ---- top group: dragon over the crown over the title */
+#ld-top,#ld-bot{left:0;top:0;transform-origin:0 0}
+#ld-dragon{will-change:transform;animation:ldDrift 11s ease-in-out infinite alternate}
+@keyframes ldDrift{0%{transform:translate(-7px,4px) rotate(-2.2deg)}50%{transform:translate(2px,-3px) rotate(.6deg)}100%{transform:translate(7px,2px) rotate(2.4deg)}}
+#ld-dragon .dw{left:0;top:0;width:100%;height:100%;perspective:520px;will-change:transform;animation:ldBob 2.6s ease-in-out infinite}
+@keyframes ldBob{0%,100%{transform:translateY(2px)}38%{transform:translateY(-7px)}}
+#ld-dragon img{left:0;top:0;width:100%;height:100%}
+#ld-dragon .dl{clip-path:polygon(0 0,42.4% 0,42.4% 29%,44.2% 47%,0 47%);transform-origin:42% 30%;will-change:transform;animation:ldWingL 2.6s cubic-bezier(.45,0,.4,1) infinite}
+#ld-dragon .dr{clip-path:polygon(57.6% 0,100% 0,100% 47%,55.8% 47%,57.6% 29%);transform-origin:58% 30%;will-change:transform;animation:ldWingR 2.6s cubic-bezier(.45,0,.4,1) infinite}
+#ld-dragon .db{clip-path:polygon(41.6% 0,58.4% 0,58.4% 29%,56.6% 47%,57% 100%,43% 100%,43.4% 47%,41.6% 29%)}
+@keyframes ldWingL{0%,100%{transform:rotateY(-24deg)}38%{transform:rotateY(46deg)}}
+@keyframes ldWingR{0%,100%{transform:rotateY(24deg)}38%{transform:rotateY(-46deg)}}
+#ld-crown .ch{border-radius:50%;background:radial-gradient(closest-side,rgba(150,205,255,.42),rgba(80,150,255,.16) 45%,rgba(40,100,230,0));will-change:opacity;animation:ldBreath 4.5s ease-in-out infinite alternate}
+#ld-crown .cr,#ld-spk{left:0;top:0;width:100%;height:100%}
+#ld-crown .cg{left:0;top:0;width:100%;height:100%;overflow:hidden;-webkit-mask:var(--m) center/100% 100% no-repeat;mask:var(--m) center/100% 100% no-repeat}
+#ld-crown .cg i{left:-40%;top:-10%;width:34%;height:120%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(235,248,255,.75) 50%,rgba(255,255,255,0));transform:translateX(0) skewX(-18deg);will-change:transform;animation:ldGlint 5.5s ease-in-out 1.2s infinite}
+@keyframes ldGlint{0%{transform:translateX(0) skewX(-18deg)}38%,100%{transform:translateX(560%) skewX(-18deg)}}
+.ld-sp{width:var(--s);height:var(--s);margin:calc(var(--s) / -2) 0 0 calc(var(--s) / -2);opacity:0;will-change:transform,opacity;animation:ldSpark var(--d) ease-in-out var(--dl) infinite}
+.ld-sp:before,.ld-sp:after{content:"";position:absolute;left:50%;top:50%;border-radius:50%;background:radial-gradient(closest-side,#fff,rgba(190,230,255,.8) 30%,rgba(120,190,255,0))}
+.ld-sp:before{width:100%;height:12%;margin:-6% 0 0 -50%}.ld-sp:after{width:12%;height:100%;margin:-50% 0 0 -6%}
+@keyframes ldSpark{0%,58%,100%{opacity:0;transform:scale(.2) rotate(0)}70%{opacity:1;transform:scale(1) rotate(25deg)}84%{opacity:0;transform:scale(.4) rotate(45deg)}}
+#ld-title{overflow:visible}
+#ld-tsw{overflow:hidden;-webkit-mask:var(--m) center/100% 100% no-repeat;mask:var(--m) center/100% 100% no-repeat}
+#ld-tsw i{left:-30%;top:0;width:18%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.9) 50%,rgba(255,255,255,0));transform:skewX(-18deg);will-change:transform;animation:ldTsw 6.5s ease-in-out 2.4s infinite}
+@keyframes ldTsw{0%{transform:translateX(0) skewX(-18deg)}30%,100%{transform:translateX(900%) skewX(-18deg)}}
+/* ---- bottom group: forged steel progress bar */
+.ld-lab{left:0;right:0;top:0;height:18px;font:900 10.5px/18px Cinzel,serif;letter-spacing:4.2px;color:#9cc9f2;text-shadow:0 0 8px rgba(40,120,255,.7),0 1px 0 #000}
+.ld-lab b{position:absolute;right:0;top:-3px;font:900 17px/22px Cinzel,serif;letter-spacing:.5px;color:#f2fbff;text-shadow:0 0 10px rgba(80,180,255,.95),0 1px 0 #000}#bw-load .ld-lab b i{position:static;display:inline;font-size:11px;font-style:normal;margin-left:1px}
+.ld-frame{left:0;right:0;top:24px;height:16px;border-radius:8px;padding:2px;
+  background:linear-gradient(180deg,#e9f1fb 0,#9fb0c8 22%,#55647d 48%,#2a3446 54%,#6c7d96 78%,#b9c7da 100%);
+  box-shadow:0 0 0 1px rgba(3,8,18,.9),0 2px 6px rgba(0,0,0,.8),0 0 18px rgba(40,130,255,.28)}
+.ld-chan{position:relative!important;width:100%;height:100%;border-radius:6px;overflow:hidden;background:linear-gradient(180deg,#01040c,#071331 70%,#0b1c44);box-shadow:inset 0 2px 4px rgba(0,0,0,.95)}
+.ld-fill{left:0;top:0;bottom:0;width:0;border-radius:6px;transition:width .35s ease-out;
+  background:linear-gradient(180deg,rgba(255,255,255,.55) 0,rgba(255,255,255,0) 45%,rgba(0,10,40,.25) 100%),linear-gradient(90deg,#0a3192 0,#1660e0 45%,#3aa0ff 82%,#bfeaff 100%);
+  box-shadow:0 0 10px rgba(70,170,255,.85)}
+.ld-fill i{left:0;top:0;width:200%;height:100%;background:repeating-linear-gradient(105deg,rgba(255,255,255,0) 0 14px,rgba(220,245,255,.16) 14px 22px);will-change:transform;animation:ldFlow 1.6s linear infinite}
+@keyframes ldFlow{from{transform:translateX(-36px)}to{transform:translateX(0)}}
+.ld-spk{top:32px;left:0;width:44px;height:44px;margin:-22px 0 0 -22px;transition:left .35s ease-out}
+.ld-spk:before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(closest-side,#fff,rgba(170,225,255,.85) 22%,rgba(60,160,255,.25) 55%,rgba(40,120,255,0));animation:ldPulse 1.3s ease-in-out infinite alternate;will-change:transform,opacity}
+.ld-spk:after{content:"";position:absolute;left:0;top:50%;width:100%;height:1.5px;margin-top:-.75px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff,rgba(255,255,255,0))}
+@keyframes ldPulse{from{transform:scale(.7);opacity:.75}to{transform:scale(1);opacity:1}}
+.ld-cap{top:22px;width:22px;height:20px;overflow:visible}.ld-cap.l{left:-15px}.ld-cap.r{right:-15px;transform:scaleX(-1)}
+.ld-tip{left:-20px;right:-20px;top:56px;text-align:center;font:400 12px/1.35 'Libre Baskerville',Georgia,serif;letter-spacing:.9px;color:#a8c4e6;text-shadow:0 1px 0 #000,0 0 10px rgba(0,0,0,.95)}
+#msg{display:none;position:fixed;left:0;right:0;bottom:12%;z-index:1100;text-align:center;padding:0 24px;line-height:1.9;font-size:17px;color:var(--ink);font-weight:700;direction:rtl;text-shadow:0 2px 0 #000,0 0 12px #000}
+#msg.big{display:block}
+@media (prefers-reduced-motion:reduce){#bw-load *{animation-duration:1ms!important;animation-iteration-count:1!important}#bw-load .ld-tg{animation:ldFl 3.5s ease-in-out infinite alternate!important}#bw-load .ld-strip{animation:none!important}#ld-drake{display:none!important}}
+</style>
+</head>
+<body>
+<div id="game"></div>
+<div id="bw-load"></div>
+<div id="msg"></div>
+<script>
+// ===================================== Blue Wall loading screen (visuals only; hooks: bwLoading(p) / bwTip(t) / bwLoadingDone())
+(function () {
+const q = new URLSearchParams(location.search); const P0 = q.has('p') ? +q.get('p') : 0;   // ?p=NN previews a fixed percentage
+const LOOK = q.get('look') || 'A';   // taste switch: 'A' moonlit night (default) | 'B' blue hour (ice-cyan afterglow behind the peaks)
+const RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+const TP = {"bask":{"d":"M33 0V-40Q78 -42 100.5 -50.5Q123 -59 131.0 -83.0Q139 -107 139 -154V-616Q139 -663 133.0 -686.5Q127 -710 108.5 -719.0Q90 -728 54 -730V-770H375Q525 -770 607.0 -721.0Q689 -672 689 -583Q689 -523 646.5 -481.5Q604 -440 518 -415V-411Q592 -411 645.5 -384.0Q699 -357 728.5 -310.0Q758 -263 758 -203Q758 -152 733.5 -114.0Q709 -76 663 -50Q619 -25 557.0 -12.5Q495 0 418 0ZM425 -61Q586 -61 586 -206Q586 -250 572.0 -282.5Q558 -315 528 -336Q498 -357 450.0 -366.0Q402 -375 334 -375H286V-175Q286 -114 318.0 -87.5Q350 -61 425 -61ZM286 -435H345Q390 -435 423.5 -443.5Q457 -452 479 -468Q504 -485 515.5 -511.0Q527 -537 527 -571Q527 -644 491.0 -676.5Q455 -709 375 -709H304Q286 -709 286 -692ZM1054 -830V-164Q1054 -111 1059.5 -85.0Q1065 -59 1084.0 -50.5Q1103 -42 1141 -40V0H826V-40Q864 -42 883.0 -51.5Q902 -61 908.5 -85.5Q915 -110 915 -157V-570Q915 -628 913.0 -666.0Q911 -704 908 -717Q903 -742 885.5 -750.0Q868 -758 822 -758V-792ZM1637 -262V-366Q1637 -420 1632.0 -445.0Q1627 -470 1609.0 -478.0Q1591 -486 1550 -490V-530H1776V-227Q1776 -166 1777.5 -131.5Q1779 -97 1783 -80Q1788 -55 1803.5 -47.5Q1819 -40 1868 -40V-1L1669 11L1658 -78H1654Q1629 -37 1581.5 -13.5Q1534 10 1476 10Q1424 10 1382.5 -9.5Q1341 -29 1313 -66Q1270 -124 1270 -231V-366Q1270 -407 1268.0 -430.5Q1266 -454 1257.5 -465.5Q1249 -477 1232.0 -482.0Q1215 -487 1185 -490V-530H1409V-247Q1409 -147 1434.0 -101.0Q1459 -55 1514 -55Q1574 -55 1605 -109Q1622 -136 1629.5 -173.0Q1637 -210 1637 -262ZM2403 -128 2431 -93Q2340 10 2204 10Q2122 10 2060.0 -24.0Q1998 -58 1963.5 -118.5Q1929 -179 1929 -258Q1929 -341 1965.5 -404.5Q2002 -468 2067.0 -504.0Q2132 -540 2216 -540Q2322 -540 2381.0 -482.5Q2440 -425 2440 -323Q2440 -307 2435.0 -303.5Q2430 -300 2407 -300H2085Q2083 -295 2082.0 -287.0Q2081 -279 2081 -267Q2081 -202 2100.5 -154.5Q2120 -107 2155.5 -81.0Q2191 -55 2239 -55Q2281 -55 2322.5 -74.0Q2364 -93 2403 -128ZM2092 -356H2237Q2278 -356 2289.0 -360.5Q2300 -365 2300 -382Q2300 -426 2275.0 -454.0Q2250 -482 2212 -482Q2169 -482 2135.5 -446.5Q2102 -411 2092 -356ZM3523 -597 3649 -194 3784 -580Q3796 -614 3802.0 -638.5Q3808 -663 3808 -680Q3808 -711 3786.5 -720.5Q3765 -730 3720 -730V-770H4004V-730Q3967 -730 3936.0 -711.5Q3905 -693 3889 -649L3648 10H3559L3385 -518L3187 10H3104L2892 -574Q2867 -643 2845.5 -676.0Q2824 -709 2798.5 -719.0Q2773 -729 2734 -729V-770H3112V-729Q3062 -729 3042.5 -719.5Q3023 -710 3023 -688Q3023 -672 3028.0 -655.5Q3033 -639 3048 -597L3188 -194L3350 -636Q3337 -673 3322.5 -691.5Q3308 -710 3287.5 -718.0Q3267 -726 3235 -729V-770H3588V-729Q3547 -729 3526.5 -718.5Q3506 -708 3506 -678Q3506 -663 3510.5 -643.0Q3515 -623 3523 -597ZM4452 10Q4406 10 4381.5 -17.5Q4357 -45 4357 -97H4352Q4325 -47 4278.0 -19.0Q4231 9 4175 9Q4129 9 4097.0 -8.5Q4065 -26 4049.0 -54.0Q4033 -82 4033 -114Q4033 -163 4073.5 -201.5Q4114 -240 4203 -278L4343 -338V-380Q4343 -437 4322.5 -464.0Q4302 -491 4260 -491Q4231 -491 4216.0 -476.5Q4201 -462 4187 -424Q4179 -401 4162.0 -386.0Q4145 -371 4117 -371Q4089 -371 4073.5 -387.5Q4058 -404 4058 -432Q4058 -483 4111.0 -511.5Q4164 -540 4267 -540Q4381 -540 4429.0 -500.0Q4477 -460 4477 -364V-145Q4477 -101 4485.5 -80.5Q4494 -60 4513 -60Q4521 -60 4529.5 -63.0Q4538 -66 4546 -73L4561 -44Q4548 -20 4518.0 -5.0Q4488 10 4452 10ZM4237 -84Q4265 -84 4289.0 -98.0Q4313 -112 4328.0 -136.5Q4343 -161 4343 -190V-285Q4280 -255 4243.0 -232.0Q4206 -209 4190.0 -188.0Q4174 -167 4174 -143Q4174 -116 4191.0 -100.0Q4208 -84 4237 -84ZM4830 -830V-164Q4830 -111 4835.5 -85.0Q4841 -59 4860.0 -50.5Q4879 -42 4917 -40V0H4602V-40Q4640 -42 4659.0 -51.5Q4678 -61 4684.5 -85.5Q4691 -110 4691 -157V-570Q4691 -628 4689.0 -666.0Q4687 -704 4684 -717Q4679 -742 4661.5 -750.0Q4644 -758 4598 -758V-792ZM5195 -830V-164Q5195 -111 5200.5 -85.0Q5206 -59 5225.0 -50.5Q5244 -42 5282 -40V0H4967V-40Q5005 -42 5024.0 -51.5Q5043 -61 5049.5 -85.5Q5056 -110 5056 -157V-570Q5056 -628 5054.0 -666.0Q5052 -704 5049 -717Q5044 -742 5026.5 -750.0Q5009 -758 4963 -758V-792Z","x0":33,"y0":-830,"x1":5282,"y1":11}};
+const M = /*LD_META*/{"P":{"near":"/pub/ld_P_near.webp","far":"/pub/ld_P_far.webp","emis":"/pub/ld_P_emis.webp","w":900,"h":990,"hf":0.72,"gate":[0.5,0.6473],"torch":[[0.4587,0.6628,46.4],[0.5413,0.6628,46.4],[0.0685,0.5682,32.5],[0.2017,0.5687,32.7],[0.7527,0.5692,32.5],[0.8861,0.5695,32.5],[0.4475,0.699,47.3],[0.5556,0.6907,47.0],[0.4631,0.721,56.2],[0.592,0.7108,56.2],[0.5155,0.772,69.7],[0.6753,0.7862,69.7],[0.5807,0.8397,91.7],[0.7909,0.835,91.9]],"flag":[[0.3683,0.3734,-1,33.0],[0.6317,0.3789,1,33.0],[0.5,0.3127,1,43.2],[0.3472,0.3566,-1,33.4],[0.2326,0.3469,-1,27.2],[0.6528,0.3552,1,33.4],[0.7674,0.351,1,27.2]],"mist":[0.3,0.6,0.14,0.1],"drake":0.22,"dy":0},"L":{"near":"/pub/ld_L_near.webp","far":"/pub/ld_L_far.webp","emis":"/pub/ld_L_emis.webp","w":1600,"h":720,"hf":0.9,"gate":[0.5,0.6961],"torch":[[0.4827,0.7119,34.7],[0.5173,0.7119,34.7],[0.3184,0.6154,24.4],[0.3745,0.6159,24.4],[0.1819,0.6155,24.2],[0.2372,0.6163,24.2],[0.0777,0.5893,24.1],[0.6063,0.6164,24.2],[0.6625,0.6168,24.4],[0.7375,0.6179,24.2],[0.793,0.6174,24.2],[0.8878,0.6029,24.1],[0.4788,0.7419,33.9],[0.5224,0.7338,33.9],[0.4859,0.7531,38.3],[0.5352,0.7436,38.3],[0.5055,0.7841,44.4],[0.5625,0.7965,44.4],[0.5258,0.8139,52.3],[0.5931,0.8102,52.3],[0.5263,0.8778,64.0],[0.6085,0.891,64.2],[0.5085,0.9624,82.4],[0.6142,0.966,82.5]],"flag":[[0.4448,0.4155,-1,24.6],[0.5552,0.4211,1,24.6],[0.1562,0.4804,-1,24.2],[0.8438,0.4873,1,24.3],[0.5,0.3381,1,34.6],[0.4319,0.3883,-1,26.4],[0.3792,0.3753,-1,21.8],[0.5681,0.3868,1,26.4],[0.6208,0.3798,1,21.8]],"mist":[0.3,0.6,0.14,0.1],"drake":0.22,"dy":0.05},"crown":{"src":"/pub/ld_crown.webp","w":420,"h":404,"gems":[[0.8572,0.8108,3],[0.947,0.7284,1],[0.0552,0.7284,1],[0.145,0.8108,3],[0.3025,0.8698,1],[0.5011,0.8913,2],[0.6996,0.8698,1],[0.8753,0.6529,2],[0.1268,0.6529,2],[0.5011,0.7533,1],[0.5011,0.0382,3]]}}/*LD_END*/;
+const root = document.getElementById('bw-load');
+const f1 = (x) => (+x).toFixed(1), f2 = (x) => (+x).toFixed(2);
+let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+// ---------------------------------------------------------------- layout tables (design px). P = portrait (390 wide), L = landscape (844 wide)
+const LAY = {
+  P: { tw: 390, th: 380, moon: [112, 82, 31], dragon: [195, 102, 238], crown: [195, 230, 158], title: [195, 330, 274], div: 366, bw: 296, bh: 96 },
+  L: { tw: 844, th: 196, moon: [150, 64, 27], dragon: [168, 84, 176], crown: [422, 58, 104], title: [422, 140, 252], div: 172, bw: 380, bh: 92 },
+};
+// ---------------------------------------------------------------- pieces
+const starField = (n, w, h, rmin, rmax, cols) => { const a = []; for (let i = 0; i < n; i++) { const r = rmin + Math.pow(rnd(), 2.2) * (rmax - rmin); a.push(`${Math.round(rnd() * w)}px ${Math.round(rnd() * h * (0.25 + 0.75 * rnd()))}px ${f1(r * 1.6)}px ${f1(r * .45)}px ${cols[i % cols.length]}`); } return a.join(','); };
+const rays = () => { const g = ['', '']; [[24, 900, 70, .10], [38, 1100, 120, .09], [52, 1200, 80, .11], [64, 1000, 150, .07], [78, 900, 60, .08], [45, 1300, 30, .14]].forEach(([a, l, h, o], i) => { g[i % 2] += `<i style="--a:${a}deg;--l:${l}px;--h:${h}px;--o:${o}"></i>`; }); return `<b style="--d:9s;--dl:0s">${g[0]}</b><b style="--d:13s;--dl:-5s">${g[1]}</b>`; };
+function titleSvg(w) {
+  const t = TP.bask, s = w / (t.x1 - t.x0), h = (t.y1 - t.y0) * s, pad = 26;
+  const tf = `translate(${f1(pad - t.x0 * s)} ${f1(pad - t.y0 * s)}) scale(${s.toFixed(5)})`, ns = 'vector-effect="non-scaling-stroke"';
+  const svg = `<svg id="ld-title" width="${f1(w + pad * 2)}" height="${f1(h + pad * 2)}" viewBox="0 0 ${f1(w + pad * 2)} ${f1(h + pad * 2)}"><defs>
+   <filter id="ldb9" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="9"/></filter><filter id="ldb3" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="2.6"/></filter>
+   <linearGradient id="ldtf" x1="0" y1="${f1(pad)}" x2="0" y2="${f1(pad + h)}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffffff"/><stop offset=".38" stop-color="#e6f5ff"/><stop offset=".52" stop-color="#a6d8ff"/><stop offset=".6" stop-color="#cfeaff"/><stop offset="1" stop-color="#f4fbff"/></linearGradient>
+   <path id="ldtp" d="${t.d}"/></defs>
+   <g transform="${tf}" stroke-linejoin="round"><use href="#ldtp" fill="none" stroke="#1556ff" stroke-width="22" filter="url(#ldb9)" opacity=".8" ${ns}/>
+   <use href="#ldtp" fill="none" stroke="#40b8ff" stroke-width="6" filter="url(#ldb3)" opacity=".85" ${ns}/>
+   <use href="#ldtp" fill="#061433" stroke="#061433" stroke-width="3.2" transform="translate(0 ${f1(2.2 / s)})" ${ns}/>
+   <use href="#ldtp" fill="url(#ldtf)" stroke="#d6f0ff" stroke-width="1.1" ${ns}/></g></svg>`;
+  const mask = `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${f1(w)} ${f1(h)}'><path transform='translate(${f1(-t.x0 * s)} ${f1(-t.y0 * s)}) scale(${s.toFixed(5)})' d='${t.d}'/></svg>`)}")`;
+  return { svg, w, h, pad, mask };
+}
+const capSvg = `<svg class="ld-cap CLS" viewBox="0 0 22 20"><defs><linearGradient id="ldcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef5ff"/><stop offset=".45" stop-color="#7e8ea8"/><stop offset=".55" stop-color="#2c3648"/><stop offset="1" stop-color="#9aaac2"/></linearGradient><radialGradient id="ldcs" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#e8f6ff"/><stop offset=".35" stop-color="#4a9bff"/><stop offset="1" stop-color="#0a2a8a"/></radialGradient></defs>
+  <path d="M1 10L9 1.5L21 6.5V13.5L9 18.5Z" fill="url(#ldcg)" stroke="#05080f" stroke-width="1"/><path d="M5 10L9.5 5.2L13.5 10L9.5 14.8Z" fill="url(#ldcs)" stroke="#0b1430" stroke-width=".6"/></svg>`;
+// ---------------------------------------------------------------- build
+const T = titleSvg(LAY.P.title[2]);
+let H = `<div id="ld-stars"><i class="s1"></i><i class="s2"></i><i class="s3"></i></div>
+<div id="ld-halo"></div><div id="ld-rays">${rays()}</div><div id="ld-moon"></div>
+<div id="ld-cl1" class="ld-strip" style="--tw:1400px;--d:240s;opacity:.6"></div><div id="ld-cl2" class="ld-strip rev" style="--tw:1400px;--d:330s;opacity:.38"></div>
+<div id="ld-world"><img id="ld-far" alt=""><div id="ld-drake"><img alt=""></div><div id="ld-mi1" class="ld-strip" style="--tw:1200px;--d:150s"></div>
+ <img id="ld-near" alt="" fetchpriority="high"><img id="ld-emis" alt=""><div id="ld-fx"></div><div id="ld-mi2" class="ld-strip rev" style="--tw:1200px;--d:110s"></div></div>
+<div id="ld-snow"><b><i style="--t:420px;--d:21s;--o:.5;background-image:url(/pub/ld_snow.webp)"></i></b></div>
+<div id="ld-shade"></div><div id="ld-vig"></div>
+<div id="ld-top"><div id="ld-dragon"><div class="dw"><img class="dl" alt=""><img class="dr" alt=""><img class="db" alt=""></div></div>
+ <div id="ld-crown"><div class="ch"></div><img class="cr" alt="" fetchpriority="high"><div class="cg"><i></i></div><div id="ld-spk"></div></div>
+ <div id="ld-tt">${T.svg}<div id="ld-tsw"><i></i></div></div>
+ <svg id="ld-div" width="280" height="16" viewBox="0 0 280 16"><defs><linearGradient id="lddg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7fd0ff" stop-opacity="0"/><stop offset=".5" stop-color="#e9fbff"/><stop offset="1" stop-color="#7fd0ff" stop-opacity="0"/></linearGradient></defs>
+  <rect x="20" y="7.3" width="240" height="1.4" fill="url(#lddg)"/><rect x="60" y="6.4" width="160" height="3.2" fill="url(#lddg)" opacity=".35"/><path d="M140 1.5L146.5 8L140 14.5L133.5 8Z" fill="#dff4ff"/><path d="M140 4.6L143.4 8L140 11.4L136.6 8Z" fill="#3d8dff"/></svg></div>
+<div id="ld-bot" class="ebar"><div class="ld-lab">LOADING<b id="pct">${P0}<i>%</i></b></div>
+ <div class="ld-frame"><div class="ld-chan"><div class="ld-fill" id="ld-fill"><i></i></div></div></div>${capSvg.replace('CLS', 'l')}${capSvg.replace('CLS', 'r')}
+ <div class="ld-spk" id="ld-sk"></div><div class="tip ld-tip" id="bw-tip">Preparing your kingdom…</div></div>`;
+root.innerHTML = H;
+const $ = (id) => document.getElementById(id);
+$('ld-tsw').style.setProperty('--m', T.mask);
+if (RM) root.classList.add('ld-rm'); root.classList.add('look-' + LOOK.toLowerCase());
+// stars (static fields; only their opacity animates)
+{ const W = 1400, Hs = 900; const st = root.querySelectorAll('#ld-stars i');
+  st[0].style.boxShadow = starField(70, W, Hs, .5, 1.2, ['rgba(220,235,255,.95)', 'rgba(180,210,255,.8)']);
+  st[1].style.boxShadow = starField(60, W, Hs, .4, 1.0, ['rgba(200,225,255,.85)', 'rgba(255,240,215,.7)']);
+  st[2].style.boxShadow = starField(26, W, Hs, .9, 1.7, ['rgba(235,245,255,1)', 'rgba(170,205,255,.9)']); }
+// images
+const img = (el, src, cb) => { el.onload = () => { el.classList.add('on'); if (cb) cb(); }; el.src = src; };
+const DR = M.dragon || { src: '/pub/ld_dragon.webp', w: 912, h: 803 };
+root.querySelectorAll('#ld-dragon img,#ld-drake img').forEach((e) => img(e, DR.src));
+const CR = M.crown || { src: '/pub/ld_crown.webp', w: 600, h: 560, gems: [] };
+img(root.querySelector('#ld-crown .cr'), CR.src); root.querySelector('#ld-crown .cg').style.setProperty('--m', `url(${CR.src})`);
+{ let s = ''; (CR.gems || []).filter((g) => g[2] >= 2).sort((a, b) => b[2] - a[2]).slice(0, 5).forEach(([x, y, k], i) => { s += `<i class="ld-sp" style="left:${f2(x * 100)}%;top:${f2(y * 100)}%;--s:${k === 3 ? 30 : 20}px;--d:${f1(3.2 + rnd() * 2.6)}s;--dl:${f1(-rnd() * 5)}s"></i>`; }); $('ld-spk').innerHTML = s; }
+for (const id of ['ld-cl1', 'ld-cl2']) $(id).style.backgroundImage = 'url(/pub/ld_clouds.webp)';
+for (const id of ['ld-mi1', 'ld-mi2']) $(id).style.backgroundImage = 'url(/pub/ld_mist.webp)';
+// ---------------------------------------------------------------- world (plates) per orientation
+let cur = null, prog = P0;
+const plate = (k) => (LOOK !== 'A' && M[LOOK + k]) || M[k];
+function setWorld(k) {
+  const W = plate(k); if (!W || cur === k) return; cur = k;
+  img($('ld-near'), W.near); img($('ld-far'), W.far); img($('ld-emis'), W.emis);
+  $('ld-world').style.setProperty('--gx', f2(W.gate[0] * 100) + '%'); $('ld-world').style.setProperty('--gy', f2(W.gate[1] * 100) + '%');
+  let s = `<div class="ld-gate" style="left:${f2(W.gate[0] * 100 - 9)}%;top:${f2(W.gate[1] * 100 - 6)}%;width:18%;height:12%"></div>`;
+  const big = W.torch.slice().sort((a, b) => b[2] - a[2]).slice(0, 2);
+  for (const [x, y, sz] of big) for (let i = 0; i < 3; i++) s += `<i class="ld-em" style="left:${f2(x * 100)}%;top:${f2(y * 100)}%;font-size:${f2(sz / 3)}em;--x:${f1((rnd() - .5) * 5)}em;--d:${f2(1.6 + rnd() * 1.6)}s;--dl:${f2(-rnd() * 3)}s"></i>`;
+  const tg = ['', '', '']; W.torch.forEach(([x, y, sz], i) => { tg[i % 3] += `<i class="ld-t" style="left:${f2(x * 100)}%;top:${f2(y * 100)}%;--s:${f2(sz)}em"></i>`; });
+  tg.forEach((t, i) => { s += `<div class="ld-tg" style="--d:${[.9, 1.27, 1.63][i]}s;--dl:${-i * .4}s">${t}</div>`; });
+  for (const [x, y, d, sz] of W.flag) s += `<div class="ld-fl" style="left:${f2(x * 100)}%;top:${f2(y * 100)}%;--w:${f2(sz * .68)}em;transform:scaleX(${d < 0 ? -1 : 1})"><svg viewBox="0 0 40 20" style="--d:${f2(1.1 + rnd() * .8)}s;--dl:${f2(-rnd() * 2)}s"><path d="M0 0C10 1.5 22 2.8 40 5.5C30 7 32 8.6 40 11.5C24 12 12 13 0 15Z" fill="#0d2452" stroke="#5f8fc8" stroke-width=".7" stroke-linejoin="round"/><path d="M0 0C10 1.5 22 2.8 40 5.5L30 7C20 6 10 6 0 6.5Z" fill="#4a7cc4" opacity=".4"/></svg></div>`;
+  $('ld-fx').innerHTML = s;
+  setProgress(prog);
+}
+// ---------------------------------------------------------------- safe areas (Telegram fullscreen header + notch / home bar)
+function insets() {
+  const cs = getComputedStyle(document.documentElement), v = (n) => parseFloat(cs.getPropertyValue(n)) || 0;
+  let t = v('--tg-safe-area-inset-top') + v('--tg-content-safe-area-inset-top'), b = v('--tg-safe-area-inset-bottom') + v('--tg-content-safe-area-inset-bottom');
+  const tg = window.Telegram && window.Telegram.WebApp;
+  try { if (tg && tg.safeAreaInset) { t = Math.max(t, (tg.safeAreaInset.top || 0) + ((tg.contentSafeAreaInset && tg.contentSafeAreaInset.top) || 0)); b = Math.max(b, (tg.safeAreaInset.bottom || 0) + ((tg.contentSafeAreaInset && tg.contentSafeAreaInset.bottom) || 0)); } } catch (e) {}
+  const pr = $('ld-probe'); if (pr) { const r = pr.getBoundingClientRect(); t = Math.max(t, r.top); b = Math.max(b, innerHeight - r.bottom); }
+  return { t, b };
+}
+root.insertAdjacentHTML('beforeend', '<div id="ld-probe" style="position:absolute;left:0;right:0;top:env(safe-area-inset-top,0px);bottom:env(safe-area-inset-bottom,0px);visibility:hidden"></div>');
+const place = (el, x, y, w, h) => { el.style.left = f1(x - w / 2) + 'px'; el.style.top = f1(y - h / 2) + 'px'; el.style.width = f1(w) + 'px'; el.style.height = f1(h) + 'px'; };
+function layout() {
+  if (!root.isConnected) return;
+  const vw = innerWidth || 390, vh = innerHeight || 844, land = vw > vh * 1.12, k = land ? 'L' : 'P', L = LAY[k], ins = insets();
+  root.classList.toggle('land', land);
+  setWorld(k);
+  // plates: bottom-anchored "cover", gate kept near the horizontal centre
+  const W = plate(k);
+  if (W) {
+    const asp = W.w / W.h; let wh = vh * W.hf, ww = wh * asp; if (ww < vw) { ww = vw; wh = ww / asp; }
+    let left = vw / 2 - W.gate[0] * ww; left = Math.min(0, Math.max(vw - ww, left));
+    const wd = $('ld-world'); wd.style.width = f1(ww) + 'px'; wd.style.height = f1(wh) + 'px'; wd.style.transform = `translate(${f1(left)}px,${f1(vh - wh + (W.dy || 0) * wh)}px)`;
+    $('ld-fx').style.cssText = `left:0;top:0;width:100%;height:100%;font-size:${(ww / W.w).toFixed(4)}px`;
+    for (const id of ['ld-mi1', 'ld-mi2']) { const m = $(id), y0 = id === 'ld-mi1' ? W.mist[0] : W.mist[1]; m.style.top = f2(y0 * 100) + '%'; m.style.height = f2((id === 'ld-mi1' ? W.mist[2] : W.mist[3]) * 100) + '%'; m.style.opacity = id === 'ld-mi1' ? .55 : .42; }
+    const dk = $('ld-drake'); dk.style.left = '6%'; dk.style.top = f2(W.drake * 100) + '%';
+  }
+  // UI scale: fit the design column into the space between the insets
+  const avail = vh - ins.t - ins.b;
+  const s = Math.max(.62, Math.min(1.6, land ? Math.min(vw / L.tw, avail / 390) : Math.min(vw / L.tw, avail / 740)));
+  const top = $('ld-top'), bot = $('ld-bot');
+  top.style.width = L.tw + 'px'; top.style.height = L.th + 'px';
+  const ty = ins.t + (land ? 2 : Math.max(0, Math.min(40, (avail - 740 * s) * .35)));
+  top.style.transform = `translate(${f1(vw / 2 - L.tw / 2 * s)}px,${f1(ty)}px) scale(${f2(s)})`;
+  bot.style.width = L.bw + 'px'; bot.style.height = L.bh + 'px';
+  bot.style.transform = `translate(${f1(vw / 2 - L.bw / 2 * s)}px,${f1(vh - ins.b - (L.bh + (land ? 4 : 18)) * s)}px) scale(${f2(s)})`;
+  // children
+  const dr = $('ld-dragon'), dw = L.dragon[2], dh = dw * DR.h / DR.w; place(dr, L.dragon[0], L.dragon[1], dw, dh);
+  const cr = $('ld-crown'), cw = L.crown[2], chh = cw * CR.h / CR.w; place(cr, L.crown[0], L.crown[1], cw, chh);
+  const ch = cr.querySelector('.ch'); ch.style.left = f1(-cw * .3) + 'px'; ch.style.top = f1(-chh * .32) + 'px'; ch.style.width = f1(cw * 1.6) + 'px'; ch.style.height = f1(chh * 1.6) + 'px';
+  const ts = L.title[2] / T.w, tt = $('ld-tt'); tt.style.left = f1(L.title[0] - (T.w / 2 + T.pad) * ts) + 'px'; tt.style.top = f1(L.title[1] - (T.h / 2 + T.pad) * ts) + 'px'; tt.style.width = f1((T.w + 2 * T.pad)) + 'px'; tt.style.height = f1((T.h + 2 * T.pad)) + 'px'; tt.style.transform = `scale(${ts.toFixed(4)})`; tt.style.transformOrigin = '0 0';
+  const tsw = $('ld-tsw'); tsw.style.left = T.pad + 'px'; tsw.style.top = T.pad + 'px'; tsw.style.width = f1(T.w) + 'px'; tsw.style.height = f1(T.h) + 'px';
+  const dv = $('ld-div'); dv.style.left = f1(L.title[0] - 140) + 'px'; dv.style.top = f1(L.div - 8) + 'px';
+  // moon, halo & rays live in screen space but follow the top group
+  const mx = vw / 2 + (L.moon[0] - L.tw / 2) * s, my = ty + L.moon[1] * s, mr = L.moon[2] * s;
+  place($('ld-moon'), mx, my, mr * 2, mr * 2); place($('ld-halo'), mx, my, mr * 16, mr * 16);
+  $('ld-rays').style.left = f1(mx) + 'px'; $('ld-rays').style.top = f1(my) + 'px';
+  // clouds: one band across the moon, a thinner one lower
+  const c1 = $('ld-cl1'), c2 = $('ld-cl2'); c1.style.top = f1(my - 190 * s) + 'px'; c1.style.height = f1(400 * s) + 'px'; c2.style.top = f1(my + 120 * s) + 'px'; c2.style.height = f1(330 * s) + 'px';
+}
+// ---------------------------------------------------------------- progress
+function setProgress(p) {
+  prog = p; const f = $('ld-fill'); if (f) f.style.width = p + '%';
+  const k = $('ld-sk'); if (k) k.style.left = `calc(${p}% + ${f1(2 - p * .04)}px)`;
+  const e = $('ld-emis'); if (e) { const r = 4 + p * 1.25; e.style.clipPath = `ellipse(${f1(r * 1.2)}% ${f1(r)}% at var(--gx) var(--gy))`; }
+}
+addEventListener('resize', layout); layout(); setProgress(P0);
+window.bwTgLayout = () => { try { const tg = window.Telegram && window.Telegram.WebApp; if (tg && tg.onEvent) for (const ev of ['viewportChanged', 'safeAreaChanged', 'contentSafeAreaChanged', 'fullscreenChanged']) tg.onEvent(ev, layout); } catch (e) {} layout(); };
+const vis = () => root.classList.toggle('ld-paused', document.hidden); document.addEventListener('visibilitychange', vis);
+window.bwLoading = (p) => { p = Math.max(0, Math.min(100, Math.round(p))); const e = $('pct'); if (e) e.innerHTML = `${p}<i>%</i>`; setProgress(p); };
+window.bwTip = (t) => { const e = $('bw-tip'); if (e && t) e.textContent = t; };
+window.bwLoadingDone = () => { root.classList.add('done'); removeEventListener('resize', layout); document.removeEventListener('visibilitychange', vis); setTimeout(() => { root.classList.add('ld-paused'); root.remove(); }, 900); };
+setTimeout(() => root.querySelectorAll('img').forEach((e) => e.classList.add('on')), 4000);   // safety: never leave a picture hidden
+document.body.dataset.ready = 1;
+})();
+</script>
+<script src="/tg.js"></script>
+<script>window.bwTgLayout && window.bwTgLayout();</script>
+<script>
+(function () {
+  "use strict";
+  var msg = document.getElementById("msg");
+  function prog(p, tip) { if (window.bwLoading) window.bwLoading(p); if (tip && window.bwTip) window.bwTip(tip); }
+  function say(t, big) { msg.textContent = t; msg.className = big ? "big" : ""; }
+  function stop(t) { say(t, true); var q = document.querySelector(".ebar"); if (q) q.style.display = "none"; var tp = document.getElementById("bw-tip"); if (tp) tp.style.display = "none"; }
+
+  var tg = window.Telegram && window.Telegram.WebApp;
+  try {
+    tg.ready(); tg.expand();
+    if (tg.isVersionAtLeast("7.7")) tg.disableVerticalSwipes();
+    if (tg.isVersionAtLeast("6.1")) { tg.setHeaderColor("#050912"); tg.setBackgroundColor("#050912"); }
+    if (tg.isVersionAtLeast("7.10")) tg.setBottomBarColor("#050912");
+    if (tg.isVersionAtLeast("8.0") && (tg.platform === "android" || tg.platform === "ios")) tg.requestFullscreen();
+  } catch (e) {}
+  var initData = (tg && tg.initData) || "";
+  if (!initData) { stop("🔒 Blue Wall فقط از داخل تلگرام باز می‌شه"); return; }
+  prog(6);
+
+  fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ init_data: initData }) })
+  .then(function (r) { return r.json().then(function (j) { return [r.status, j]; }); })
+  .then(function (res) {
+    var j = res[1];
+    if (!j.ok) {
+      if (j.reason === "locked") stop("🔒 Blue Wall هنوز افتتاح نشده… به‌زودی دروازه‌ها باز می‌شن ⚔️");
+      else if (j.reason === "slow") stop("⏳ یه لحظه صبر کن و دوباره باز کن");
+      else stop("⚠️ ورود تأیید نشد؛ دوباره از تلگرام باز کن");
+      return;
+    }
+    prog(12);
+    return loadBundle(j).then(function () {
+      if (!window.BlueWall || !window.BlueWall.start) throw new Error("no-bundle");
+      return window.BlueWall.start({
+        root: document.getElementById("game"), token: j.token, uid: j.uid, name: j.name, owner: !!j.owner, tg: tg,
+        progress: function (p, t) { prog(60 + p * 0.4, t); },
+        ready: function () { prog(100); setTimeout(function () { if (window.bwLoadingDone) window.bwLoadingDone(); }, 250); }
+      });
+    });
+  })
+  .catch(function (e) {
+    console.error(e);
+    if (e && e.message === "webgl") stop("⚠️ گوشیت از گرافیک سه‌بعدی (WebGL) پشتیبانی نمی‌کنه");
+    else stop("⚠️ اتصال برقرار نشد؛ دوباره امتحان کن");
+  });
+
+  function loadBundle(j) {
+    return fetch("/api/bundle", { headers: { Authorization: "Bearer " + j.token } }).then(function (r) {
+      if (!r.ok) throw new Error("bundle " + r.status);
+      var total = +(r.headers.get("X-Raw-Size") || 0);
+      if (!r.body || !r.body.getReader || !total) return r.text();
+      var rd = r.body.getReader(), got = 0, parts = [];
+      function pump() {
+        return rd.read().then(function (x) {
+          if (x.done) return new Blob(parts).text();
+          parts.push(x.value); got += x.value.length; prog(12 + 48 * Math.min(1, got / total));
+          return pump();
+        });
+      }
+      return pump();
+    }).then(function (code) {
+      return new Promise(function (ok, bad) {
+        var url = URL.createObjectURL(new Blob([code], { type: "text/javascript" }));
+        var s = document.createElement("script");
+        s.onload = function () { URL.revokeObjectURL(url); ok(); };
+        s.onerror = function () { bad(new Error("script")); };
+        s.src = url; document.body.appendChild(s);
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>
+</body>
+</html>

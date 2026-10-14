@@ -1,0 +1,11 @@
+import * as L from '/home/claude/bot/bluebot_v2/bluewall/client/src/layout.js';
+import { layoutFromGame } from '/home/claude/bot/bluebot_v2/bluewall/client/src/b1_layout.js';
+import fs from 'fs';
+L.setMap('night');
+const lay = layoutFromGame();
+fs.writeFileSync('/home/claude/work/b1/layout.json', JSON.stringify(lay));
+console.log('streets', lay.streets.map((s) => s.name + ':' + s.w + ':' + s.pts.length).join(' '));
+console.log('market', JSON.stringify(lay.market), 'keep', JSON.stringify(lay.keep));
+console.log('fixed', lay.fixed.map((f) => f.id + '@' + Math.round(f.x) + ',' + Math.round(f.z)).join(' '));
+console.log('gates', JSON.stringify(lay.gates.map((g) => [Math.round(g.x), Math.round(g.z)])));
+console.log('town', JSON.stringify(lay.town.map((p) => p.map(Math.round))));

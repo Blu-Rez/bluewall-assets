@@ -1,0 +1,548 @@
+[
+ {
+  "name": "ws_lumbermill",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_lumbermill_blue.gltf",
+  "w": 13,
+  "tris": 2275,
+  "tex": 384
+ },
+ {
+  "name": "ws_mine",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_mine_blue.gltf",
+  "w": 15,
+  "tris": 1300,
+  "tex": 384
+ },
+ {
+  "name": "ws_smithy",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_blacksmith_blue.gltf",
+  "w": 10,
+  "tris": 1950,
+  "tex": 384
+ },
+ {
+  "name": "ws_hut",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_home_A_blue.gltf",
+  "w": 8,
+  "tris": 975,
+  "tex": 384
+ },
+ {
+  "name": "ws_market",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_market_blue.gltf",
+  "w": 10,
+  "tris": 2080,
+  "tex": 384
+ },
+ {
+  "name": "ws_brewhouse",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/blue/building_tavern_blue.gltf",
+  "w": 9,
+  "tris": 2080,
+  "tex": 384
+ },
+ {
+  "name": "ws_stageA",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/neutral/building_stage_A.gltf",
+  "w": 6,
+  "tex": 384,
+  "tris": 2200
+ },
+ {
+  "name": "ws_stageB",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/neutral/building_stage_B.gltf",
+  "w": 7,
+  "tex": 384,
+  "tris": 2200
+ },
+ {
+  "name": "ws_stageC",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/neutral/building_stage_C.gltf",
+  "w": 8,
+  "tex": 384,
+  "tris": 2200
+ },
+ {
+  "name": "ws_scaffold",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/buildings/neutral/building_scaffolding.gltf",
+  "w": 8,
+  "tris": 1755,
+  "tex": 384
+ },
+ {
+  "name": "ws_logs",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/props/resource_lumber.gltf",
+  "w": 4.5,
+  "tex": 256,
+  "tris": 500
+ },
+ {
+  "name": "ws_stoneblocks",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/props/resource_stone.gltf",
+  "w": 3.6,
+  "tex": 256,
+  "tris": 420
+ },
+ {
+  "name": "ws_stumpsA",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/nature/trees_A_cut.gltf",
+  "w": 15,
+  "tex": 384,
+  "tris": 2200
+ },
+ {
+  "name": "ws_stumpsB",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/nature/trees_B_cut.gltf",
+  "w": 12,
+  "tex": 384,
+  "tris": 2200
+ },
+ {
+  "name": "ws_stump",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/nature/tree_single_A_cut.gltf",
+  "h": 0.9,
+  "tex": 256,
+  "tris": 90
+ },
+ {
+  "name": "ws_wheelbarrow",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/props/wheelbarrow.gltf",
+  "w": 1.7,
+  "tex": 256,
+  "tris": 400
+ },
+ {
+  "name": "ws_pallet",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/props/pallet.gltf",
+  "w": 1.5,
+  "tex": 256,
+  "tris": 120
+ },
+ {
+  "name": "ws_cratelong",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/props/crate_long_A.gltf",
+  "w": 2.2,
+  "tex": 256,
+  "tris": 180
+ },
+ {
+  "name": "ws_sack",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/props/sack.gltf",
+  "w": 1.0,
+  "tex": 256,
+  "tris": 100
+ },
+ {
+  "name": "ws_ladder",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/props/ladder.gltf",
+  "h": 3.2,
+  "tex": 256,
+  "tris": 200
+ },
+ {
+  "name": "ws_rockA",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/nature/mountain_A.gltf",
+  "w": 14,
+  "tex": 384,
+  "tris": 2200
+ },
+ {
+  "name": "ws_rockB",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/nature/mountain_B.gltf",
+  "w": 12,
+  "tex": 384,
+  "tris": 2200
+ },
+ {
+  "name": "ws_rockC",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/nature/mountain_C.gltf",
+  "w": 10,
+  "tex": 384,
+  "tris": 2200
+ },
+ {
+  "name": "ws_boulderA",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/nature/rock_single_A.gltf",
+  "w": 4,
+  "tex": 256,
+  "tris": 1200
+ },
+ {
+  "name": "ws_boulderC",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/nature/rock_single_C.gltf",
+  "w": 5,
+  "tex": 384,
+  "tris": 2200
+ },
+ {
+  "name": "ws_boulderD",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/nature/rock_single_D.gltf",
+  "w": 3.4,
+  "tex": 256,
+  "tris": 1200
+ },
+ {
+  "name": "ws_boulderE",
+  "src": "/home/claude/blu-rez/bluewall-assets/kaykit-medieval-hexagon/KayKit_Medieval_Hexagon_Pack_1.0_FREE/Assets/gltf/decoration/nature/rock_single_E.gltf",
+  "w": 3,
+  "tex": 256,
+  "tris": 1200
+ },
+ {
+  "name": "ws_openbarn",
+  "src": "/home/claude/blu-rez/bluewall-assets/v2/farm-buildings/FBX/OpenBarn.glb",
+  "w": 9,
+  "tris": 1105,
+  "tex": 384
+ },
+ {
+  "name": "ws_smallbarn",
+  "src": "/home/claude/blu-rez/bluewall-assets/v2/farm-buildings/FBX/SmallBarn.glb",
+  "w": 9,
+  "tris": 1430,
+  "tex": 384
+ },
+ {
+  "name": "ws_barn",
+  "src": "/home/claude/blu-rez/bluewall-assets/v2/farm-buildings/FBX/Barn.glb",
+  "w": 12,
+  "tris": 1885,
+  "tex": 384
+ },
+ {
+  "name": "ws_silo",
+  "src": "/home/claude/blu-rez/bluewall-assets/v2/farm-buildings/FBX/Silo.glb",
+  "h": 9,
+  "tris": 900,
+  "tex": 384
+ },
+ {
+  "name": "ws_coop",
+  "src": "/home/claude/blu-rez/bluewall-assets/v2/farm-buildings/FBX/ChickenCoop.glb",
+  "w": 3.6,
+  "tex": 256,
+  "tris": 800
+ },
+ {
+  "name": "ws_fence",
+  "src": "/home/claude/blu-rez/bluewall-assets/v2/farm-buildings/FBX/Fence.glb",
+  "w": 4.2,
+  "tex": 256,
+  "tris": 400
+ },
+ {
+  "name": "ws_workbench",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Workbench.gltf",
+  "w": 2.2,
+  "tex": 256,
+  "tris": 450
+ },
+ {
+  "name": "ws_anvil_log",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Anvil_Log.gltf",
+  "h": 1.0,
+  "tris": 300,
+  "tex": 256
+ },
+ {
+  "name": "ws_stall_cart_empty",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Stall_Cart_Empty.gltf",
+  "w": 3.2,
+  "tris": 700,
+  "tex": 256
+ },
+ {
+  "name": "ws_stall_empty",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Stall_Empty.gltf",
+  "w": 2.4,
+  "tris": 700,
+  "tex": 256
+ },
+ {
+  "name": "ws_crate_wooden",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Crate_Wooden.gltf",
+  "w": 1.1,
+  "tris": 180,
+  "tex": 256
+ },
+ {
+  "name": "ws_barrel",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Barrel.gltf",
+  "h": 1.05,
+  "tris": 260,
+  "tex": 256
+ },
+ {
+  "name": "ws_barrel_apples",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Barrel_Apples.gltf",
+  "h": 1.05,
+  "tris": 260,
+  "tex": 256
+ },
+ {
+  "name": "ws_farmcrate_apple",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/FarmCrate_Apple.gltf",
+  "w": 0.9,
+  "tris": 140,
+  "tex": 256
+ },
+ {
+  "name": "ws_farmcrate_empty",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/FarmCrate_Empty.gltf",
+  "w": 0.9,
+  "tris": 120,
+  "tex": 256
+ },
+ {
+  "name": "ws_coin_pile",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Coin_Pile.gltf",
+  "w": 1.4,
+  "tex": 256,
+  "tris": 220
+ },
+ {
+  "name": "ws_pickaxe_bronze",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Pickaxe_Bronze.gltf",
+  "h": 1.3,
+  "tex": 256,
+  "tris": 150
+ },
+ {
+  "name": "ws_axe_bronze",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Axe_Bronze.gltf",
+  "h": 1.1,
+  "tex": 256,
+  "tris": 150
+ },
+ {
+  "name": "ws_bucket_wooden_1",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Bucket_Wooden_1.gltf",
+  "w": 0.55,
+  "tex": 256,
+  "tris": 120
+ },
+ {
+  "name": "ws_cauldron",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Cauldron.gltf",
+  "w": 1.3,
+  "tris": 350,
+  "tex": 256
+ },
+ {
+  "name": "ws_whetstone",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Whetstone.gltf",
+  "w": 1.3,
+  "tris": 200,
+  "tex": 256
+ },
+ {
+  "name": "ws_cage_small",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Cage_Small.gltf",
+  "w": 1.1,
+  "tris": 450,
+  "tex": 256
+ },
+ {
+  "name": "ws_barrel_holder",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Barrel_Holder.gltf",
+  "w": 1.6,
+  "tris": 650,
+  "tex": 256
+ },
+ {
+  "name": "ws_chain_coil",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Chain_Coil.gltf",
+  "w": 1.2,
+  "tris": 160,
+  "tex": 256
+ },
+ {
+  "name": "ws_rope_1",
+  "src": "/home/claude/blu-rez/bluewall-assets/fantasy-props-megakit/Exports/glTF/Rope_1.gltf",
+  "w": 0.9,
+  "tris": 100,
+  "tex": 256
+ },
+ {
+  "name": "ws_waterwheel",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/wood/water_wheel_with_cog_b8552465/scene.gltf",
+  "w": 7,
+  "tris": 780,
+  "tex": 384
+ },
+ {
+  "name": "ws_jetty",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/food/river_jetty_and_boatyard_9cbeb537/scene.gltf",
+  "w": 18,
+  "tris": 2405,
+  "tex": 384
+ },
+ {
+  "name": "ws_rowboat",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/food/medieval_rowboat_6cfb2d70/scene.gltf",
+  "w": 4.6,
+  "tris": 700,
+  "tex": 256
+ },
+ {
+  "name": "ws_fishrack",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/food/fish_drying_rack_545a6702/scene.gltf",
+  "w": 4.2,
+  "tris": 700,
+  "tex": 256
+ },
+ {
+  "name": "ws_fishset",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/food/fishing_supplies_set_8742c7af/scene.gltf",
+  "w": 1.8,
+  "tris": 320,
+  "tex": 256
+ },
+ {
+  "name": "ws_net",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/food/square_net_b5579a86/scene.gltf",
+  "w": 4.5,
+  "tris": 500,
+  "tex": 256
+ },
+ {
+  "name": "ws_butcher",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/food/cartoon_butcher_market_polygonal_912eb640/scene.gltf",
+  "w": 5.5,
+  "tris": 2275,
+  "tex": 384
+ },
+ {
+  "name": "ws_winepress",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/food/medieval_wine_press_free_706ee74b/scene.gltf",
+  "w": 3.8,
+  "tris": 1950,
+  "tex": 256
+ },
+ {
+  "name": "ws_winery",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/food/winery_vineyard_wine_press_064044e2/scene.gltf",
+  "w": 9,
+  "tris": 3250,
+  "tex": 384
+ },
+ {
+  "name": "ws_cartbeer",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/life/cart_and_beer_barrels_b6e30643/scene.gltf",
+  "w": 4.2,
+  "tris": 1950,
+  "tex": 256
+ },
+ {
+  "name": "ws_cart1",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/life/stylized_medieval_cart_with_a_lamp_and_h_47288f68/scene.gltf",
+  "w": 4.8,
+  "tris": 650,
+  "tex": 256
+ },
+ {
+  "name": "ws_cart2",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/life/stylized_medieval_cart_with_a_lamp_de1f6a60/scene.gltf",
+  "w": 4.8,
+  "tris": 650,
+  "tex": 256
+ },
+ {
+  "name": "ws_cart3",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/life/stylized_medieval_cart_with_a_lamp_e2889f4c/scene.gltf",
+  "w": 4.8,
+  "tris": 650,
+  "tex": 256
+ },
+ {
+  "name": "ws_camel",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/oil/aravan_camel_model_59bfedf9/scene.gltf",
+  "h": 2.3,
+  "tris": 1100,
+  "tex": 256
+ },
+ {
+  "name": "ws_minecart",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/iron/mine_cart_emty_8aab44c7/scene.gltf",
+  "w": 1.9,
+  "tris": 520,
+  "tex": 256
+ },
+ {
+  "name": "ws_orecart",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/iron/mine_cart_2beeab5f/scene.gltf",
+  "w": 1.9,
+  "tris": 520,
+  "tex": 256
+ },
+ {
+  "name": "ws_nugget",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/gold/gold_nugget_5ccc72d4/scene.gltf",
+  "w": 0.9,
+  "tex": 256,
+  "tris": 140
+ },
+ {
+  "name": "ws_nugget2",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/gold/gold_nugget_free_download_d2aebf1e/scene.gltf",
+  "w": 0.8,
+  "tex": 256,
+  "tris": 120
+ },
+ {
+  "name": "ws_goldbars",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/gold/gold_bar_pile_ac639a7c/scene.gltf",
+  "w": 1.3,
+  "tex": 256,
+  "tris": 200
+ },
+ {
+  "name": "ws_amphora",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/oil/ancient_vase_4bb5d53b/scene.gltf",
+  "h": 1.15,
+  "tris": 220,
+  "tex": 256
+ },
+ {
+  "name": "ws_logpile",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/wood/oak_log_pile_41fe0571/scene.gltf",
+  "w": 2.8,
+  "tex": 256,
+  "tris": 500
+ },
+ {
+  "name": "ws_barrelold",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/food/old_barrel_e7b12378/scene.gltf",
+  "h": 1.0,
+  "tris": 300,
+  "tex": 256
+ },
+ {
+  "name": "ws_scarecrow",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/food/scarecrow_bb672e59/scene.gltf",
+  "h": 2.3,
+  "tris": 500,
+  "tex": 256
+ },
+ {
+  "name": "ws_ballistatower",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/defense/tower_ballista_9d28917f/scene.gltf",
+  "h": 13,
+  "tris": 3900,
+  "tex": 384
+ },
+ {
+  "name": "ws_watchtower2",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/defense/wooden_watchtower_6ae46294/scene.gltf",
+  "h": 12,
+  "tris": 325,
+  "tex": 384
+ },
+ {
+  "name": "ws_spikes",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/defense/trap_woodenspike_reject_the_horse_50435d5b/scene.gltf",
+  "w": 5,
+  "tris": 455,
+  "tex": 384
+ }
+]

@@ -1,0 +1,10 @@
+[
+ {"url":"/v2/sketchfab/gryphon/gryphon.glb","label":"G1 DreamNoms gryphon (current src)"},
+ {"url":"/v4/sketchfab/units/gryphon_simple_animated_2e79d72e/scene.gltf","label":"G2 Twqero gryphon-simple"},
+ {"url":"/v2/sketchfab/eagle/eagle.glb","label":"G3 eagle (not a gryphon)"},
+ {"url":"/v4/sketchfab/heroes/spirit_of_the_crow_free_for_download_bf5bd250/scene.gltf","label":"H1 spirit of the crow"},
+ {"url":"/v4/sketchfab/heroes/angelic_holy_warrior_69a51437/scene.gltf","label":"H2 angelic holy warrior"},
+ {"url":"/v4/sketchfab/heroes/valkyrie_fca01409/scene.gltf","label":"H3 valkyrie"},
+ {"url":"/v4/sketchfab/heroes/dragon_khight_jessie_remodel_5de01984/scene.gltf","label":"H4 dragon knight jessie"},
+ {"url":"/v4/sketchfab/heroes/high_templar_fantasy_greatsword_6daa63f4/scene.gltf","label":"H5 high templar"}
+]

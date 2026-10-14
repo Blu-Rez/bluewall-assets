@@ -1,0 +1,6 @@
+[{"kind":"market","lv":30,"seed":7,"dist":40,"ty":2,"polar":1.05,"az":0.3,"label":"market lv30 front"},
+ {"kind":"market","lv":15,"seed":7,"dist":38,"ty":2,"polar":1.05,"az":2.4,"label":"market lv15 from the back"},
+ {"kind":"townhall","lv":15,"seed":7,"dist":34,"ty":4,"polar":1.2,"az":0.2,"label":"townhall lv15 front"},
+ {"kind":"townhall","lv":30,"seed":7,"dist":36,"ty":4,"polar":1.1,"az":-0.5,"label":"townhall lv30"},
+ {"kind":"tavern","lv":30,"seed":7,"dist":30,"ty":3,"polar":1.15,"az":0.1,"label":"tavern lv30 front"},
+ {"kind":"chapel","lv":30,"seed":7,"dist":36,"ty":6,"polar":1.2,"az":0.2,"label":"chapel lv30 front"}]

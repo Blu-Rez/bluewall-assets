@@ -1,0 +1,4 @@
+{ "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/units/battle_ogre_behemoth_attacks_9b3f7a6e/scene.gltf",
+  "out": "/tmp/claude-0/-home-claude/a23aa9ae-e3a3-56da-8bbd-e66ddcd9510f/scratchpad/u2_ogre_behemoth.glb",
+  "tris": 6000, "err": 0.04, "tex": 1024, "q": 74, "dropFlat": true,
+  "clips": { "mixamo.com": "Punch" } }

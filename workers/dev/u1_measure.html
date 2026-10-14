@@ -1,0 +1,30 @@
+<!doctype html><meta charset=utf-8><body>
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
+<script type=module>
+// u1_measure.html?url=/assets/x.glb&foot=footl,footr&root=hips — per clip: foot travel (model units), duration, stance speed = range / (0.6 * duration) (crowd.js stats.walkSpeed), height of the model
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+const q = new URLSearchParams(location.search), ld = new GLTFLoader(); ld.setMeshoptDecoder(MeshoptDecoder);
+const g = await ld.loadAsync(q.get('url')), foots = (q.get('foot') || 'footl').split(',');
+const root = g.scene; root.updateMatrixWorld(true);
+const bb = new THREE.Box3().setFromObject(root, true), out = { height: +(bb.max.y - bb.min.y).toFixed(3), min: bb.min.toArray().map((v) => +v.toFixed(2)), max: bb.max.toArray().map((v) => +v.toFixed(2)), clips: {} };
+out.bind = {}; for (const nm of (q.get('dump') || '').split(',').filter(Boolean)) { const b = root.getObjectByName(nm); if (b) { const v = new THREE.Vector3(); b.getWorldPosition(v); out.bind[nm] = v.toArray().map((x) => +x.toFixed(3)); } }
+const mx = new THREE.AnimationMixer(root), p = new THREE.Vector3();
+for (const c of g.animations) {
+  const a = mx.clipAction(c); a.play(); const r = {}; const N = 60;
+  for (const fn of foots) {
+    const ft = root.getObjectByName(fn); if (!ft) continue; let lo = [1e9, 1e9, 1e9], hi = [-1e9, -1e9, -1e9];
+    for (let f = 0; f < N; f++) { mx.setTime((f / N) * c.duration); root.updateMatrixWorld(true); ft.getWorldPosition(p); for (let k = 0; k < 3; k++) { lo[k] = Math.min(lo[k], p.getComponent(k)); hi[k] = Math.max(hi[k], p.getComponent(k)); } }
+    
+    // stance speed: while the foot is on the ground it slides backwards at the speed of the body -> mean of -dz/dt over the frames where the foot is at its lowest
+    { const ys = [], zs = []; for (let f = 0; f <= N; f++) { mx.setTime((f / N) * c.duration * 0.999); root.updateMatrixWorld(true); ft.getWorldPosition(p); ys.push(p.y); zs.push(p.z); } const ymin = Math.min(...ys), sp = []; for (let f = 0; f < N; f++) if (ys[f] < ymin + 0.04 && ys[f + 1] < ymin + 0.04) sp.push(-(zs[f + 1] - zs[f]) / (c.duration * 0.999 / N)); r[fn + '_stance'] = sp.length ? +(sp.reduce((a, b) => a + b, 0) / sp.length).toFixed(3) : null; }
+    r[fn] = { rx: +(hi[0] - lo[0]).toFixed(3), ry: +(hi[1] - lo[1]).toFixed(3), rz: +(hi[2] - lo[2]).toFixed(3) };
+  }
+  // hips drift over the loop (root motion check)
+  const hp = root.getObjectByName(q.get('root') || 'hips'); let h0 = new THREE.Vector3(), h1 = new THREE.Vector3(); if (hp) { mx.setTime(0); root.updateMatrixWorld(true); hp.getWorldPosition(h0); mx.setTime(c.duration * 0.999); root.updateMatrixWorld(true); hp.getWorldPosition(h1); r.drift = h1.sub(h0).toArray().map((v) => +v.toFixed(3)); }
+  if (q.get('hand')) { const hb = root.getObjectByName(q.get('hand')); if (hb) { const N2 = 120, pts = []; for (let f = 0; f <= N2; f++) { mx.setTime((f / N2) * c.duration * 0.999); root.updateMatrixWorld(true); hb.getWorldPosition(p); pts.push(p.clone()); } let bs = 0, bt = 0, br = 0, brt = 0; for (let f = 1; f <= N2; f++) { const sp = pts[f].distanceTo(pts[f - 1]) / (c.duration * 0.999 / N2); if (sp > bs) { bs = sp; bt = (f - 0.5) / N2 * c.duration; } } const h0 = pts[0]; for (let f = 0; f <= N2; f++) { const d = Math.hypot(pts[f].x - h0.x, pts[f].z - h0.z); if (d > br) { br = d; brt = f / N2 * c.duration; } } r.contact = { tFastest: +bt.toFixed(2), vmax: +bs.toFixed(2), tReach: +brt.toFixed(2) }; } }
+  out.clips[c.name] = { dur: +c.duration.toFixed(3), ...r }; a.stop(); mx.uncacheClip(c);
+}
+window.__out = out;
+</script>

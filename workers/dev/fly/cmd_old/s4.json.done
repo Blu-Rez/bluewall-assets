@@ -1,0 +1,1 @@
+[{"name": "dom", "js": "return [...document.getElementById('game').children].map(e=>e.tagName+'#'+e.id+'.'+e.className+' '+e.children.length+' '+(e.style.cssText||'').slice(0,80))"}]

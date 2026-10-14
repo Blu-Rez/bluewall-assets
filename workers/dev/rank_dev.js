@@ -1,0 +1,14 @@
+import { UI } from '../bot/bluebot_v2/bluewall/client/src/ui.js';
+import { createRankUI } from '../bot/bluebot_v2/bluewall/client/src/rankui.js';
+import { leagueBadge, LEAGUES } from '../bot/bluebot_v2/bluewall/client/src/cups.js';
+const root = document.getElementById('root');
+const ui = new UI({ tg: { openTelegramLink: (u) => { window.__shared = u; } }, mount: root, version: 'dev', owner: true, onClick() {} });
+ui.setProfile({ level: 7, name: 'Wingless' });
+const names = ['Zahra', 'Kian', 'ShadowWolf', 'NightRider', 'Parisa', 'Arman', 'Blue Hawk', 'Mina', 'Dariush', 'Sara', 'Omid', 'Leila', 'Navid', 'Roya', 'Babak', 'Elham', 'Farhad', 'Shirin', 'Kaveh', 'Nasim'];
+const emb = ['swords', 'wings', 'dragon', 'axes', 'heart', 'crown', 'tower', 'wolf', 'eagle', 'lion', 'bear', 'serpent'];
+const top = names.map((n, i) => ({ r: i + 1, id: 100 + i, n, e: emb[i % emb.length], tro: Math.round(3100 - i * 140 - (i * i) * 2), lg: 0 }));
+for (const t of top) t.lg = LEAGUES.map((L) => L.from).filter((f) => t.tro >= f).length - 1;
+const mine = +(new URLSearchParams(location.search).get('t') || 640);
+const econ = { st: { tro: mine, lg: 0, emblem: 'lion', name: 'Wingless' }, async rank() { return { ok: true, top, me: { rank: mine > 100 ? 41 : null, tro: mine, best: mine + 80, lg: 0, n: 'Wingless', e: 'lion' }, invite: { link: 'https://t.me/Blue_Hearts_Bot?startapp=ref_777', pay: 1000, keep: 3, done: 4, max: 50 } }; } };
+const r = createRankUI(root, { econ, ui, audio: null });
+window.__r = r; window.__ui = ui; window.__ready = true;

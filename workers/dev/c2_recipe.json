@@ -1,0 +1,139 @@
+[
+ {
+  "name": "c2_furnace",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/iron/low_poly_medieval_forge_2e2b4343/scene.gltf",
+  "only": [
+   "Furnace_Brick_0",
+   "Furnace_Brick Dark_0",
+   "Furnace_Brick Light_0",
+   "Furnace_Furnace_0",
+   "Furnace_Stone Light_0",
+   "Furnace_Furnace 2_0",
+   "Furnace_Brick Tube_0"
+  ],
+  "w": 3.4,
+  "tris": 1900,
+  "tex": 256,
+  "extra": [
+   {
+    "src": "/home/claude/dev/c2_src/glowmouth.gltf",
+    "t": [
+     2.6,
+     1.0,
+     -2.62
+    ]
+   }
+  ],
+  "sloppy": true,
+  "sloppyErr": 0.05
+ },
+ {
+  "name": "c2_grindwheel",
+  "src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/iron/low_poly_medieval_forge_2e2b4343/scene.gltf",
+  "only": [
+   "Grinding Wheel_Wood_0",
+   "Grinding Wheel_Stone Light_0",
+   "Grinding Wheel_Wood Light_0"
+  ],
+  "w": 1.9,
+  "tris": 420,
+  "sloppy": true,
+  "sloppyErr": 0.1,
+  "tex": 256
+ },
+ {
+  "name": "c2_sawshed",
+  "src": "/home/claude/dev/c2_src/sawshed.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_sawframe",
+  "src": "/home/claude/dev/c2_src/sawframe.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_logramp",
+  "src": "/home/claude/dev/c2_src/logramp.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_plankstack",
+  "src": "/home/claude/dev/c2_src/plankstack.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_sawtrestle",
+  "src": "/home/claude/dev/c2_src/sawtrestle.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_sawdust",
+  "src": "/home/claude/dev/c2_src/sawdust.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_masonlodge",
+  "src": "/home/claude/dev/c2_src/masonlodge.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_stonesaw",
+  "src": "/home/claude/dev/c2_src/stonesaw.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_arch",
+  "src": "/home/claude/dev/c2_src/arch.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_blockstack",
+  "src": "/home/claude/dev/c2_src/blockstack.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_hoist",
+  "src": "/home/claude/dev/c2_src/hoist.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_drums",
+  "src": "/home/claude/dev/c2_src/drums.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_mouldhot",
+  "src": "/home/claude/dev/c2_src/mouldhot.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_mouldcold",
+  "src": "/home/claude/dev/c2_src/mouldcold.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_barstack",
+  "src": "/home/claude/dev/c2_src/barstack.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_bellows",
+  "src": "/home/claude/dev/c2_src/bellows.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_oreheap",
+  "src": "/home/claude/dev/c2_src/oreheap.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_coalheap",
+  "src": "/home/claude/dev/c2_src/coalheap.gltf",
+  "s": 1
+ },
+ {
+  "name": "c2_smeltery",
+  "src": "/home/claude/dev/c2_src/smeltery.gltf",
+  "s": 1
+ }
+]

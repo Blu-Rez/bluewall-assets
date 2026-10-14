@@ -1,0 +1,12 @@
+import { createHUD } from '/home/claude/bot/bluebot_v2/bluewall/client/src/bhud_old_tmp.js';
+const Q = new URLSearchParams(location.search);
+const bg = Q.get('bg') || '/s30/t/n1_fight.png';
+document.body.style.cssText = `margin:0;background:#000 url(${bg}) 0 0/390px 844px no-repeat;width:390px;height:844px;position:relative;overflow:hidden`;
+const root = document.createElement('div'); root.style.cssText = 'position:absolute;inset:0'; document.body.appendChild(root);
+const types = 'spear,sword,archer,cavalry,axerider,pegasus,baby'.split(',');
+const hud = createHUD(root, { target: { emblem: 'swords', name: 'Navid', levels: { keep: 18 }, ratio: 1.0, loot: { turq: 60, emerald: 60, ruby: 60 } }, types, spells: ['lightning', 'heal', 'freeze', 'rage', 'quake'], onSelect() {}, onSpell() {}, onAbility() {}, onEnd() {}, onNext() {} });
+hud.el.querySelector('.bwb-load').style.display = 'none';
+const squads = {}; types.forEach((t, i) => { squads[t] = { n: [10, 8, 8, 5, 5, 2, 1][i], hp: [1, 0.8, 0.5, 0.2, 1, 0.65, 1][i], sent: i < 3 }; });
+hud.update({ left: 145, des: 15, starsN: 0, loot: null, squads, sel: 'spear', started: true, spellN: { lightning: 3, heal: 2, freeze: 2, rage: 2, quake: 2 } });
+hud.bars([{ id: 'b1', x: 128, y: 235, k: 0.1, sc: 1 }, { id: 'u1', x: 258, y: 329, k: 0.8, u: true, sc: 1 }, { id: 'u2', x: 200, y: 450, k: 0.35, u: true, sc: 1 }, { id: 'b2', x: 100, y: 520, k: 0.65, sc: 1 }]);
+setTimeout(() => { window.__done = 1; }, 900);

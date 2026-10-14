@@ -1,0 +1,14 @@
+import { NodeIO } from '@gltf-transform/core';
+import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
+import { dedup, prune, textureCompress, meshopt, quantize, getBounds } from '@gltf-transform/functions';
+import { MeshoptEncoder, MeshoptDecoder } from 'meshoptimizer';
+import fs from 'fs';
+await MeshoptEncoder.ready; await MeshoptDecoder.ready;
+const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ 'meshopt.encoder': MeshoptEncoder, 'meshopt.decoder': MeshoptDecoder });
+const [src, out] = process.argv.slice(2);
+const doc = await io.read(src);
+for (const a of doc.getRoot().listAnimations()) a.setName(a.getName().replace(/^.*\|/, ''));
+await doc.transform(dedup(), prune());
+const b = getBounds(doc.getRoot().listScenes()[0]); console.log(out, 'bbox', b.min.map((v) => +v.toFixed(2)), b.max.map((v) => +v.toFixed(2)), 'anims', doc.getRoot().listAnimations().map((a) => a.getName()).join(','));
+await io.write(out, doc);
+console.log(fs.statSync(out).size);

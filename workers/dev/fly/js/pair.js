@@ -1,0 +1,1 @@
+window.PAIR=(a,b,dist,az,el,fov=30)=>{ const A=L.views.views.get(a), B=L.views.views.get(b), pa=A.parts[0].p, pb=B.parts[0].p; const tx=(pa.x+pb.x)/2, tz=(pa.z+pb.z)/2, ty=(pa.y+pb.y)/2+(window.HY||0), an=A.yaw+az; L.cam(tx+Math.sin(an)*dist*Math.cos(el), ty+Math.sin(el)*dist, tz+Math.cos(an)*dist*Math.cos(el), tx, ty, tz, fov); };

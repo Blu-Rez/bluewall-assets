@@ -1,0 +1,170 @@
+[
+{
+"name": "df_bear",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/traps/bear_trap_animation_d318b0ba/scene.gltf",
+"w": 2.4,
+"tris": 1200,
+"tex": 256,
+"err": 0.05,
+"mul": 0.5
+},
+{
+"name": "df_bear2",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/traps/bear_trap_f435ec05/scene.gltf",
+"w": 3.2,
+"tris": 564,
+"tex": 256,
+"err": 0.03
+},
+{
+"name": "df_keg",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/traps/keg_of_ancient_black_powder_sea_of_thiev_0774b914/scene.gltf",
+"h": 2.4,
+"tris": 1600,
+"tex": 256,
+"err": 0.05
+},
+{
+"name": "df_mine",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/traps/rusted_ww2_landmine_266a00c1/scene.gltf",
+"w": 2.2,
+"tris": 700,
+"tex": 256,
+"err": 0.4,
+"sloppy": true,
+"sloppyErr": 0.2,
+"lift": 0.55
+},
+{
+"name": "df_crossbow",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/traps/makeshift_crossbow_88c5a84f/scene.gltf",
+"w": 4.6,
+"tris": 2200,
+"tex": 256,
+"err": 0.25,
+"sloppy": true,
+"sloppyErr": 0.2
+},
+{
+"name": "df_swing",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/traps/obstacle_set_spiked_traps_swing_blades_f21e3fd3/scene.gltf",
+"only": [
+"Obstacles - 2_Model_Obstacles - 1_Material_0",
+"Obstacles - 2_Model_Obstacles - 2_Material_0",
+"Obstacles - 2_Model_Obstacles - 3_Material_0",
+"Obstacles - 2_Model_Obstacles - 4_Material_0"
+],
+"h": 5.0,
+"tris": 1500,
+"tex": 256,
+"err": 0.04
+},
+{
+"name": "df_spikeball",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/traps/obstacle_set_spiked_traps_swing_blades_f21e3fd3/scene.gltf",
+"only": [
+"Obstacles - 3_Model_Obstacles - 1_Material_0",
+"Obstacles - 3_Model_Obstacles - 2_Material_0",
+"Obstacles - 3_Model_Obstacles - 3_Material_0"
+],
+"h": 3.2,
+"tris": 624,
+"tex": 256,
+"err": 0.04
+},
+{
+"name": "df_saw",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/traps/saw_fb0f9342/scene.gltf",
+"w": 3.6,
+"tris": 764,
+"tex": 256,
+"err": 0.03,
+"lift": 1.7
+},
+{
+"name": "df_grate",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/traps/spike_trap_26602c98/scene.gltf",
+"w": 3.8,
+"tris": 1100,
+"tex": 256,
+"err": 0.04
+},
+{
+"name": "df_tesla",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/traps/tesla_coil_old_5a2c8c1a/scene.gltf",
+"h": 7.0,
+"tris": 6000,
+"tex": 256,
+"err": 0.6,
+"sloppy": true,
+"sloppyErr": 0.06,
+"lift": 0.6
+},
+{
+"name": "df_pit",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/traps/wooden_spike_trap_6f761415/scene.gltf",
+"w": 4.6,
+"tris": 1800,
+"tex": 256,
+"err": 0.05
+},
+{
+"name": "df_grenade",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/traps/c_03_caltrop_grenade_fd9ea618/scene.gltf",
+"h": 1.3,
+"tris": 700,
+"tex": 256,
+"err": 0.06
+},
+{
+"name": "df_hedgehog",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/defense/trap_woodenspike_reject_the_horse_50435d5b/scene.gltf",
+"w": 5.4,
+"tris": 624,
+"tex": 256,
+"err": 0.03
+},
+{
+"name": "df_watchtower",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/defense/wooden_watchtower_6ae46294/scene.gltf",
+"h": 15,
+"tris": 446,
+"tex": 256,
+"err": 0.03
+},
+{
+"name": "df_brazierpair",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/defense/medieval_braziers_l_lights_l_enviroment_fc5c7544/scene.gltf",
+"h": 4.6,
+"tris": 1700,
+"tex": 256,
+"err": 0.05,
+"w": 13
+},
+{
+"name": "df_firestone",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/defense/swordtember_2022_day_17_b_fire_stone_cb3b3d3c/scene.gltf",
+"h": 3.6,
+"tris": 1500,
+"tex": 256,
+"err": 0.05
+},
+{
+"name": "df_gatehouse",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/defense/new_castle_door_c1777504/scene.gltf",
+"w": 17,
+"tris": 3400,
+"tex": 384,
+"err": 0.2
+},
+{
+"name": "df_ballista",
+"src": "/home/claude/blu-rez/bluewall-assets/v4/sketchfab/defense/tower_ballista_9d28917f/scene.gltf",
+"h": 11,
+"tris": 4800,
+"tex": 384,
+"err": 0.3,
+"sloppy": true,
+"sloppyErr": 0.2
+}
+]

@@ -1,0 +1,8 @@
+<!doctype html><meta charset="utf-8"><title>spell lab</title>
+<body style="margin:0;background:#0b1428;color:#cfe3ff;font:14px sans-serif">
+<div id="r" style="padding:14px"></div>
+<script type="module">
+import { orb, crest, KEYS } from './spell_art.js';
+const row = (name, f) => `<div style="margin:6px 0 14px"><div style="margin:4px 0">${name}</div><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">${KEYS.map((k) => f(k, 104)).join('')}<span style="width:20px"></span>${KEYS.map((k) => f(k, 48)).join('')}</div></div>`;
+document.getElementById('r').innerHTML = row('A — glass orb', orb) + row('B — crest', crest);
+</script>

@@ -1,0 +1,2 @@
+dom ["DIV#game. 3 position: fixed; inset: 0px; overflow: clip;", "SCRIPT#. 0 ", "SCRIPT#. 0 ", "SCRIPT#. 0 ", 58, 390, 844, 1]
+LOGS ["warning THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported."]

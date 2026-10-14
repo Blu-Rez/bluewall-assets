@@ -1,0 +1,3 @@
+(() => { const W = __bw.world, R = W.rings, P = W.patrols, st = R.state(), per = (arr, f) => { const o = { inner: 0, outer: 0, town: 0 }; for (const a of arr) if (f(a) && o[a.ring] != null) o[a.ring]++; return o; };
+  const lamp = {}, pick = {}; for (const id of ['inner', 'outer', 'town']) { lamp[id] = R.rings[id].lights.filter((e) => e.base > 0).length + '/' + R.rings[id].lights.length; pick[id] = R.rings[id].picks.filter((e) => W.picks.includes(e)).length + '/' + R.rings[id].picks.length; }
+  return { level: st.level, active: st.active, archersDrawn: per(P.archers, (a) => !!a.p), archersTotal: per(P.archers, () => true), sentriesDrawn: per(P.sentries, (a) => !!a.p), sentriesTotal: per(P.sentries, () => true), lampsOn: lamp, tapBoxes: pick }; })()

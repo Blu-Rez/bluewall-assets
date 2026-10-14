@@ -1,0 +1,4 @@
+[
+ {"name":"start","js":"const T={levels:{keep:18,wall:18,towers:18,barracks:12,lair:12},seed:11,ratio:1,power:4500,loot:{turq:60,emerald:60,ruby:60},tesla:0,emblem:'swords',name:'Navid'}; __bw.battle.start(T,null,null); for(let i=0;i<400;i++){ await new Promise(r=>setTimeout(r,500)); if(__bw.battle.session && !__bw.battle.loading) break; } const S=__bw.battle.session; return {active:__bw.battle.active, loading:__bw.battle.loading, keys:Object.keys(S||{}).slice(0,40), phase:S&&S.phase};","frames":12,"wait":4,"shot":true},
+ {"name":"info","js":"const S=__bw.battle.session; const u=S.sim.units||[]; const kinds={}; u.forEach(x=>kinds[x.type||x.k]=(kinds[x.type||x.k]||0)+1); return {phase:S.phase, muster:S.muster||S.sim.muster, units:Object.keys(S.sim).slice(0,40), kinds, nb:(S.sim.buildings||[]).length, cam:{p:__bw.camera.position.toArray().map(v=>+v.toFixed(0)), t:__bw.ctl.target.toArray().map(v=>+v.toFixed(0)), d:Math.round(__bw.ctl.dist)}};","shot":false}
+]

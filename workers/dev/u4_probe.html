@@ -1,0 +1,17 @@
+<!doctype html><meta charset=utf-8>
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
+<script type=module>
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+const q = new URLSearchParams(location.search), ld = new GLTFLoader(); ld.setMeshoptDecoder(MeshoptDecoder);
+const g = await ld.loadAsync(q.get('url')); g.scene.updateMatrixWorld(true);
+const out = { bones: [], meshes: [] };
+const sm = []; g.scene.traverse((o) => { if (o.isSkinnedMesh) sm.push(o); if (o.isMesh) out.meshes.push({ n: o.name, skinned: !!o.isSkinnedMesh, mat: o.material.name, verts: o.geometry.attributes.position.count }); });
+const seen = new Set();
+g.scene.traverse((o) => { if (o.isBone) { const p = new THREE.Vector3(); o.getWorldPosition(p); const e = new THREE.Euler().setFromQuaternion(o.quaternion); out.bones.push({ n: o.name, parent: o.parent && o.parent.name, wp: p.toArray().map((v) => +v.toFixed(3)), lq: o.quaternion.toArray().map((v) => +v.toFixed(3)) }); } });
+const b = new THREE.Box3().setFromObject(g.scene); out.box = [b.min.toArray(), b.max.toArray()].map((a) => a.map((v) => +v.toFixed(3)));
+out.root = { pos: g.scene.position.toArray(), scale: g.scene.scale.toArray(), children: g.scene.children.map((c) => c.name + ':' + c.type) };
+out.skinned = sm.map((m) => ({ n: m.name, bones: m.skeleton.bones.length, bindMode: m.bindMode }));
+window.__out = out; window.__done = true;
+</script>

@@ -1,0 +1,32 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#222">
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
+<canvas id=out></canvas>
+<script type=module>
+// u4_animsheet.html?url=..&times=0,1,2&clip=0&cols=4&tw=300&th=260&yaw=0.8  : one model at several times of one clip
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+const q = new URLSearchParams(location.search), url = q.get('url'), times = q.get('times').split(',').map(Number), TW = +q.get('tw') || 300, TH = +q.get('th') || 260, COLS = +q.get('cols') || 4, yaw = +(q.get('yaw') || 0.8), clipI = 0;
+const rows = Math.ceil(times.length / COLS), cv = document.getElementById('out'); cv.width = TW * COLS; cv.height = TH * rows;
+const c2 = cv.getContext('2d');
+const R = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true }); R.setSize(TW, TH); R.outputColorSpace = THREE.SRGBColorSpace; R.toneMapping = THREE.ACESFilmicToneMapping;
+const sc = new THREE.Scene(); sc.background = new THREE.Color(0x8fa0b5);
+sc.add(new THREE.HemisphereLight(0xffffff, 0x556070, 1.6)); const dl = new THREE.DirectionalLight(0xfff2dd, 2.6); dl.position.set(3, 5, 4); sc.add(dl);
+const cam = new THREE.PerspectiveCamera(35, TW / TH, 0.01, 1e5), ld = new GLTFLoader(); ld.setMeshoptDecoder(MeshoptDecoder);
+const g = await ld.loadAsync(url);
+if (q.get('looks')) { const L = await import('/src/u4_looks.js?' + Date.now()); g.animations = L.buildU4Gryphon(g).animations; }
+sc.add(g.scene);
+const clip = g.animations.find((a) => a.name === q.get('clip')) || g.animations[+q.get('clip') || 0], mx = clip ? new THREE.AnimationMixer(g.scene) : null; if (mx) mx.clipAction(clip).play();
+window.__info = { clips: g.animations.map((a) => a.name + ':' + a.duration.toFixed(2)) };
+// fixed camera from the union of all frames' boxes
+let box = new THREE.Box3();
+for (const t of times) { if (mx) mx.setTime(t); g.scene.updateMatrixWorld(true); g.scene.traverse((m) => { if (m.isSkinnedMesh) { m.skeleton.update(); const b = new THREE.Box3(); b.expandByObject(m, true); box.union(b); } else if (m.isMesh) box.expandByObject(m); }); }
+const s = box.getSize(new THREE.Vector3()), cn = box.getCenter(new THREE.Vector3()), r = Math.max(s.x, s.y, s.z) || 1;
+const d = r * 1.55 / Math.tan(THREE.MathUtils.degToRad(17.5)) * 0.62;
+cam.position.set(cn.x + d * Math.sin(yaw) * 0.9, cn.y + d * 0.35, cn.z + d * Math.cos(yaw) * 0.9); cam.lookAt(cn); cam.near = d / 200; cam.far = d * 40; cam.updateProjectionMatrix();
+times.forEach((t, i) => {
+  if (mx) mx.setTime(t); R.render(sc, cam); const x = (i % COLS) * TW, y = Math.floor(i / COLS) * TH; c2.drawImage(R.domElement, x, y);
+  c2.fillStyle = 'rgba(0,0,0,0.6)'; c2.fillRect(x, y, 90, 18); c2.fillStyle = '#fff'; c2.font = '13px sans-serif'; c2.fillText('t=' + t, x + 4, y + 13); c2.strokeStyle = '#000'; c2.strokeRect(x, y, TW, TH);
+});
+window.__done = true;
+</script>

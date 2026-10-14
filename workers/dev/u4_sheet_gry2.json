@@ -1,0 +1,5 @@
+[
+ {"url":"/v2/sketchfab/gryphon/gryphon.glb","label":"G1 DreamNoms (3074 tris) skin broken"},
+ {"url":"/v4/sketchfab/units/gryphon_simple_animated_2e79d72e/scene.gltf","label":"G2 Twqero (670 tris) rig OK, idle clip only"},
+ {"url":"/v2/sketchfab/eagle/eagle.glb","label":"G3 Eagle (3128 tris) rig OK, flap 0.6s"}
+]

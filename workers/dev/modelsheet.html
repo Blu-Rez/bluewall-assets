@@ -1,0 +1,36 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#222">
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
+<canvas id=out></canvas>
+<script type=module>
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+const q = new URLSearchParams(location.search), list = await (await fetch(q.get('list'))).json();
+const TW = +q.get('tw') || 320, TH = +q.get('th') || 240, COLS = +q.get('cols') || 5;
+const rows = Math.ceil(list.length / COLS), cv = document.getElementById('out'); cv.width = TW * COLS; cv.height = TH * rows;
+const c2 = cv.getContext('2d'); c2.fillStyle = '#1b2230'; c2.fillRect(0, 0, cv.width, cv.height);
+const R = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true }); R.setSize(TW, TH); R.outputColorSpace = THREE.SRGBColorSpace; R.toneMapping = THREE.ACESFilmicToneMapping;
+const sc = new THREE.Scene(); sc.background = new THREE.Color(0x8fa0b5);
+sc.add(new THREE.HemisphereLight(0xffffff, 0x556070, 1.6)); const dl = new THREE.DirectionalLight(0xfff2dd, 2.6); dl.position.set(3, 5, 4); sc.add(dl);
+const cam = new THREE.PerspectiveCamera(35, TW / TH, 0.01, 1e5), ld = new GLTFLoader(); ld.setMeshoptDecoder(MeshoptDecoder);
+const KC = {};
+window.__info = [];
+for (let i = 0; i < list.length; i++) {
+  const it = list[i], x = (i % COLS) * TW, y = Math.floor(i / COLS) * TH; let info = { label: it.label };
+  try {
+    const g = KC[it.url] || (KC[it.url] = await Promise.race([ld.loadAsync(it.url), new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 90000))]));
+    const o = it.node ? g.scene.getObjectByName(it.node).clone(true) : g.scene; sc.add(o); o.updateMatrixWorld(true);
+    let tris = 0; o.traverse((m) => { if (m.isMesh) { const ix = m.geometry.index; tris += (ix ? ix.count : m.geometry.attributes.position.count) / 3; } });
+    const b = new THREE.Box3().setFromObject(o), s = b.getSize(new THREE.Vector3()), cn = b.getCenter(new THREE.Vector3()), r = Math.max(s.x, s.y, s.z) || 1;
+    const d = r * 1.55 / Math.tan(THREE.MathUtils.degToRad(17.5)) * 0.62;
+    cam.position.set(cn.x + d * 0.62, cn.y + d * 0.42, cn.z + d * 0.78); cam.lookAt(cn); cam.near = d / 200; cam.far = d * 40; cam.updateProjectionMatrix();
+    R.render(sc, cam); c2.drawImage(R.domElement, x, y); sc.remove(o);
+    if (!it.node) o.traverse((m) => { if (m.isMesh) { m.geometry.dispose(); const ms = Array.isArray(m.material) ? m.material : [m.material]; ms.forEach((t) => { for (const k in t) if (t[k] && t[k].isTexture) t[k].dispose(); t.dispose(); }); } });
+    info = { ...info, tris: Math.round(tris), size: [s.x, s.y, s.z].map((v) => +v.toFixed(2)), anims: (g.animations || []).length };
+  } catch (e) { c2.fillStyle = '#601818'; c2.fillRect(x, y, TW, TH); info.err = String(e).slice(0, 80); }
+  c2.fillStyle = 'rgba(0,0,0,0.6)'; c2.fillRect(x, y, TW, 30); c2.fillStyle = '#fff'; c2.font = '13px sans-serif'; c2.fillText((it.label || '').slice(0, 44), x + 4, y + 13);
+  c2.fillStyle = '#9fd'; c2.fillText((info.tris != null ? info.tris + ' tris · ' + (info.anims || 0) + ' anim · ' + (info.size || []).join('×') : info.err || ''), x + 4, y + 26);
+  c2.strokeStyle = '#000'; c2.strokeRect(x, y, TW, TH); window.__info.push(info);
+}
+window.__done = true;
+</script>

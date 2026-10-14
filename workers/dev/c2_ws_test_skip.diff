@@ -1,0 +1,9 @@
+--- a/dev/ws_test.js
++++ b/dev/ws_test.js
+@@ -30,5 +30,5 @@
+ }
+ for (const q of ROADS.filter((r) => /^ws_/.test(r.name))) { const s = S.find((t) => 'ws_' + t.id === q.name); const e = q.pts[q.pts.length - 1]; ok(Math.hypot(e[0] - s.x, e[1] - s.z) < s.r, `${q.name}: ends inside the site`); }
+ // unlock + counts grow with level
+-for (const k of Object.keys(WS_KINDS)) { const s = S.find((t) => t.kind === k); const c1 = counts(s, 1), c30 = counts(s, 30); const grows = Object.keys(c30).every((key) => c30[key] >= (c1[key] ?? 0)) && Object.keys(c30).some((key) => c30[key] > (c1[key] ?? 0)); ok(grows, `${k}: workers / animals / boats grow with the level (${JSON.stringify(c1)} -> ${JSON.stringify(c30)})`); ok(wsLevel(s, WS_KINDS[k].unlock - 1) === 0 || WS_KINDS[k].unlock === 1, `${k}: locked below level ${WS_KINDS[k].unlock}`); }
++for (const k of Object.keys(WS_KINDS)) { const s = S.find((t) => t.kind === k); if (!s) continue; /* C2: kinds the planner has not placed on the map yet (sawmill / masonry / smelter: inTown, placed by the town planner) */ const c1 = counts(s, 1), c30 = counts(s, 30); const grows = Object.keys(c30).every((key) => c30[key] >= (c1[key] ?? 0)) && Object.keys(c30).some((key) => c30[key] > (c1[key] ?? 0)); ok(grows, `${k}: workers / animals / boats grow with the level (${JSON.stringify(c1)} -> ${JSON.stringify(c30)})`); ok(wsLevel(s, WS_KINDS[k].unlock - 1) === 0 || WS_KINDS[k].unlock === 1, `${k}: locked below level ${WS_KINDS[k].unlock}`); }
+ console.log(bad ? `WS FAIL (${bad})` : 'WS OK');

@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#050912">
+<title>Blue Wall</title>
+<link rel="preload" href="/pub/cinzel-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/pub/baskerville-700.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:Vazirmatn;src:url(/pub/Vazirmatn-Regular.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(/pub/Vazirmatn-Bold.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(/pub/Vazirmatn-Black.woff2) format("woff2");font-weight:900;font-display:swap}
+@font-face{font-family:"Libre Baskerville";src:url(/pub/baskerville-700.woff2) format("woff2");font-weight:700;font-style:normal;font-display:block}
+@font-face{font-family:"Libre Baskerville";src:url(/pub/baskerville-400.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:Cinzel;src:url(/pub/cinzel-900.woff2) format("woff2");font-weight:900;font-display:block}
+@font-face{font-family:"BW Naskh";src:url(/pub/naskh-400.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"BW Naskh";src:url(/pub/naskh-700.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Noto Sans Tai Viet";src:url(/pub/taiviet.woff2) format("woff2");font-display:swap}
+:root{--bg:#050912;--ink:#dbe8ff;--dim:#7f93b8;--blue:#4aa8ff;--glow:#7cc8ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:Vazirmatn,system-ui,sans-serif;overflow:hidden;overscroll-behavior:none;touch-action:none;user-select:none;-webkit-user-select:none}
+#game{position:fixed;inset:0}
+#bw-load{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#020509;transition:opacity .6s ease;z-index:1000}
+#bw-load.done{opacity:0;pointer-events:none}
+#bw-stage{position:relative;flex:none;width:390px;height:844px;overflow:hidden;transform-origin:50% 50%;
+  background:radial-gradient(ellipse 120% 70% at 50% 30%,#163f86 0%,#0b2152 30%,#06112b 56%,#020509 88%);font-family:Cinzel,Georgia,serif;font-weight:900;color:#d8f0ff;-webkit-user-select:none;user-select:none}
+#bw-stage svg.bg,#bw-stage .fx{position:absolute;inset:0;pointer-events:none}
+#bw-stage .ly{position:absolute;display:block;pointer-events:none}
+#bw-stage img.ly{opacity:0;transition:opacity .7s ease}#bw-stage img.ly.on{opacity:1}
+#bw-stage .tip{position:absolute;left:0;right:0;text-align:center;font:700 11.5px/1 'Libre Baskerville',Georgia,serif;letter-spacing:1.4px;color:#8fb6e0;text-shadow:0 1px 0 #000,0 0 8px rgba(0,0,0,.9)}
+.wsweep{animation:sw 3.6s ease-in-out infinite}@keyframes sw{0%{transform:translateX(0) skewX(-18deg)}60%,100%{transform:translateX(560px) skewX(-18deg)}}
+.spin1{animation:spin 70s linear infinite}.spin2{animation:spin 46s linear infinite reverse}@keyframes spin{to{transform:rotate(360deg)}}
+.ebar{position:absolute;left:36px;width:318px}
+.ebadge{position:absolute;top:-52px;left:calc(0% - 32px);width:64px;height:40px;transition:left .25s ease-out}.ebadge svg{position:absolute;inset:0}
+.ebadge b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:900 16px Cinzel,serif;color:#f4feff;text-shadow:0 0 6px #3cb6ff}.ebadge i{font-style:normal;font-size:10px;margin-left:1px}
+.etrack{height:18px;border-radius:9px;padding:2px;background:linear-gradient(#0a1a3a,#030a1a);box-shadow:0 0 0 1.4px #5fb8ff,0 0 14px rgba(40,140,255,.55),inset 0 2px 5px #000}
+.efill{position:relative;height:100%;border-radius:7px;transition:width .25s ease-out;background:linear-gradient(#bff4ff,#46b6ff 42%,#1766e6 58%,#0e47b8);box-shadow:0 0 12px rgba(80,190,255,.9)}
+.estripe{position:absolute;inset:0;border-radius:7px;overflow:hidden;background:repeating-linear-gradient(115deg,rgba(255,255,255,0) 0 9px,rgba(255,255,255,.2) 9px 15px);background-size:30px 100%;animation:stripe 1s linear infinite}
+@keyframes stripe{to{background-position:30px 0}}
+.egloss{position:absolute;left:3px;right:3px;top:1px;height:36%;border-radius:5px;background:linear-gradient(rgba(255,255,255,.8),rgba(255,255,255,0))}
+.etip{position:absolute;right:-9px;top:50%;width:18px;height:18px;margin-top:-9px}.etip span{position:absolute;inset:0;border-radius:50%;background:radial-gradient(#fff,rgba(150,230,255,.9) 35%,rgba(60,170,255,0) 70%);animation:pulse 1.2s ease-in-out infinite}
+.etip:before,.etip:after{content:"";position:absolute;left:50%;top:50%;background:#fff;opacity:.9;border-radius:2px}.etip:before{width:26px;height:1.4px;margin:-.7px 0 0 -13px}.etip:after{width:1.4px;height:26px;margin:-13px 0 0 -.7px}
+@keyframes pulse{50%{transform:scale(1.35);opacity:.7}}
+.eticks{display:block;margin-top:3px}.elab{text-align:center;margin-top:2px;font:900 11px Cinzel,serif;letter-spacing:5px;color:#8fc9ff;text-shadow:0 0 8px rgba(60,170,255,.8)}
+#msg{display:none;position:fixed;left:0;right:0;bottom:12%;z-index:1100;text-align:center;padding:0 24px;line-height:1.9;font-size:17px;color:var(--ink);font-weight:700;direction:rtl;text-shadow:0 2px 0 #000,0 0 12px #000}
+#msg.big{display:block}
+</style>
+</head>
+<body>
+<div id="game"></div>
+<div id="bw-load"><div id="bw-stage"></div></div>
+<div id="msg"></div>
+<script src="/tg.js"></script>
+<script>
+(function () {
+const q = new URLSearchParams(location.search); const P0 = q.has('p') ? +q.get('p') : 0;   // ?p=NN previews a fixed percentage
+const W = 390, H = 844, CX = 195;
+const IMG = { dragon: { src: '/pub/dragon.webp', w: 840, h: 731 }, crown: { src: '/pub/crown.webp', w: 560, h: 363 } };
+let seed = 1; const rnd = (s) => { if (s !== undefined) seed = s; seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+const f1 = (x) => (+x).toFixed(1);
+// ---------------------------------------------------------------- sky: rays + stars + vignette
+function sky(cx, cy, s0) {
+  rnd(s0); let rays = '';
+  for (let i = 0; i < 18; i++) { const a = i * Math.PI * 2 / 18 + rnd() * .1, w = .05 + rnd() * .06, L = 700;
+    rays += `<polygon points="${f1(cx)},${f1(cy)} ${f1(cx + L * Math.cos(a - w))},${f1(cy + L * Math.sin(a - w))} ${f1(cx + L * Math.cos(a + w))},${f1(cy + L * Math.sin(a + w))}" fill="url(#bwRay)" opacity="${(.25 + rnd() * .35).toFixed(2)}"/>`; }
+  let dots = ''; for (let i = 0; i < 70; i++) { const x = rnd() * W, y = rnd() * H * .78, s = rnd() * 1.8 + .4; dots += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${s.toFixed(2)}" fill="#9fdcff" opacity="${(.15 + rnd() * .55).toFixed(2)}"/>`; }
+  return `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs>
+   <radialGradient id="bwRay" cx="${cx}" cy="${cy}" r="500" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7cc9ff" stop-opacity=".55"/><stop offset=".6" stop-color="#2a7be0" stop-opacity=".08"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+   <filter id="bwRb"><feGaussianBlur stdDeviation="6"/></filter></defs><g filter="url(#bwRb)">${rays}</g>${dots}</svg>`;
+}
+const vignette = () => `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><radialGradient id="bwVig" cx=".5" cy=".42" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".72"/></radialGradient></defs><rect width="${W}" height="${H}" fill="url(#bwVig)"/></svg>`;
+
+// ---------------------------------------------------------------- fortress silhouettes
+// shapes: arrays of SVG path strings; front layer gets the rim light, windows and the gate glow
+function fortress(v) {
+  const F = [], B = [], wins = [], gates = [], flags = [];
+  const G = 820;
+  // conical-roof tower: body x..x+w from `top` down to `base`, roof overhang, slightly concave cone, finial (+ optional pennant)
+  const tower = (L, x, w, top, rh, o = {}) => {
+    const base = o.base ?? G, ov = o.ov ?? w * .16, cx = x + w / 2, ap = top - rh, sp = o.spire ?? Math.max(4, rh * .2);
+    L.push(`M${f1(x)} ${base}L${f1(x)} ${f1(top + 3)}L${f1(x - ov)} ${f1(top + 3)}L${f1(x - ov)} ${f1(top)}Q${f1(cx - w * .1)} ${f1(top - rh * .38)} ${f1(cx)} ${f1(ap)}Q${f1(cx + w * .1)} ${f1(top - rh * .38)} ${f1(x + w + ov)} ${f1(top)}L${f1(x + w + ov)} ${f1(top + 3)}L${f1(x + w)} ${f1(top + 3)}L${f1(x + w)} ${base}Z`);
+    L.push(`M${f1(cx - .55)} ${f1(ap + 2)}L${f1(cx - .55)} ${f1(ap - sp)}L${f1(cx + .55)} ${f1(ap - sp)}L${f1(cx + .55)} ${f1(ap + 2)}Z`);
+    if (o.ball) L.push(circle(cx, ap - sp * .55, 1.3));
+    if (o.flag) flags.push([cx + .5, ap - sp, o.flag]);
+    if (o.win) for (const [fx, fy, k] of o.win) wins.push([x + w * fx, top + fy, k || 1, L === F]);
+  };
+  const circle = (x, y, r) => `M${f1(x - r)} ${f1(y)}a${r} ${r} 0 1 0 ${f1(2 * r)} 0a${r} ${r} 0 1 0 ${f1(-2 * r)} 0Z`;
+  // crenellated block (walls, keeps): top with merlons
+  const cren = (L, x0, x1, top, o = {}) => {
+    const base = o.base ?? G, mw = o.mw ?? 4.2, mh = o.mh ?? 4.2; let d = `M${f1(x0)} ${base}L${f1(x0)} ${f1(top - mh)}`; let x = x0; let up = true;
+    while (x < x1 - .01) { const nx = Math.min(x1, x + mw); d += `L${f1(nx)} ${f1(up ? top - mh : top)}`; up = !up; if (nx < x1) d += `L${f1(nx)} ${f1(up ? top - mh : top)}`; x = nx; }
+    d += `L${f1(x1)} ${base}Z`; L.push(d);
+  };
+  const slope = (L, pts) => L.push('M' + pts.map((p) => f1(p[0]) + ' ' + f1(p[1])).join('L') + 'Z');
+  if (v === 'D1') {            // the Citadel: symmetric fortress, gatehouse keep with twin turrets and a central spire under the title diamond
+    slope(B, [[-5, 812], [-5, 728], [28, 720], [62, 726], [100, 712], [140, 722], [195, 716], [250, 722], [290, 712], [328, 726], [362, 720], [395, 728], [395, 812]]);
+    tower(B, 44, 10, 712, 20); tower(B, 336, 10, 712, 20); tower(B, 128, 8, 704, 16); tower(B, 254, 8, 704, 16);
+    cren(F, -4, 394, 732);
+    tower(F, 4, 26, 714, 30, { win: [[.5, 12], [.5, 30]], flag: 1 }); tower(F, 360, 26, 714, 30, { win: [[.5, 12], [.5, 30]], flag: -1 });
+    tower(F, 70, 28, 707, 32, { win: [[.33, 10], [.67, 10], [.5, 24]], flag: 1, ball: 1 }); tower(F, 292, 28, 707, 32, { win: [[.33, 10], [.67, 10], [.5, 24]], flag: -1, ball: 1 });
+    cren(F, 96, 294, 722);
+    cren(F, 158, 232, 708, { mw: 4.6 });
+    tower(F, 148, 18, 701, 25, { win: [[.5, 9], [.5, 22]], ball: 1 }); tower(F, 224, 18, 701, 25, { win: [[.5, 9], [.5, 22]], ball: 1 });
+    tower(F, 183, 24, 698, 22, { win: [[.5, 8]], spire: 4 });
+    for (const [x, y] of [[171, 716], [177, 716], [213, 716], [219, 716], [114, 727], [126, 727], [264, 727], [276, 727], [40, 738], [350, 738]]) wins.push([x, y, .85, true]);
+  } else if (v === 'D2') {     // the Crag: fairy-tale fortress on a rocky outcrop, asymmetric towers, mountains in the haze
+    slope(B, [[-5, 820], [-5, 700], [24, 684], [50, 698], [80, 678], [112, 704], [140, 696], [160, 716], [230, 716], [252, 700], [282, 708], [316, 680], [346, 698], [372, 688], [395, 700], [395, 820]]);
+    slope(F, [[-5, 820], [-5, 772], [26, 764], [56, 752], [86, 740], [110, 732], [130, 728], [260, 728], [282, 733], [304, 742], [334, 756], [362, 766], [395, 770], [395, 820]]);
+    cren(F, 112, 288, 722, { base: 760 });
+    tower(F, 104, 20, 708, 26, { base: 760, win: [[.5, 10]], ball: 1 });
+    tower(F, 136, 26, 694, 22, { base: 760, win: [[.5, 9], [.3, 22], [.7, 22]], flag: 1, spire: 6 });
+    cren(F, 162, 230, 706, { base: 760, mw: 4.4 });
+    tower(F, 184, 22, 694, 20, { base: 720, win: [[.5, 8]], spire: 5, ball: 1 });
+    tower(F, 226, 24, 702, 28, { base: 760, win: [[.5, 10], [.5, 22]], flag: -1 });
+    tower(F, 260, 18, 712, 24, { base: 760, win: [[.5, 10]] });
+    tower(F, 288, 14, 724, 20, { base: 770, win: [[.5, 9]] });
+    slope(F, [[296, 790], [296, 736], [302, 736], [302, 732], [306, 732], [306, 736], [312, 736], [312, 732], [316, 732], [316, 738], [340, 750], [340, 790]]);
+    tower(F, 336, 12, 740, 16, { base: 790, win: [[.5, 8]], flag: -1 });
+    tower(F, 30, 12, 752, 16, { base: 800, win: [[.5, 8]] });
+    for (const [x, y] of [[174, 714], [216, 714], [196, 718], [124, 728], [270, 728]]) wins.push([x, y, .85, true]);
+  } else {                      // the Blue Wall: a long crenellated wall with regular cone-roofed towers and a great central gatehouse
+    slope(B, [[-5, 812], [-5, 722], [40, 714], [90, 720], [140, 710], [195, 716], [250, 710], [300, 720], [350, 712], [395, 722], [395, 812]]);
+    cren(F, -4, 394, 732, { mw: 4 });
+    const xs = [14, 64, 114, 276, 326, 376]; const hs = [716, 712, 708, 708, 712, 716];
+    xs.forEach((x, i) => tower(F, x - 10, 20, hs[i], 26 + (2 - Math.abs(2.5 - i)) * 2.5, { win: [[.5, 10], [.5, 24]], flag: i < 3 ? 1 : -1 }));
+    cren(F, 150, 240, 712, { mw: 5 });
+    tower(F, 142, 20, 702, 26, { win: [[.5, 9], [.5, 22]], ball: 1 }); tower(F, 228, 20, 702, 26, { win: [[.5, 9], [.5, 22]], ball: 1 });
+    tower(F, 182, 26, 699, 23, { win: [[.3, 9], [.7, 9]], spire: 4 });
+    for (let x = 30; x < 380; x += 25) if (Math.abs(x - CX) > 56) wins.push([x, 740, .75, true]);
+    for (const [x, y] of [[168, 720], [180, 720], [210, 720], [222, 720]]) wins.push([x, y, .85, true]);
+  }
+  // ---- render
+  const front = F.join(''), back = B.join('');
+  let s = `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs>
+   <linearGradient id="bwCas" x1="0" y1="666" x2="0" y2="790" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#0c1f45"/><stop offset=".45" stop-color="#06132c"/><stop offset="1" stop-color="#02060f"/></linearGradient>
+   <radialGradient id="bwRim" cx="195" cy="620" r="240" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#e6f8ff"/><stop offset=".45" stop-color="#9ad8ff"/><stop offset="1" stop-color="#3f86d6"/></radialGradient>
+   <linearGradient id="bwBack" x1="0" y1="676" x2="0" y2="780" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1b4386"/><stop offset="1" stop-color="#0a1f46"/></linearGradient>
+   <radialGradient id="bwWin"><stop offset="0" stop-color="#e8faff" stop-opacity=".95"/><stop offset=".35" stop-color="#7fd0ff" stop-opacity=".55"/><stop offset="1" stop-color="#2a8cff" stop-opacity="0"/></radialGradient>
+   <linearGradient id="bwGate" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8faff"/><stop offset=".45" stop-color="#7fd0ff"/><stop offset="1" stop-color="#1f6fe0"/></linearGradient>
+   <linearGradient id="bwFog" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d2a5c" stop-opacity="0"/><stop offset=".4" stop-color="#081a3c" stop-opacity=".6"/><stop offset="1" stop-color="#01040a" stop-opacity=".97"/></linearGradient>
+   <filter id="bwB4" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="4"/></filter>
+   <filter id="bwB9" x="-30%" y="-100%" width="160%" height="300%"><feGaussianBlur stdDeviation="9"/></filter>
+   <filter id="bwB2"><feGaussianBlur stdDeviation="1.6"/></filter></defs>`;
+  // halo behind the skyline (separates it from the dark sky)
+  s += `<ellipse cx="195" cy="712" rx="235" ry="46" fill="#2f86ff" opacity=".34" filter="url(#bwB9)"/>`;
+  // far layer, hazy, faint rim
+  s += `<path d="${back}" fill="#6fb4ff" opacity=".35"/><path d="${back}" fill="url(#bwBack)" transform="translate(0 1)" opacity=".95"/>`;
+  s += `<g class="mistB"><ellipse cx="110" cy="${v === 'D2' ? 722 : 730}" rx="150" ry="7" fill="#9cc8ff" opacity=".15" filter="url(#bwB4)"/><ellipse cx="300" cy="${v === 'D2' ? 726 : 732}" rx="140" ry="7" fill="#9cc8ff" opacity=".13" filter="url(#bwB4)"/></g>`;
+  // front: glow, rim, body
+  s += `<path d="${front}" fill="#3a8fff" opacity=".55" filter="url(#bwB4)"/>`;
+  s += `<path d="${front}" fill="url(#bwRim)"/><path d="${front}" fill="url(#bwCas)" transform="translate(0 1.5)"/>`;
+  // pennants
+  for (const [x, y, d] of flags) s += `<path d="M${f1(x)} ${f1(y)}q${f1(d * 6)} 1.6 ${f1(d * 11)} 3.4q${f1(-d * 5)} .2 ${f1(-d * 11)} 2.6z" fill="#0a1a3a" stroke="#8fd0ff" stroke-width=".7" stroke-linejoin="round"/>`;
+  // gate: glowing arch + portcullis
+  for (const g of gates) { const x0 = g.x - g.w / 2, y0 = g.y - g.h; const d = `M${f1(x0)} ${f1(g.y)}L${f1(x0)} ${f1(y0 + g.w / 2)}A${f1(g.w / 2)} ${f1(g.w / 2)} 0 0 1 ${f1(x0 + g.w)} ${f1(y0 + g.w / 2)}L${f1(x0 + g.w)} ${f1(g.y)}Z`;
+    s += `<ellipse cx="${f1(g.x)}" cy="${f1(g.y - g.h * .45)}" rx="${f1(g.w * 1.3)}" ry="${f1(g.h * .9)}" fill="url(#bwWin)" opacity=".8"/><path d="${d}" fill="url(#bwGate)" opacity=".92"/>`;
+    let bars = ''; for (let i = 1; i < 5; i++) { const x = x0 + g.w * i / 5; bars += `<line x1="${f1(x)}" y1="${f1(y0)}" x2="${f1(x)}" y2="${f1(g.y)}"/>`; } for (let j = 1; j < 5; j++) { const y = y0 + g.w / 2 + (g.h - g.w / 2) * j / 5; bars += `<line x1="${f1(x0)}" y1="${f1(y)}" x2="${f1(x0 + g.w)}" y2="${f1(y)}"/>`; }
+    s += `<g stroke="#0a1c40" stroke-width="1" opacity=".75">${bars}</g><path d="${d}" fill="none" stroke="#9ad8ff" stroke-width=".8" opacity=".9"/>`; }
+  // lit windows (none right behind the LOADING label)
+  for (const [x, y, k, fr] of wins.filter(([x, y]) => !(y > 724 && Math.abs(x - CX) < 102))) { s += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(4.2 * k)}" fill="url(#bwWin)" opacity="${fr ? .85 : .5}"/><rect x="${f1(x - .9 * k)}" y="${f1(y - 2 * k)}" width="${f1(1.8 * k)}" height="${f1(4 * k)}" rx="${f1(.9 * k)}" fill="#dff6ff"/>`; }
+  // mist in front of the walls and fog to the bottom edge
+  s += `<g class="mistA"><ellipse cx="60" cy="768" rx="120" ry="12" fill="#a9d2ff" opacity=".2" filter="url(#bwB4)"/><ellipse cx="330" cy="772" rx="120" ry="12" fill="#a9d2ff" opacity=".18" filter="url(#bwB4)"/><ellipse cx="195" cy="812" rx="240" ry="18" fill="#8fc2ff" opacity=".13" filter="url(#bwB4)"/></g>`;
+  s += `<rect x="0" y="744" width="${W}" height="${H - 744}" fill="url(#bwFog)"/>`;
+  return s + '</svg>';
+}
+const sparkle = (x, y, r, op = 1) => { const k = r * .18; return `<path d="M${x} ${y - r}Q${x + k} ${y - k} ${x + r} ${y}Q${x + k} ${y + k} ${x} ${y + r}Q${x - k} ${y + k} ${x - r} ${y}Q${x - k} ${y - k} ${x} ${y - r}Z" fill="#fff" opacity="${op}"/><circle cx="${x}" cy="${y}" r="${r * .22}" fill="#fff" opacity="${op}"/>`; };
+const img = (k, w, cx, cy, filter) => { const m = IMG[k]; const h = m.h * w / m.w; return `<img class="ly" alt="" src="${m.src}" onload="this.classList.add('on')" style="left:${cx - w / 2}px;top:${f1(cy - h / 2)}px;width:${w}px;height:${f1(h)}px;filter:${filter}">`; };
+function motes(seed, n, y0, y1) {
+  rnd(seed); let s = ''; for (let i = 0; i < n; i++) { const x = rnd() * W, y = y0 + rnd() * (y1 - y0), r = .5 + rnd() * 1.5; s += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${r.toFixed(2)}" fill="#cfeaff" opacity="${(.2 + rnd() * .5).toFixed(2)}"/>`; }
+  return `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${s}</svg>`;
+}
+const beam = (x, y0, y1, w) => `<div class="ly" style="left:${x - w / 2}px;top:${y0}px;width:${w}px;height:${y1 - y0}px;background:linear-gradient(to top,rgba(150,215,255,.45),rgba(90,170,255,.14) 55%,rgba(60,140,255,0));filter:blur(12px);clip-path:polygon(40% 100%,60% 100%,100% 0,0 0)"></div>`;
+const halo = (x, y, rx, ry, col) => `<div class="ly" style="left:${x - rx}px;top:${y - ry}px;width:${rx * 2}px;height:${ry * 2}px;border-radius:50%;background:radial-gradient(closest-side,${col},rgba(0,0,0,0))"></div>`;
+const DRAGON_F = 'drop-shadow(0 0 1px rgba(190,230,255,.95)) drop-shadow(0 0 8px rgba(90,175,255,.65)) drop-shadow(0 0 22px rgba(40,120,255,.4))';
+const CROWN_F = 'drop-shadow(0 0 10px rgba(110,190,255,.55))';
+const FOGBOT = `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="bwFb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#020509" stop-opacity="0"/><stop offset="1" stop-color="#020509" stop-opacity="1"/></linearGradient></defs><rect x="0" y="760" width="${W}" height="${H - 760}" fill="url(#bwFb)"/></svg>`;
+const ground = (y) => `<div class="ly" style="left:0;top:${y}px;width:${W}px;height:${H - y}px;background:#02060f"></div>`;
+const castle = (dy) => ground(770 + dy) + `<div class="ly" style="left:0;top:${dy}px;width:${W}px;height:${H}px">${fortress('D2')}</div>`;
+const TP = {"bask":{"d":"M33 0V-40Q78 -42 100.5 -50.5Q123 -59 131.0 -83.0Q139 -107 139 -154V-616Q139 -663 133.0 -686.5Q127 -710 108.5 -719.0Q90 -728 54 -730V-770H375Q525 -770 607.0 -721.0Q689 -672 689 -583Q689 -523 646.5 -481.5Q604 -440 518 -415V-411Q592 -411 645.5 -384.0Q699 -357 728.5 -310.0Q758 -263 758 -203Q758 -152 733.5 -114.0Q709 -76 663 -50Q619 -25 557.0 -12.5Q495 0 418 0ZM425 -61Q586 -61 586 -206Q586 -250 572.0 -282.5Q558 -315 528 -336Q498 -357 450.0 -366.0Q402 -375 334 -375H286V-175Q286 -114 318.0 -87.5Q350 -61 425 -61ZM286 -435H345Q390 -435 423.5 -443.5Q457 -452 479 -468Q504 -485 515.5 -511.0Q527 -537 527 -571Q527 -644 491.0 -676.5Q455 -709 375 -709H304Q286 -709 286 -692ZM1054 -830V-164Q1054 -111 1059.5 -85.0Q1065 -59 1084.0 -50.5Q1103 -42 1141 -40V0H826V-40Q864 -42 883.0 -51.5Q902 -61 908.5 -85.5Q915 -110 915 -157V-570Q915 -628 913.0 -666.0Q911 -704 908 -717Q903 -742 885.5 -750.0Q868 -758 822 -758V-792ZM1637 -262V-366Q1637 -420 1632.0 -445.0Q1627 -470 1609.0 -478.0Q1591 -486 1550 -490V-530H1776V-227Q1776 -166 1777.5 -131.5Q1779 -97 1783 -80Q1788 -55 1803.5 -47.5Q1819 -40 1868 -40V-1L1669 11L1658 -78H1654Q1629 -37 1581.5 -13.5Q1534 10 1476 10Q1424 10 1382.5 -9.5Q1341 -29 1313 -66Q1270 -124 1270 -231V-366Q1270 -407 1268.0 -430.5Q1266 -454 1257.5 -465.5Q1249 -477 1232.0 -482.0Q1215 -487 1185 -490V-530H1409V-247Q1409 -147 1434.0 -101.0Q1459 -55 1514 -55Q1574 -55 1605 -109Q1622 -136 1629.5 -173.0Q1637 -210 1637 -262ZM2403 -128 2431 -93Q2340 10 2204 10Q2122 10 2060.0 -24.0Q1998 -58 1963.5 -118.5Q1929 -179 1929 -258Q1929 -341 1965.5 -404.5Q2002 -468 2067.0 -504.0Q2132 -540 2216 -540Q2322 -540 2381.0 -482.5Q2440 -425 2440 -323Q2440 -307 2435.0 -303.5Q2430 -300 2407 -300H2085Q2083 -295 2082.0 -287.0Q2081 -279 2081 -267Q2081 -202 2100.5 -154.5Q2120 -107 2155.5 -81.0Q2191 -55 2239 -55Q2281 -55 2322.5 -74.0Q2364 -93 2403 -128ZM2092 -356H2237Q2278 -356 2289.0 -360.5Q2300 -365 2300 -382Q2300 -426 2275.0 -454.0Q2250 -482 2212 -482Q2169 -482 2135.5 -446.5Q2102 -411 2092 -356ZM3523 -597 3649 -194 3784 -580Q3796 -614 3802.0 -638.5Q3808 -663 3808 -680Q3808 -711 3786.5 -720.5Q3765 -730 3720 -730V-770H4004V-730Q3967 -730 3936.0 -711.5Q3905 -693 3889 -649L3648 10H3559L3385 -518L3187 10H3104L2892 -574Q2867 -643 2845.5 -676.0Q2824 -709 2798.5 -719.0Q2773 -729 2734 -729V-770H3112V-729Q3062 -729 3042.5 -719.5Q3023 -710 3023 -688Q3023 -672 3028.0 -655.5Q3033 -639 3048 -597L3188 -194L3350 -636Q3337 -673 3322.5 -691.5Q3308 -710 3287.5 -718.0Q3267 -726 3235 -729V-770H3588V-729Q3547 -729 3526.5 -718.5Q3506 -708 3506 -678Q3506 -663 3510.5 -643.0Q3515 -623 3523 -597ZM4452 10Q4406 10 4381.5 -17.5Q4357 -45 4357 -97H4352Q4325 -47 4278.0 -19.0Q4231 9 4175 9Q4129 9 4097.0 -8.5Q4065 -26 4049.0 -54.0Q4033 -82 4033 -114Q4033 -163 4073.5 -201.5Q4114 -240 4203 -278L4343 -338V-380Q4343 -437 4322.5 -464.0Q4302 -491 4260 -491Q4231 -491 4216.0 -476.5Q4201 -462 4187 -424Q4179 -401 4162.0 -386.0Q4145 -371 4117 -371Q4089 -371 4073.5 -387.5Q4058 -404 4058 -432Q4058 -483 4111.0 -511.5Q4164 -540 4267 -540Q4381 -540 4429.0 -500.0Q4477 -460 4477 -364V-145Q4477 -101 4485.5 -80.5Q4494 -60 4513 -60Q4521 -60 4529.5 -63.0Q4538 -66 4546 -73L4561 -44Q4548 -20 4518.0 -5.0Q4488 10 4452 10ZM4237 -84Q4265 -84 4289.0 -98.0Q4313 -112 4328.0 -136.5Q4343 -161 4343 -190V-285Q4280 -255 4243.0 -232.0Q4206 -209 4190.0 -188.0Q4174 -167 4174 -143Q4174 -116 4191.0 -100.0Q4208 -84 4237 -84ZM4830 -830V-164Q4830 -111 4835.5 -85.0Q4841 -59 4860.0 -50.5Q4879 -42 4917 -40V0H4602V-40Q4640 -42 4659.0 -51.5Q4678 -61 4684.5 -85.5Q4691 -110 4691 -157V-570Q4691 -628 4689.0 -666.0Q4687 -704 4684 -717Q4679 -742 4661.5 -750.0Q4644 -758 4598 -758V-792ZM5195 -830V-164Q5195 -111 5200.5 -85.0Q5206 -59 5225.0 -50.5Q5244 -42 5282 -40V0H4967V-40Q5005 -42 5024.0 -51.5Q5043 -61 5049.5 -85.5Q5056 -110 5056 -157V-570Q5056 -628 5054.0 -666.0Q5052 -704 5049 -717Q5044 -742 5026.5 -750.0Q5009 -758 4963 -758V-792Z","x0":33,"y0":-830,"x1":5282,"y1":11}};   // 'Blue Wall' lettering as plain vector paths (Libre Baskerville Bold): no font, no JS fitting, nothing that can double up
+function titleG(key, w, cx, cy) {
+  const t = TP[key], s = w / (t.x1 - t.x0), h = (t.y1 - t.y0) * s;
+  return { s, h, tf: `translate(${f1(cx - w / 2 - t.x0 * s)} ${f1(cy - h / 2 - t.y0 * s)}) scale(${s.toFixed(5)})`, d: t.d, base: cy + h / 2 };
+}
+const defsBlur = (id, sd) => `<filter id="${id}" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="${sd}"/></filter>`;
+function titleN2() {
+  const T = titleG('bask', 262, CX, 352), ns = 'vector-effect="non-scaling-stroke"';
+  return `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs>${defsBlur('wb14', 9)}${defsBlur('wb4', 3)}
+   <linearGradient id="wfg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#e3f6ff"/><stop offset=".55" stop-color="#9fdcff"/><stop offset="1" stop-color="#e9f9ff"/></linearGradient>
+   <linearGradient id="wsw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+   <path id="tN2" d="${T.d}"/><clipPath id="wcl"><use href="#tN2" transform="${T.tf}"/></clipPath></defs>
+   <g transform="${T.tf}" stroke-linejoin="round"><use href="#tN2" fill="none" stroke="#1a62ff" stroke-width="22" filter="url(#wb14)" opacity=".85" ${ns}/>
+     <use href="#tN2" fill="none" stroke="#46c2ff" stroke-width="7" filter="url(#wb4)" opacity=".9" ${ns}/>
+     <use href="#tN2" fill="url(#wfg)" stroke="#bfeaff" stroke-width="1.2" ${ns}/></g>
+   <g clip-path="url(#wcl)"><rect class="wsweep" x="-120" y="${f1(352 - T.h)}" width="70" height="${f1(T.h * 2)}" fill="url(#wsw)" transform="skewX(-18)"/></g></svg>`;
+}
+function runeRing(cx, cy, r) {
+  let t = '', dm = ''; for (let i = 0; i < 72; i++) { const a = i * Math.PI / 36, l = i % 6 === 0 ? 7 : 3.2; t += `M${f1(cx + Math.cos(a) * (r - l))} ${f1(cy + Math.sin(a) * (r - l))}L${f1(cx + Math.cos(a) * r)} ${f1(cy + Math.sin(a) * r)}`; }
+  for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3 + .3, x = cx + Math.cos(a) * (r + 9), y = cy + Math.sin(a) * (r + 9); dm += `<path d="M${f1(x)} ${f1(y - 4.5)}L${f1(x + 3.4)} ${f1(y)}L${f1(x)} ${f1(y + 4.5)}L${f1(x - 3.4)} ${f1(y)}Z" fill="#cfefff"/>`; }
+  return `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs>${defsBlur('rg2', 2.4)}</defs>
+   <g class="spin1" style="transform-origin:${cx}px ${cy}px"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#3aa4ff" stroke-width="2.4" filter="url(#rg2)" opacity=".8"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#cfefff" stroke-width=".9" opacity=".8"/><path d="${t}" stroke="#bfeaff" stroke-width=".9" opacity=".8"/>${dm}</g>
+   <g class="spin2" style="transform-origin:${cx}px ${cy}px"><circle cx="${cx}" cy="${cy}" r="${r - 15}" fill="none" stroke="#7fd0ff" stroke-width="1" stroke-dasharray="3 7" opacity=".6"/></g></svg>`;
+}
+function dividerN2(cy) {
+  return `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="d2g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7fd0ff" stop-opacity="0"/><stop offset=".5" stop-color="#e9fbff"/><stop offset="1" stop-color="#7fd0ff" stop-opacity="0"/></linearGradient>${defsBlur('d2b', 2.4)}</defs>
+   <rect x="${CX - 120}" y="${cy - .8}" width="240" height="1.6" fill="url(#d2g)"/><rect x="${CX - 120}" y="${cy - 1.4}" width="240" height="2.8" fill="url(#d2g)" filter="url(#d2b)" opacity=".8"/>
+   <path d="M${CX} ${cy - 7}L${CX + 7} ${cy}L${CX} ${cy + 7}L${CX - 7} ${cy}Z" fill="#e9fbff"/><path d="M${CX} ${cy - 7}L${CX + 7} ${cy}L${CX} ${cy + 7}L${CX - 7} ${cy}Z" fill="#5cc4ff" filter="url(#d2b)" opacity=".9"/></svg>`;
+}
+function barN2(p0) {
+  const bw = 318, bh = 16, ticks = Array.from({ length: 11 }, (_, i) => `<rect x="${(1 + i * (bw - 2) / 10 - .5).toFixed(1)}" y="${i % 5 === 0 ? 4 : 6}" width="1" height="${i % 5 === 0 ? 8 : 5}" fill="#8fd2ff" opacity="${i % 5 === 0 ? .8 : .5}"/>`).join('');
+  return `<div class="ebar" style="bottom:64px"><div class="ebadge" id="ebd"><svg width="64" height="40" viewBox="0 0 64 40"><path d="M16 2H48L62 20L48 38H16L2 20Z" fill="#06173a" stroke="#6fd0ff" stroke-width="1.6"/><path d="M16 2H48L62 20L48 38H16L2 20Z" fill="none" stroke="#2f8bff" stroke-width="5" opacity=".35"/></svg><b id="pct">${p0}<i>%</i></b></div>
+   <div class="etrack"><div class="efill" id="efill" style="width:${p0}%"><div class="estripe"></div><div class="egloss"></div><div class="etip"><span></span></div></div></div>
+   <svg class="eticks" width="${bw}" height="16" viewBox="0 0 ${bw} 16">${ticks}</svg><div class="elab">LOADING</div></div>`;
+}
+function setBarN2(p) {
+  document.getElementById('efill').style.width = p + '%';
+  const b = document.getElementById('ebd'); b.style.left = `calc(${p}% - 32px)`;
+}
+
+// ---------------------------------------------------------------- compose: dragon over the crown over the glowing title, the fortress below
+let html = sky(CX, 300, 42);
+html += halo(CX, 262, 210, 190, 'rgba(110,190,255,.55)');
+html += runeRing(CX, 266, 70);
+html += beam(CX, 300, 700, 120) + motes(3, 40, 60, 600) + castle(-6);
+html += img('dragon', 214, CX, 160, DRAGON_F) + halo(CX, 272, 70, 46, 'rgba(120,200,255,.5)') + img('crown', 116, CX, 272, CROWN_F);
+html += `<svg class="fx" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${[[CX, 237, 6, 1], [150, 294, 3.5, .8], [242, 290, 4, .8], [60, 170, 4, .6], [336, 380, 3.5, .6]].map((s) => sparkle(...s)).join('')}</svg>`;
+html += FOGBOT + vignette();
+html += titleN2() + dividerN2(388) + barN2(P0);
+html += `<div class="tip" id="bw-tip" style="bottom:30px">Preparing your kingdom…</div>`;
+const stage = document.getElementById('bw-stage'); stage.innerHTML = html;
+const fit = () => { const s = Math.min(innerWidth / W, innerHeight / H); stage.style.transform = `scale(${s})`; };
+addEventListener('resize', fit); fit();
+setBarN2(P0);
+window.bwLoading = (p) => { p = Math.max(0, Math.min(100, Math.round(p))); const e = document.getElementById('pct'); if (e) e.innerHTML = `${p}<i>%</i>`; setBarN2(p); };
+window.bwTip = (t) => { const e = document.getElementById('bw-tip'); if (e && t) e.textContent = t; };
+window.bwLoadingDone = () => { const el = document.getElementById('bw-load'); el.classList.add('done'); setTimeout(() => el.remove(), 900); };
+setTimeout(() => stage.querySelectorAll('img.ly').forEach((e) => e.classList.add('on')), 3000);   // safety: never leave a picture hidden
+document.body.dataset.ready = 1;
+})();
+</script>
+
+<script>
+(function () {
+  "use strict";
+  var msg = document.getElementById("msg");
+  function prog(p, tip) { if (window.bwLoading) window.bwLoading(p); if (tip && window.bwTip) window.bwTip(tip); }
+  function say(t, big) { msg.textContent = t; msg.className = big ? "big" : ""; }
+  function stop(t) { say(t, true); var q = document.querySelector(".ebar"); if (q) q.style.display = "none"; var tp = document.getElementById("bw-tip"); if (tp) tp.style.display = "none"; }
+
+  var tg = window.Telegram && window.Telegram.WebApp;
+  try {
+    tg.ready(); tg.expand();
+    if (tg.isVersionAtLeast("7.7")) tg.disableVerticalSwipes();
+    if (tg.isVersionAtLeast("6.1")) { tg.setHeaderColor("#050912"); tg.setBackgroundColor("#050912"); }
+    if (tg.isVersionAtLeast("7.10")) tg.setBottomBarColor("#050912");
+    if (tg.isVersionAtLeast("8.0") && (tg.platform === "android" || tg.platform === "ios")) tg.requestFullscreen();
+  } catch (e) {}
+  var initData = (tg && tg.initData) || "";
+  if (!initData) { stop("🔒 Blue Wall فقط از داخل تلگرام باز می‌شه"); return; }
+  prog(6);
+
+  fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ init_data: initData }) })
+  .then(function (r) { return r.json().then(function (j) { return [r.status, j]; }); })
+  .then(function (res) {
+    var j = res[1];
+    if (!j.ok) {
+      if (j.reason === "locked") stop("🔒 Blue Wall هنوز افتتاح نشده… به‌زودی دروازه‌ها باز می‌شن ⚔️");
+      else if (j.reason === "slow") stop("⏳ یه لحظه صبر کن و دوباره باز کن");
+      else stop("⚠️ ورود تأیید نشد؛ دوباره از تلگرام باز کن");
+      return;
+    }
+    prog(12);
+    return loadBundle(j).then(function () {
+      if (!window.BlueWall || !window.BlueWall.start) throw new Error("no-bundle");
+      return window.BlueWall.start({
+        root: document.getElementById("game"), token: j.token, uid: j.uid, name: j.name, owner: !!j.owner, tg: tg,
+        progress: function (p, t) { prog(60 + p * 0.4, t); },
+        ready: function () { prog(100); setTimeout(function () { if (window.bwLoadingDone) window.bwLoadingDone(); }, 250); }
+      });
+    });
+  })
+  .catch(function (e) {
+    console.error(e);
+    if (e && e.message === "webgl") stop("⚠️ گوشیت از گرافیک سه‌بعدی (WebGL) پشتیبانی نمی‌کنه");
+    else stop("⚠️ اتصال برقرار نشد؛ دوباره امتحان کن");
+  });
+
+  function loadBundle(j) {
+    return fetch("/api/bundle", { headers: { Authorization: "Bearer " + j.token } }).then(function (r) {
+      if (!r.ok) throw new Error("bundle " + r.status);
+      var total = +(r.headers.get("X-Raw-Size") || 0);
+      if (!r.body || !r.body.getReader || !total) return r.text();
+      var rd = r.body.getReader(), got = 0, parts = [];
+      function pump() {
+        return rd.read().then(function (x) {
+          if (x.done) return new Blob(parts).text();
+          parts.push(x.value); got += x.value.length; prog(12 + 48 * Math.min(1, got / total));
+          return pump();
+        });
+      }
+      return pump();
+    }).then(function (code) {
+      return new Promise(function (ok, bad) {
+        var url = URL.createObjectURL(new Blob([code], { type: "text/javascript" }));
+        var s = document.createElement("script");
+        s.onload = function () { URL.revokeObjectURL(url); ok(); };
+        s.onerror = function () { bad(new Error("script")); };
+        s.src = url; document.body.appendChild(s);
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>

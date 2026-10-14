@@ -1,0 +1,7 @@
+<!doctype html><meta charset="utf-8"><title>sword lab</title>
+<body style="margin:0;background:#0b1428;color:#cfe3ff;font:14px sans-serif">
+<div id="r" style="padding:14px"></div>
+<script type="module">
+import { swords, attackButton } from './sword_art.js';
+document.getElementById('r').innerHTML = `<div style="display:flex;gap:26px;align-items:center;flex-wrap:wrap">${swords(220)}${attackButton(220)}<span>${attackButton(64)}</span><span>${attackButton(44)}</span><span>${swords(44)}</span></div>`;
+</script>

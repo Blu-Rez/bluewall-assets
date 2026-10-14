@@ -1,0 +1,171 @@
+OK   deterministic: two runs on the same layout are identical  (23233 bytes)
+INFO plan time (ms) runs 1-3 of this process: 47 / 37 / 36   (run 1 may be cold-JIT)
+OK   plan time < 100 ms in node (warm best 36 ms)
+OK   sliced planning: 38 steps, longest 18 ms (< 100)
+OK   sliced plan == one-shot plan
+OK   base: every non-house building found a place
+OK   base: 20 distinct kinds at level 30 (>= 14)
+OK   base: no footprint overlaps (134 buildings)
+OK   base: nothing on a street (>= 0.3 m clear of every street edge)
+OK   base: nothing in the river or on its quay (>= 6.6 m from the centre line)
+OK   base: inside the wall, off the citadel moat and the gates
+OK   base: every door looks toward a street (<= 40 m)
+OK   base: smokehouse <= 10 m from water (7.6, 8.1)
+OK   base: mint <= 60 m from the treasury (40.2)
+OK   base: refinery >= 40 m from any home (44.2 of 102 homes)
+OK   base: bakery <= 30 m from the mill or the market (14.0, 18.7, 20.9)
+OK   base: butcher <= 40 m from the market (8.8, 10.6)
+OK   base: one well in each of the 8 quarters (1,1,1,1,1,1,1,1)
+OK   base: merchants sit nearer the market than cottages  (111 vs 190 m)
+OK   base: nobles sit nearer the keep than the other homes  (120 vs 131 m)
+OK   base: cottages sit nearer the town wall (outer lanes) than the other homes  (27 vs 36 m deep)
+OK   base: smelter / sawmill / masonry stand on the side facing their supply site (angle <= 39 deg, < 90)  smelter1->iron1: 3, smelter2->iron1: 21, sawmill1->lumber1: 4, sawmill2->lumber2: 19, masonry1->quarry1: 12, masonry2->quarry1: 39
+OK   counts per level never decrease and nothing moves between levels
+OK   the town grows: 23 / 51 / 94 / 141 buildings at level 1 / 10 / 20 / 30
+INFO distinct kinds: lv1 4, lv10 15, lv20 20, lv30 20
+OK   refinery-vs-homes and mint-vs-treasury hold at every level
+OK   perturbed (rings +5 deg) really gives a different plan
+OK   rings +5 deg: every non-house building found a place
+OK   rings +5 deg: 20 distinct kinds at level 30 (>= 14)
+OK   rings +5 deg: no footprint overlaps (138 buildings)
+OK   rings +5 deg: nothing on a street (>= 0.3 m clear of every street edge)
+OK   rings +5 deg: nothing in the river or on its quay (>= 6.6 m from the centre line)
+OK   rings +5 deg: inside the wall, off the citadel moat and the gates
+OK   rings +5 deg: every door looks toward a street (<= 40 m)
+OK   rings +5 deg: smokehouse <= 10 m from water (8.1, 8.1)
+OK   rings +5 deg: mint <= 60 m from the treasury (37.9)
+OK   rings +5 deg: refinery >= 40 m from any home (44.5 of 106 homes)
+OK   rings +5 deg: bakery <= 30 m from the mill or the market (8.0, 14.8, 19.9)
+OK   rings +5 deg: butcher <= 40 m from the market (8.8, 10.6)
+OK   rings +5 deg: one well in each of the 8 quarters (1,1,1,1,1,1,1,1)
+OK   rings +5 deg: merchants sit nearer the market than cottages  (98 vs 194 m)
+OK   rings +5 deg: nobles sit nearer the keep than the other homes  (118 vs 128 m)
+OK   rings +5 deg: cottages sit nearer the town wall (outer lanes) than the other homes  (29 vs 37 m deep)
+OK   rings +5 deg: smelter / sawmill / masonry stand on the side facing their supply site (angle <= 32 deg, < 90)  smelter1->iron1: 2, smelter2->iron1: 32, sawmill1->lumber1: 1, sawmill2->lumber2: 18, masonry1->quarry1: 20, masonry2->quarry1: 5
+OK   perturbed (rings -5 deg) really gives a different plan
+OK   rings -5 deg: every non-house building found a place
+OK   rings -5 deg: 20 distinct kinds at level 30 (>= 14)
+OK   rings -5 deg: no footprint overlaps (136 buildings)
+OK   rings -5 deg: nothing on a street (>= 0.3 m clear of every street edge)
+OK   rings -5 deg: nothing in the river or on its quay (>= 6.6 m from the centre line)
+OK   rings -5 deg: inside the wall, off the citadel moat and the gates
+OK   rings -5 deg: every door looks toward a street (<= 40 m)
+OK   rings -5 deg: smokehouse <= 10 m from water (8.1, 8.1)
+OK   rings -5 deg: mint <= 60 m from the treasury (39.3)
+OK   rings -5 deg: refinery >= 40 m from any home (45.4 of 104 homes)
+OK   rings -5 deg: bakery <= 30 m from the mill or the market (15.1, 17.5, 22.4)
+OK   rings -5 deg: butcher <= 40 m from the market (8.8, 10.6)
+OK   rings -5 deg: one well in each of the 8 quarters (1,1,1,1,1,1,1,1)
+OK   rings -5 deg: merchants sit nearer the market than cottages  (101 vs 176 m)
+OK   rings -5 deg: nobles sit nearer the keep than the other homes  (120 vs 131 m)
+OK   rings -5 deg: cottages sit nearer the town wall (outer lanes) than the other homes  (28 vs 38 m deep)
+OK   rings -5 deg: smelter / sawmill / masonry stand on the side facing their supply site (angle <= 42 deg, < 90)  smelter1->iron1: 1, smelter2->iron1: 42, sawmill1->lumber1: 27, sawmill2->lumber2: 17, masonry1->quarry1: 14, masonry2->quarry1: 41
+OK   perturbed (river +20 m east) really gives a different plan
+OK   river +20 m east: every non-house building found a place
+OK   river +20 m east: 20 distinct kinds at level 30 (>= 14)
+OK   river +20 m east: no footprint overlaps (146 buildings)
+OK   river +20 m east: nothing on a street (>= 0.3 m clear of every street edge)
+OK   river +20 m east: nothing in the river or on its quay (>= 6.6 m from the centre line)
+OK   river +20 m east: inside the wall, off the citadel moat and the gates
+OK   river +20 m east: every door looks toward a street (<= 40 m)
+OK   river +20 m east: smokehouse <= 10 m from water (8.1, 8.1)
+OK   river +20 m east: mint <= 60 m from the treasury (25.7)
+OK   river +20 m east: refinery >= 40 m from any home (45.8 of 114 homes)
+OK   river +20 m east: bakery <= 30 m from the mill or the market (17.2, 17.9, 22.4)
+OK   river +20 m east: butcher <= 40 m from the market (8.8, 10.6)
+OK   river +20 m east: one well in each of the 8 quarters (1,1,1,1,1,1,1,1)
+OK   river +20 m east: merchants sit nearer the market than cottages  (111 vs 193 m)
+OK   river +20 m east: nobles sit nearer the keep than the other homes  (105 vs 129 m)
+OK   river +20 m east: cottages sit nearer the town wall (outer lanes) than the other homes  (27 vs 37 m deep)
+OK   river +20 m east: smelter / sawmill / masonry stand on the side facing their supply site (angle <= 37 deg, < 90)  smelter1->iron1: 4, smelter2->iron1: 37, sawmill1->lumber1: 4, sawmill2->lumber2: 19, masonry1->quarry1: 21, masonry2->quarry1: 6
+OK   perturbed (river -20 m west) really gives a different plan
+OK   river -20 m west: every non-house building found a place
+OK   river -20 m west: 20 distinct kinds at level 30 (>= 14)
+OK   river -20 m west: no footprint overlaps (146 buildings)
+OK   river -20 m west: nothing on a street (>= 0.3 m clear of every street edge)
+OK   river -20 m west: nothing in the river or on its quay (>= 6.6 m from the centre line)
+OK   river -20 m west: inside the wall, off the citadel moat and the gates
+OK   river -20 m west: every door looks toward a street (<= 40 m)
+OK   river -20 m west: smokehouse <= 10 m from water (8.1, 8.1)
+OK   river -20 m west: mint <= 60 m from the treasury (35.5)
+OK   river -20 m west: refinery >= 40 m from any home (44.0 of 114 homes)
+OK   river -20 m west: bakery <= 30 m from the mill or the market (15.7, 17.4, 23.8)
+OK   river -20 m west: butcher <= 40 m from the market (8.8, 10.6)
+OK   river -20 m west: one well in each of the 8 quarters (1,1,1,1,1,1,1,1)
+OK   river -20 m west: merchants sit nearer the market than cottages  (105 vs 191 m)
+OK   river -20 m west: nobles sit nearer the keep than the other homes  (107 vs 131 m)
+OK   river -20 m west: cottages sit nearer the town wall (outer lanes) than the other homes  (25 vs 42 m deep)
+OK   river -20 m west: smelter / sawmill / masonry stand on the side facing their supply site (angle <= 21 deg, < 90)  smelter1->iron1: 3, smelter2->iron1: 21, sawmill1->lumber1: 4, sawmill2->lumber2: 9, masonry1->quarry1: 12, masonry2->quarry1: 15
+OK   perturbed (river +20 m south) really gives a different plan
+OK   river +20 m south: every non-house building found a place
+OK   river +20 m south: 20 distinct kinds at level 30 (>= 14)
+OK   river +20 m south: no footprint overlaps (149 buildings)
+OK   river +20 m south: nothing on a street (>= 0.3 m clear of every street edge)
+OK   river +20 m south: nothing in the river or on its quay (>= 6.6 m from the centre line)
+OK   river +20 m south: inside the wall, off the citadel moat and the gates
+OK   river +20 m south: every door looks toward a street (<= 40 m)
+OK   river +20 m south: smokehouse <= 10 m from water (8.1, 8.1)
+OK   river +20 m south: mint <= 60 m from the treasury (39.3)
+OK   river +20 m south: refinery >= 40 m from any home (45.2 of 117 homes)
+OK   river +20 m south: bakery <= 30 m from the mill or the market (13.8, 19.6, 22.4)
+OK   river +20 m south: butcher <= 40 m from the market (8.8, 10.6)
+OK   river +20 m south: one well in each of the 8 quarters (1,1,1,1,1,1,1,1)
+OK   river +20 m south: merchants sit nearer the market than cottages  (110 vs 200 m)
+OK   river +20 m south: nobles sit nearer the keep than the other homes  (102 vs 130 m)
+OK   river +20 m south: cottages sit nearer the town wall (outer lanes) than the other homes  (25 vs 37 m deep)
+OK   river +20 m south: smelter / sawmill / masonry stand on the side facing their supply site (angle <= 42 deg, < 90)  smelter1->iron1: 4, smelter2->iron1: 37, sawmill1->lumber1: 4, sawmill2->lumber2: 16, masonry1->quarry1: 14, masonry2->quarry1: 42
+OK   perturbed (river -20 m north) really gives a different plan
+OK   river -20 m north: every non-house building found a place
+OK   river -20 m north: 20 distinct kinds at level 30 (>= 14)
+OK   river -20 m north: no footprint overlaps (146 buildings)
+OK   river -20 m north: nothing on a street (>= 0.3 m clear of every street edge)
+OK   river -20 m north: nothing in the river or on its quay (>= 6.6 m from the centre line)
+OK   river -20 m north: inside the wall, off the citadel moat and the gates
+OK   river -20 m north: every door looks toward a street (<= 40 m)
+OK   river -20 m north: smokehouse <= 10 m from water (8.1, 8.1)
+OK   river -20 m north: mint <= 60 m from the treasury (25.7)
+OK   river -20 m north: refinery >= 40 m from any home (44.7 of 114 homes)
+OK   river -20 m north: bakery <= 30 m from the mill or the market (16.1, 19.2, 22.4)
+OK   river -20 m north: butcher <= 40 m from the market (8.8, 10.6)
+OK   river -20 m north: one well in each of the 8 quarters (1,1,1,1,1,1,1,1)
+OK   river -20 m north: merchants sit nearer the market than cottages  (109 vs 173 m)
+OK   river -20 m north: nobles sit nearer the keep than the other homes  (110 vs 127 m)
+OK   river -20 m north: cottages sit nearer the town wall (outer lanes) than the other homes  (30 vs 40 m deep)
+OK   river -20 m north: smelter / sawmill / masonry stand on the side facing their supply site (angle <= 39 deg, < 90)  smelter1->iron1: 4, smelter2->iron1: 37, sawmill1->lumber1: 15, sawmill2->lumber2: 7, masonry1->quarry1: 8, masonry2->quarry1: 39
+OK   perturbed (rings +5 deg AND river +20 m east) really gives a different plan
+OK   rings +5 deg AND river +20 m east: every non-house building found a place
+OK   rings +5 deg AND river +20 m east: 20 distinct kinds at level 30 (>= 14)
+OK   rings +5 deg AND river +20 m east: no footprint overlaps (148 buildings)
+OK   rings +5 deg AND river +20 m east: nothing on a street (>= 0.3 m clear of every street edge)
+OK   rings +5 deg AND river +20 m east: nothing in the river or on its quay (>= 6.6 m from the centre line)
+OK   rings +5 deg AND river +20 m east: inside the wall, off the citadel moat and the gates
+OK   rings +5 deg AND river +20 m east: every door looks toward a street (<= 40 m)
+OK   rings +5 deg AND river +20 m east: smokehouse <= 10 m from water (8.1, 8.1)
+OK   rings +5 deg AND river +20 m east: mint <= 60 m from the treasury (27.9)
+OK   rings +5 deg AND river +20 m east: refinery >= 40 m from any home (45.2 of 116 homes)
+OK   rings +5 deg AND river +20 m east: bakery <= 30 m from the mill or the market (8.0, 18.7, 26.8)
+OK   rings +5 deg AND river +20 m east: butcher <= 40 m from the market (8.8, 10.6)
+OK   rings +5 deg AND river +20 m east: one well in each of the 8 quarters (1,1,1,1,1,1,1,1)
+OK   rings +5 deg AND river +20 m east: merchants sit nearer the market than cottages  (106 vs 180 m)
+OK   rings +5 deg AND river +20 m east: nobles sit nearer the keep than the other homes  (103 vs 131 m)
+OK   rings +5 deg AND river +20 m east: cottages sit nearer the town wall (outer lanes) than the other homes  (28 vs 39 m deep)
+OK   rings +5 deg AND river +20 m east: smelter / sawmill / masonry stand on the side facing their supply site (angle <= 32 deg, < 90)  smelter1->iron1: 2, smelter2->iron1: 32, sawmill1->lumber1: 1, sawmill2->lumber2: 15, masonry1->quarry1: 18, masonry2->quarry1: 8
+OK   perturbed (rings -5 deg AND river -20 m north) really gives a different plan
+OK   rings -5 deg AND river -20 m north: every non-house building found a place
+OK   rings -5 deg AND river -20 m north: 20 distinct kinds at level 30 (>= 14)
+OK   rings -5 deg AND river -20 m north: no footprint overlaps (152 buildings)
+OK   rings -5 deg AND river -20 m north: nothing on a street (>= 0.3 m clear of every street edge)
+OK   rings -5 deg AND river -20 m north: nothing in the river or on its quay (>= 6.6 m from the centre line)
+OK   rings -5 deg AND river -20 m north: inside the wall, off the citadel moat and the gates
+OK   rings -5 deg AND river -20 m north: every door looks toward a street (<= 40 m)
+OK   rings -5 deg AND river -20 m north: smokehouse <= 10 m from water (7.6, 8.1)
+OK   rings -5 deg AND river -20 m north: mint <= 60 m from the treasury (25.7)
+OK   rings -5 deg AND river -20 m north: refinery >= 40 m from any home (44.2 of 120 homes)
+OK   rings -5 deg AND river -20 m north: bakery <= 30 m from the mill or the market (14.7, 17.6, 22.4)
+OK   rings -5 deg AND river -20 m north: butcher <= 40 m from the market (8.8, 10.6)
+OK   rings -5 deg AND river -20 m north: one well in each of the 8 quarters (1,1,1,1,1,1,1,1)
+OK   rings -5 deg AND river -20 m north: merchants sit nearer the market than cottages  (107 vs 192 m)
+OK   rings -5 deg AND river -20 m north: nobles sit nearer the keep than the other homes  (102 vs 128 m)
+OK   rings -5 deg AND river -20 m north: cottages sit nearer the town wall (outer lanes) than the other homes  (30 vs 41 m deep)
+OK   rings -5 deg AND river -20 m north: smelter / sawmill / masonry stand on the side facing their supply site (angle <= 50 deg, < 90)  smelter1->iron1: 1, smelter2->iron1: 27, sawmill1->lumber1: 17, sawmill2->lumber2: 8, masonry1->quarry1: 13, masonry2->quarry1: 50
+B1 OK

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<defs>
+<linearGradient id="r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#cfdcf2"/><stop offset="1" stop-color="#8ea4c6"/></linearGradient>
+<linearGradient id="f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f9bff"/><stop offset="1" stop-color="#1747b4"/></linearGradient>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b6fe0"/><stop offset="1" stop-color="#0b2a78"/></linearGradient>
+<linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a7ee8"/><stop offset="1" stop-color="#0a2468"/></linearGradient>
+<path id="sh" d="M50 5 L83 14 V47 C83 69 68 83 50 95 C32 83 17 69 17 47 V14 Z"/>
+<clipPath id="c"><use href="#sh"/></clipPath>
+</defs>
+<!-- the two shields behind -->
+<g transform="translate(-27 9) scale(.78)"><use href="#sh" fill="url(#g)" stroke="url(#r)" stroke-width="6" transform="rotate(-12 50 50)"/></g>
+<g transform="translate(49 9) scale(.78)"><use href="#sh" fill="url(#g)" stroke="url(#r)" stroke-width="6" transform="rotate(12 50 50)"/></g>
+<!-- the front shield -->
+<use href="#sh" fill="#06133a" stroke="#06133a" stroke-width="10"/>
+<use href="#sh" fill="url(#f)" stroke="url(#r)" stroke-width="5.5"/>
+<g clip-path="url(#c)">
+<path d="M50 0 H100 V50 H50 Z" fill="#2b72e8" opacity=".55"/>
+<path d="M0 50 H50 V100 H0 Z" fill="#0b2c80" opacity=".6"/>
+<path d="M44 0 H56 V100 H44 Z" fill="url(#r)"/>
+<path d="M0 41 H100 V53 H0 Z" fill="url(#r)"/>
+</g>
+<circle cx="50" cy="47" r="9.5" fill="#0b2c80" stroke="url(#r)" stroke-width="3.2"/>
+<circle cx="50" cy="47" r="3.6" fill="#bfe4ff"/>
+<path d="M24 14 L50 9 L62 12 C44 18 30 30 22 46 Z" fill="#fff" opacity=".28"/>
+</svg>

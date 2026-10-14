@@ -1,0 +1,2 @@
+L=__lab; window.HC=(uid,dist,az,elev,fwd=5,fov=30)=>{ const v=L.views.views.get(uid), pp=v.parts[0].p, sy=Math.sin(v.yaw), cy=Math.cos(v.yaw); const tx=pp.x+sy*fwd, tz=pp.z+cy*fwd, ty=pp.y+ (window.HY||0); const a=v.yaw+az; L.cam(tx+Math.sin(a)*dist*Math.cos(elev), ty+Math.sin(elev)*dist, tz+Math.cos(a)*dist*Math.cos(elev), tx, ty, tz, fov); };
+window.POSE=(clip,off)=>{ for(const v of L.views.views.values()) for(const pt of v.parts) pt.p.play(clip,{fade:false,speed:0,offset:off}); };

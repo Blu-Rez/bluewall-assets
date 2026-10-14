@@ -1,0 +1,6 @@
+start {"ok": true, "ctl": true}
+camp {"ok": 1}
+drag {"from": [122, 483], "d": ["sword"]}
+stage1 {"staged": ["sword"], "started": false}
+stage3 {"staged": ["sword", "archer", "spear"], "drag": ["cavalry"]}
+LOGS []

@@ -1,0 +1,10 @@
+{
+ "gryphon": {
+  "bf": 1.0,
+  "pad": 1.25,
+  "az": 0.7,
+  "up": 0.3,
+  "dy": 0.2
+ },
+ "how": "copy dev/s35/port to a new dir, sed its path, add this entry to cfg3.json, run pd.py then shoot3.py gryphon 384 then mkport3.py gryphon"
+}

@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#050912">
+<title>Blue Wall</title>
+<style>
+@font-face{font-family:Vazirmatn;src:url(/pub/Vazirmatn-Regular.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(/pub/Vazirmatn-Bold.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(/pub/Vazirmatn-Black.woff2) format("woff2");font-weight:900;font-display:swap}
+@font-face{font-family:"Libre Baskerville";src:url(/pub/baskerville-700.woff2) format("woff2");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:"Libre Baskerville";src:url(/pub/baskerville-400.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Cinzel Decorative";src:url(/pub/cinzeldeco-900.woff2) format("woff2");font-weight:900;font-style:normal;font-display:swap}
+@font-face{font-family:"Noto Sans Tai Viet";src:url(/pub/taiviet.woff2) format("woff2");font-display:swap}
+:root{--bg:#050912;--ink:#dbe8ff;--dim:#7f93b8;--blue:#4aa8ff;--glow:#7cc8ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:Vazirmatn,system-ui,sans-serif;overflow:hidden;overscroll-behavior:none;touch-action:none;user-select:none;-webkit-user-select:none}
+#game{position:fixed;inset:0}
+#bw-load { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: #020509; transition: opacity .6s ease; z-index: 1000; }
+#bw-load.done { opacity: 0; pointer-events: none; }
+#bw-stage { position: relative; flex: none; width: 390px; height: 844px; overflow: hidden; transform-origin: 50% 50%;
+  background: radial-gradient(ellipse 120% 70% at 50% 30%, #163f86 0%, #0b2152 30%, #06112b 56%, #020509 88%);
+  font-family: 'Libre Baskerville', Georgia, serif; font-weight: 700; color: #d8f0ff; -webkit-user-select: none; user-select: none; }
+#bw-stage svg.bg, #bw-stage .fx { position: absolute; inset: 0; pointer-events: none; }
+#bw-stage .ly { position: absolute; display: block; pointer-events: none; }
+#bw-stage .ttl { position: absolute; left: 0; width: 390px; display: flex; justify-content: center; }
+#bw-stage .tip { position: absolute; left: 0; right: 0; text-align: center; font-size: 12px; letter-spacing: .6px; color: #8fb6e0; text-shadow: 0 1px 0 #000, 0 0 8px rgba(0,0,0,.9); }
+.lbar { position: absolute; left: 40px; right: 40px; text-align: center; }
+.lbar-label { color: #bfe9ff; font-size: 14px; letter-spacing: 3px; margin-bottom: 9px; text-shadow: 0 0 10px rgba(70,180,255,.7), 0 2px 0 #000, 0 0 6px #000; }
+.lbar-label span { color: #fff; }
+.lbar-frame { height: 22px; border-radius: 12px; padding: 3px; background: linear-gradient(#6f9bd1, #1b335f 45%, #0a1530 55%, #3b5f93); box-shadow: 0 0 0 1.5px #000, 0 6px 14px rgba(0,0,0,.7), 0 0 22px rgba(40,140,255,.25); }
+.lbar-track { height: 100%; border-radius: 9px; background: linear-gradient(#000, #071228); box-shadow: inset 0 2px 4px #000; overflow: hidden; position: relative; }
+.lbar-fill { position: relative; height: 100%; border-radius: 9px; transition: width .25s ease-out;
+  background: repeating-linear-gradient(115deg, rgba(255,255,255,0) 0 8px, rgba(255,255,255,.13) 8px 14px), linear-gradient(#bff0ff, #4cb8ff 45%, #1f78e0 55%, #145bc0); box-shadow: 0 0 14px rgba(80,190,255,.8); }
+.lbar-gloss { position: absolute; left: 4px; right: 4px; top: 2px; height: 35%; border-radius: 6px; background: linear-gradient(rgba(255,255,255,.75), rgba(255,255,255,0)); }
+.lbar-tip { position: absolute; right: -6px; top: 50%; width: 18px; height: 18px; margin-top: -9px; border-radius: 50%; background: radial-gradient(#fff, rgba(160,230,255,.8) 35%, rgba(60,170,255,0) 70%); }
+#msg{display:none;position:fixed;left:0;right:0;bottom:12%;z-index:1100;text-align:center;padding:0 24px;line-height:1.9;font-size:17px;color:var(--ink);font-weight:700;direction:rtl;text-shadow:0 2px 0 #000,0 0 12px #000}
+#msg.big{display:block}
+</style>
+</head>
+<body>
+<div id="game"></div>
+<div id="bw-load"><div id="bw-stage"></div></div>
+<div id="msg"></div>
+<script src="/tg.js"></script>
+<script>
+(function () {
+const VARIANT = 'D2';            // 'D1' | 'D2' | 'D3'   (fortress skyline)
+const PCT0 = 0;                 // initial value shown before the game reports progress
+const q = new URLSearchParams(location.search); const V = q.get('v') || VARIANT; const P0 = q.has('p') ? +q.get('p') : PCT0;
+const W = 390, H = 844, CX = 195;
+const IMG = { dragon: { src: '/pub/dragon.webp', w: 840, h: 731 }, crown: { src: '/pub/crown.webp', w: 560, h: 363 } };
+let seed = 1; const rnd = (s) => { if (s !== undefined) seed = s; seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+const f1 = (x) => (+x).toFixed(1);
+
+// ---------------------------------------------------------------- sky: rays + stars + vignette
+function sky(cx, cy, s0) {
+  rnd(s0); let rays = '';
+  for (let i = 0; i < 18; i++) { const a = i * Math.PI * 2 / 18 + rnd() * .1, w = .05 + rnd() * .06, L = 700;
+    rays += `<polygon points="${f1(cx)},${f1(cy)} ${f1(cx + L * Math.cos(a - w))},${f1(cy + L * Math.sin(a - w))} ${f1(cx + L * Math.cos(a + w))},${f1(cy + L * Math.sin(a + w))}" fill="url(#bwRay)" opacity="${(.25 + rnd() * .35).toFixed(2)}"/>`; }
+  let dots = ''; for (let i = 0; i < 70; i++) { const x = rnd() * W, y = rnd() * H * .78, s = rnd() * 1.8 + .4; dots += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${s.toFixed(2)}" fill="#9fdcff" opacity="${(.15 + rnd() * .55).toFixed(2)}"/>`; }
+  return `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs>
+   <radialGradient id="bwRay" cx="${cx}" cy="${cy}" r="500" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7cc9ff" stop-opacity=".55"/><stop offset=".6" stop-color="#2a7be0" stop-opacity=".08"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+   <filter id="bwRb"><feGaussianBlur stdDeviation="6"/></filter></defs><g filter="url(#bwRb)">${rays}</g>${dots}</svg>`;
+}
+const vignette = () => `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><radialGradient id="bwVig" cx=".5" cy=".42" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".72"/></radialGradient></defs><rect width="${W}" height="${H}" fill="url(#bwVig)"/></svg>`;
+
+// ---------------------------------------------------------------- fortress silhouettes
+// shapes: arrays of SVG path strings; front layer gets the rim light, windows and the gate glow
+function fortress(v) {
+  const F = [], B = [], wins = [], gates = [], flags = [];
+  const G = 820;
+  // conical-roof tower: body x..x+w from `top` down to `base`, roof overhang, slightly concave cone, finial (+ optional pennant)
+  const tower = (L, x, w, top, rh, o = {}) => {
+    const base = o.base ?? G, ov = o.ov ?? w * .16, cx = x + w / 2, ap = top - rh, sp = o.spire ?? Math.max(4, rh * .2);
+    L.push(`M${f1(x)} ${base}L${f1(x)} ${f1(top + 3)}L${f1(x - ov)} ${f1(top + 3)}L${f1(x - ov)} ${f1(top)}Q${f1(cx - w * .1)} ${f1(top - rh * .38)} ${f1(cx)} ${f1(ap)}Q${f1(cx + w * .1)} ${f1(top - rh * .38)} ${f1(x + w + ov)} ${f1(top)}L${f1(x + w + ov)} ${f1(top + 3)}L${f1(x + w)} ${f1(top + 3)}L${f1(x + w)} ${base}Z`);
+    L.push(`M${f1(cx - .55)} ${f1(ap + 2)}L${f1(cx - .55)} ${f1(ap - sp)}L${f1(cx + .55)} ${f1(ap - sp)}L${f1(cx + .55)} ${f1(ap + 2)}Z`);
+    if (o.ball) L.push(circle(cx, ap - sp * .55, 1.3));
+    if (o.flag) flags.push([cx + .5, ap - sp, o.flag]);
+    if (o.win) for (const [fx, fy, k] of o.win) wins.push([x + w * fx, top + fy, k || 1, L === F]);
+  };
+  const circle = (x, y, r) => `M${f1(x - r)} ${f1(y)}a${r} ${r} 0 1 0 ${f1(2 * r)} 0a${r} ${r} 0 1 0 ${f1(-2 * r)} 0Z`;
+  // crenellated block (walls, keeps): top with merlons
+  const cren = (L, x0, x1, top, o = {}) => {
+    const base = o.base ?? G, mw = o.mw ?? 4.2, mh = o.mh ?? 4.2; let d = `M${f1(x0)} ${base}L${f1(x0)} ${f1(top - mh)}`; let x = x0; let up = true;
+    while (x < x1 - .01) { const nx = Math.min(x1, x + mw); d += `L${f1(nx)} ${f1(up ? top - mh : top)}`; up = !up; if (nx < x1) d += `L${f1(nx)} ${f1(up ? top - mh : top)}`; x = nx; }
+    d += `L${f1(x1)} ${base}Z`; L.push(d);
+  };
+  const slope = (L, pts) => L.push('M' + pts.map((p) => f1(p[0]) + ' ' + f1(p[1])).join('L') + 'Z');
+  if (v === 'D1') {            // the Citadel: symmetric fortress, gatehouse keep with twin turrets and a central spire under the title diamond
+    slope(B, [[-5, 812], [-5, 728], [28, 720], [62, 726], [100, 712], [140, 722], [195, 716], [250, 722], [290, 712], [328, 726], [362, 720], [395, 728], [395, 812]]);
+    tower(B, 44, 10, 712, 20); tower(B, 336, 10, 712, 20); tower(B, 128, 8, 704, 16); tower(B, 254, 8, 704, 16);
+    cren(F, -4, 394, 732);
+    tower(F, 4, 26, 714, 30, { win: [[.5, 12], [.5, 30]], flag: 1 }); tower(F, 360, 26, 714, 30, { win: [[.5, 12], [.5, 30]], flag: -1 });
+    tower(F, 70, 28, 707, 32, { win: [[.33, 10], [.67, 10], [.5, 24]], flag: 1, ball: 1 }); tower(F, 292, 28, 707, 32, { win: [[.33, 10], [.67, 10], [.5, 24]], flag: -1, ball: 1 });
+    cren(F, 96, 294, 722);
+    cren(F, 158, 232, 708, { mw: 4.6 });
+    tower(F, 148, 18, 701, 25, { win: [[.5, 9], [.5, 22]], ball: 1 }); tower(F, 224, 18, 701, 25, { win: [[.5, 9], [.5, 22]], ball: 1 });
+    tower(F, 183, 24, 698, 22, { win: [[.5, 8]], spire: 4 });
+    for (const [x, y] of [[171, 716], [177, 716], [213, 716], [219, 716], [114, 727], [126, 727], [264, 727], [276, 727], [40, 738], [350, 738]]) wins.push([x, y, .85, true]);
+  } else if (v === 'D2') {     // the Crag: fairy-tale fortress on a rocky outcrop, asymmetric towers, mountains in the haze
+    slope(B, [[-5, 820], [-5, 700], [24, 684], [50, 698], [80, 678], [112, 704], [140, 696], [160, 716], [230, 716], [252, 700], [282, 708], [316, 680], [346, 698], [372, 688], [395, 700], [395, 820]]);
+    slope(F, [[-5, 820], [-5, 772], [26, 764], [56, 752], [86, 740], [110, 732], [130, 728], [260, 728], [282, 733], [304, 742], [334, 756], [362, 766], [395, 770], [395, 820]]);
+    cren(F, 112, 288, 722, { base: 760 });
+    tower(F, 104, 20, 708, 26, { base: 760, win: [[.5, 10]], ball: 1 });
+    tower(F, 136, 26, 694, 22, { base: 760, win: [[.5, 9], [.3, 22], [.7, 22]], flag: 1, spire: 6 });
+    cren(F, 162, 230, 706, { base: 760, mw: 4.4 });
+    tower(F, 184, 22, 694, 20, { base: 720, win: [[.5, 8]], spire: 5, ball: 1 });
+    tower(F, 226, 24, 702, 28, { base: 760, win: [[.5, 10], [.5, 22]], flag: -1 });
+    tower(F, 260, 18, 712, 24, { base: 760, win: [[.5, 10]] });
+    tower(F, 288, 14, 724, 20, { base: 770, win: [[.5, 9]] });
+    slope(F, [[296, 790], [296, 736], [302, 736], [302, 732], [306, 732], [306, 736], [312, 736], [312, 732], [316, 732], [316, 738], [340, 750], [340, 790]]);
+    tower(F, 336, 12, 740, 16, { base: 790, win: [[.5, 8]], flag: -1 });
+    tower(F, 30, 12, 752, 16, { base: 800, win: [[.5, 8]] });
+    for (const [x, y] of [[174, 714], [216, 714], [196, 718], [124, 728], [270, 728]]) wins.push([x, y, .85, true]);
+  } else {                      // the Blue Wall: a long crenellated wall with regular cone-roofed towers and a great central gatehouse
+    slope(B, [[-5, 812], [-5, 722], [40, 714], [90, 720], [140, 710], [195, 716], [250, 710], [300, 720], [350, 712], [395, 722], [395, 812]]);
+    cren(F, -4, 394, 732, { mw: 4 });
+    const xs = [14, 64, 114, 276, 326, 376]; const hs = [716, 712, 708, 708, 712, 716];
+    xs.forEach((x, i) => tower(F, x - 10, 20, hs[i], 26 + (2 - Math.abs(2.5 - i)) * 2.5, { win: [[.5, 10], [.5, 24]], flag: i < 3 ? 1 : -1 }));
+    cren(F, 150, 240, 712, { mw: 5 });
+    tower(F, 142, 20, 702, 26, { win: [[.5, 9], [.5, 22]], ball: 1 }); tower(F, 228, 20, 702, 26, { win: [[.5, 9], [.5, 22]], ball: 1 });
+    tower(F, 182, 26, 699, 23, { win: [[.3, 9], [.7, 9]], spire: 4 });
+    for (let x = 30; x < 380; x += 25) if (Math.abs(x - CX) > 56) wins.push([x, 740, .75, true]);
+    for (const [x, y] of [[168, 720], [180, 720], [210, 720], [222, 720]]) wins.push([x, y, .85, true]);
+  }
+  // ---- render
+  const front = F.join(''), back = B.join('');
+  let s = `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs>
+   <linearGradient id="bwCas" x1="0" y1="666" x2="0" y2="790" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#0c1f45"/><stop offset=".45" stop-color="#06132c"/><stop offset="1" stop-color="#02060f"/></linearGradient>
+   <radialGradient id="bwRim" cx="195" cy="620" r="240" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#e6f8ff"/><stop offset=".45" stop-color="#9ad8ff"/><stop offset="1" stop-color="#3f86d6"/></radialGradient>
+   <linearGradient id="bwBack" x1="0" y1="676" x2="0" y2="780" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1b4386"/><stop offset="1" stop-color="#0a1f46"/></linearGradient>
+   <radialGradient id="bwWin"><stop offset="0" stop-color="#e8faff" stop-opacity=".95"/><stop offset=".35" stop-color="#7fd0ff" stop-opacity=".55"/><stop offset="1" stop-color="#2a8cff" stop-opacity="0"/></radialGradient>
+   <linearGradient id="bwGate" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8faff"/><stop offset=".45" stop-color="#7fd0ff"/><stop offset="1" stop-color="#1f6fe0"/></linearGradient>
+   <linearGradient id="bwFog" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d2a5c" stop-opacity="0"/><stop offset=".4" stop-color="#081a3c" stop-opacity=".6"/><stop offset="1" stop-color="#01040a" stop-opacity=".97"/></linearGradient>
+   <filter id="bwB4" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="4"/></filter>
+   <filter id="bwB9" x="-30%" y="-100%" width="160%" height="300%"><feGaussianBlur stdDeviation="9"/></filter>
+   <filter id="bwB2"><feGaussianBlur stdDeviation="1.6"/></filter></defs>`;
+  // halo behind the skyline (separates it from the dark sky)
+  s += `<ellipse cx="195" cy="712" rx="235" ry="46" fill="#2f86ff" opacity=".34" filter="url(#bwB9)"/>`;
+  // far layer, hazy, faint rim
+  s += `<path d="${back}" fill="#6fb4ff" opacity=".35"/><path d="${back}" fill="url(#bwBack)" transform="translate(0 1)" opacity=".95"/>`;
+  s += `<g class="mistB"><ellipse cx="110" cy="${v === 'D2' ? 722 : 730}" rx="150" ry="7" fill="#9cc8ff" opacity=".15" filter="url(#bwB4)"/><ellipse cx="300" cy="${v === 'D2' ? 726 : 732}" rx="140" ry="7" fill="#9cc8ff" opacity=".13" filter="url(#bwB4)"/></g>`;
+  // front: glow, rim, body
+  s += `<path d="${front}" fill="#3a8fff" opacity=".55" filter="url(#bwB4)"/>`;
+  s += `<path d="${front}" fill="url(#bwRim)"/><path d="${front}" fill="url(#bwCas)" transform="translate(0 1.5)"/>`;
+  // pennants
+  for (const [x, y, d] of flags) s += `<path d="M${f1(x)} ${f1(y)}q${f1(d * 6)} 1.6 ${f1(d * 11)} 3.4q${f1(-d * 5)} .2 ${f1(-d * 11)} 2.6z" fill="#0a1a3a" stroke="#8fd0ff" stroke-width=".7" stroke-linejoin="round"/>`;
+  // gate: glowing arch + portcullis
+  for (const g of gates) { const x0 = g.x - g.w / 2, y0 = g.y - g.h; const d = `M${f1(x0)} ${f1(g.y)}L${f1(x0)} ${f1(y0 + g.w / 2)}A${f1(g.w / 2)} ${f1(g.w / 2)} 0 0 1 ${f1(x0 + g.w)} ${f1(y0 + g.w / 2)}L${f1(x0 + g.w)} ${f1(g.y)}Z`;
+    s += `<ellipse cx="${f1(g.x)}" cy="${f1(g.y - g.h * .45)}" rx="${f1(g.w * 1.3)}" ry="${f1(g.h * .9)}" fill="url(#bwWin)" opacity=".8"/><path d="${d}" fill="url(#bwGate)" opacity=".92"/>`;
+    let bars = ''; for (let i = 1; i < 5; i++) { const x = x0 + g.w * i / 5; bars += `<line x1="${f1(x)}" y1="${f1(y0)}" x2="${f1(x)}" y2="${f1(g.y)}"/>`; } for (let j = 1; j < 5; j++) { const y = y0 + g.w / 2 + (g.h - g.w / 2) * j / 5; bars += `<line x1="${f1(x0)}" y1="${f1(y)}" x2="${f1(x0 + g.w)}" y2="${f1(y)}"/>`; }
+    s += `<g stroke="#0a1c40" stroke-width="1" opacity=".75">${bars}</g><path d="${d}" fill="none" stroke="#9ad8ff" stroke-width=".8" opacity=".9"/>`; }
+  // lit windows (none right behind the LOADING label)
+  for (const [x, y, k, fr] of wins.filter(([x, y]) => !(y > 724 && Math.abs(x - CX) < 102))) { s += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(4.2 * k)}" fill="url(#bwWin)" opacity="${fr ? .85 : .5}"/><rect x="${f1(x - .9 * k)}" y="${f1(y - 2 * k)}" width="${f1(1.8 * k)}" height="${f1(4 * k)}" rx="${f1(.9 * k)}" fill="#dff6ff"/>`; }
+  // mist in front of the walls and fog to the bottom edge
+  s += `<g class="mistA"><ellipse cx="60" cy="768" rx="120" ry="12" fill="#a9d2ff" opacity=".2" filter="url(#bwB4)"/><ellipse cx="330" cy="772" rx="120" ry="12" fill="#a9d2ff" opacity=".18" filter="url(#bwB4)"/><ellipse cx="195" cy="812" rx="240" ry="18" fill="#8fc2ff" opacity=".13" filter="url(#bwB4)"/></g>`;
+  s += `<rect x="0" y="744" width="${W}" height="${H - 744}" fill="url(#bwFog)"/>`;
+  return s + '</svg>';
+}
+
+// ---------------------------------------------------------------- title (bevelled, glowing), sparkles, glows
+function titleSVG(o) {
+  const w = o.w, h = o.h, fs = 100, y = h * 0.72; const FF = o.font || "'Libre Baskerville', Georgia, serif", FW = o.wt || 700, LS = o.ls ?? 1; const glow = '#2ea8ff', stroke = '#030b1f', sw = 8, ext = 5;
+  const attrs = `x="${w / 2}" y="${y}" text-anchor="middle" letter-spacing="${LS}"`;
+  let extr = ''; for (let i = ext; i >= 1; i--) extr += `<text ${attrs} transform="translate(0 ${i})" fill="${i === ext ? '#000' : '#071433'}" stroke="${i === ext ? '#000' : '#071433'}" stroke-width="${sw}" stroke-linejoin="round">${o.text}</text>`;
+  return `<svg class="title" data-fit="${o.fitW}" data-max="${o.max}" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="overflow:visible"><defs>
+   <linearGradient id="bwTf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".42" stop-color="#bfeaff"/><stop offset=".5" stop-color="#62c2ff"/><stop offset=".53" stop-color="#3f9cf0"/><stop offset="1" stop-color="#1b4fb8"/></linearGradient>
+   <linearGradient id="bwTe" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fe2ff"/><stop offset=".5" stop-color="#1d5cb3"/><stop offset="1" stop-color="#0a2457"/></linearGradient>
+   <filter id="bwTb" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="1.6" result="bl"/><feSpecularLighting in="bl" surfaceScale="3" specularConstant=".9" specularExponent="22" lighting-color="#ffffff" result="sp"><feDistantLight azimuth="235" elevation="48"/></feSpecularLighting><feComposite in="sp" in2="SourceAlpha" operator="in" result="spi"/><feComposite in="SourceGraphic" in2="spi" operator="arithmetic" k1="0" k2="1" k3=".75" k4="0"/></filter>
+   <filter id="bwTg" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="9"/></filter><linearGradient id="bwTgl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".95"/><stop offset=".25" stop-color="#cdeeff" stop-opacity=".7"/><stop offset=".47" stop-color="#6cc2ff" stop-opacity=".42"/><stop offset=".5" stop-color="#1f78e8" stop-opacity=".5"/><stop offset=".78" stop-color="#3fb0ff" stop-opacity=".66"/><stop offset="1" stop-color="#b4f2ff" stop-opacity=".95"/></linearGradient>
+   <filter id="bwTb2" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur in="SourceAlpha" stdDeviation="1.4" result="bl"/><feSpecularLighting in="bl" surfaceScale="2.5" specularConstant=".8" specularExponent="26" lighting-color="#ffffff" result="sp"><feDistantLight azimuth="235" elevation="52"/></feSpecularLighting><feComposite in="sp" in2="SourceAlpha" operator="in" result="spi"/><feComposite in="SourceGraphic" in2="spi" operator="arithmetic" k1="0" k2="1" k3=".55" k4="0"/></filter></defs>
+   <g class="fitg" font-family="${FF}" font-weight="${FW}" font-size="${fs}">
+   <text ${attrs} fill="none" stroke="${glow}" stroke-width="${sw + 8}" opacity="${o.glass ? .5 : .55}" filter="url(#bwTg)">${o.text}</text>${o.glass ? `
+   <text ${attrs} fill="none" stroke="#020a1e" stroke-opacity=".8" stroke-width="5" stroke-linejoin="round" transform="translate(0 1.5)">${o.text}</text>
+   <text ${attrs} fill="#0a3f94" fill-opacity=".5">${o.text}</text>
+   <text ${attrs} fill="url(#bwTgl)" filter="url(#bwTb2)">${o.text}</text>
+   <text ${attrs} fill="none" stroke="#d4f1ff" stroke-opacity=".95" stroke-width="1.3" stroke-linejoin="round">${o.text}</text></g></svg>` : `${extr}
+   <text ${attrs} fill="none" stroke="url(#bwTe)" stroke-width="${sw}" stroke-linejoin="round">${o.text}</text>
+   <text ${attrs} fill="none" stroke="${stroke}" stroke-width="${sw - 3.5}" stroke-linejoin="round">${o.text}</text>
+   <text ${attrs} fill="url(#bwTf)" filter="url(#bwTb)">${o.text}</text></g></svg>`}`;
+}
+function fitTitles(root) {
+  root.querySelectorAll('svg.title').forEach((svg) => { const g = svg.querySelector('.fitg'); const t = g.querySelector('text:last-child'); const fs = +g.getAttribute('font-size');
+    const bb = t.getBBox(); g.setAttribute('font-size', Math.min(fs * (+svg.dataset.fit) / bb.width, +svg.dataset.max));
+    const bb2 = t.getBBox(); const Hh = +svg.getAttribute('height'); g.setAttribute('transform', `translate(0 ${H / 2 - H / 2 + Hh / 2 - (bb2.y + bb2.height / 2)})`); });
+}
+const sparkle = (x, y, r, op = 1) => { const k = r * .18; return `<path d="M${x} ${y - r}Q${x + k} ${y - k} ${x + r} ${y}Q${x + k} ${y + k} ${x} ${y + r}Q${x - k} ${y + k} ${x - r} ${y}Q${x - k} ${y - k} ${x} ${y - r}Z" fill="#fff" opacity="${op}"/><circle cx="${x}" cy="${y}" r="${r * .22}" fill="#fff" opacity="${op}"/>`; };
+const glow = (x, y, rx, ry, col) => `<div class="ly" style="left:${x - rx}px;top:${y - ry}px;width:${rx * 2}px;height:${ry * 2}px;border-radius:50%;background:radial-gradient(closest-side,${col},rgba(0,0,0,0));mix-blend-mode:screen"></div>`;
+const img = (k, w, cx, cy, filter) => { const m = IMG[k]; const h = m.h * w / m.w; return `<img class="ly" alt="" src="${m.src}" style="left:${cx - w / 2}px;top:${cy - h / 2}px;width:${w}px;height:${h}px;filter:${filter}">`; };
+
+// ---------------------------------------------------------------- scene helpers (v2 loader)
+function ridgePts(seed, y0, amp, rough, n) {
+  rnd(seed); const N = 1 << n, a = new Array(N + 1).fill(0); a[0] = rnd() * amp; a[N] = rnd() * amp; let step = N, disp = amp;
+  while (step > 1) { const h = step >> 1; for (let i = h; i < N; i += step) a[i] = (a[i - h] + a[i + h]) / 2 + (rnd() - .5) * disp; disp *= rough; step = h; }
+  return a.map((v, i) => [-10 + i * (410 / N), y0 - Math.max(0, v), v]);
+}
+function mountains(layers) {
+  let defs = '', body = '';
+  layers.forEach((L, i) => {
+    const pts = ridgePts(L.seed, L.y, L.amp, L.rough || .56, 6), top = Math.min(...pts.map((p) => p[1])), bot = 850;
+    const d = 'M' + pts.map((p) => f1(p[0]) + ' ' + f1(p[1])).join('L');
+    defs += `<linearGradient id="bwM${i}" x1="0" y1="${f1(top)}" x2="0" y2="${f1(top + (L.fall || 170))}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${L.c0}"/><stop offset="1" stop-color="${L.c1}"/></linearGradient><clipPath id="bwMc${i}"><path d="${d}L400 ${bot}L-10 ${bot}Z"/></clipPath>`;
+    body += `<path d="${d}L400 ${bot}L-10 ${bot}Z" fill="url(#bwM${i})" opacity="${L.op ?? 1}"/>`;
+    // moon-lit facets on the left flank of each summit
+    let fac = '';
+    for (let k = 2; k < pts.length - 2; k++) { const p = pts[k]; if (p[2] > pts[k - 1][2] && p[2] > pts[k + 1][2] && p[2] > pts[k - 2][2] && p[2] > pts[k + 2][2] && p[2] > L.amp * .35) {
+      const w = 16 + rnd() * 18, h = 34 + rnd() * 46; fac += `<path d="M${f1(p[0])} ${f1(p[1])}L${f1(p[0] - w)} ${f1(p[1] + h)}L${f1(p[0] + 3)} ${f1(p[1] + h * .85)}Z" fill="#dff2ff" opacity="${(.07 + rnd() * .09).toFixed(2)}"/><path d="M${f1(p[0])} ${f1(p[1])}L${f1(p[0] + w * .8)} ${f1(p[1] + h * .9)}L${f1(p[0] + 3)} ${f1(p[1] + h * .85)}Z" fill="#000" opacity="${(.18 + rnd() * .12).toFixed(2)}"/>`; } }
+    body += `<g clip-path="url(#bwMc${i})" opacity="${L.op ?? 1}">${fac}</g>`;
+    body += `<path d="${d}" fill="none" stroke="${L.rim || '#c8e8ff'}" stroke-width=".9" opacity="${L.rimOp ?? .4}" stroke-linejoin="round"/>`;
+    if (L.fog) for (const f of L.fog) body += `<ellipse cx="${f[0]}" cy="${f[1]}" rx="${f[2]}" ry="${f[3]}" fill="#a8d0ff" opacity="${f[4]}" filter="url(#bwMf)"/>`;
+  });
+  return `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs>${defs}<filter id="bwMf" x="-20%" y="-150%" width="140%" height="400%"><feGaussianBlur stdDeviation="9"/></filter></defs>${body}</svg>`;
+}
+function mtnImg(k, mist) {
+  const m = mist.map((f) => `<ellipse cx="${f[0]}" cy="${f[1]}" rx="${f[2]}" ry="${f[3]}" fill="#a8d0ff" opacity="${f[4]}" filter="url(#bwMf)"/>`).join('');
+  return `<img class="ly" alt="" src="/pub/lw_mtn_${k}.webp" style="left:0;top:300px;width:390px;height:544px"><svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><filter id="bwMf" x="-20%" y="-150%" width="140%" height="400%"><feGaussianBlur stdDeviation="9"/></filter></defs>${m}</svg>`;
+}
+function moon(x, y, r) {
+  let cr = ''; rnd(7); for (let i = 0; i < 7; i++) { const a = rnd() * 6.283, d = Math.sqrt(rnd()) * r * .7, cs = r * (.08 + rnd() * .16); cr += `<circle cx="${f1(x + d * Math.cos(a))}" cy="${f1(y + d * Math.sin(a))}" r="${f1(cs)}" fill="#8fb8e0" opacity="${(.12 + rnd() * .14).toFixed(2)}"/>`; }
+  return `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><radialGradient id="bwMoH"><stop offset="0" stop-color="#bfe6ff" stop-opacity=".75"/><stop offset=".25" stop-color="#6db8ff" stop-opacity=".32"/><stop offset="1" stop-color="#2a7be0" stop-opacity="0"/></radialGradient>
+   <radialGradient id="bwMoB" cx=".38" cy=".35" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#d6eeff"/><stop offset="1" stop-color="#9ccbf0"/></radialGradient></defs>
+   <circle cx="${x}" cy="${y}" r="${r * 5}" fill="url(#bwMoH)"/><circle cx="${x}" cy="${y}" r="${r * 1.55}" fill="none" stroke="#bfe6ff" stroke-width="1" opacity=".22"/><circle cx="${x}" cy="${y}" r="${r}" fill="url(#bwMoB)"/>${cr}</svg>`;
+}
+function motes(seed, n, y0, y1) {
+  rnd(seed); let s = ''; for (let i = 0; i < n; i++) { const x = rnd() * W, y = y0 + rnd() * (y1 - y0), r = .5 + rnd() * 1.5; s += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${r.toFixed(2)}" fill="#cfeaff" opacity="${(.2 + rnd() * .5).toFixed(2)}"/>`; }
+  return `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${s}</svg>`;
+}
+const beam = (x, y0, y1, w) => `<div class="ly" style="left:${x - w / 2}px;top:${y0}px;width:${w}px;height:${y1 - y0}px;background:linear-gradient(to top,rgba(150,215,255,.45),rgba(90,170,255,.14) 55%,rgba(60,140,255,0));filter:blur(12px);clip-path:polygon(40% 100%,60% 100%,100% 0,0 0)"></div>`;
+const halo = (x, y, rx, ry, col) => `<div class="ly" style="left:${x - rx}px;top:${y - ry}px;width:${rx * 2}px;height:${ry * 2}px;border-radius:50%;background:radial-gradient(closest-side,${col},rgba(0,0,0,0))"></div>`;
+const DRAGON_F = 'drop-shadow(0 0 1px rgba(190,230,255,.95)) drop-shadow(0 0 8px rgba(90,175,255,.65)) drop-shadow(0 0 22px rgba(40,120,255,.4))';
+const CROWN_F = 'drop-shadow(0 0 10px rgba(110,190,255,.55))';
+const FOGBOT = `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="bwFb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#020509" stop-opacity="0"/><stop offset="1" stop-color="#020509" stop-opacity="1"/></linearGradient></defs><rect x="0" y="760" width="${W}" height="${H - 760}" fill="url(#bwFb)"/></svg>`;
+const ttlAt = (cy, fitW, max, o = {}) => `<div class="ttl" style="top:${cy - 50}px">${titleSVG({ text: 'Blue Wall', w: 390, h: 100, fitW, max, font: o.font, ls: o.ls, wt: o.wt, glass: o.glass })}</div>`;
+const divider = (cy, w) => `<div class="ttl" style="top:${cy - 9}px"><svg width="${w}" height="18" viewBox="0 0 ${w} 18"><rect x="0" y="8.2" width="${w / 2 - 14}" height="1.4" fill="#7fd0ff" opacity=".55"/><rect x="${w / 2 + 14}" y="8.2" width="${w / 2 - 14}" height="1.4" fill="#7fd0ff" opacity=".55"/><polygon points="${w / 2},2 ${w / 2 + 7},9 ${w / 2},16 ${w / 2 - 7},9" fill="#bfeaff"/></svg></div>`;
+const ground = (y) => `<div class="ly" style="left:0;top:${y}px;width:${W}px;height:${H - y}px;background:#02060f"></div>`;
+const castle = (dy) => ground(770 + dy) + `<div class="ly" style="left:0;top:${dy}px;width:${W}px;height:${H}px">${fortress('D2')}</div>`;
+
+// ---------------------------------------------------------------- compose (three samples)
+const SEL = (q.get('s') || 'A').toUpperCase();
+let html = sky(CX, 300, 42);
+let fontKey = 'bask';
+if (SEL === 'G') {          // lock-up: dragon over the crown over a small title, valley below
+  html += halo(CX, 262, 210, 190, 'rgba(110,190,255,.55)');
+  html += `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><circle cx="195" cy="268" r="118" fill="none" stroke="#9fd8ff" stroke-width="1" opacity=".22"/><circle cx="195" cy="268" r="132" fill="none" stroke="#9fd8ff" stroke-width=".6" stroke-dasharray="2 5" opacity=".25"/></svg>`;
+  html += beam(CX, 300, 700, 120);
+  html += motes(3, 40, 60, 600);
+  html += castle(-6);
+  html += img('dragon', 214, CX, 160, DRAGON_F);
+  html += halo(CX, 272, 70, 46, 'rgba(120,200,255,.5)');
+  html += img('crown', 116, CX, 272, CROWN_F);
+  html += `<svg class="fx" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${[[CX, 237, 6, 1], [150, 294, 3.5, .8], [242, 290, 4, .8], [60, 170, 4, .6], [336, 380, 3.5, .6]].map((s) => sparkle(...s)).join('')}</svg>`;
+  html += FOGBOT + vignette();
+  html += ttlAt(350, 214, 54, { glass: true }) + divider(384, 200);
+} else if (SEL === 'A') {          // lock-up: dragon over the crown over a small title, valley below
+  html += halo(CX, 230, 210, 190, 'rgba(110,190,255,.55)');
+  html += `<svg class="bg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><circle cx="195" cy="236" r="118" fill="none" stroke="#9fd8ff" stroke-width="1" opacity=".22"/><circle cx="195" cy="236" r="132" fill="none" stroke="#9fd8ff" stroke-width=".6" stroke-dasharray="2 5" opacity=".25"/></svg>`;
+  html += beam(CX, 250, 560, 110);
+  html += mtnImg('A', [[90, 548, 150, 10, 0.16], [300, 556, 130, 9, 0.14], [200, 620, 220, 12, 0.15]]);
+  html += motes(3, 40, 60, 600);
+  html += castle(-6);
+  html += img('dragon', 214, CX, 128, DRAGON_F);
+  html += halo(CX, 238, 70, 46, 'rgba(120,200,255,.5)');
+  html += img('crown', 116, CX, 240, CROWN_F);
+  html += `<svg class="fx" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${[[CX, 205, 6, 1], [150, 262, 3.5, .8], [242, 258, 4, .8], [60, 140, 4, .6], [336, 330, 3.5, .6]].map((s) => sparkle(...s)).join('')}</svg>`;
+  html += FOGBOT + vignette();
+  html += ttlAt(318, 214, 54) + divider(352, 200);
+} else if (SEL === 'B') {   // the dragon crosses the moon; crown + title hover over the fortress
+  html += moon(CX, 170, 50);
+  html += halo(CX, 170, 230, 170, 'rgba(100,180,255,.45)');
+  html += beam(CX, 330, 640, 120);
+  html += mtnImg('B', [[100, 458, 160, 10, 0.18], [310, 464, 130, 9, 0.16], [200, 548, 230, 12, 0.16]]);
+  html += motes(9, 40, 60, 620);
+  html += castle(-44);
+  html += img('dragon', 262, CX, 164, 'drop-shadow(0 0 1px rgba(200,235,255,.9)) drop-shadow(0 0 14px rgba(70,160,255,.5))');
+  html += halo(CX, 530, 80, 46, 'rgba(120,200,255,.5)');
+  html += img('crown', 100, CX, 528, CROWN_F);
+  html += `<svg class="fx" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${[[CX, 502, 5, 1], [152, 542, 3, .8], [238, 538, 3.5, .8], [64, 250, 4, .6]].map((s) => sparkle(...s)).join('')}</svg>`;
+  html += FOGBOT + vignette();
+  html += ttlAt(596, 200, 50) + divider(626, 190);
+} else {                    // game-logo layout: crown + title on top, wide valley scene, dragon far across the sky (Cinzel title)
+  fontKey = 'cinz';
+  html += moon(92, 330, 30);
+  html += halo(CX, 130, 220, 150, 'rgba(100,180,255,.4)');
+  html += mtnImg('C', [[120, 500, 170, 11, 0.2], [300, 512, 140, 10, 0.18], [200, 598, 230, 12, 0.16]]);
+  html += motes(13, 40, 40, 640);
+  html += castle(-6);
+  html += img('dragon', 150, 268, 300, 'drop-shadow(0 0 1px rgba(200,235,255,.9)) drop-shadow(0 0 10px rgba(70,160,255,.5))');
+  html += halo(CX, 92, 80, 40, 'rgba(120,200,255,.5)');
+  html += img('crown', 110, CX, 96, CROWN_F);
+  html += `<svg class="fx" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${[[CX, 66, 5, 1], [146, 112, 3, .8], [244, 108, 3.5, .8], [330, 200, 4, .6], [50, 220, 3, .6]].map((s) => sparkle(...s)).join('')}</svg>`;
+  html += FOGBOT + vignette();
+  html += ttlAt(176, 250, 60, { font: "'Cinzel Decorative', 'Libre Baskerville', serif", wt: 900, ls: 2 }) + divider(214, 210);
+}
+html += `<div class="lbar" style="bottom:66px"><div class="lbar-label" id="pct">LOADING <span>${P0}%</span></div><div class="lbar-frame"><div class="lbar-track"><div class="lbar-fill" id="bar" style="width:${P0}%"><div class="lbar-gloss"></div><div class="lbar-tip"></div></div></div></div></div>`;
+html += `<div class="tip" id="bw-tip" style="bottom:40px">Preparing your kingdom…</div>`;
+const stage = document.getElementById('bw-stage'); stage.innerHTML = html;
+const fit = () => { const s = Math.min(innerWidth / W, innerHeight / H); stage.style.transform = `scale(${s})`; };
+addEventListener('resize', fit); fit();
+window.bwLoading = (p) => { p = Math.max(0, Math.min(100, Math.round(p))); document.getElementById('pct').innerHTML = `LOADING <span>${p}%</span>`; document.getElementById('bar').style.width = p + '%'; };
+window.bwTip = (t) => { const e = document.getElementById('bw-tip'); if (e && t) e.textContent = t; };
+window.bwLoadingDone = () => { const el = document.getElementById('bw-load'); el.classList.add('done'); setTimeout(() => el.remove(), 900); };
+const ready = () => { fitTitles(stage); document.body.dataset.ready = 1; };
+const fl = fontKey === 'cinz' ? "900 40px 'Cinzel Decorative'" : "700 40px 'Libre Baskerville'";
+(document.fonts && document.fonts.ready ? document.fonts.load(fl).then(() => document.fonts.ready) : Promise.resolve()).then(ready, ready);
+})();
+</script>
+
+<script>
+(function () {
+  "use strict";
+  var msg = document.getElementById("msg");
+  function prog(p, tip) { if (window.bwLoading) window.bwLoading(p); if (tip && window.bwTip) window.bwTip(tip); }
+  function say(t, big) { msg.textContent = t; msg.className = big ? "big" : ""; }
+  function stop(t) { say(t, true); var q = document.querySelector(".lbar"); if (q) q.style.display = "none"; var tp = document.getElementById("bw-tip"); if (tp) tp.style.display = "none"; }
+
+  var tg = window.Telegram && window.Telegram.WebApp;
+  try {
+    tg.ready(); tg.expand();
+    if (tg.isVersionAtLeast("7.7")) tg.disableVerticalSwipes();
+    if (tg.isVersionAtLeast("6.1")) { tg.setHeaderColor("#050912"); tg.setBackgroundColor("#050912"); }
+    if (tg.isVersionAtLeast("7.10")) tg.setBottomBarColor("#050912");
+    if (tg.isVersionAtLeast("8.0") && (tg.platform === "android" || tg.platform === "ios")) tg.requestFullscreen();
+  } catch (e) {}
+  var initData = (tg && tg.initData) || "";
+  if (!initData) { stop("🔒 Blue Wall فقط از داخل ربات باز می‌شه"); return; }
+  prog(6);
+
+  fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ init_data: initData }) })
+  .then(function (r) { return r.json().then(function (j) { return [r.status, j]; }); })
+  .then(function (res) {
+    var j = res[1];
+    if (!j.ok) {
+      if (j.reason === "locked") stop("🔒 Blue Wall هنوز افتتاح نشده… به‌زودی دروازه‌ها باز می‌شن ⚔️");
+      else if (j.reason === "slow") stop("⏳ یه لحظه صبر کن و دوباره باز کن");
+      else stop("⚠️ ورود تأیید نشد؛ از داخل ربات دوباره باز کن");
+      return;
+    }
+    prog(12);
+    return loadBundle(j).then(function () {
+      if (!window.BlueWall || !window.BlueWall.start) throw new Error("no-bundle");
+      return window.BlueWall.start({
+        root: document.getElementById("game"), token: j.token, uid: j.uid, name: j.name, owner: !!j.owner, tg: tg,
+        progress: function (p, t) { prog(60 + p * 0.4, t); },
+        ready: function () { prog(100); setTimeout(function () { if (window.bwLoadingDone) window.bwLoadingDone(); }, 250); }
+      });
+    });
+  })
+  .catch(function (e) {
+    console.error(e);
+    if (e && e.message === "webgl") stop("⚠️ گوشیت از گرافیک سه‌بعدی (WebGL) پشتیبانی نمی‌کنه");
+    else stop("⚠️ اتصال برقرار نشد؛ دوباره امتحان کن");
+  });
+
+  function loadBundle(j) {
+    return fetch("/api/bundle", { headers: { Authorization: "Bearer " + j.token } }).then(function (r) {
+      if (!r.ok) throw new Error("bundle " + r.status);
+      var total = +(r.headers.get("X-Raw-Size") || 0);
+      if (!r.body || !r.body.getReader || !total) return r.text();
+      var rd = r.body.getReader(), got = 0, parts = [];
+      function pump() {
+        return rd.read().then(function (x) {
+          if (x.done) return new Blob(parts).text();
+          parts.push(x.value); got += x.value.length; prog(12 + 48 * Math.min(1, got / total));
+          return pump();
+        });
+      }
+      return pump();
+    }).then(function (code) {
+      return new Promise(function (ok, bad) {
+        var url = URL.createObjectURL(new Blob([code], { type: "text/javascript" }));
+        var s = document.createElement("script");
+        s.onload = function () { URL.revokeObjectURL(url); ok(); };
+        s.onerror = function () { bad(new Error("script")); };
+        s.src = url; document.body.appendChild(s);
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>

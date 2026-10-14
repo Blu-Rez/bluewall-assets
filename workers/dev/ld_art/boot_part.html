@@ -1,0 +1,75 @@
+<script>
+(function () {
+  "use strict";
+  var msg = document.getElementById("msg");
+  function prog(p, tip) { if (window.bwLoading) window.bwLoading(p); if (tip && window.bwTip) window.bwTip(tip); }
+  function say(t, big) { msg.textContent = t; msg.className = big ? "big" : ""; }
+  function stop(t) { say(t, true); var q = document.querySelector(".ebar"); if (q) q.style.display = "none"; var tp = document.getElementById("bw-tip"); if (tp) tp.style.display = "none"; }
+
+  var tg = window.Telegram && window.Telegram.WebApp;
+  try {
+    tg.ready(); tg.expand();
+    if (tg.isVersionAtLeast("7.7")) tg.disableVerticalSwipes();
+    if (tg.isVersionAtLeast("6.1")) { tg.setHeaderColor("#050912"); tg.setBackgroundColor("#050912"); }
+    if (tg.isVersionAtLeast("7.10")) tg.setBottomBarColor("#050912");
+    if (tg.isVersionAtLeast("8.0") && (tg.platform === "android" || tg.platform === "ios")) tg.requestFullscreen();
+  } catch (e) {}
+  var initData = (tg && tg.initData) || "";
+  if (!initData) { stop("🔒 Blue Wall فقط از داخل تلگرام باز می‌شه"); return; }
+  prog(6);
+
+  fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ init_data: initData }) })
+  .then(function (r) { return r.json().then(function (j) { return [r.status, j]; }); })
+  .then(function (res) {
+    var j = res[1];
+    if (!j.ok) {
+      if (j.reason === "locked") stop("🔒 Blue Wall هنوز افتتاح نشده… به‌زودی دروازه‌ها باز می‌شن ⚔️");
+      else if (j.reason === "slow") stop("⏳ یه لحظه صبر کن و دوباره باز کن");
+      else stop("⚠️ ورود تأیید نشد؛ دوباره از تلگرام باز کن");
+      return;
+    }
+    prog(12);
+    return loadBundle(j).then(function () {
+      if (!window.BlueWall || !window.BlueWall.start) throw new Error("no-bundle");
+      return window.BlueWall.start({
+        root: document.getElementById("game"), token: j.token, uid: j.uid, name: j.name, owner: !!j.owner, tg: tg,
+        progress: function (p, t) { prog(60 + p * 0.4, t); },
+        ready: function () { prog(100); setTimeout(function () { if (window.bwLoadingDone) window.bwLoadingDone(); }, 250); }
+      });
+    });
+  })
+  .catch(function (e) {
+    console.error(e);
+    if (e && e.message === "webgl") stop("⚠️ گوشیت از گرافیک سه‌بعدی (WebGL) پشتیبانی نمی‌کنه");
+    else stop("⚠️ اتصال برقرار نشد؛ دوباره امتحان کن");
+  });
+
+  function loadBundle(j) {
+    return fetch("/api/bundle", { headers: { Authorization: "Bearer " + j.token } }).then(function (r) {
+      if (!r.ok) throw new Error("bundle " + r.status);
+      var total = +(r.headers.get("X-Raw-Size") || 0);
+      if (!r.body || !r.body.getReader || !total) return r.text();
+      var rd = r.body.getReader(), got = 0, parts = [];
+      function pump() {
+        return rd.read().then(function (x) {
+          if (x.done) return new Blob(parts).text();
+          parts.push(x.value); got += x.value.length; prog(12 + 48 * Math.min(1, got / total));
+          return pump();
+        });
+      }
+      return pump();
+    }).then(function (code) {
+      return new Promise(function (ok, bad) {
+        var url = URL.createObjectURL(new Blob([code], { type: "text/javascript" }));
+        var s = document.createElement("script");
+        s.onload = function () { URL.revokeObjectURL(url); ok(); };
+        s.onerror = function () { bad(new Error("script")); };
+        s.src = url; document.body.appendChild(s);
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>

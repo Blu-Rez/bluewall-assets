@@ -1,0 +1,24 @@
+import * as THREE from 'three';
+import { createSpellFX } from '/home/claude/bot/bluebot_v2/bluewall/client/src/spellfx.js';
+import { createFX } from '/home/claude/bot/bluebot_v2/bluewall/client/src/bfx.js';
+const W = +(new URLSearchParams(location.search).get('w') || 900), Hh = +(new URLSearchParams(location.search).get('h') || 560);
+const r = new THREE.WebGLRenderer({ antialias: true }); r.setSize(W, Hh); r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.0;
+document.body.style.margin = 0; document.body.appendChild(r.domElement);
+const sc = new THREE.Scene(); sc.background = new THREE.Color(0x7d93b8); sc.fog = new THREE.Fog(0x7d93b8, 160, 520);
+const key = new THREE.DirectionalLight(0xffe8c8, 2.6); key.position.set(-60, 90, 40); sc.add(key); sc.add(new THREE.HemisphereLight(0x8fb0e0, 0x4a5a30, 1.2));
+const hf = (x, z) => 3.2 * Math.sin(x * 0.045) * Math.cos(z * 0.05) + 1.6 * Math.sin(x * 0.11 + z * 0.07) + Math.max(0, 8 - Math.hypot(x - 40, z + 20) * 0.3);
+const gg = new THREE.PlaneGeometry(400, 400, 160, 160).rotateX(-Math.PI / 2); const pa = gg.attributes.position; for (let i = 0; i < pa.count; i++) pa.setY(i, hf(pa.getX(i), pa.getZ(i))); gg.computeVertexNormals();
+sc.add(new THREE.Mesh(gg, new THREE.MeshStandardMaterial({ color: 0x5f7436, roughness: 1 })));
+const bm = new THREE.MeshStandardMaterial({ color: 0xc9bca4, roughness: 0.9 });
+const B = [[-22, 14, 12, 14, 12], [26, 12, 10, 10, 18], [4, -30, 22, 4, 8], [-34, -6, 10, 10, 10], [34, -8, 8, 8, 22], [-3, 36, 16, 12, 9], [-16, -16, 6, 6, 9], [14, 14, 7, 7, 10]];
+for (const [x, z, w, d, h] of B) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), bm); m.position.set(x, hf(x, z) + h / 2, z); sc.add(m); }
+const cam = new THREE.PerspectiveCamera(48, W / Hh, 0.5, 800);
+const view = (tx, tz, dist, az = 0.4, pitch = 0.8) => { const gy = hf(tx, tz); cam.position.set(tx + Math.sin(az) * Math.cos(pitch) * dist, gy + Math.sin(pitch) * dist, tz + Math.cos(az) * Math.cos(pitch) * dist); cam.lookAt(tx, gy, tz); cam.updateMatrixWorld(true); };
+view(0, 0, 90);
+const PXs = { value: Hh * 0.5 / Math.tan(THREE.MathUtils.degToRad(48) / 2) };
+const fx = createFX(sc, { scale: PXs, height: hf });
+const sp = createSpellFX(sc, { height: hf, camera: cam, fx });
+let t = 0;
+const adv = (sec, step = 1 / 30) => { let n = Math.round(sec / step); while (n-- > 0) { fx.update(step, cam); sp.update(step); t += step; } r.render(sc, cam); };
+window.__sp = sp; window.__fx = fx; window.__view = view; window.__adv = adv; window.__cam = cam; window.__sc = sc; window.__r = r; window.__hf = hf;
+window.__ready = true; adv(0.05);

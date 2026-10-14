@@ -1,0 +1,10 @@
+import { NodeIO } from '@gltf-transform/core';
+import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
+import { MeshoptEncoder, MeshoptDecoder } from 'meshoptimizer';
+await MeshoptDecoder.ready;
+const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ 'meshopt.decoder': MeshoptDecoder, 'meshopt.encoder': MeshoptEncoder });
+const doc = await io.read(process.argv[2]); const R = doc.getRoot();
+const tri = (n) => { let t = 0; const m = n.getMesh(); if (m) for (const p of m.listPrimitives()) { const ix = p.getIndices(); t += (ix ? ix.getCount() : p.getAttribute('POSITION').getCount()) / 3; } for (const c of n.listChildren()) t += tri(c); return t; };
+const mats = (n, s = new Set()) => { const m = n.getMesh(); if (m) for (const p of m.listPrimitives()) { const mt = p.getMaterial(); if (mt) s.add(mt.getName()); } for (const c of n.listChildren()) mats(c, s); return s; };
+const rows = []; for (const sc of R.listScenes()) for (const n of sc.listChildren()) rows.push([n.getName(), Math.round(tri(n)), mats(n).size]);
+rows.sort((a, b) => b[1] - a[1]); for (const r of rows) console.log(r[0].padEnd(22), String(r[1]).padStart(7), 'mats', r[2]);
