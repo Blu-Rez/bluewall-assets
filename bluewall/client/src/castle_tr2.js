@@ -38,6 +38,10 @@ export const GATE_PLAQUE = { y: 0.62, w: 0.24, h: 0.15 };      // plaque over th
 export const GATE_SCONCE = { dx: 0.19, y: 0.30 };            // wall torches either side of the door (fraction of length / height)
 export const KEEP_DOME = 0.93;                                // the keep's dome apex (fraction of its height): the beacon
 export const INNER_TOWER_W = 9.4, MAX_STRETCH = 1.28, MED_NAT = 1.518;   // the medium tower's natural platform height = 1.518 * its width
+// TR2-S3-R2: the stairs up to the wall-walk.  There is NO stairs model in lib-tripo yet: this is the spec the model will be made to (TR2_gaps_S3.md) and what anchors('stairs') hands the wiring.
+// One straight flight, 'castle_stairs_<tier>' (stone first): the front (the foot, where one steps on) is +Z, the flight climbs towards -Z and ends in a flat landing at the wall-walk floor.
+// The model's base centre (bbox) is the pivot like every library model; its real size in the game is rise x run x width below; the game scales it in y only (rise = the ring's wall height H).
+export const STAIRS = { key: 'castle_stairs', rise: 9.0, riser: 0.22, tread: 0.30, run: 12.3, width: 2.0, landing: 2.0, gap: 0.3, rings: ['outer', 'town'] };   // 41 steps x 0.30 m = 12.3 m; the inner ring (H 16 m) has no room for a flight (the keep clears its wall by 0.4 m)
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const _v = new THREE.Vector3();
 export const tvis = (T) => T_VIS * T;
@@ -240,8 +244,58 @@ export function createCastleTr2() {
     return refresh(true);
   }
   const state = () => ({ installed: S.installed, sig: S.sig, builds: S.builds, tris: S.tris, trisLo: S.trisLo, meshes: S.meshes, lod: S.cells.map((c) => c.key + ':' + c.state), held: [...S.held].sort(), failed: [...S.failed], last: S.last, pieces: { walls: walls.reduce((a, w) => a + w.n, 0), towers: towers.length, gates: gates.length, keep: keep ? 1 : 0 } });
+  // ---------------------------------------------------------------- stairs to the wall-walk (spec: STAIRS above; the model does not exist yet, so nothing is drawn here)
+  // One flight at an END of a wall run (= beside a tower or a gate), on the INNER face of the wall, running along the wall away from the joint; its top landing meets the wall-walk through
+  // the inner parapet.  opts: rings (default STAIRS.rings), ends 'both' | 'a' | 'b', spacing (m, greedy: keep a site only if no kept site of its ring is nearer than that; 0 = all).
+  // Returns [{ id, ring, at: 'tower' | 'gate' | 'wall', tid (wall run), joint: tower / gate tid, model, key, centre: {x, z} (where the model's base centre goes), ry (yaw of the model's +Z = the foot end, radians),
+  //   foot: {x, z} (front edge of the lowest step), top: {x, z} (centre of the top landing), join: {x, z} (the wall-walk point the landing meets: on the wall's centre line), dir: {x, z} (unit, top -> foot),
+  //   inward: {x, z} (unit, towards the ring centre), rise (= the ring's wall height H above the ground at the wall), scale: {x: 1, y, z: 1}, width, run, rect: {cx, cz, w, d, ry} (keep-out footprint) }]
+  function stairsAt({ rings = STAIRS.rings, ends = 'both', spacing = 0 } = {}) {
+    const out = [], P = STAIRS, runs = walls.filter((w) => rings.includes(w.ring));
+    for (const ring of rings) {
+      const rw = runs.filter((w) => w.ring === ring); if (!rw.length) continue;
+      let cx = 0, cz = 0; for (const w of rw) { cx += w.ax + w.ux * w.len / 2; cz += w.az + w.uz * w.len / 2; } cx /= rw.length; cz /= rw.length;
+      const sites = [];
+      for (const w of rw) {
+        let used = 0;                                                                              // along-wall length already taken by the flight from the other end of this run
+        for (const e of ends === 'a' ? ['a'] : ends === 'b' ? ['b'] : ['a', 'b']) {
+          const sg = e === 'a' ? 1 : -1, ex = e === 'a' ? w.ax : w.ax + w.ux * w.len, ez = e === 'a' ? w.az : w.az + w.uz * w.len, dx = w.ux * sg, dz = w.uz * sg;
+          let at = 'wall', jt = null, jc = 0.5;                                                  // jc = how far along the wall the landing starts (clear of the tower / gate body)
+          // castle.js starts a run 0.6 R from the tower CENTRE (the polygon corner), so the run end is not at the tower centre: look for a tower whose body (W x W) reaches the end
+          const tw = towers.find((t) => t.ring === ring && Math.hypot(t.x - ex, t.z - ez) < t.W / 2 + 1.5);
+          const gt = gates.find((g) => g.ring === ring && Math.hypot(g.x - ex, g.z - ez) < g.L / 2 + 1.5);
+          let nx = -dz, nz = dx; if (nx * (cx - ex) + nz * (cz - ez) < 0) { nx = -nx; nz = -nz; }  // inward = the perpendicular that points to the ring centre
+          const off = tvis(w.T) / 2 + P.gap + P.width / 2, half = (P.landing + P.run) / 2;
+          if (tw) {                                                                                  // jc = the first start (m along the wall from the run end) where the flight rectangle is >= gap clear of the tower's W x W footprint
+            at = 'tower'; jt = tw.tid; jc = 0.5;
+            const tax = [[Math.sin(tw.face), Math.cos(tw.face)], [Math.cos(tw.face), -Math.sin(tw.face)]], fax = [[dx, dz], [nx, nz]];
+            const sep = (j) => {                                                                     // separating-axis gap between the flight rectangle (starting j m along) and the tower square (>0 = clear by that much)
+              const c1 = [ex + dx * (j + half) + nx * off, ez + dz * (j + half) + nz * off], h1 = [half, P.width / 2], h2 = [tw.W / 2, tw.W / 2]; let best = -1e9;
+              for (const a of [...fax, ...tax]) { const d = Math.abs((tw.x - c1[0]) * a[0] + (tw.z - c1[1]) * a[1]), r = (ax, h) => h[0] * Math.abs(a[0] * ax[0][0] + a[1] * ax[0][1]) + h[1] * Math.abs(a[0] * ax[1][0] + a[1] * ax[1][1]); best = Math.max(best, d - r(fax, h1) - r(tax, h2)); }
+              return best;
+            };
+            while (jc < tw.W + 6 && sep(jc) < P.gap) jc += 0.1;
+            jc = +jc.toFixed(1);
+          } else if (gt) { at = 'gate'; jt = gt.tid; jc = Math.max(0.5, gt.L / 2 - Math.hypot(gt.x - ex, gt.z - ez)) + P.gap; }
+          const need = jc + P.landing + P.run; if (need + used > w.len - 0.5) continue;           // the run is too short for a flight (or for two)
+          if (P.riser * w.H / P.rise > 0.25 || P.riser * w.H / P.rise < 0.19) continue;           // the y-scaled steps would be too steep / too flat (the inner ring, H 16 m, needs its own model)
+          used = need;
+          const alongC = jc + half, alongTop = jc + P.landing / 2, alongFoot = jc + P.landing + P.run;
+          const pt = (a, l) => ({ x: +(ex + dx * a + nx * l).toFixed(3), z: +(ez + dz * a + nz * l).toFixed(3) });
+          sites.push({ id: ring + ':' + w.tid + e, ring, at, tid: w.tid, joint: jt, model: P.key, key: P.key + '_<tier>', centre: pt(alongC, off), ry: +Math.atan2(dx, dz).toFixed(5), foot: pt(alongFoot, off), top: pt(alongTop, off), join: pt(alongTop, 0),
+            dir: { x: +dx.toFixed(5), z: +dz.toFixed(5) }, inward: { x: +nx.toFixed(5), z: +nz.toFixed(5) }, rise: w.H, scale: { x: 1, y: +(w.H / P.rise).toFixed(4), z: 1 }, width: P.width, run: P.run, rect: { cx: pt(alongC, off).x, cz: pt(alongC, off).z, w: P.width, d: P.landing + P.run, ry: +Math.atan2(dx, dz).toFixed(5) }, ang: Math.atan2(ez - cz, ex - cx) });
+        }
+      }
+      sites.sort((a, b) => a.ang - b.ang);
+      const kept = [];
+      for (const s of sites) if (!spacing || kept.every((k) => Math.hypot(k.centre.x - s.centre.x, k.centre.z - s.centre.z) >= spacing)) kept.push(s);
+      for (const s of kept) { delete s.ang; out.push(s); }
+    }
+    return out;
+  }
   // where things can be hung on the castle (S4c lamps / banners, later work): the registered pieces with the heights the weapons / torches use.  y = platform floor of a tower, wall walk of a wall piece.
-  const anchors = () => ({
+  // anchors('stairs', opts) = the stair sites (stairsAt above).
+  const anchors = (kind, opts) => kind === 'stairs' ? stairsAt(opts) : ({
     towers: towers.map((t) => ({ ring: t.ring, tid: t.tid, i: t.i, x: t.x, z: t.z, y: t.P, face: t.face, w: t.W })),
     walls: walls.map((w) => ({ ring: w.ring, tid: w.tid, x: w.ax + w.ux * w.len / 2, z: w.az + w.uz * w.len / 2, y: w.H, ry: w.ry, len: w.len, thick: tvis(w.T) })),
     gates: gates.map((g) => ({ ring: g.ring, tid: g.tid, x: g.x, z: g.z, ry: g.ry, L: g.L, ...gateGeom(g.ring, g.L) })),

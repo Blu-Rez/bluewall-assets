@@ -1,5 +1,5 @@
 // TR2-S3: castle_tr2.js logic (no GL, no models): which tier every wall piece / tower shows, how many pieces, which files are needed, the fits.  Bundled by dev/tr2_s3_test.sh.  Last line: "TR2 S3 OK"
-import { createCastleTr2, fileOf, loOf, lodPick, cellDist, LOD_NEAR, LOD_FAR, neededFiles, tierSig, towerWidth, towerPlatform, tvis, WALL_SLOT, KEEP_W, MAX_STRETCH, MED_NAT, INNER_TOWER_W } from '/home/claude/bot/bluebot_v2/bluewall/client/src/castle_tr2.js';
+import { createCastleTr2, fileOf, loOf, lodPick, cellDist, LOD_NEAR, LOD_FAR, neededFiles, tierSig, towerWidth, towerPlatform, tvis, WALL_SLOT, KEEP_W, MAX_STRETCH, MED_NAT, INNER_TOWER_W, STAIRS } from '/home/claude/bot/bluebot_v2/bluewall/client/src/castle_tr2.js';
 import * as T from '/home/claude/bot/bluebot_v2/bluewall/client/src/tiers.js';
 import * as L from '/home/claude/bot/bluebot_v2/bluewall/client/src/layout.js';
 import { DIMS } from '/home/claude/bot/bluebot_v2/bluewall/client/src/a1_rings.js';
@@ -65,6 +65,50 @@ console.log('== 4. keep size vs the inner ring');
   }
   ok(wallGap > 0, 'the keep (' + KEEP_W + ' m wide) clears the inner wall slabs by ' + wallGap.toFixed(1) + ' m');
   ok(towerGap > -1.5, 'the keep corner reaches ' + (-towerGap).toFixed(1) + ' m into the foot of an inner tower at most (< 1.5 m: it touches, the old keep did too)');
+}
+
+console.log('== 5. stairs to the wall-walk (anchors(\'stairs\'): spec only, there is no model yet)');
+{
+  const S3 = createCastleTr2(), ring = 'outer', poly = L.OUTER, dims = DIMS.outer, np = poly.length;
+  let cx = 0, cz = 0; for (const a of poly) { cx += a[0]; cz += a[1]; } cx /= np; cz /= np;
+  poly.forEach((a, i) => { const b = poly[(i + 1) % np], Lt = Math.hypot(b[0] - a[0], b[1] - a[1]), ux = (b[0] - a[0]) / Lt, uz = (b[1] - a[1]) / Lt, s0 = dims.R * 0.6, s1 = Lt - dims.R * 0.6;   // as castle.js wallRun: a run starts 0.6 R from the tower centre
+    S3.wall({ ring, tid: 300 + i, ax: a[0] + ux * s0, az: a[1] + uz * s0, bx: a[0] + ux * s1, bz: a[1] + uz * s1, H: dims.H, T: dims.T }); S3.tower({ ring, tid: 400 + i, i, x: a[0], z: a[1], R: dims.R, h: 15, face: Math.atan2(cx - a[0], cz - a[1]) }); });
+  const A = S3.anchors();
+  ok(A.towers.length === np && A.walls.length === np && A.keep === null, 'anchors() (no kind) is unchanged: towers / walls / gates / keep');
+  const st = S3.anchors('stairs', { rings: ['outer'] });
+  ok(st.length > 0 && st.every((s) => s.ring === 'outer'), 'anchors(\'stairs\'): ' + st.length + ' sites on the outer ring (' + np + ' runs, both ends)');
+  let bad = [], tmin = 1e9;
+  const W = towerWidth('outer', dims.R), off = tvis(dims.T) / 2 + STAIRS.gap + STAIRS.width / 2;
+  for (const s of st) {
+    const w = S3.walls.find((q) => q.tid === s.tid), dd = (p, q) => Math.hypot(p.x - q.x, p.z - q.z);
+    const dline = Math.abs((s.join.x - w.ax) * w.uz - (s.join.z - w.az) * w.ux);                      // join on the wall's centre line
+    if (dline > 0.01) bad.push(s.id + ' join off the wall line ' + dline.toFixed(3));
+    if (Math.abs(dd(s.top, s.join) - off) > 0.01) bad.push(s.id + ' top-join ' + dd(s.top, s.join).toFixed(3) + ' != ' + off.toFixed(3));
+    if (Math.abs(dd(s.top, s.foot) - (STAIRS.landing / 2 + STAIRS.run)) > 0.01) bad.push(s.id + ' flight length ' + dd(s.top, s.foot).toFixed(2));
+    if (Math.abs((s.foot.x - s.top.x) * s.dir.x + (s.foot.z - s.top.z) * s.dir.z - (STAIRS.landing / 2 + STAIRS.run)) > 0.01) bad.push(s.id + ' dir not top->foot');
+    if (Math.abs(Math.sin(s.ry) - s.dir.x) > 1e-3 || Math.abs(Math.cos(s.ry) - s.dir.z) > 1e-3) bad.push(s.id + ' ry != dir');
+    if ((cx - s.join.x) * s.inward.x + (cz - s.join.z) * s.inward.z <= 0) bad.push(s.id + ' not on the inner side');
+    if (s.rise !== dims.H || Math.abs(s.scale.y - dims.H / STAIRS.rise) > 1e-3) bad.push(s.id + ' rise ' + s.rise);
+    const tw = S3.towers.find((t) => t.tid === s.joint); if (!tw || s.at !== 'tower') bad.push(s.id + ' joint is not its tower (at ' + s.at + ')');
+    else {                                                                                            // the flight's 4 corners vs the tower's W x W square turned by face: all corners outside, and the nearest one >= gap away (a sampled distance, not the code's own SAT)
+      const c = s.rect, ux = s.dir.x, uz = s.dir.z, nx = s.inward.x, nz = s.inward.z, f = tw.face; let dmin = 1e9;
+      const sq = (px, pz) => { const dx = px - tw.x, dz = pz - tw.z, u = dx * Math.sin(f) + dz * Math.cos(f), v = dx * Math.cos(f) - dz * Math.sin(f); return Math.hypot(Math.max(Math.abs(u) - W / 2, 0), Math.max(Math.abs(v) - W / 2, 0)) * (Math.abs(u) < W / 2 && Math.abs(v) < W / 2 ? -1 : 1); };
+      for (let a = -1; a <= 1; a += 0.1) for (let b = -1; b <= 1; b += 0.1) dmin = Math.min(dmin, sq(c.cx + ux * a * c.d / 2 + nx * b * c.w / 2, c.cz + uz * a * c.d / 2 + nz * b * c.w / 2));
+      if (dmin < STAIRS.gap - 0.05) bad.push(s.id + ' flight is ' + dmin.toFixed(2) + ' m from the tower footprint (needs ' + STAIRS.gap + ')');
+      tmin = Math.min(tmin, dmin);
+    }
+  }
+  const rectsOverlap = (r, q) => { const ax = (rr) => [[Math.sin(rr.ry), Math.cos(rr.ry)], [Math.cos(rr.ry), -Math.sin(rr.ry)]], A = ax(r), B = ax(q); for (const a of [...A, ...B]) { const d = Math.abs((q.cx - r.cx) * a[0] + (q.cz - r.cz) * a[1]), pr = (R, ex) => (ex.d / 2) * Math.abs(a[0] * R[0][0] + a[1] * R[0][1]) + (ex.w / 2) * Math.abs(a[0] * R[1][0] + a[1] * R[1][1]); if (d >= pr(A, r) + pr(B, q)) return false; } return true; };
+  { let n = 0; for (let i = 0; i < st.length; i++) for (let j = i + 1; j < st.length; j++) if (rectsOverlap(st[i].rect, st[j].rect)) n++; if (n) bad.push(n + ' pairs of flights overlap'); }
+  ok(bad.length === 0, 'every site (' + st.length + ', walls inset 0.6 R like castle.js): join on the wall line, top ' + off.toFixed(2) + ' m inside it, flight ' + (STAIRS.landing / 2 + STAIRS.run) + ' m, yaw = direction, inner side, rise = H ' + dims.H + ' m, clear of the tower footprint (nearest ' + tmin.toFixed(2) + ' m), no two flights overlap' + (bad.length ? ' — ' + bad.slice(0, 4).join('; ') : ''));
+  const sp = S3.anchors('stairs', { rings: ['outer'], spacing: 60 });
+  let mind = 1e9; for (let i = 0; i < sp.length; i++) for (let j = i + 1; j < sp.length; j++) mind = Math.min(mind, Math.hypot(sp[i].centre.x - sp[j].centre.x, sp[i].centre.z - sp[j].centre.z));
+  ok(sp.length > 0 && sp.length < st.length && mind >= 60, 'spacing 60: ' + sp.length + ' of ' + st.length + ' sites, nearest pair ' + mind.toFixed(0) + ' m');
+  { const S4 = createCastleTr2(), pl = L.INNER, d = DIMS.inner; pl.forEach((a, i) => { const b = pl[(i + 1) % pl.length]; S4.wall({ ring: 'inner', tid: 500 + i, ax: a[0], az: a[1], bx: b[0], bz: b[1], H: d.H, T: d.T }); });
+  ok(S4.anchors('stairs', { rings: ['inner'] }).length === 0 && STAIRS.riser * d.H / STAIRS.rise > 0.25, 'inner ring (H ' + d.H + ' m): the y-scaled steps would be ' + (STAIRS.riser * d.H / STAIRS.rise).toFixed(2) + ' m high => no sites (it needs its own model; the default rings are outer + town)'); }
+  const run1 = S3.walls[0]; ok(STAIRS.landing + STAIRS.run + 2 * (W / 2 + STAIRS.gap) < run1.len + 20, 'the flight (' + (STAIRS.landing + STAIRS.run).toFixed(1) + ' m + tower) fits the outer ring\'s runs (first run ' + run1.len.toFixed(1) + ' m)');
+  ok(Math.abs(STAIRS.rise / STAIRS.riser - Math.round(STAIRS.rise / STAIRS.riser)) < 0.4 && Math.abs(Math.round(STAIRS.rise / STAIRS.riser) * STAIRS.tread - STAIRS.run) < 0.2, 'spec numbers agree: ' + STAIRS.rise + ' m / ' + STAIRS.riser + ' m = ' + Math.round(STAIRS.rise / STAIRS.riser) + ' steps x ' + STAIRS.tread + ' m = ' + STAIRS.run + ' m run');
+  for (const [r, H] of [['outer', DIMS.outer.H], ['town', DIMS.town.H]]) { const sy = H / STAIRS.rise; ok(STAIRS.riser * sy >= 0.19 && STAIRS.riser * sy <= 0.25, r + ' (H ' + H + ' m): y x' + sy.toFixed(3) + ' => riser ' + (STAIRS.riser * sy).toFixed(3) + ' m (0.19 .. 0.25)'); }
 }
 console.log(fails ? 'TR2 S3 FAIL (' + fails + ')' : 'TR2 S3 OK');
 process.exit(fails ? 1 : 0);
