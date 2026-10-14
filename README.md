@@ -1,0 +1,2 @@
+Install package p50 of Blue Wall (built by the mother chat, 15 Oct 2026). Supersedes p48/p49 (p49 had the old long-gown Mobina). Contains: RP0B hero clips (33 per hero) + RP3 underworld hub + RP4 combat (R1+R2) + RP1B/RP1C hero culling, door orbs, governor + UI1 sheets in look C + TR2 castle (S3 + S3-R2 stair sites), houses/civic (S4a), animals/people (S4d), nature + lamps (S4c; `?s4c=0` = old look) + the NEW Mobina v2 (short tunic, model + half-body card). Rollback: bash /root/p50/rollback.sh
+On the server:  cd /root && tar xzf p50.tar.gz && bash p50/install.sh
