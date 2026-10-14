@@ -1,0 +1,327 @@
+{
+ "hero": "elina",
+ "source": "Tripo Studio export (v1.0 biped rig, 79 joints), 47 clips; RP0B adds 11 clips (33 total)",
+ "facing": "+Z",
+ "units": "model height 0.979 u, feet on y=0",
+ "clips": [
+  {
+   "name": "idle",
+   "from": "idle",
+   "dur_s": 15.33,
+   "loop": true,
+   "root": "in place (drift removed)",
+   "note": "loop, 15.3 s breathing/weight shift"
+  },
+  {
+   "name": "walk",
+   "from": "walk",
+   "dur_s": 2.33,
+   "loop": true,
+   "root": "in place (drift removed)",
+   "note": "loop; native speed 0.68 height/s (0.66 u/s; a 1.7 m hero = 1.2 m/s)"
+  },
+  {
+   "name": "run",
+   "from": "run",
+   "dur_s": 1.25,
+   "loop": true,
+   "root": "in place (drift removed)",
+   "note": "loop (end blended into start 0.4 s); native speed 2.46 u/s (a 1.7 m hero = 4.3 m/s)"
+  },
+  {
+   "name": "jump",
+   "from": "jump [0.40–1.05 s]",
+   "dur_s": 0.65,
+   "loop": false,
+   "root": "in place (net drift removed)",
+   "note": "one hop cut from the 4-hop Tripo clip: squat → air → land"
+  },
+  {
+   "name": "fall",
+   "from": "jump_down [0.00–0.50 s]",
+   "dur_s": 0.5,
+   "loop": true,
+   "root": "in place (XZ locked)",
+   "note": "air pose loop (hip height rebased to standing; the game sets the height)"
+  },
+  {
+   "name": "land",
+   "from": "jump_down [2.15–3.30 s]",
+   "dur_s": 1.15,
+   "loop": false,
+   "root": "in place (XZ locked)",
+   "note": "touch-down → deep crouch → stand"
+  },
+  {
+   "name": "dodge",
+   "from": "dive [0.85–2.55 s]",
+   "dur_s": 1.7,
+   "loop": false,
+   "root": "in place (XZ locked)",
+   "note": "dive roll cut from Tripo 'dive' (wind-up removed); play at timeScale ~2 for a 0.85 s dodge"
+  },
+  {
+   "name": "hit",
+   "from": "hit_to_body_01",
+   "dur_s": 1.29,
+   "loop": false,
+   "root": "in place (net drift removed)",
+   "note": "flinch, 1.3 s"
+  },
+  {
+   "name": "death",
+   "from": "defeat_03 [0.30–4.30 s]",
+   "dur_s": 4.0,
+   "loop": false,
+   "root": "as authored (body moves)",
+   "note": "shot → stagger → kneel → fall → lies; clamp on the last frame; root keeps its travel"
+  },
+  {
+   "name": "knockdown",
+   "from": "fall",
+   "dur_s": 3.0,
+   "loop": false,
+   "root": "as authored (body moves)",
+   "note": "stumble + fall + lies (Tripo 'fall'); root keeps its travel"
+  },
+  {
+   "name": "punch_a",
+   "from": "box_01",
+   "dur_s": 2.21,
+   "loop": false,
+   "root": "in place (net drift removed)",
+   "note": "punch combo (Tripo box_01)"
+  },
+  {
+   "name": "punch_b",
+   "from": "box_02",
+   "dur_s": 2.79,
+   "loop": false,
+   "root": "in place (net drift removed)",
+   "note": "punch combo (Tripo box_02)"
+  },
+  {
+   "name": "kick_a",
+   "from": "front_kick_01",
+   "dur_s": 2.5,
+   "loop": false,
+   "root": "in place (net drift removed)",
+   "note": "spinning kick (Tripo front_kick_01, body yaws ~190°)"
+  },
+  {
+   "name": "kick_b",
+   "from": "front_kick_02",
+   "dur_s": 1.38,
+   "loop": false,
+   "root": "in place (net drift removed)",
+   "note": "back kick (Tripo front_kick_02)"
+  },
+  {
+   "name": "cast",
+   "from": "cast_a_spell",
+   "dur_s": 5.38,
+   "loop": false,
+   "root": "in place (net drift removed)",
+   "note": "arm thrust forward, spell (Tripo cast_a_spell)"
+  },
+  {
+   "name": "aim",
+   "from": "fire",
+   "dur_s": 1.5,
+   "loop": false,
+   "root": "in place (net drift removed)",
+   "note": "arm out, aiming/pointing (Tripo fire); holds"
+  },
+  {
+   "name": "talk",
+   "from": "agree",
+   "dur_s": 4.0,
+   "loop": false,
+   "root": "in place (net drift removed)",
+   "note": "nod/agree 4 s"
+  },
+  {
+   "name": "bow",
+   "from": "bow",
+   "dur_s": 6.0,
+   "loop": false,
+   "root": "in place (net drift removed)",
+   "note": "bow 6 s"
+  },
+  {
+   "name": "cry",
+   "from": "cry",
+   "dur_s": 7.88,
+   "loop": false,
+   "root": "in place (net drift removed)",
+   "note": "cry 7.9 s"
+  },
+  {
+   "name": "look_around",
+   "from": "look_around",
+   "dur_s": 15.58,
+   "loop": false,
+   "root": "in place (net drift removed)",
+   "note": "15.6 s"
+  },
+  {
+   "name": "cheer",
+   "from": "cheer [0.00–5.00 s]",
+   "dur_s": 5.0,
+   "loop": false,
+   "root": "in place (net drift removed)",
+   "note": "first 5 s of Tripo cheer"
+  },
+  {
+   "name": "angry",
+   "from": "angry_03",
+   "dur_s": 3.58,
+   "loop": false,
+   "root": "in place (net drift removed)",
+   "note": "arms crossed + stomp (Tripo angry_03)"
+  },
+  {
+   "name": "sit_down",
+   "from": "SYNTHESIZED (procedural): hero idle pose -> sit pose, local slerp + forward lean + eased hip, feet locked front/back",
+   "dur_s": 1.2,
+   "loop": false,
+   "root": "hip travels with the pose",
+   "hip_travel_u": [
+    -0.064,
+    -0.22,
+    -0.241
+   ],
+   "note": "stand -> seated; origin = the feet; hip ends lower and behind them (see hip_travel_u); seat is where the hip ends"
+  },
+  {
+   "name": "sit_idle",
+   "from": "anims.glb Sitting_Idle_Loop",
+   "dur_s": 1.67,
+   "loop": true,
+   "root": "in place (RP0B)",
+   "hip_travel_u": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "note": "loop 1.67 s, seated (hands on thighs); hip offset matches the end of sit_down"
+  },
+  {
+   "name": "stand_up",
+   "from": "SYNTHESIZED (procedural): sit pose -> hero idle pose",
+   "dur_s": 1.0,
+   "loop": false,
+   "root": "hip travels with the pose",
+   "hip_travel_u": [
+    0.064,
+    0.22,
+    0.241
+   ],
+   "note": "exact reverse path of sit_down with a forward lean; ends on the hero idle first frame"
+  },
+  {
+   "name": "slash_a",
+   "from": "anims_army.glb Sword_Regular_A",
+   "dur_s": 0.43,
+   "loop": false,
+   "root": "in place (RP0B)",
+   "hip_travel_u": [
+    -0.0,
+    -0.174,
+    -0.0
+   ],
+   "note": "1st hit; wind-up crouch -> lunge -> right arm high; sword goes in the right hand (game attaches it)"
+  },
+  {
+   "name": "slash_b",
+   "from": "anims_army.glb Sword_Regular_B",
+   "dur_s": 0.53,
+   "loop": false,
+   "root": "in place (RP0B)",
+   "hip_travel_u": [
+    -0.0,
+    -0.036,
+    -0.0
+   ],
+   "note": "2nd hit; twist -> deep low lunge -> arm out"
+  },
+  {
+   "name": "slash_c",
+   "from": "anims.glb Sword_Attack [0.45-1.25 s] x1.15",
+   "dur_s": 0.7,
+   "loop": false,
+   "root": "in place (RP0B)",
+   "hip_travel_u": [
+    0.0,
+    0.125,
+    0.0
+   ],
+   "note": "3rd hit / finisher; low reach -> rise (same source clip as heavy, different window)"
+  },
+  {
+   "name": "heavy",
+   "from": "anims.glb Sword_Attack [0-1.25 s] x1.35",
+   "dur_s": 0.93,
+   "loop": false,
+   "root": "in place (RP0B)",
+   "hip_travel_u": [
+    0.0,
+    0.007,
+    0.0
+   ],
+   "note": "heavy lunge sweep (NOT overhead: no overhead swing exists in the shipped sources)"
+  },
+  {
+   "name": "block",
+   "from": "anims_army.glb Sword_Block hold [0.22-0.64 s], ping-pong",
+   "dur_s": 0.84,
+   "loop": true,
+   "root": "in place (RP0B)",
+   "hip_travel_u": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "note": "guard crouch, loop-able hold (forward+reverse = seamless)"
+  },
+  {
+   "name": "swim",
+   "from": "Elina library swim (Tripo)",
+   "dur_s": 5.71,
+   "loop": true,
+   "root": "in place (RP0B)",
+   "hip_travel_u": [
+    0.0,
+    -0.0,
+    -0.0
+   ],
+   "note": "surface stroke, horizontal body; hip stays at ~0.19 u (the game sets the water height)"
+  },
+  {
+   "name": "climb",
+   "from": "Elina library climb (Tripo)",
+   "dur_s": 3.46,
+   "loop": true,
+   "root": "in place (RP0B)",
+   "hip_travel_u": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "note": "hand-over-hand/leg-step climb, in place: linear drift removed in X, Y and Z (hip bobs around the standing hip height)"
+  },
+  {
+   "name": "interact",
+   "from": "anims.glb Interact [0.15-1.7 s] x1.4",
+   "dur_s": 1.11,
+   "loop": false,
+   "root": "in place (RP0B)",
+   "hip_travel_u": [
+    0.0,
+    0.001,
+    0.0
+   ],
+   "note": "reach forward with the right arm, hold, return"
+  }
+ ]
+}
