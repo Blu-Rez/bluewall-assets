@@ -1,0 +1,12532 @@
+[
+ {
+  "cat": "animals",
+  "key": "animal_calf",
+  "kb": 128,
+  "tris": 5000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 68
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.335,
+   0.727,
+   0.981
+  ],
+  "min": [
+   -0.168,
+   0.001,
+   -0.491
+  ],
+  "max": [
+   0.168,
+   0.728,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "animals",
+  "key": "animal_camel",
+  "kb": 150,
+  "tris": 6000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 80
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.249,
+   0.721,
+   0.981
+  ],
+  "min": [
+   -0.125,
+   0,
+   -0.491
+  ],
+  "max": [
+   0.124,
+   0.721,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "animals",
+  "key": "animal_cow",
+  "kb": 184,
+  "tris": 5996,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 105
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.501,
+   0.583,
+   0.979
+  ],
+  "min": [
+   -0.25,
+   0,
+   -0.488
+  ],
+  "max": [
+   0.251,
+   0.583,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "animals",
+  "key": "animal_dog",
+  "kb": 144,
+  "tris": 4998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 85
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.334,
+   0.677,
+   0.979
+  ],
+  "min": [
+   -0.168,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.166,
+   0.678,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "animals",
+  "key": "animal_donkey",
+  "kb": 153,
+  "tris": 4998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 90
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.252,
+   0.79,
+   0.979
+  ],
+  "min": [
+   -0.125,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.127,
+   0.79,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "animals",
+  "key": "animal_horse_black",
+  "kb": 134,
+  "tris": 5000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 63
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.204,
+   0.735,
+   0.976
+  ],
+  "min": [
+   -0.102,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.102,
+   0.735,
+   0.487
+  ],
+  "top": 1
+ },
+ {
+  "cat": "animals",
+  "key": "animal_horse_brown",
+  "kb": 164,
+  "tris": 4999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 82
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.206,
+   0.728,
+   0.978
+  ],
+  "min": [
+   -0.103,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.103,
+   0.728,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "animals",
+  "key": "animal_horse_white",
+  "kb": 117,
+  "tris": 5000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 49
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.212,
+   0.74,
+   0.978
+  ],
+  "min": [
+   -0.106,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.107,
+   0.74,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "animals",
+  "key": "animal_lamb",
+  "kb": 149,
+  "tris": 4000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 101
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.381,
+   0.823,
+   0.982
+  ],
+  "min": [
+   -0.189,
+   0,
+   -0.491
+  ],
+  "max": [
+   0.191,
+   0.823,
+   0.491
+  ],
+  "top": 1
+ },
+ {
+  "cat": "animals",
+  "key": "animal_pig",
+  "kb": 121,
+  "tris": 4500,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 64
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.358,
+   0.488,
+   0.98
+  ],
+  "min": [
+   -0.179,
+   0.001,
+   -0.49
+  ],
+  "max": [
+   0.179,
+   0.488,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "animals",
+  "key": "animal_sheep",
+  "kb": 147,
+  "tris": 5000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 88
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.355,
+   0.687,
+   0.98
+  ],
+  "min": [
+   -0.177,
+   0.001,
+   -0.49
+  ],
+  "max": [
+   0.177,
+   0.688,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "animals",
+  "key": "animal_wolf",
+  "kb": 173,
+  "tris": 5000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 112
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.28,
+   0.616,
+   0.979
+  ],
+  "min": [
+   -0.14,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.14,
+   0.616,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "animals",
+  "key": "birds",
+  "kb": 219,
+  "tris": 8997,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 97
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.707,
+   0.315,
+   0.357
+  ],
+  "min": [
+   -0.383,
+   0,
+   -0.178
+  ],
+  "max": [
+   0.323,
+   0.315,
+   0.178
+  ],
+  "top": 3,
+  "nodes": [
+   {
+    "name": "dove",
+    "tris": 2999,
+    "size": [
+     0.167,
+     0.279,
+     0.278
+    ],
+    "t": [
+     -0.3,
+     0.139,
+     0
+    ]
+   },
+   {
+    "name": "crow",
+    "tris": 3000,
+    "size": [
+     0.206,
+     0.283,
+     0.34
+    ],
+    "t": [
+     -0.053,
+     0.141,
+     0
+    ]
+   },
+   {
+    "name": "eagle",
+    "tris": 2998,
+    "size": [
+     0.213,
+     0.315,
+     0.357
+    ],
+    "t": [
+     0.217,
+     0.157,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "animals",
+  "key": "poultry_fish_pack",
+  "kb": 287,
+  "tris": 12512,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 128
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.94,
+   0.317,
+   0.35
+  ],
+  "min": [
+   -0.5,
+   0,
+   -0.175
+  ],
+  "max": [
+   0.44,
+   0.317,
+   0.175
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "fish_small",
+    "tris": 956,
+    "size": [
+     0.055,
+     0.099,
+     0.265
+    ],
+    "t": [
+     -0.473,
+     0.049,
+     0
+    ]
+   },
+   {
+    "name": "chick",
+    "tris": 1784,
+    "size": [
+     0.119,
+     0.16,
+     0.137
+    ],
+    "t": [
+     -0.326,
+     0.08,
+     0
+    ]
+   },
+   {
+    "name": "trout",
+    "tris": 2364,
+    "size": [
+     0.068,
+     0.137,
+     0.35
+    ],
+    "t": [
+     -0.172,
+     0.069,
+     0
+    ]
+   },
+   {
+    "name": "rooster",
+    "tris": 2498,
+    "size": [
+     0.142,
+     0.317,
+     0.284
+    ],
+    "t": [
+     -0.007,
+     0.159,
+     0
+    ]
+   },
+   {
+    "name": "carp",
+    "tris": 2412,
+    "size": [
+     0.102,
+     0.168,
+     0.303
+    ],
+    "t": [
+     0.175,
+     0.084,
+     0
+    ]
+   },
+   {
+    "name": "hen",
+    "tris": 2498,
+    "size": [
+     0.154,
+     0.285,
+     0.261
+    ],
+    "t": [
+     0.363,
+     0.142,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "bridges",
+  "key": "bridge_moat",
+  "kb": 233,
+  "tris": 5989,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 121
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.856,
+   0.822,
+   0.982
+  ],
+  "min": [
+   -0.428,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.429,
+   0.822,
+   0.492
+  ],
+  "top": 1
+ },
+ {
+  "cat": "bridges",
+  "key": "bridge_stone_0",
+  "kb": 184,
+  "tris": 5000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 120
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.379,
+   0.339,
+   0.981
+  ],
+  "min": [
+   -0.19,
+   0,
+   -0.491
+  ],
+  "max": [
+   0.19,
+   0.34,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "bridges",
+  "key": "bridge_stone_1",
+  "kb": 183,
+  "tris": 5000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 107
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.331,
+   0.246,
+   0.978
+  ],
+  "min": [
+   -0.165,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.166,
+   0.246,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "bridges",
+  "key": "water_gate",
+  "kb": 222,
+  "tris": 5986,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 113
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.522,
+   0.841,
+   0.979
+  ],
+  "min": [
+   -0.263,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.259,
+   0.841,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_gate_diamond_black",
+  "kb": 215,
+  "tris": 5998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 107
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.321,
+   0.592,
+   0.977
+  ],
+  "min": [
+   -0.161,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.161,
+   0.592,
+   0.488
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_gate_diamond_blue",
+  "kb": 253,
+  "tris": 5993,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 149
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.337,
+   0.593,
+   0.978
+  ],
+  "min": [
+   -0.167,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.17,
+   0.593,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_gate_diamond_green",
+  "kb": 267,
+  "tris": 5999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 160
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.34,
+   0.578,
+   0.981
+  ],
+  "min": [
+   -0.17,
+   0,
+   -0.492
+  ],
+  "max": [
+   0.17,
+   0.578,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_gate_diamond_ice",
+  "kb": 265,
+  "tris": 5995,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 162
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.358,
+   0.597,
+   0.981
+  ],
+  "min": [
+   -0.179,
+   0,
+   -0.491
+  ],
+  "max": [
+   0.179,
+   0.597,
+   0.491
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_gate_diamond_red",
+  "kb": 211,
+  "tris": 5998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 106
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.339,
+   0.592,
+   0.985
+  ],
+  "min": [
+   -0.169,
+   0,
+   -0.492
+  ],
+  "max": [
+   0.17,
+   0.592,
+   0.493
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_gate_gold",
+  "kb": 283,
+  "tris": 5992,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 177
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.312,
+   0.583,
+   0.982
+  ],
+  "min": [
+   -0.156,
+   0,
+   -0.491
+  ],
+  "max": [
+   0.156,
+   0.583,
+   0.491
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_gate_iron",
+  "kb": 213,
+  "tris": 5992,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 112
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.339,
+   0.578,
+   0.98
+  ],
+  "min": [
+   -0.169,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.17,
+   0.578,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_gate_stone",
+  "kb": 200,
+  "tris": 5996,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 103
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.337,
+   0.578,
+   0.98
+  ],
+  "min": [
+   -0.169,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.168,
+   0.578,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_gate_wood",
+  "kb": 234,
+  "tris": 6000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 123
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.336,
+   0.595,
+   0.978
+  ],
+  "min": [
+   -0.169,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.168,
+   0.595,
+   0.488
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_keep_stone_1",
+  "kb": 914,
+  "tris": 18175,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     2048,
+     2048
+    ],
+    "kb": 673
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.733,
+   0.772,
+   0.98
+  ],
+  "min": [
+   -0.367,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.366,
+   0.772,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_keep_stone_2",
+  "kb": 869,
+  "tris": 17946,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     2048,
+     2048
+    ],
+    "kb": 610
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.813,
+   0.862,
+   0.981
+  ],
+  "min": [
+   -0.407,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.407,
+   0.862,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_medium_diamond_black",
+  "kb": 192,
+  "tris": 5000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 113
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.553,
+   0.981,
+   0.555
+  ],
+  "min": [
+   -0.277,
+   0,
+   -0.277
+  ],
+  "max": [
+   0.276,
+   0.981,
+   0.277
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_medium_diamond_blue",
+  "kb": 227,
+  "tris": 4999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 152
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.564,
+   0.98,
+   0.568
+  ],
+  "min": [
+   -0.282,
+   0,
+   -0.284
+  ],
+  "max": [
+   0.282,
+   0.98,
+   0.284
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_medium_diamond_green",
+  "kb": 247,
+  "tris": 4999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 171
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.549,
+   0.981,
+   0.567
+  ],
+  "min": [
+   -0.275,
+   0,
+   -0.283
+  ],
+  "max": [
+   0.275,
+   0.981,
+   0.284
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_medium_diamond_ice",
+  "kb": 275,
+  "tris": 4998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 195
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.563,
+   0.98,
+   0.562
+  ],
+  "min": [
+   -0.281,
+   0,
+   -0.281
+  ],
+  "max": [
+   0.281,
+   0.98,
+   0.281
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_medium_diamond_red",
+  "kb": 183,
+  "tris": 4998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 107
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.552,
+   0.98,
+   0.553
+  ],
+  "min": [
+   -0.276,
+   0,
+   -0.276
+  ],
+  "max": [
+   0.276,
+   0.98,
+   0.276
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_medium_gold",
+  "kb": 215,
+  "tris": 4999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 137
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.555,
+   0.979,
+   0.563
+  ],
+  "min": [
+   -0.277,
+   0,
+   -0.282
+  ],
+  "max": [
+   0.277,
+   0.979,
+   0.282
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_medium_iron",
+  "kb": 196,
+  "tris": 4967,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 115
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.568,
+   0.981,
+   0.576
+  ],
+  "min": [
+   -0.284,
+   0,
+   -0.287
+  ],
+  "max": [
+   0.283,
+   0.981,
+   0.289
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_medium_stone",
+  "kb": 170,
+  "tris": 4998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 94
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.567,
+   0.981,
+   0.568
+  ],
+  "min": [
+   -0.283,
+   0,
+   -0.284
+  ],
+  "max": [
+   0.284,
+   0.981,
+   0.284
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_medium_wood",
+  "kb": 212,
+  "tris": 4996,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 135
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.575,
+   0.979,
+   0.581
+  ],
+  "min": [
+   -0.287,
+   0,
+   -0.291
+  ],
+  "max": [
+   0.287,
+   0.979,
+   0.29
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_short_diamond_black",
+  "kb": 188,
+  "tris": 3999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 122
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.776,
+   0.978,
+   0.759
+  ],
+  "min": [
+   -0.388,
+   0,
+   -0.38
+  ],
+  "max": [
+   0.387,
+   0.978,
+   0.38
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_short_diamond_blue",
+  "kb": 210,
+  "tris": 4000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 147
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.819,
+   0.979,
+   0.748
+  ],
+  "min": [
+   -0.409,
+   0,
+   -0.374
+  ],
+  "max": [
+   0.409,
+   0.979,
+   0.374
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_short_diamond_green",
+  "kb": 229,
+  "tris": 4000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 164
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.779,
+   0.978,
+   0.744
+  ],
+  "min": [
+   -0.389,
+   0,
+   -0.372
+  ],
+  "max": [
+   0.389,
+   0.978,
+   0.372
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_short_diamond_ice",
+  "kb": 247,
+  "tris": 3998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 184
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.775,
+   0.979,
+   0.742
+  ],
+  "min": [
+   -0.387,
+   0,
+   -0.371
+  ],
+  "max": [
+   0.387,
+   0.979,
+   0.371
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_short_diamond_red",
+  "kb": 161,
+  "tris": 3996,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 101
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.783,
+   0.978,
+   0.75
+  ],
+  "min": [
+   -0.392,
+   0,
+   -0.375
+  ],
+  "max": [
+   0.392,
+   0.978,
+   0.375
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_short_gold",
+  "kb": 226,
+  "tris": 3999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 165
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.791,
+   0.978,
+   0.744
+  ],
+  "min": [
+   -0.395,
+   0,
+   -0.372
+  ],
+  "max": [
+   0.396,
+   0.979,
+   0.372
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_short_iron",
+  "kb": 201,
+  "tris": 3999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 129
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.795,
+   0.977,
+   0.768
+  ],
+  "min": [
+   -0.4,
+   0,
+   -0.382
+  ],
+  "max": [
+   0.394,
+   0.977,
+   0.386
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_short_stone",
+  "kb": 161,
+  "tris": 3999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 99
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.773,
+   0.978,
+   0.74
+  ],
+  "min": [
+   -0.386,
+   0,
+   -0.37
+  ],
+  "max": [
+   0.387,
+   0.978,
+   0.37
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_short_wood",
+  "kb": 211,
+  "tris": 4000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 146
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.805,
+   0.98,
+   0.764
+  ],
+  "min": [
+   -0.402,
+   0.002,
+   -0.382
+  ],
+  "max": [
+   0.402,
+   0.982,
+   0.383
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_stone_1",
+  "kb": 317,
+  "tris": 5999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 236
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.512,
+   0.983,
+   0.536
+  ],
+  "min": [
+   -0.256,
+   0,
+   -0.268
+  ],
+  "max": [
+   0.256,
+   0.983,
+   0.267
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_stone_2",
+  "kb": 285,
+  "tris": 6000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 203
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.493,
+   0.981,
+   0.527
+  ],
+  "min": [
+   -0.247,
+   0,
+   -0.264
+  ],
+  "max": [
+   0.245,
+   0.981,
+   0.263
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_tall_diamond_black",
+  "kb": 211,
+  "tris": 6000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 118
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.308,
+   0.981,
+   0.31
+  ],
+  "min": [
+   -0.154,
+   0,
+   -0.155
+  ],
+  "max": [
+   0.154,
+   0.981,
+   0.155
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_tall_diamond_blue",
+  "kb": 248,
+  "tris": 6000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 158
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.311,
+   0.982,
+   0.311
+  ],
+  "min": [
+   -0.156,
+   0,
+   -0.155
+  ],
+  "max": [
+   0.155,
+   0.982,
+   0.156
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_tall_diamond_green",
+  "kb": 262,
+  "tris": 5999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 172
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.3,
+   0.978,
+   0.3
+  ],
+  "min": [
+   -0.15,
+   0,
+   -0.15
+  ],
+  "max": [
+   0.15,
+   0.978,
+   0.15
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_tall_diamond_ice",
+  "kb": 252,
+  "tris": 5994,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 159
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.306,
+   0.98,
+   0.307
+  ],
+  "min": [
+   -0.153,
+   0,
+   -0.154
+  ],
+  "max": [
+   0.153,
+   0.98,
+   0.154
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_tall_diamond_red",
+  "kb": 200,
+  "tris": 5997,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 114
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.311,
+   0.976,
+   0.31
+  ],
+  "min": [
+   -0.155,
+   0,
+   -0.155
+  ],
+  "max": [
+   0.155,
+   0.976,
+   0.155
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_tall_gold",
+  "kb": 252,
+  "tris": 5999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 164
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.307,
+   0.978,
+   0.311
+  ],
+  "min": [
+   -0.154,
+   0,
+   -0.155
+  ],
+  "max": [
+   0.154,
+   0.978,
+   0.155
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_tall_iron",
+  "kb": 205,
+  "tris": 5959,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 112
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.311,
+   0.978,
+   0.312
+  ],
+  "min": [
+   -0.156,
+   0,
+   -0.156
+  ],
+  "max": [
+   0.155,
+   0.978,
+   0.156
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_tall_stone",
+  "kb": 209,
+  "tris": 5999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 119
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.308,
+   0.983,
+   0.312
+  ],
+  "min": [
+   -0.154,
+   0,
+   -0.156
+  ],
+  "max": [
+   0.154,
+   0.983,
+   0.156
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_tower_tall_wood",
+  "kb": 245,
+  "tris": 5998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 150
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.311,
+   0.975,
+   0.312
+  ],
+  "min": [
+   -0.156,
+   0,
+   -0.156
+  ],
+  "max": [
+   0.155,
+   0.975,
+   0.156
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_wall_diamond_black",
+  "kb": 219,
+  "tris": 1999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 177
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.125,
+   0.764,
+   0.976
+  ],
+  "min": [
+   -0.062,
+   0,
+   -0.487
+  ],
+  "max": [
+   0.062,
+   0.764,
+   0.488
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_wall_diamond_blue",
+  "kb": 264,
+  "tris": 1999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 221
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.263,
+   0.694,
+   0.977
+  ],
+  "min": [
+   -0.129,
+   0,
+   -0.488
+  ],
+  "max": [
+   0.134,
+   0.694,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_wall_diamond_green",
+  "kb": 253,
+  "tris": 2144,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 208
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.133,
+   0.708,
+   0.978
+  ],
+  "min": [
+   -0.067,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.066,
+   0.708,
+   0.488
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_wall_diamond_ice",
+  "kb": 248,
+  "tris": 2000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 214
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.188,
+   0.739,
+   0.978
+  ],
+  "min": [
+   -0.094,
+   0.001,
+   -0.489
+  ],
+  "max": [
+   0.094,
+   0.74,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_wall_diamond_red",
+  "kb": 221,
+  "tris": 2000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 181
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.208,
+   0.707,
+   0.977
+  ],
+  "min": [
+   -0.104,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.104,
+   0.707,
+   0.488
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_wall_gold",
+  "kb": 244,
+  "tris": 2000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 201
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.165,
+   0.613,
+   0.975
+  ],
+  "min": [
+   -0.083,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.083,
+   0.613,
+   0.486
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_wall_iron",
+  "kb": 212,
+  "tris": 2358,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 160
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.206,
+   0.655,
+   0.973
+  ],
+  "min": [
+   -0.103,
+   0,
+   -0.488
+  ],
+  "max": [
+   0.103,
+   0.655,
+   0.485
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_wall_stone",
+  "kb": 214,
+  "tris": 1999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 176
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.2,
+   0.526,
+   0.975
+  ],
+  "min": [
+   -0.1,
+   0,
+   -0.486
+  ],
+  "max": [
+   0.1,
+   0.526,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_wall_stone_b",
+  "kb": 162,
+  "tris": 2000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 123
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.177,
+   0.647,
+   0.979
+  ],
+  "min": [
+   -0.089,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.089,
+   0.647,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "castle",
+  "key": "castle_wall_wood",
+  "kb": 289,
+  "tris": 3432,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 207
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.225,
+   0.742,
+   0.977
+  ],
+  "min": [
+   -0.111,
+   0,
+   -0.487
+  ],
+  "max": [
+   0.114,
+   0.742,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "armory_0",
+  "kb": 277,
+  "tris": 8329,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 108
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.827,
+   0.963,
+   0.972
+  ],
+  "min": [
+   -0.415,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.412,
+   0.963,
+   0.482
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "armory_1",
+  "kb": 240,
+  "tris": 6349,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 110
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.967,
+   0.407,
+   0.518
+  ],
+  "min": [
+   -0.488,
+   0,
+   -0.258
+  ],
+  "max": [
+   0.48,
+   0.407,
+   0.26
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "bakery",
+  "kb": 224,
+  "tris": 7992,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 89
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.799,
+   0.77,
+   0.98
+  ],
+  "min": [
+   -0.401,
+   0.002,
+   -0.49
+  ],
+  "max": [
+   0.399,
+   0.772,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "barn_0",
+  "kb": 206,
+  "tris": 4998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 113
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.631,
+   0.29,
+   0.978
+  ],
+  "min": [
+   -0.315,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.316,
+   0.29,
+   0.488
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "barn_1",
+  "kb": 252,
+  "tris": 5853,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 123
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.979,
+   0.717,
+   0.83
+  ],
+  "min": [
+   -0.49,
+   0,
+   -0.415
+  ],
+  "max": [
+   0.489,
+   0.717,
+   0.415
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "brewhouse",
+  "kb": 302,
+  "tris": 8808,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 124
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.727,
+   0.843,
+   0.954
+  ],
+  "min": [
+   -0.363,
+   0.001,
+   -0.471
+  ],
+  "max": [
+   0.364,
+   0.844,
+   0.483
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "butcher",
+  "kb": 255,
+  "tris": 7985,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 114
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.881,
+   0.771,
+   0.975
+  ],
+  "min": [
+   -0.442,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.44,
+   0.771,
+   0.486
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "camp_0",
+  "kb": 222,
+  "tris": 5992,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 113
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.979,
+   0.457,
+   0.98
+  ],
+  "min": [
+   -0.489,
+   0,
+   -0.491
+  ],
+  "max": [
+   0.489,
+   0.458,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "camp_1",
+  "kb": 237,
+  "tris": 5985,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 120
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.98,
+   0.597,
+   0.962
+  ],
+  "min": [
+   -0.49,
+   0,
+   -0.479
+  ],
+  "max": [
+   0.49,
+   0.597,
+   0.483
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "cannon_house_0",
+  "kb": 253,
+  "tris": 5997,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 147
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.825,
+   0.829,
+   0.972
+  ],
+  "min": [
+   -0.412,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.413,
+   0.829,
+   0.483
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "cannon_house_1",
+  "kb": 226,
+  "tris": 5994,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 126
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.56,
+   0.466,
+   0.98
+  ],
+  "min": [
+   -0.28,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.28,
+   0.466,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "civic_hall_0",
+  "kb": 824,
+  "tris": 3994,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     2048,
+     2048
+    ],
+    "kb": 742
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.978,
+   0.734,
+   0.658
+  ],
+  "min": [
+   -0.489,
+   0,
+   -0.329
+  ],
+  "max": [
+   0.489,
+   0.734,
+   0.329
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "civic_hall_1",
+  "kb": 677,
+  "tris": 3996,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     2048,
+     2048
+    ],
+    "kb": 605
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.744,
+   0.761,
+   0.98
+  ],
+  "min": [
+   -0.373,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.371,
+   0.761,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "clock_tower",
+  "kb": 257,
+  "tris": 5455,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 146
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.246,
+   0.958,
+   0.233
+  ],
+  "min": [
+   -0.123,
+   0,
+   -0.116
+  ],
+  "max": [
+   0.122,
+   0.958,
+   0.117
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "coop_0",
+  "kb": 177,
+  "tris": 3998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 111
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.98,
+   0.712,
+   0.694
+  ],
+  "min": [
+   -0.489,
+   0,
+   -0.347
+  ],
+  "max": [
+   0.491,
+   0.712,
+   0.347
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "coop_1",
+  "kb": 156,
+  "tris": 4000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 100
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.979,
+   0.908,
+   0.956
+  ],
+  "min": [
+   -0.49,
+   0,
+   -0.477
+  ],
+  "max": [
+   0.489,
+   0.908,
+   0.479
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "granary_0",
+  "kb": 193,
+  "tris": 4993,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 105
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.979,
+   0.663,
+   0.65
+  ],
+  "min": [
+   -0.49,
+   0,
+   -0.325
+  ],
+  "max": [
+   0.49,
+   0.663,
+   0.326
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "granary_1",
+  "kb": 203,
+  "tris": 4993,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 110
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.982,
+   0.593,
+   0.936
+  ],
+  "min": [
+   -0.491,
+   0,
+   -0.468
+  ],
+  "max": [
+   0.491,
+   0.593,
+   0.468
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "jetty",
+  "kb": 270,
+  "tris": 6088,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 129
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.973,
+   0.342,
+   0.282
+  ],
+  "min": [
+   -0.485,
+   0,
+   -0.142
+  ],
+  "max": [
+   0.489,
+   0.343,
+   0.14
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "jeweller",
+  "kb": 252,
+  "tris": 7982,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 115
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.871,
+   0.978,
+   0.772
+  ],
+  "min": [
+   -0.435,
+   0,
+   -0.391
+  ],
+  "max": [
+   0.435,
+   0.978,
+   0.381
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "market_hall",
+  "kb": 320,
+  "tris": 10318,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 122
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.977,
+   0.287,
+   0.395
+  ],
+  "min": [
+   -0.488,
+   0,
+   -0.199
+  ],
+  "max": [
+   0.489,
+   0.287,
+   0.196
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "mint",
+  "kb": 262,
+  "tris": 7999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 117
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.893,
+   0.828,
+   0.96
+  ],
+  "min": [
+   -0.448,
+   0,
+   -0.481
+  ],
+  "max": [
+   0.444,
+   0.828,
+   0.479
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "shrine_0",
+  "kb": 221,
+  "tris": 5998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 124
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.79,
+   0.983,
+   0.71
+  ],
+  "min": [
+   -0.38,
+   0,
+   -0.356
+  ],
+  "max": [
+   0.41,
+   0.983,
+   0.353
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "shrine_1",
+  "kb": 206,
+  "tris": 6000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 122
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.83,
+   0.979,
+   0.841
+  ],
+  "min": [
+   -0.415,
+   0,
+   -0.42
+  ],
+  "max": [
+   0.415,
+   0.979,
+   0.421
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "silo",
+  "kb": 190,
+  "tris": 4998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 114
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.863,
+   0.979,
+   0.713
+  ],
+  "min": [
+   -0.431,
+   0,
+   -0.356
+  ],
+  "max": [
+   0.431,
+   0.979,
+   0.357
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "smokehouse",
+  "kb": 246,
+  "tris": 6996,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 126
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.629,
+   0.981,
+   0.731
+  ],
+  "min": [
+   -0.314,
+   0,
+   -0.366
+  ],
+  "max": [
+   0.315,
+   0.981,
+   0.366
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "stable_0",
+  "kb": 201,
+  "tris": 4996,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 104
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.979,
+   0.491,
+   0.74
+  ],
+  "min": [
+   -0.49,
+   0,
+   -0.37
+  ],
+  "max": [
+   0.489,
+   0.491,
+   0.37
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "stable_1",
+  "kb": 214,
+  "tris": 4997,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 111
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.977,
+   0.307,
+   0.859
+  ],
+  "min": [
+   -0.489,
+   0.001,
+   -0.428
+  ],
+  "max": [
+   0.489,
+   0.308,
+   0.43
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "tavern_0",
+  "kb": 352,
+  "tris": 12514,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 118
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.809,
+   0.941,
+   0.95
+  ],
+  "min": [
+   -0.415,
+   0.005,
+   -0.474
+  ],
+  "max": [
+   0.394,
+   0.946,
+   0.476
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "tavern_1",
+  "kb": 352,
+  "tris": 12759,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 110
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.859,
+   0.937,
+   0.976
+  ],
+  "min": [
+   -0.421,
+   0.005,
+   -0.488
+  ],
+  "max": [
+   0.439,
+   0.942,
+   0.488
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "treasury_0",
+  "kb": 228,
+  "tris": 5997,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 119
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.976,
+   0.909,
+   0.892
+  ],
+  "min": [
+   -0.486,
+   0,
+   -0.446
+  ],
+  "max": [
+   0.49,
+   0.909,
+   0.446
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "treasury_1",
+  "kb": 262,
+  "tris": 5995,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 139
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.915,
+   0.777,
+   0.98
+  ],
+  "min": [
+   -0.458,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.457,
+   0.777,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "watermill",
+  "kb": 278,
+  "tris": 7995,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 122
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.976,
+   0.747,
+   0.83
+  ],
+  "min": [
+   -0.488,
+   0,
+   -0.417
+  ],
+  "max": [
+   0.488,
+   0.747,
+   0.413
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "well_abanbar",
+  "kb": 171,
+  "tris": 5999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 95
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.977,
+   0.469,
+   0.817
+  ],
+  "min": [
+   -0.488,
+   0,
+   -0.409
+  ],
+  "max": [
+   0.489,
+   0.469,
+   0.408
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "well_qanat",
+  "kb": 175,
+  "tris": 3992,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 119
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.9,
+   0.754,
+   0.977
+  ],
+  "min": [
+   -0.45,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.45,
+   0.754,
+   0.488
+  ],
+  "top": 1
+ },
+ {
+  "cat": "civic",
+  "key": "well_stone",
+  "kb": 216,
+  "tris": 3994,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 138
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.765,
+   0.98,
+   0.918
+  ],
+  "min": [
+   -0.381,
+   0,
+   -0.459
+  ],
+  "max": [
+   0.384,
+   0.98,
+   0.459
+  ],
+  "top": 1
+ },
+ {
+  "cat": "defense",
+  "key": "def_ballista",
+  "kb": 189,
+  "tris": 4994,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 94
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.986,
+   0.657,
+   0.844
+  ],
+  "min": [
+   -0.49,
+   0,
+   -0.423
+  ],
+  "max": [
+   0.496,
+   0.658,
+   0.42
+  ],
+  "top": 1
+ },
+ {
+  "cat": "defense",
+  "key": "def_catapult",
+  "kb": 189,
+  "tris": 4987,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 97
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.975,
+   0.649,
+   0.732
+  ],
+  "min": [
+   -0.486,
+   0,
+   -0.369
+  ],
+  "max": [
+   0.49,
+   0.649,
+   0.363
+  ],
+  "top": 1
+ },
+ {
+  "cat": "defense",
+  "key": "def_firepot",
+  "kb": 164,
+  "tris": 2998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 107
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.983,
+   0.549,
+   0.661
+  ],
+  "min": [
+   -0.491,
+   0,
+   -0.328
+  ],
+  "max": [
+   0.491,
+   0.55,
+   0.333
+  ],
+  "top": 1
+ },
+ {
+  "cat": "defense",
+  "key": "def_oil",
+  "kb": 144,
+  "tris": 3000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 82
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.979,
+   0.757,
+   0.855
+  ],
+  "min": [
+   -0.49,
+   0,
+   -0.427
+  ],
+  "max": [
+   0.489,
+   0.757,
+   0.428
+  ],
+  "top": 1
+ },
+ {
+  "cat": "defense",
+  "key": "def_scorpion",
+  "kb": 187,
+  "tris": 3499,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 109
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.883,
+   0.733,
+   0.975
+  ],
+  "min": [
+   -0.438,
+   0,
+   -0.487
+  ],
+  "max": [
+   0.445,
+   0.733,
+   0.488
+  ],
+  "top": 1
+ },
+ {
+  "cat": "defense",
+  "key": "def_tesla",
+  "kb": 211,
+  "tris": 4999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 118
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.873,
+   0.971,
+   0.872
+  ],
+  "min": [
+   -0.437,
+   0.001,
+   -0.436
+  ],
+  "max": [
+   0.437,
+   0.972,
+   0.436
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_cottage_0",
+  "kb": 300,
+  "tris": 5000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 219
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.823,
+   0.725,
+   0.981
+  ],
+  "min": [
+   -0.411,
+   0.002,
+   -0.491
+  ],
+  "max": [
+   0.411,
+   0.727,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_cottage_1",
+  "kb": 313,
+  "tris": 5000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 229
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.98,
+   0.895,
+   0.714
+  ],
+  "min": [
+   -0.489,
+   0,
+   -0.357
+  ],
+  "max": [
+   0.49,
+   0.895,
+   0.356
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_cottage_2",
+  "kb": 285,
+  "tris": 4999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 201
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.914,
+   0.803,
+   0.978
+  ],
+  "min": [
+   -0.458,
+   0.034,
+   -0.487
+  ],
+  "max": [
+   0.456,
+   0.838,
+   0.491
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_craftsman_0",
+  "kb": 244,
+  "tris": 6473,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 121
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.767,
+   0.978,
+   0.854
+  ],
+  "min": [
+   -0.383,
+   0,
+   -0.426
+  ],
+  "max": [
+   0.384,
+   0.978,
+   0.428
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_craftsman_0_alt",
+  "kb": 374,
+  "tris": 9778,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 184
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.932,
+   0.937,
+   0.975
+  ],
+  "min": [
+   -0.465,
+   0.005,
+   -0.485
+  ],
+  "max": [
+   0.467,
+   0.942,
+   0.491
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_craftsman_1",
+  "kb": 274,
+  "tris": 7748,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 124
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.968,
+   0.9,
+   0.913
+  ],
+  "min": [
+   -0.482,
+   0.001,
+   -0.457
+  ],
+  "max": [
+   0.487,
+   0.901,
+   0.456
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_craftsman_1_alt",
+  "kb": 391,
+  "tris": 9973,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 203
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.616,
+   0.956,
+   0.975
+  ],
+  "min": [
+   -0.306,
+   0,
+   -0.485
+  ],
+  "max": [
+   0.31,
+   0.956,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_craftsman_2",
+  "kb": 266,
+  "tris": 7410,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 121
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.976,
+   0.968,
+   0.967
+  ],
+  "min": [
+   -0.49,
+   0,
+   -0.484
+  ],
+  "max": [
+   0.486,
+   0.968,
+   0.484
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_craftsman_2_alt",
+  "kb": 329,
+  "tris": 7943,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 172
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.636,
+   0.836,
+   0.939
+  ],
+  "min": [
+   -0.316,
+   0,
+   -0.486
+  ],
+  "max": [
+   0.321,
+   0.836,
+   0.453
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_generic_a",
+  "kb": 303,
+  "tris": 3000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 244
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.961,
+   0.741,
+   0.686
+  ],
+  "min": [
+   -0.475,
+   0,
+   -0.341
+  ],
+  "max": [
+   0.486,
+   0.741,
+   0.345
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_generic_b",
+  "kb": 267,
+  "tris": 3935,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 185
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.976,
+   0.921,
+   0.872
+  ],
+  "min": [
+   -0.487,
+   0,
+   -0.436
+  ],
+  "max": [
+   0.489,
+   0.921,
+   0.436
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_generic_c",
+  "kb": 248,
+  "tris": 4232,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 162
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.923,
+   0.785,
+   0.978
+  ],
+  "min": [
+   -0.459,
+   0,
+   -0.491
+  ],
+  "max": [
+   0.463,
+   0.785,
+   0.487
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_generic_d",
+  "kb": 266,
+  "tris": 3000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 223
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.539,
+   0.492,
+   0.977
+  ],
+  "min": [
+   -0.269,
+   0,
+   -0.488
+  ],
+  "max": [
+   0.27,
+   0.492,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_merchant_0",
+  "kb": 299,
+  "tris": 5000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 193
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.76,
+   0.927,
+   0.593
+  ],
+  "min": [
+   -0.38,
+   0,
+   -0.298
+  ],
+  "max": [
+   0.38,
+   0.927,
+   0.295
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_merchant_1",
+  "kb": 279,
+  "tris": 4988,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 184
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.715,
+   0.978,
+   0.924
+  ],
+  "min": [
+   -0.357,
+   0,
+   -0.462
+  ],
+  "max": [
+   0.358,
+   0.978,
+   0.462
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_merchant_2",
+  "kb": 279,
+  "tris": 4998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 182
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.958,
+   0.884,
+   0.918
+  ],
+  "min": [
+   -0.468,
+   0.001,
+   -0.449
+  ],
+  "max": [
+   0.49,
+   0.885,
+   0.469
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_noble_0",
+  "kb": 300,
+  "tris": 5996,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 201
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.406,
+   0.721,
+   0.979
+  ],
+  "min": [
+   -0.203,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.203,
+   0.721,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_noble_1",
+  "kb": 326,
+  "tris": 5995,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 203
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.482,
+   0.559,
+   0.978
+  ],
+  "min": [
+   -0.241,
+   0.002,
+   -0.489
+  ],
+  "max": [
+   0.241,
+   0.56,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "houses",
+  "key": "house_noble_2",
+  "kb": 309,
+  "tris": 5981,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 189
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.799,
+   0.817,
+   0.979
+  ],
+  "min": [
+   -0.4,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.4,
+   0.817,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "coal_mine_0",
+  "kb": 219,
+  "tris": 5989,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 125
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.982,
+   0.503,
+   0.978
+  ],
+  "min": [
+   -0.49,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.492,
+   0.503,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "coal_mine_1",
+  "kb": 243,
+  "tris": 5991,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 126
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.899,
+   0.742,
+   0.979
+  ],
+  "min": [
+   -0.453,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.446,
+   0.742,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "dia_mine_black",
+  "kb": 208,
+  "tris": 4993,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 120
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.936,
+   0.757,
+   0.976
+  ],
+  "min": [
+   -0.467,
+   0,
+   -0.485
+  ],
+  "max": [
+   0.47,
+   0.757,
+   0.491
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "dia_mine_blue",
+  "kb": 199,
+  "tris": 4998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 116
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.947,
+   0.772,
+   0.978
+  ],
+  "min": [
+   -0.474,
+   0.001,
+   -0.491
+  ],
+  "max": [
+   0.474,
+   0.773,
+   0.487
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "dia_mine_green",
+  "kb": 211,
+  "tris": 4999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 126
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.925,
+   0.754,
+   0.979
+  ],
+  "min": [
+   -0.451,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.474,
+   0.754,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "dia_mine_ice",
+  "kb": 207,
+  "tris": 4998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 121
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.958,
+   0.781,
+   0.98
+  ],
+  "min": [
+   -0.477,
+   0,
+   -0.488
+  ],
+  "max": [
+   0.48,
+   0.781,
+   0.491
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "dia_mine_red",
+  "kb": 209,
+  "tris": 4993,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 123
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.969,
+   0.781,
+   0.975
+  ],
+  "min": [
+   -0.483,
+   0,
+   -0.486
+  ],
+  "max": [
+   0.486,
+   0.781,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "farm_field_1",
+  "kb": 231,
+  "tris": 4061,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 144
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.97,
+   0.306,
+   0.881
+  ],
+  "min": [
+   -0.483,
+   0.001,
+   -0.441
+  ],
+  "max": [
+   0.487,
+   0.307,
+   0.44
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "farm_field_2",
+  "kb": 214,
+  "tris": 3808,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 132
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.976,
+   0.304,
+   0.846
+  ],
+  "min": [
+   -0.49,
+   0,
+   -0.423
+  ],
+  "max": [
+   0.486,
+   0.304,
+   0.423
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "fishing_hut_1",
+  "kb": 325,
+  "tris": 9201,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 138
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.552,
+   0.607,
+   0.956
+  ],
+  "min": [
+   -0.278,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.275,
+   0.607,
+   0.467
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "fishing_hut_2",
+  "kb": 273,
+  "tris": 6960,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 134
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.974,
+   0.392,
+   0.582
+  ],
+  "min": [
+   -0.484,
+   0,
+   -0.292
+  ],
+  "max": [
+   0.49,
+   0.392,
+   0.289
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "gem_mine_turquoise",
+  "kb": 228,
+  "tris": 6000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 130
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.927,
+   0.752,
+   0.975
+  ],
+  "min": [
+   -0.463,
+   0.002,
+   -0.491
+  ],
+  "max": [
+   0.464,
+   0.753,
+   0.484
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "iron_mine_0",
+  "kb": 220,
+  "tris": 5995,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 115
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.979,
+   0.518,
+   0.91
+  ],
+  "min": [
+   -0.49,
+   0,
+   -0.456
+  ],
+  "max": [
+   0.489,
+   0.518,
+   0.454
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "iron_mine_1",
+  "kb": 205,
+  "tris": 5996,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 97
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.828,
+   0.773,
+   0.977
+  ],
+  "min": [
+   -0.416,
+   0,
+   -0.488
+  ],
+  "max": [
+   0.412,
+   0.774,
+   0.489
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "iron_mine_2",
+  "kb": 253,
+  "tris": 6000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 129
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.979,
+   0.741,
+   0.928
+  ],
+  "min": [
+   -0.489,
+   0,
+   -0.464
+  ],
+  "max": [
+   0.489,
+   0.741,
+   0.465
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "lumber_mill_0",
+  "kb": 266,
+  "tris": 6623,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 121
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.969,
+   0.68,
+   0.922
+  ],
+  "min": [
+   -0.49,
+   0,
+   -0.46
+  ],
+  "max": [
+   0.479,
+   0.68,
+   0.462
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "lumber_mill_1",
+  "kb": 258,
+  "tris": 5992,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 132
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.973,
+   0.498,
+   0.952
+  ],
+  "min": [
+   -0.492,
+   0.002,
+   -0.473
+  ],
+  "max": [
+   0.481,
+   0.501,
+   0.479
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "lumber_mill_2",
+  "kb": 275,
+  "tris": 6410,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 127
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.974,
+   0.283,
+   0.612
+  ],
+  "min": [
+   -0.486,
+   0,
+   -0.305
+  ],
+  "max": [
+   0.488,
+   0.283,
+   0.306
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "oil_refinery_0",
+  "kb": 270,
+  "tris": 7992,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 119
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.52,
+   0.85,
+   0.966
+  ],
+  "min": [
+   -0.26,
+   0,
+   -0.489
+  ],
+  "max": [
+   0.259,
+   0.85,
+   0.477
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "oil_refinery_1",
+  "kb": 257,
+  "tris": 6995,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 125
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.644,
+   0.697,
+   0.983
+  ],
+  "min": [
+   -0.322,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.322,
+   0.697,
+   0.493
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "oil_well_0",
+  "kb": 227,
+  "tris": 5981,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 121
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.884,
+   0.739,
+   0.982
+  ],
+  "min": [
+   -0.443,
+   0,
+   -0.492
+  ],
+  "max": [
+   0.442,
+   0.739,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "oil_well_1",
+  "kb": 199,
+  "tris": 4988,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 111
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.399,
+   0.708,
+   0.966
+  ],
+  "min": [
+   -0.2,
+   0,
+   -0.492
+  ],
+  "max": [
+   0.199,
+   0.709,
+   0.474
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "oil_well_2",
+  "kb": 235,
+  "tris": 6000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 137
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.98,
+   0.533,
+   0.787
+  ],
+  "min": [
+   -0.49,
+   0,
+   -0.396
+  ],
+  "max": [
+   0.49,
+   0.533,
+   0.391
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "rice_paddy_1",
+  "kb": 173,
+  "tris": 2982,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 110
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.978,
+   0.229,
+   0.903
+  ],
+  "min": [
+   -0.489,
+   0,
+   -0.453
+  ],
+  "max": [
+   0.489,
+   0.229,
+   0.451
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "rice_paddy_2",
+  "kb": 206,
+  "tris": 3769,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 129
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.973,
+   0.269,
+   0.953
+  ],
+  "min": [
+   -0.49,
+   0.001,
+   -0.476
+  ],
+  "max": [
+   0.483,
+   0.27,
+   0.477
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "stone_quarry_0",
+  "kb": 265,
+  "tris": 7490,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 123
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.971,
+   0.676,
+   0.98
+  ],
+  "min": [
+   -0.485,
+   0.002,
+   -0.49
+  ],
+  "max": [
+   0.486,
+   0.678,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "stone_quarry_1",
+  "kb": 235,
+  "tris": 5000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 135
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.968,
+   0.657,
+   0.973
+  ],
+  "min": [
+   -0.487,
+   0,
+   -0.485
+  ],
+  "max": [
+   0.481,
+   0.657,
+   0.488
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "stone_quarry_2",
+  "kb": 250,
+  "tris": 5358,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 137
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.88,
+   0.654,
+   0.964
+  ],
+  "min": [
+   -0.448,
+   0,
+   -0.483
+  ],
+  "max": [
+   0.432,
+   0.654,
+   0.481
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "windmill_asbad_1",
+  "kb": 201,
+  "tris": 4954,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 109
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.355,
+   0.52,
+   0.977
+  ],
+  "min": [
+   -0.178,
+   0,
+   -0.488
+  ],
+  "max": [
+   0.177,
+   0.52,
+   0.488
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "windmill_asbad_2",
+  "kb": 189,
+  "tris": 4988,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 98
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.47,
+   0.978,
+   0.512
+  ],
+  "min": [
+   -0.235,
+   0,
+   -0.256
+  ],
+  "max": [
+   0.235,
+   0.978,
+   0.256
+  ],
+  "top": 1
+ },
+ {
+  "cat": "mines",
+  "key": "windmill_tower",
+  "kb": 783,
+  "tris": 3999,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     2048,
+     2048
+    ],
+    "kb": 724
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.693,
+   0.983,
+   0.548
+  ],
+  "min": [
+   -0.345,
+   0.002,
+   -0.274
+  ],
+  "max": [
+   0.348,
+   0.985,
+   0.273
+  ],
+  "top": 1
+ },
+ {
+  "cat": "nature",
+  "key": "bushes",
+  "kb": 242,
+  "tris": 6069,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 114
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.003,
+   0.208,
+   0.216
+  ],
+  "min": [
+   -0.531,
+   0,
+   -0.108
+  ],
+  "max": [
+   0.471,
+   0.208,
+   0.108
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "rose",
+    "tris": 2219,
+    "size": [
+     0.185,
+     0.199,
+     0.208
+    ],
+    "t": [
+     -0.439,
+     0.099,
+     0
+    ]
+   },
+   {
+    "name": "boxwood",
+    "tris": 1200,
+    "size": [
+     0.226,
+     0.194,
+     0.216
+    ],
+    "t": [
+     -0.173,
+     0.097,
+     0
+    ]
+   },
+   {
+    "name": "thorny",
+    "tris": 1450,
+    "size": [
+     0.198,
+     0.192,
+     0.197
+    ],
+    "t": [
+     0.099,
+     0.096,
+     0
+    ]
+   },
+   {
+    "name": "round",
+    "tris": 1200,
+    "size": [
+     0.214,
+     0.208,
+     0.215
+    ],
+    "t": [
+     0.365,
+     0.104,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "nature",
+  "key": "cliffs",
+  "kb": 188,
+  "tris": 6998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 105
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.915,
+   0.654,
+   0.568
+  ],
+  "min": [
+   -0.487,
+   0,
+   -0.284
+  ],
+  "max": [
+   0.427,
+   0.654,
+   0.284
+  ],
+  "top": 2,
+  "nodes": [
+   {
+    "name": "spire",
+    "tris": 3498,
+    "size": [
+     0.315,
+     0.589,
+     0.28
+    ],
+    "t": [
+     -0.33,
+     0.295,
+     0
+    ]
+   },
+   {
+    "name": "cliff",
+    "tris": 3500,
+    "size": [
+     0.54,
+     0.654,
+     0.568
+    ],
+    "t": [
+     0.157,
+     0.327,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "nature",
+  "key": "crops",
+  "kb": 330,
+  "tris": 9102,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 147
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.738,
+   0.29,
+   0.318
+  ],
+  "min": [
+   -0.899,
+   0,
+   -0.159
+  ],
+  "max": [
+   0.839,
+   0.29,
+   0.159
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "pumpkins",
+    "tris": 1470,
+    "size": [
+     0.324,
+     0.235,
+     0.298
+    ],
+    "t": [
+     -0.737,
+     0.117,
+     0
+    ]
+   },
+   {
+    "name": "wheat_sheaf",
+    "tris": 2014,
+    "size": [
+     0.195,
+     0.261,
+     0.195
+    ],
+    "t": [
+     -0.417,
+     0.131,
+     0
+    ]
+   },
+   {
+    "name": "hay_bale",
+    "tris": 1149,
+    "size": [
+     0.265,
+     0.24,
+     0.283
+    ],
+    "t": [
+     -0.127,
+     0.12,
+     0
+    ]
+   },
+   {
+    "name": "cabbage",
+    "tris": 1498,
+    "size": [
+     0.24,
+     0.217,
+     0.318
+    ],
+    "t": [
+     0.185,
+     0.109,
+     0
+    ]
+   },
+   {
+    "name": "corn",
+    "tris": 1476,
+    "size": [
+     0.198,
+     0.29,
+     0.297
+    ],
+    "t": [
+     0.464,
+     0.145,
+     0
+    ]
+   },
+   {
+    "name": "carrots",
+    "tris": 1495,
+    "size": [
+     0.216,
+     0.212,
+     0.274
+    ],
+    "t": [
+     0.731,
+     0.106,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "nature",
+  "key": "flowers",
+  "kb": 322,
+  "tris": 8590,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 135
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.675,
+   0.303,
+   0.282
+  ],
+  "min": [
+   -0.867,
+   0,
+   -0.141
+  ],
+  "max": [
+   0.807,
+   0.303,
+   0.141
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "lavender",
+    "tris": 1882,
+    "size": [
+     0.241,
+     0.266,
+     0.25
+    ],
+    "t": [
+     -0.747,
+     0.133,
+     0
+    ]
+   },
+   {
+    "name": "crocus",
+    "tris": 1200,
+    "size": [
+     0.206,
+     0.232,
+     0.243
+    ],
+    "t": [
+     -0.463,
+     0.116,
+     0
+    ]
+   },
+   {
+    "name": "tulip",
+    "tris": 1200,
+    "size": [
+     0.246,
+     0.303,
+     0.282
+    ],
+    "t": [
+     -0.177,
+     0.151,
+     0
+    ]
+   },
+   {
+    "name": "daisy",
+    "tris": 2032,
+    "size": [
+     0.251,
+     0.251,
+     0.252
+    ],
+    "t": [
+     0.131,
+     0.125,
+     0
+    ]
+   },
+   {
+    "name": "poppy",
+    "tris": 1200,
+    "size": [
+     0.231,
+     0.259,
+     0.259
+    ],
+    "t": [
+     0.432,
+     0.129,
+     0
+    ]
+   },
+   {
+    "name": "narcissus",
+    "tris": 1076,
+    "size": [
+     0.2,
+     0.273,
+     0.218
+    ],
+    "t": [
+     0.707,
+     0.136,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "nature",
+  "key": "grass",
+  "kb": 150,
+  "tris": 3826,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 117
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.725,
+   0.862,
+   0.648
+  ],
+  "min": [
+   -0.393,
+   0,
+   -0.324
+  ],
+  "max": [
+   0.333,
+   0.862,
+   0.324
+  ],
+  "top": 1
+ },
+ {
+  "cat": "nature",
+  "key": "ground_cover",
+  "kb": 283,
+  "tris": 10288,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 118
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   2.018,
+   0.31,
+   0.334
+  ],
+  "min": [
+   -1.039,
+   0,
+   -0.167
+  ],
+  "max": [
+   0.979,
+   0.31,
+   0.167
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "mushroom_brown",
+    "tris": 886,
+    "size": [
+     0.238,
+     0.228,
+     0.256
+    ],
+    "t": [
+     -0.92,
+     0.114,
+     0
+    ]
+   },
+   {
+    "name": "reed",
+    "tris": 1793,
+    "size": [
+     0.327,
+     0.31,
+     0.245
+    ],
+    "t": [
+     -0.577,
+     0.155,
+     0
+    ]
+   },
+   {
+    "name": "clover",
+    "tris": 1797,
+    "size": [
+     0.276,
+     0.209,
+     0.312
+    ],
+    "t": [
+     -0.215,
+     0.105,
+     0
+    ]
+   },
+   {
+    "name": "grass_tall",
+    "tris": 2391,
+    "size": [
+     0.358,
+     0.289,
+     0.334
+    ],
+    "t": [
+     0.162,
+     0.145,
+     0
+    ]
+   },
+   {
+    "name": "fern",
+    "tris": 1795,
+    "size": [
+     0.275,
+     0.239,
+     0.286
+    ],
+    "t": [
+     0.538,
+     0.119,
+     0
+    ]
+   },
+   {
+    "name": "mushroom_red",
+    "tris": 1626,
+    "size": [
+     0.243,
+     0.26,
+     0.235
+    ],
+    "t": [
+     0.857,
+     0.13,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "nature",
+  "key": "plants_desert",
+  "kb": 245,
+  "tris": 5506,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 108
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.958,
+   0.26,
+   0.276
+  ],
+  "min": [
+   -0.509,
+   0,
+   -0.138
+  ],
+  "max": [
+   0.449,
+   0.26,
+   0.138
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "grass_dry",
+    "tris": 1198,
+    "size": [
+     0.18,
+     0.213,
+     0.168
+    ],
+    "t": [
+     -0.419,
+     0.106,
+     0
+    ]
+   },
+   {
+    "name": "camelthorn",
+    "tris": 1658,
+    "size": [
+     0.117,
+     0.26,
+     0.256
+    ],
+    "t": [
+     -0.211,
+     0.13,
+     0
+    ]
+   },
+   {
+    "name": "agave",
+    "tris": 1200,
+    "size": [
+     0.303,
+     0.244,
+     0.276
+    ],
+    "t": [
+     0.059,
+     0.122,
+     0
+    ]
+   },
+   {
+    "name": "cactus_barrel",
+    "tris": 1450,
+    "size": [
+     0.179,
+     0.18,
+     0.183
+    ],
+    "t": [
+     0.36,
+     0.09,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "nature",
+  "key": "rocks_boulder",
+  "kb": 232,
+  "tris": 6000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 159
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.105,
+   0.245,
+   0.249
+  ],
+  "min": [
+   -0.582,
+   0,
+   -0.125
+  ],
+  "max": [
+   0.522,
+   0.245,
+   0.125
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "slab",
+    "tris": 1500,
+    "size": [
+     0.216,
+     0.21,
+     0.249
+    ],
+    "t": [
+     -0.474,
+     0.105,
+     0
+    ]
+   },
+   {
+    "name": "slate",
+    "tris": 1500,
+    "size": [
+     0.263,
+     0.245,
+     0.223
+    ],
+    "t": [
+     -0.175,
+     0.123,
+     0
+    ]
+   },
+   {
+    "name": "mossy",
+    "tris": 1500,
+    "size": [
+     0.216,
+     0.215,
+     0.226
+    ],
+    "t": [
+     0.125,
+     0.108,
+     0
+    ]
+   },
+   {
+    "name": "granite",
+    "tris": 1500,
+    "size": [
+     0.229,
+     0.237,
+     0.219
+    ],
+    "t": [
+     0.408,
+     0.118,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "nature",
+  "key": "rocks_ore",
+  "kb": 213,
+  "tris": 6000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 138
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.193,
+   0.28,
+   0.251
+  ],
+  "min": [
+   -0.627,
+   0,
+   -0.125
+  ],
+  "max": [
+   0.567,
+   0.28,
+   0.125
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "crystal_blue",
+    "tris": 1500,
+    "size": [
+     0.22,
+     0.28,
+     0.212
+    ],
+    "t": [
+     -0.517,
+     0.14,
+     0
+    ]
+   },
+   {
+    "name": "gold",
+    "tris": 1500,
+    "size": [
+     0.24,
+     0.248,
+     0.211
+    ],
+    "t": [
+     -0.227,
+     0.124,
+     0
+    ]
+   },
+   {
+    "name": "iron",
+    "tris": 1500,
+    "size": [
+     0.295,
+     0.239,
+     0.236
+    ],
+    "t": [
+     0.101,
+     0.12,
+     0
+    ]
+   },
+   {
+    "name": "coal",
+    "tris": 1500,
+    "size": [
+     0.258,
+     0.224,
+     0.251
+    ],
+    "t": [
+     0.437,
+     0.112,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "nature",
+  "key": "rocks_sandstone",
+  "kb": 214,
+  "tris": 6000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 137
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.143,
+   0.44,
+   0.282
+  ],
+  "min": [
+   -0.602,
+   0,
+   -0.141
+  ],
+  "max": [
+   0.542,
+   0.44,
+   0.141
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "limestone",
+    "tris": 1500,
+    "size": [
+     0.25,
+     0.277,
+     0.211
+    ],
+    "t": [
+     -0.477,
+     0.138,
+     0
+    ]
+   },
+   {
+    "name": "pillar",
+    "tris": 1500,
+    "size": [
+     0.187,
+     0.44,
+     0.191
+    ],
+    "t": [
+     -0.198,
+     0.22,
+     0
+    ]
+   },
+   {
+    "name": "layered",
+    "tris": 1500,
+    "size": [
+     0.242,
+     0.263,
+     0.282
+    ],
+    "t": [
+     0.077,
+     0.132,
+     0
+    ]
+   },
+   {
+    "name": "red",
+    "tris": 1500,
+    "size": [
+     0.284,
+     0.318,
+     0.218
+    ],
+    "t": [
+     0.4,
+     0.159,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "nature",
+  "key": "rocks_small",
+  "kb": 220,
+  "tris": 5998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 144
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   2.1,
+   0.221,
+   0.331
+  ],
+  "min": [
+   -1.08,
+   0,
+   -0.165
+  ],
+  "max": [
+   1.02,
+   0.221,
+   0.165
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "flat",
+    "tris": 1000,
+    "size": [
+     0.342,
+     0.085,
+     0.331
+    ],
+    "t": [
+     -0.909,
+     0.043,
+     0
+    ]
+   },
+   {
+    "name": "speckled",
+    "tris": 1000,
+    "size": [
+     0.275,
+     0.191,
+     0.272
+    ],
+    "t": [
+     -0.54,
+     0.096,
+     0
+    ]
+   },
+   {
+    "name": "angular",
+    "tris": 1000,
+    "size": [
+     0.282,
+     0.22,
+     0.254
+    ],
+    "t": [
+     -0.202,
+     0.11,
+     0
+    ]
+   },
+   {
+    "name": "mossy",
+    "tris": 998,
+    "size": [
+     0.305,
+     0.19,
+     0.27
+    ],
+    "t": [
+     0.152,
+     0.095,
+     0
+    ]
+   },
+   {
+    "name": "round",
+    "tris": 1000,
+    "size": [
+     0.301,
+     0.221,
+     0.285
+    ],
+    "t": [
+     0.515,
+     0.11,
+     0
+    ]
+   },
+   {
+    "name": "split",
+    "tris": 1000,
+    "size": [
+     0.295,
+     0.191,
+     0.253
+    ],
+    "t": [
+     0.873,
+     0.095,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "nature",
+  "key": "trees_broadleaf",
+  "kb": 279,
+  "tris": 7990,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 152
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.133,
+   0.38,
+   0.31
+  ],
+  "min": [
+   -0.597,
+   0,
+   -0.155
+  ],
+  "max": [
+   0.537,
+   0.38,
+   0.155
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "poplar",
+    "tris": 2000,
+    "size": [
+     0.096,
+     0.38,
+     0.099
+    ],
+    "t": [
+     -0.548,
+     0.19,
+     0
+    ]
+   },
+   {
+    "name": "walnut",
+    "tris": 2000,
+    "size": [
+     0.26,
+     0.224,
+     0.253
+    ],
+    "t": [
+     -0.31,
+     0.112,
+     0
+    ]
+   },
+   {
+    "name": "plane",
+    "tris": 1998,
+    "size": [
+     0.326,
+     0.257,
+     0.31
+    ],
+    "t": [
+     0.043,
+     0.128,
+     0
+    ]
+   },
+   {
+    "name": "oak",
+    "tris": 1992,
+    "size": [
+     0.271,
+     0.235,
+     0.251
+    ],
+    "t": [
+     0.401,
+     0.118,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "nature",
+  "key": "trees_conifer",
+  "kb": 283,
+  "tris": 7127,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 129
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.088,
+   0.538,
+   0.328
+  ],
+  "min": [
+   -0.574,
+   0,
+   -0.164
+  ],
+  "max": [
+   0.514,
+   0.538,
+   0.164
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "cedar",
+    "tris": 2588,
+    "size": [
+     0.343,
+     0.428,
+     0.328
+    ],
+    "t": [
+     -0.402,
+     0.214,
+     0
+    ]
+   },
+   {
+    "name": "cypress",
+    "tris": 542,
+    "size": [
+     0.089,
+     0.538,
+     0.09
+    ],
+    "t": [
+     -0.127,
+     0.269,
+     0
+    ]
+   },
+   {
+    "name": "spruce",
+    "tris": 2000,
+    "size": [
+     0.263,
+     0.433,
+     0.25
+    ],
+    "t": [
+     0.109,
+     0.216,
+     0
+    ]
+   },
+   {
+    "name": "pine",
+    "tris": 1997,
+    "size": [
+     0.214,
+     0.479,
+     0.232
+    ],
+    "t": [
+     0.407,
+     0.239,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "nature",
+  "key": "trees_orchard",
+  "kb": 298,
+  "tris": 7984,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 139
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.798,
+   0.401,
+   0.284
+  ],
+  "min": [
+   -0.429,
+   0,
+   -0.142
+  ],
+  "max": [
+   0.369,
+   0.401,
+   0.142
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "olive",
+    "tris": 2000,
+    "size": [
+     0.259,
+     0.295,
+     0.284
+    ],
+    "t": [
+     -0.3,
+     0.148,
+     0
+    ]
+   },
+   {
+    "name": "pomegranate",
+    "tris": 2000,
+    "size": [
+     0.209,
+     0.272,
+     0.226
+    ],
+    "t": [
+     -0.005,
+     0.136,
+     0
+    ]
+   },
+   {
+    "name": "date_palm_young",
+    "tris": 1998,
+    "size": [
+     0.075,
+     0.193,
+     0.198
+    ],
+    "t": [
+     0.197,
+     0.097,
+     0
+    ]
+   },
+   {
+    "name": "date_palm",
+    "tris": 1986,
+    "size": [
+     0.075,
+     0.401,
+     0.265
+    ],
+    "t": [
+     0.332,
+     0.201,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "nature",
+  "key": "trees_season",
+  "kb": 319,
+  "tris": 7998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 175
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.058,
+   0.333,
+   0.252
+  ],
+  "min": [
+   -0.559,
+   0,
+   -0.126
+  ],
+  "max": [
+   0.499,
+   0.333,
+   0.126
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "apple",
+    "tris": 1998,
+    "size": [
+     0.267,
+     0.31,
+     0.248
+    ],
+    "t": [
+     -0.425,
+     0.155,
+     0
+    ]
+   },
+   {
+    "name": "fir_snow",
+    "tris": 2000,
+    "size": [
+     0.223,
+     0.333,
+     0.21
+    ],
+    "t": [
+     -0.12,
+     0.167,
+     0
+    ]
+   },
+   {
+    "name": "dead_tree",
+    "tris": 2000,
+    "size": [
+     0.152,
+     0.329,
+     0.252
+    ],
+    "t": [
+     0.127,
+     0.165,
+     0
+    ]
+   },
+   {
+    "name": "maple_autumn",
+    "tris": 2000,
+    "size": [
+     0.236,
+     0.311,
+     0.228
+    ],
+    "t": [
+     0.381,
+     0.156,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "nature",
+  "key": "trees_special",
+  "kb": 243,
+  "tris": 9368,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 125
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.108,
+   0.374,
+   0.253
+  ],
+  "min": [
+   -0.584,
+   0,
+   -0.126
+  ],
+  "max": [
+   0.524,
+   0.374,
+   0.126
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "birch",
+    "tris": 2000,
+    "size": [
+     0.182,
+     0.37,
+     0.192
+    ],
+    "t": [
+     -0.493,
+     0.185,
+     0
+    ]
+   },
+   {
+    "name": "almond",
+    "tris": 1994,
+    "size": [
+     0.255,
+     0.325,
+     0.228
+    ],
+    "t": [
+     -0.215,
+     0.162,
+     0
+    ]
+   },
+   {
+    "name": "tamarisk",
+    "tris": 2000,
+    "size": [
+     0.242,
+     0.321,
+     0.253
+    ],
+    "t": [
+     0.094,
+     0.161,
+     0
+    ]
+   },
+   {
+    "name": "willow",
+    "tris": 3374,
+    "size": [
+     0.249,
+     0.374,
+     0.253
+    ],
+    "t": [
+     0.4,
+     0.187,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "people",
+  "key": "villager_boy",
+  "kb": 248,
+  "tris": 3000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 109
+   }
+  ],
+  "skins": 1,
+  "joints": 78,
+  "anims": [
+   "walk"
+  ],
+  "size": [
+   1.268,
+   2,
+   0.438
+  ],
+  "min": [
+   -0.634,
+   -1,
+   -0.219
+  ],
+  "max": [
+   0.634,
+   1,
+   0.219
+  ],
+  "top": 1,
+  "nodes": [
+   {
+    "name": "tripo_node_d6b3b19b-e032-4ca5-b7c7-e1bb0330cad0",
+    "tris": 3000,
+    "size": [
+     1.268,
+     2,
+     0.438
+    ],
+    "t": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "name": "BoneRoot",
+    "tris": 0,
+    "size": [
+     null,
+     null,
+     null
+    ],
+    "t": [
+     0.006,
+     0.492,
+     -0.036
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "people",
+  "key": "villager_girl",
+  "kb": 245,
+  "tris": 3000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 97
+   }
+  ],
+  "skins": 1,
+  "joints": 78,
+  "anims": [
+   "walk"
+  ],
+  "size": [
+   1.246,
+   2,
+   0.475
+  ],
+  "min": [
+   -0.623,
+   -1,
+   -0.238
+  ],
+  "max": [
+   0.623,
+   1,
+   0.238
+  ],
+  "top": 1,
+  "nodes": [
+   {
+    "name": "tripo_node_7c683021-b0bc-4b15-8483-bd3f32938235",
+    "tris": 3000,
+    "size": [
+     1.246,
+     2,
+     0.475
+    ],
+    "t": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "name": "BoneRoot",
+    "tris": 0,
+    "size": [
+     null,
+     null,
+     null
+    ],
+    "t": [
+     0.006,
+     0.533,
+     0.002
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "people",
+  "key": "villager_littlegirl",
+  "kb": 273,
+  "tris": 2998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 118
+   }
+  ],
+  "skins": 1,
+  "joints": 78,
+  "anims": [
+   "walk"
+  ],
+  "size": [
+   1.24,
+   2,
+   0.513
+  ],
+  "min": [
+   -0.62,
+   -1,
+   -0.256
+  ],
+  "max": [
+   0.62,
+   1,
+   0.256
+  ],
+  "top": 1,
+  "nodes": [
+   {
+    "name": "tripo_node_8ac6249b-8b0a-4739-898f-d7a814d5c54b",
+    "tris": 2998,
+    "size": [
+     1.24,
+     2,
+     0.513
+    ],
+    "t": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "name": "BoneRoot",
+    "tris": 0,
+    "size": [
+     null,
+     null,
+     null
+    ],
+    "t": [
+     0.002,
+     0.511,
+     -0.006
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "people",
+  "key": "villager_man",
+  "kb": 230,
+  "tris": 3000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 90
+   }
+  ],
+  "skins": 1,
+  "joints": 78,
+  "anims": [
+   "walk"
+  ],
+  "size": [
+   1.211,
+   2,
+   0.485
+  ],
+  "min": [
+   -0.606,
+   -1,
+   -0.242
+  ],
+  "max": [
+   0.606,
+   1,
+   0.242
+  ],
+  "top": 1,
+  "nodes": [
+   {
+    "name": "tripo_node_e468dd2f-e7ae-4c90-bc7f-d21501eedb37",
+    "tris": 3000,
+    "size": [
+     1.211,
+     2,
+     0.485
+    ],
+    "t": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "name": "BoneRoot",
+    "tris": 0,
+    "size": [
+     null,
+     null,
+     null
+    ],
+    "t": [
+     0.002,
+     0.515,
+     0.006
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "people",
+  "key": "villager_oldman",
+  "kb": 234,
+  "tris": 3000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 95
+   }
+  ],
+  "skins": 1,
+  "joints": 78,
+  "anims": [
+   "walk"
+  ],
+  "size": [
+   1.221,
+   2,
+   0.437
+  ],
+  "min": [
+   -0.61,
+   -1,
+   -0.219
+  ],
+  "max": [
+   0.61,
+   1,
+   0.219
+  ],
+  "top": 1,
+  "nodes": [
+   {
+    "name": "tripo_node_230a102f-da33-453e-8076-37edea022733",
+    "tris": 3000,
+    "size": [
+     1.221,
+     2,
+     0.437
+    ],
+    "t": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "name": "BoneRoot",
+    "tris": 0,
+    "size": [
+     null,
+     null,
+     null
+    ],
+    "t": [
+     0.002,
+     0.511,
+     0.01
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "people",
+  "key": "villager_oldwoman",
+  "kb": 266,
+  "tris": 3000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 102
+   }
+  ],
+  "skins": 1,
+  "joints": 78,
+  "anims": [
+   "walk"
+  ],
+  "size": [
+   1.288,
+   2,
+   0.493
+  ],
+  "min": [
+   -0.644,
+   -1,
+   -0.247
+  ],
+  "max": [
+   0.644,
+   1,
+   0.247
+  ],
+  "top": 1,
+  "nodes": [
+   {
+    "name": "tripo_node_83ee62ab-5a38-4172-8d03-18a1dbc02347",
+    "tris": 3000,
+    "size": [
+     1.288,
+     2,
+     0.493
+    ],
+    "t": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "name": "BoneRoot",
+    "tris": 0,
+    "size": [
+     null,
+     null,
+     null
+    ],
+    "t": [
+     0.002,
+     0.515,
+     0.013
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "people",
+  "key": "villager_woman",
+  "kb": 263,
+  "tris": 2998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 113
+   }
+  ],
+  "skins": 1,
+  "joints": 78,
+  "anims": [
+   "walk"
+  ],
+  "size": [
+   1.206,
+   2,
+   0.435
+  ],
+  "min": [
+   -0.603,
+   -1,
+   -0.218
+  ],
+  "max": [
+   0.603,
+   1,
+   0.218
+  ],
+  "top": 1,
+  "nodes": [
+   {
+    "name": "tripo_node_930654b7-b3ac-430b-96e0-d5a95bd3842c",
+    "tris": 2998,
+    "size": [
+     1.206,
+     2,
+     0.435
+    ],
+    "t": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "name": "BoneRoot",
+    "tris": 0,
+    "size": [
+     null,
+     null,
+     null
+    ],
+    "t": [
+     0.006,
+     0.542,
+     0.01
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "people",
+  "key": "villager_youngman",
+  "kb": 231,
+  "tris": 3000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 90
+   }
+  ],
+  "skins": 1,
+  "joints": 78,
+  "anims": [
+   "walk"
+  ],
+  "size": [
+   1.175,
+   2,
+   0.407
+  ],
+  "min": [
+   -0.587,
+   -1,
+   -0.204
+  ],
+  "max": [
+   0.587,
+   1,
+   0.204
+  ],
+  "top": 1,
+  "nodes": [
+   {
+    "name": "tripo_node_5cf2b2cb-6f86-4e6a-889d-5f572f9993b1",
+    "tris": 3000,
+    "size": [
+     1.175,
+     2,
+     0.407
+    ],
+    "t": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "name": "BoneRoot",
+    "tris": 0,
+    "size": [
+     null,
+     null,
+     null
+    ],
+    "t": [
+     0.002,
+     0.53,
+     -0.002
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "construction_pack",
+  "kb": 332,
+  "tris": 13829,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 131
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.976,
+   0.259,
+   0.252
+  ],
+  "min": [
+   -0.518,
+   0,
+   -0.126
+  ],
+  "max": [
+   0.458,
+   0.259,
+   0.126
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "materials_pile",
+    "tris": 3358,
+    "size": [
+     0.244,
+     0.143,
+     0.199
+    ],
+    "t": [
+     -0.396,
+     0.072,
+     0
+    ]
+   },
+   {
+    "name": "scaffold",
+    "tris": 3473,
+    "size": [
+     0.153,
+     0.259,
+     0.155
+    ],
+    "t": [
+     -0.138,
+     0.13,
+     0
+    ]
+   },
+   {
+    "name": "wall_half",
+    "tris": 3499,
+    "size": [
+     0.187,
+     0.257,
+     0.252
+    ],
+    "t": [
+     0.092,
+     0.128,
+     0
+    ]
+   },
+   {
+    "name": "foundation_scaffold",
+    "tris": 3499,
+    "size": [
+     0.212,
+     0.238,
+     0.221
+    ],
+    "t": [
+     0.352,
+     0.119,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "lamps_candles",
+  "kb": 263,
+  "tris": 12762,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 102
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.165,
+   0.418,
+   0.242
+  ],
+  "min": [
+   -0.613,
+   0,
+   -0.121
+  ],
+  "max": [
+   0.553,
+   0.418,
+   0.121
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "candle_lantern_box",
+    "tris": 2500,
+    "size": [
+     0.149,
+     0.301,
+     0.131
+    ],
+    "t": [
+     -0.538,
+     0.15,
+     0
+    ]
+   },
+   {
+    "name": "candlestick_iron",
+    "tris": 1364,
+    "size": [
+     0.113,
+     0.381,
+     0.108
+    ],
+    "t": [
+     -0.347,
+     0.19,
+     0
+    ]
+   },
+   {
+    "name": "chandelier_crown",
+    "tris": 2498,
+    "size": [
+     0.313,
+     0.314,
+     0.242
+    ],
+    "t": [
+     -0.074,
+     0.157,
+     0
+    ]
+   },
+   {
+    "name": "candelabra_floor",
+    "tris": 2500,
+    "size": [
+     0.101,
+     0.418,
+     0.151
+    ],
+    "t": [
+     0.193,
+     0.209,
+     0
+    ]
+   },
+   {
+    "name": "candelabra_table",
+    "tris": 2064,
+    "size": [
+     0.098,
+     0.271,
+     0.181
+    ],
+    "t": [
+     0.352,
+     0.136,
+     0
+    ]
+   },
+   {
+    "name": "candle_pillar",
+    "tris": 1836,
+    "size": [
+     0.091,
+     0.295,
+     0.092
+    ],
+    "t": [
+     0.507,
+     0.148,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "lamps_fantasy",
+  "kb": 318,
+  "tris": 14378,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 133
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.131,
+   0.576,
+   0.185
+  ],
+  "min": [
+   -0.595,
+   0,
+   -0.092
+  ],
+  "max": [
+   0.535,
+   0.576,
+   0.092
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "lamp_glass_jar",
+    "tris": 2497,
+    "size": [
+     0.141,
+     0.409,
+     0.161
+    ],
+    "t": [
+     -0.525,
+     0.205,
+     0
+    ]
+   },
+   {
+    "name": "lamp_rune_stone",
+    "tris": 2499,
+    "size": [
+     0.144,
+     0.44,
+     0.143
+    ],
+    "t": [
+     -0.322,
+     0.22,
+     0
+    ]
+   },
+   {
+    "name": "lamp_gem_ruby",
+    "tris": 2500,
+    "size": [
+     0.156,
+     0.454,
+     0.152
+    ],
+    "t": [
+     -0.112,
+     0.227,
+     0
+    ]
+   },
+   {
+    "name": "lamp_ice_crystal",
+    "tris": 1964,
+    "size": [
+     0.093,
+     0.47,
+     0.114
+    ],
+    "t": [
+     0.072,
+     0.235,
+     0
+    ]
+   },
+   {
+    "name": "lamp_skull",
+    "tris": 2500,
+    "size": [
+     0.191,
+     0.488,
+     0.185
+    ],
+    "t": [
+     0.274,
+     0.244,
+     0
+    ]
+   },
+   {
+    "name": "lamp_staff_crystal",
+    "tris": 2418,
+    "size": [
+     0.106,
+     0.576,
+     0.107
+    ],
+    "t": [
+     0.482,
+     0.288,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "lamps_hand",
+  "kb": 339,
+  "tris": 14108,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 131
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.162,
+   0.367,
+   0.196
+  ],
+  "min": [
+   -0.611,
+   0,
+   -0.098
+  ],
+  "max": [
+   0.551,
+   0.367,
+   0.098
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "lamp_hand_storm",
+    "tris": 2479,
+    "size": [
+     0.125,
+     0.367,
+     0.144
+    ],
+    "t": [
+     -0.548,
+     0.183,
+     0
+    ]
+   },
+   {
+    "name": "lamp_hand_horn",
+    "tris": 2414,
+    "size": [
+     0.149,
+     0.354,
+     0.142
+    ],
+    "t": [
+     -0.351,
+     0.177,
+     0
+    ]
+   },
+   {
+    "name": "lamp_hand_oil",
+    "tris": 1784,
+    "size": [
+     0.109,
+     0.32,
+     0.113
+    ],
+    "t": [
+     -0.162,
+     0.16,
+     0
+    ]
+   },
+   {
+    "name": "lamp_hand_cloth",
+    "tris": 2434,
+    "size": [
+     0.197,
+     0.319,
+     0.196
+    ],
+    "t": [
+     0.051,
+     0.16,
+     0
+    ]
+   },
+   {
+    "name": "lamp_hand_cage",
+    "tris": 2500,
+    "size": [
+     0.148,
+     0.345,
+     0.148
+    ],
+    "t": [
+     0.284,
+     0.172,
+     0
+    ]
+   },
+   {
+    "name": "lamp_hand_persian",
+    "tris": 2497,
+    "size": [
+     0.133,
+     0.365,
+     0.116
+    ],
+    "t": [
+     0.484,
+     0.183,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "lamps_house_oil",
+  "kb": 293,
+  "tris": 14552,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 128
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.029,
+   0.326,
+   0.213
+  ],
+  "min": [
+   -0.545,
+   0,
+   -0.107
+  ],
+  "max": [
+   0.485,
+   0.326,
+   0.107
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "lamp_oil_stone",
+    "tris": 2500,
+    "size": [
+     0.118,
+     0.198,
+     0.176
+    ],
+    "t": [
+     -0.486,
+     0.099,
+     0
+    ]
+   },
+   {
+    "name": "lamp_oil_genie",
+    "tris": 2500,
+    "size": [
+     0.122,
+     0.169,
+     0.213
+    ],
+    "t": [
+     -0.306,
+     0.085,
+     0
+    ]
+   },
+   {
+    "name": "lamp_oil_pedestal",
+    "tris": 2500,
+    "size": [
+     0.104,
+     0.326,
+     0.104
+    ],
+    "t": [
+     -0.132,
+     0.163,
+     0
+    ]
+   },
+   {
+    "name": "lamp_oil_multiwick",
+    "tris": 2500,
+    "size": [
+     0.164,
+     0.199,
+     0.154
+    ],
+    "t": [
+     0.061,
+     0.099,
+     0
+    ]
+   },
+   {
+    "name": "lamp_oil_chiragh",
+    "tris": 2500,
+    "size": [
+     0.091,
+     0.198,
+     0.161
+    ],
+    "t": [
+     0.249,
+     0.099,
+     0
+    ]
+   },
+   {
+    "name": "lamp_oil_clay",
+    "tris": 2052,
+    "size": [
+     0.131,
+     0.111,
+     0.172
+    ],
+    "t": [
+     0.419,
+     0.056,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "lamps_persian_shrine",
+  "kb": 332,
+  "tris": 14539,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 138
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.192,
+   0.441,
+   0.231
+  ],
+  "min": [
+   -0.626,
+   0,
+   -0.115
+  ],
+  "max": [
+   0.566,
+   0.441,
+   0.115
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "lamp_dome_brass",
+    "tris": 2482,
+    "size": [
+     0.171,
+     0.328,
+     0.14
+    ],
+    "t": [
+     -0.541,
+     0.164,
+     0
+    ]
+   },
+   {
+    "name": "lamp_golden_temple",
+    "tris": 2500,
+    "size": [
+     0.11,
+     0.441,
+     0.124
+    ],
+    "t": [
+     -0.34,
+     0.221,
+     0
+    ]
+   },
+   {
+    "name": "atashdan",
+    "tris": 2500,
+    "size": [
+     0.172,
+     0.342,
+     0.231
+    ],
+    "t": [
+     -0.139,
+     0.171,
+     0
+    ]
+   },
+   {
+    "name": "lamp_tile_holder",
+    "tris": 2499,
+    "size": [
+     0.109,
+     0.421,
+     0.119
+    ],
+    "t": [
+     0.061,
+     0.21,
+     0
+    ]
+   },
+   {
+    "name": "lamp_mosque_hanging",
+    "tris": 2126,
+    "size": [
+     0.171,
+     0.369,
+     0.137
+    ],
+    "t": [
+     0.261,
+     0.184,
+     0
+    ]
+   },
+   {
+    "name": "lamp_star_bronze",
+    "tris": 2432,
+    "size": [
+     0.16,
+     0.265,
+     0.171
+    ],
+    "t": [
+     0.486,
+     0.132,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "lamps_torches_braziers",
+  "kb": 247,
+  "tris": 13793,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 83
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.262,
+   0.494,
+   0.219
+  ],
+  "min": [
+   -0.661,
+   0,
+   -0.109
+  ],
+  "max": [
+   0.601,
+   0.494,
+   0.109
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "torch_pole",
+    "tris": 2500,
+    "size": [
+     0.097,
+     0.491,
+     0.098
+    ],
+    "t": [
+     -0.613,
+     0.246,
+     0
+    ]
+   },
+   {
+    "name": "fire_basket_pole",
+    "tris": 2500,
+    "size": [
+     0.13,
+     0.494,
+     0.125
+    ],
+    "t": [
+     -0.439,
+     0.247,
+     0
+    ]
+   },
+   {
+    "name": "fire_bowl_stone",
+    "tris": 2500,
+    "size": [
+     0.221,
+     0.333,
+     0.219
+    ],
+    "t": [
+     -0.203,
+     0.167,
+     0
+    ]
+   },
+   {
+    "name": "brazier_tripod",
+    "tris": 2499,
+    "size": [
+     0.212,
+     0.356,
+     0.216
+    ],
+    "t": [
+     0.074,
+     0.178,
+     0
+    ]
+   },
+   {
+    "name": "torch_wall",
+    "tris": 2160,
+    "size": [
+     0.223,
+     0.376,
+     0.19
+    ],
+    "t": [
+     0.351,
+     0.188,
+     0
+    ]
+   },
+   {
+    "name": "torch_hand",
+    "tris": 1634,
+    "size": [
+     0.079,
+     0.47,
+     0.077
+    ],
+    "t": [
+     0.562,
+     0.235,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "lamps_tower_gate",
+  "kb": 257,
+  "tris": 12286,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 86
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.207,
+   0.402,
+   0.209
+  ],
+  "min": [
+   -0.633,
+   0,
+   -0.104
+  ],
+  "max": [
+   0.573,
+   0.402,
+   0.104
+  ],
+  "top": 5,
+  "nodes": [
+   {
+    "name": "chandelier_hall",
+    "tris": 2500,
+    "size": [
+     0.214,
+     0.292,
+     0.209
+    ],
+    "t": [
+     -0.527,
+     0.146,
+     0
+    ]
+   },
+   {
+    "name": "beacon_cauldron",
+    "tris": 2500,
+    "size": [
+     0.185,
+     0.262,
+     0.192
+    ],
+    "t": [
+     -0.267,
+     0.131,
+     0
+    ]
+   },
+   {
+    "name": "lantern_watchtower",
+    "tris": 2500,
+    "size": [
+     0.185,
+     0.348,
+     0.171
+    ],
+    "t": [
+     -0.022,
+     0.174,
+     0
+    ]
+   },
+   {
+    "name": "lantern_signal",
+    "tris": 2492,
+    "size": [
+     0.214,
+     0.355,
+     0.194
+    ],
+    "t": [
+     0.238,
+     0.177,
+     0
+    ]
+   },
+   {
+    "name": "beacon_basket_pole",
+    "tris": 2294,
+    "size": [
+     0.169,
+     0.402,
+     0.169
+    ],
+    "t": [
+     0.489,
+     0.201,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "lamps_wall_street",
+  "kb": 323,
+  "tris": 14695,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 124
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.986,
+   0.528,
+   0.194
+  ],
+  "min": [
+   -0.523,
+   0,
+   -0.097
+  ],
+  "max": [
+   0.463,
+   0.528,
+   0.097
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "lamp_pedestal_small",
+    "tris": 2499,
+    "size": [
+     0.092,
+     0.362,
+     0.091
+    ],
+    "t": [
+     -0.477,
+     0.181,
+     0
+    ]
+   },
+   {
+    "name": "lamp_gate_hanging",
+    "tris": 2500,
+    "size": [
+     0.158,
+     0.424,
+     0.194
+    ],
+    "t": [
+     -0.292,
+     0.212,
+     0
+    ]
+   },
+   {
+    "name": "lamp_stone_pillar",
+    "tris": 2500,
+    "size": [
+     0.137,
+     0.438,
+     0.134
+    ],
+    "t": [
+     -0.085,
+     0.219,
+     0
+    ]
+   },
+   {
+    "name": "lamp_post",
+    "tris": 2196,
+    "size": [
+     0.091,
+     0.528,
+     0.089
+    ],
+    "t": [
+     0.089,
+     0.264,
+     0
+    ]
+   },
+   {
+    "name": "lamp_street_arm",
+    "tris": 2500,
+    "size": [
+     0.103,
+     0.483,
+     0.175
+    ],
+    "t": [
+     0.246,
+     0.242,
+     0
+    ]
+   },
+   {
+    "name": "lamp_wall_bracket",
+    "tris": 2500,
+    "size": [
+     0.106,
+     0.364,
+     0.165
+    ],
+    "t": [
+     0.41,
+     0.182,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "market_stalls",
+  "kb": 303,
+  "tris": 11986,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 119
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.002,
+   0.261,
+   0.245
+  ],
+  "min": [
+   -0.531,
+   0,
+   -0.122
+  ],
+  "max": [
+   0.471,
+   0.261,
+   0.122
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "stall_spice",
+    "tris": 2996,
+    "size": [
+     0.226,
+     0.257,
+     0.231
+    ],
+    "t": [
+     -0.418,
+     0.129,
+     0
+    ]
+   },
+   {
+    "name": "stall_pottery",
+    "tris": 2997,
+    "size": [
+     0.206,
+     0.261,
+     0.197
+    ],
+    "t": [
+     -0.142,
+     0.13,
+     0
+    ]
+   },
+   {
+    "name": "stall_cloth",
+    "tris": 2999,
+    "size": [
+     0.184,
+     0.257,
+     0.237
+    ],
+    "t": [
+     0.113,
+     0.128,
+     0
+    ]
+   },
+   {
+    "name": "stall_produce",
+    "tris": 2994,
+    "size": [
+     0.206,
+     0.253,
+     0.245
+    ],
+    "t": [
+     0.368,
+     0.126,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "oil_pipes_pack",
+  "kb": 224,
+  "tris": 7997,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 118
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.789,
+   0.26,
+   0.268
+  ],
+  "min": [
+   -0.425,
+   0,
+   -0.134
+  ],
+  "max": [
+   0.365,
+   0.26,
+   0.134
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "pump_station",
+    "tris": 1999,
+    "size": [
+     0.186,
+     0.26,
+     0.268
+    ],
+    "t": [
+     -0.332,
+     0.13,
+     0
+    ]
+   },
+   {
+    "name": "valve_t",
+    "tris": 2000,
+    "size": [
+     0.154,
+     0.215,
+     0.221
+    ],
+    "t": [
+     -0.102,
+     0.107,
+     0
+    ]
+   },
+   {
+    "name": "elbow",
+    "tris": 1998,
+    "size": [
+     0.117,
+     0.21,
+     0.145
+    ],
+    "t": [
+     0.094,
+     0.105,
+     0
+    ]
+   },
+   {
+    "name": "straight",
+    "tris": 2000,
+    "size": [
+     0.152,
+     0.132,
+     0.248
+    ],
+    "t": [
+     0.288,
+     0.066,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "oil_tanks_pack",
+  "kb": 217,
+  "tris": 7488,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 116
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.043,
+   0.474,
+   0.323
+  ],
+  "min": [
+   -0.551,
+   0,
+   -0.161
+  ],
+  "max": [
+   0.491,
+   0.474,
+   0.161
+  ],
+  "top": 3,
+  "nodes": [
+   {
+    "name": "tank_wood",
+    "tris": 2500,
+    "size": [
+     0.284,
+     0.474,
+     0.251
+    ],
+    "t": [
+     -0.41,
+     0.237,
+     0
+    ]
+   },
+   {
+    "name": "tank_copper",
+    "tris": 2488,
+    "size": [
+     0.296,
+     0.434,
+     0.266
+    ],
+    "t": [
+     -0.06,
+     0.217,
+     0
+    ]
+   },
+   {
+    "name": "tank_brick",
+    "tris": 2500,
+    "size": [
+     0.343,
+     0.458,
+     0.323
+    ],
+    "t": [
+     0.32,
+     0.229,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "props_camp",
+  "kb": 276,
+  "tris": 11995,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 113
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.273,
+   0.422,
+   0.3
+  ],
+  "min": [
+   -0.667,
+   0,
+   -0.15
+  ],
+  "max": [
+   0.607,
+   0.422,
+   0.15
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "tent",
+    "tris": 2998,
+    "size": [
+     0.466,
+     0.335,
+     0.3
+    ],
+    "t": [
+     -0.433,
+     0.167,
+     0
+    ]
+   },
+   {
+    "name": "dummy",
+    "tris": 3000,
+    "size": [
+     0.157,
+     0.422,
+     0.24
+    ],
+    "t": [
+     -0.062,
+     0.211,
+     0
+    ]
+   },
+   {
+    "name": "cooking_pot",
+    "tris": 3000,
+    "size": [
+     0.273,
+     0.418,
+     0.266
+    ],
+    "t": [
+     0.213,
+     0.209,
+     0
+    ]
+   },
+   {
+    "name": "anvil",
+    "tris": 2997,
+    "size": [
+     0.197,
+     0.255,
+     0.172
+    ],
+    "t": [
+     0.508,
+     0.127,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "props_mining",
+  "kb": 318,
+  "tris": 15364,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 129
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.168,
+   0.273,
+   0.292
+  ],
+  "min": [
+   -0.614,
+   0,
+   -0.146
+  ],
+  "max": [
+   0.554,
+   0.273,
+   0.146
+  ],
+  "top": 5,
+  "nodes": [
+   {
+    "name": "winch",
+    "tris": 3500,
+    "size": [
+     0.211,
+     0.273,
+     0.23
+    ],
+    "t": [
+     -0.509,
+     0.136,
+     0
+    ]
+   },
+   {
+    "name": "sack",
+    "tris": 2536,
+    "size": [
+     0.113,
+     0.133,
+     0.124
+    ],
+    "t": [
+     -0.286,
+     0.067,
+     0
+    ]
+   },
+   {
+    "name": "sacks_pair",
+    "tris": 3500,
+    "size": [
+     0.135,
+     0.158,
+     0.229
+    ],
+    "t": [
+     -0.103,
+     0.079,
+     0
+    ]
+   },
+   {
+    "name": "ingots",
+    "tris": 2328,
+    "size": [
+     0.215,
+     0.11,
+     0.2
+    ],
+    "t": [
+     0.132,
+     0.055,
+     0
+    ]
+   },
+   {
+    "name": "cart",
+    "tris": 3500,
+    "size": [
+     0.254,
+     0.237,
+     0.292
+    ],
+    "t": [
+     0.427,
+     0.118,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "props_street",
+  "kb": 284,
+  "tris": 11208,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 137
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.816,
+   0.353,
+   0.282
+  ],
+  "min": [
+   -0.938,
+   0,
+   -0.141
+  ],
+  "max": [
+   0.878,
+   0.353,
+   0.141
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "lantern",
+    "tris": 1564,
+    "size": [
+     0.074,
+     0.315,
+     0.143
+    ],
+    "t": [
+     -0.901,
+     0.158,
+     0
+    ]
+   },
+   {
+    "name": "trough",
+    "tris": 2500,
+    "size": [
+     0.355,
+     0.204,
+     0.258
+    ],
+    "t": [
+     -0.626,
+     0.102,
+     0
+    ]
+   },
+   {
+    "name": "flag",
+    "tris": 1254,
+    "size": [
+     0.25,
+     0.353,
+     0.077
+    ],
+    "t": [
+     -0.264,
+     0.177,
+     0
+    ]
+   },
+   {
+    "name": "table_stool",
+    "tris": 2500,
+    "size": [
+     0.334,
+     0.15,
+     0.282
+    ],
+    "t": [
+     0.088,
+     0.075,
+     0
+    ]
+   },
+   {
+    "name": "signpost",
+    "tris": 1424,
+    "size": [
+     0.166,
+     0.329,
+     0.108
+    ],
+    "t": [
+     0.398,
+     0.165,
+     0
+    ]
+   },
+   {
+    "name": "bench",
+    "tris": 1966,
+    "size": [
+     0.337,
+     0.189,
+     0.207
+    ],
+    "t": [
+     0.71,
+     0.094,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "props",
+  "key": "props_town",
+  "kb": 329,
+  "tris": 15702,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 125
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.977,
+   0.226,
+   0.451
+  ],
+  "min": [
+   -1.018,
+   0,
+   -0.226
+  ],
+  "max": [
+   0.958,
+   0.226,
+   0.226
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "sacks",
+    "tris": 3000,
+    "size": [
+     0.316,
+     0.209,
+     0.275
+    ],
+    "t": [
+     -0.86,
+     0.104,
+     0
+    ]
+   },
+   {
+    "name": "chest",
+    "tris": 2786,
+    "size": [
+     0.187,
+     0.218,
+     0.229
+    ],
+    "t": [
+     -0.549,
+     0.109,
+     0
+    ]
+   },
+   {
+    "name": "crates",
+    "tris": 2920,
+    "size": [
+     0.307,
+     0.219,
+     0.297
+    ],
+    "t": [
+     -0.243,
+     0.11,
+     0
+    ]
+   },
+   {
+    "name": "wagon",
+    "tris": 3000,
+    "size": [
+     0.319,
+     0.189,
+     0.245
+    ],
+    "t": [
+     0.13,
+     0.094,
+     0
+    ]
+   },
+   {
+    "name": "handcart",
+    "tris": 1850,
+    "size": [
+     0.287,
+     0.175,
+     0.451
+    ],
+    "t": [
+     0.493,
+     0.087,
+     0
+    ]
+   },
+   {
+    "name": "barrels",
+    "tris": 2146,
+    "size": [
+     0.262,
+     0.226,
+     0.275
+    ],
+    "t": [
+     0.828,
+     0.113,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "traps",
+  "key": "trap_spike_pit",
+  "kb": 97,
+  "tris": 3000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 48
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.969,
+   0.499,
+   0.98
+  ],
+  "min": [
+   -0.515,
+   0,
+   -0.49
+  ],
+  "max": [
+   0.455,
+   0.499,
+   0.49
+  ],
+  "top": 1
+ },
+ {
+  "cat": "traps",
+  "key": "traps_blast",
+  "kb": 264,
+  "tris": 11508,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 115
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.007,
+   0.296,
+   0.3
+  ],
+  "min": [
+   -0.533,
+   0,
+   -0.15
+  ],
+  "max": [
+   0.473,
+   0.296,
+   0.15
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "net",
+    "tris": 2611,
+    "size": [
+     0.1,
+     0.296,
+     0.238
+    ],
+    "t": [
+     -0.483,
+     0.148,
+     0
+    ]
+   },
+   {
+    "name": "firepit",
+    "tris": 3499,
+    "size": [
+     0.315,
+     0.132,
+     0.3
+    ],
+    "t": [
+     -0.215,
+     0.066,
+     0
+    ]
+   },
+   {
+    "name": "landmine",
+    "tris": 3500,
+    "size": [
+     0.249,
+     0.139,
+     0.255
+    ],
+    "t": [
+     0.127,
+     0.069,
+     0
+    ]
+   },
+   {
+    "name": "powder_barrel",
+    "tris": 1898,
+    "size": [
+     0.162,
+     0.275,
+     0.163
+    ],
+    "t": [
+     0.392,
+     0.137,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "traps",
+  "key": "traps_floor2",
+  "kb": 241,
+  "tris": 9000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 102
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.018,
+   0.134,
+   0.314
+  ],
+  "min": [
+   -0.539,
+   0,
+   -0.157
+  ],
+  "max": [
+   0.479,
+   0.134,
+   0.157
+  ],
+  "top": 3,
+  "nodes": [
+   {
+    "name": "caltrops",
+    "tris": 3000,
+    "size": [
+     0.298,
+     0.123,
+     0.275
+    ],
+    "t": [
+     -0.39,
+     0.061,
+     0
+    ]
+   },
+   {
+    "name": "spiked_board",
+    "tris": 3000,
+    "size": [
+     0.29,
+     0.13,
+     0.308
+    ],
+    "t": [
+     -0.036,
+     0.065,
+     0
+    ]
+   },
+   {
+    "name": "bear_trap",
+    "tris": 3000,
+    "size": [
+     0.31,
+     0.134,
+     0.314
+    ],
+    "t": [
+     0.324,
+     0.067,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "traps",
+  "key": "traps_mech",
+  "kb": 300,
+  "tris": 12650,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 128
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.033,
+   0.355,
+   0.344
+  ],
+  "min": [
+   -0.547,
+   0,
+   -0.172
+  ],
+  "max": [
+   0.487,
+   0.355,
+   0.172
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "crossbow",
+    "tris": 2338,
+    "size": [
+     0.312,
+     0.193,
+     0.32
+    ],
+    "t": [
+     -0.391,
+     0.096,
+     0
+    ]
+   },
+   {
+    "name": "spiked_log",
+    "tris": 3499,
+    "size": [
+     0.151,
+     0.293,
+     0.344
+    ],
+    "t": [
+     -0.1,
+     0.147,
+     0
+    ]
+   },
+   {
+    "name": "spiked_ball",
+    "tris": 3499,
+    "size": [
+     0.296,
+     0.335,
+     0.183
+    ],
+    "t": [
+     0.184,
+     0.168,
+     0
+    ]
+   },
+   {
+    "name": "saw",
+    "tris": 3314,
+    "size": [
+     0.095,
+     0.355,
+     0.237
+    ],
+    "t": [
+     0.439,
+     0.177,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "units",
+  "key": "soldier_a",
+  "kb": 301,
+  "tris": 3000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 160
+   }
+  ],
+  "skins": 1,
+  "joints": 78,
+  "anims": [
+   "walk"
+  ],
+  "size": [
+   1.163,
+   2,
+   0.53
+  ],
+  "min": [
+   -0.582,
+   -1,
+   -0.265
+  ],
+  "max": [
+   0.582,
+   1,
+   0.265
+  ],
+  "top": 1,
+  "nodes": [
+   {
+    "name": "tripo_node_292f2c14-c291-4e48-87e7-17ee3a03f4f6",
+    "tris": 3000,
+    "size": [
+     1.163,
+     2,
+     0.53
+    ],
+    "t": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "name": "BoneRoot",
+    "tris": 0,
+    "size": [
+     null,
+     null,
+     null
+    ],
+    "t": [
+     0.002,
+     0.531,
+     -0.021
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "units",
+  "key": "soldier_b",
+  "kb": 294,
+  "tris": 3000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 155
+   }
+  ],
+  "skins": 1,
+  "joints": 78,
+  "anims": [
+   "walk"
+  ],
+  "size": [
+   1.14,
+   2,
+   0.484
+  ],
+  "min": [
+   -0.57,
+   -1,
+   -0.242
+  ],
+  "max": [
+   0.57,
+   1,
+   0.242
+  ],
+  "top": 1,
+  "nodes": [
+   {
+    "name": "tripo_node_68bc55f1-5f97-42c2-9a1a-1132cd99a2a3",
+    "tris": 3000,
+    "size": [
+     1.14,
+     2,
+     0.484
+    ],
+    "t": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "name": "BoneRoot",
+    "tris": 0,
+    "size": [
+     null,
+     null,
+     null
+    ],
+    "t": [
+     0.002,
+     0.531,
+     -0.01
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_arrows_quivers",
+  "kb": 245,
+  "tris": 7458,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 118
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.847,
+   0.615,
+   0.169
+  ],
+  "min": [
+   -0.453,
+   0,
+   -0.084
+  ],
+  "max": [
+   0.393,
+   0.615,
+   0.084
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "quiver_persian",
+    "tris": 1798,
+    "size": [
+     0.144,
+     0.583,
+     0.153
+    ],
+    "t": [
+     -0.381,
+     0.292,
+     0
+    ]
+   },
+   {
+    "name": "quiver_leather",
+    "tris": 1800,
+    "size": [
+     0.148,
+     0.585,
+     0.169
+    ],
+    "t": [
+     -0.175,
+     0.292,
+     0
+    ]
+   },
+   {
+    "name": "bolts_pair",
+    "tris": 860,
+    "size": [
+     0.063,
+     0.599,
+     0.081
+    ],
+    "t": [
+     -0.009,
+     0.299,
+     0
+    ]
+   },
+   {
+    "name": "arrow_fire",
+    "tris": 502,
+    "size": [
+     0.06,
+     0.599,
+     0.065
+    ],
+    "t": [
+     0.112,
+     0.299,
+     0
+    ]
+   },
+   {
+    "name": "arrow_war",
+    "tris": 698,
+    "size": [
+     0.052,
+     0.615,
+     0.06
+    ],
+    "t": [
+     0.229,
+     0.308,
+     0
+    ]
+   },
+   {
+    "name": "arrows_bundle",
+    "tris": 1800,
+    "size": [
+     0.079,
+     0.599,
+     0.151
+    ],
+    "t": [
+     0.354,
+     0.299,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_axes_double",
+  "kb": 274,
+  "tris": 8994,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 158
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.549,
+   0.638,
+   0.218
+  ],
+  "min": [
+   -0.304,
+   0,
+   -0.109
+  ],
+  "max": [
+   0.244,
+   0.638,
+   0.109
+  ],
+  "top": 5,
+  "nodes": [
+   {
+    "name": "axe2_golden",
+    "tris": 1798,
+    "size": [
+     0.067,
+     0.586,
+     0.185
+    ],
+    "t": [
+     -0.271,
+     0.293,
+     0
+    ]
+   },
+   {
+    "name": "axe2_crescent",
+    "tris": 1800,
+    "size": [
+     0.059,
+     0.58,
+     0.181
+    ],
+    "t": [
+     -0.148,
+     0.29,
+     0
+    ]
+   },
+   {
+    "name": "axe2_great",
+    "tris": 1799,
+    "size": [
+     0.067,
+     0.638,
+     0.218
+    ],
+    "t": [
+     -0.025,
+     0.319,
+     0
+    ]
+   },
+   {
+    "name": "axe2_labrys",
+    "tris": 1800,
+    "size": [
+     0.051,
+     0.566,
+     0.166
+    ],
+    "t": [
+     0.093,
+     0.283,
+     0
+    ]
+   },
+   {
+    "name": "axe2_battle",
+    "tris": 1797,
+    "size": [
+     0.066,
+     0.585,
+     0.181
+    ],
+    "t": [
+     0.211,
+     0.293,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_axes_single",
+  "kb": 233,
+  "tris": 10402,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 113
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.59,
+   0.6,
+   0.155
+  ],
+  "min": [
+   -0.325,
+   0,
+   -0.077
+  ],
+  "max": [
+   0.265,
+   0.6,
+   0.077
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "axe_felling",
+    "tris": 1799,
+    "size": [
+     0.069,
+     0.509,
+     0.155
+    ],
+    "t": [
+     -0.291,
+     0.255,
+     0
+    ]
+   },
+   {
+    "name": "axe_francisca",
+    "tris": 1797,
+    "size": [
+     0.045,
+     0.471,
+     0.131
+    ],
+    "t": [
+     -0.174,
+     0.236,
+     0
+    ]
+   },
+   {
+    "name": "axe_tabar",
+    "tris": 1798,
+    "size": [
+     0.039,
+     0.562,
+     0.145
+    ],
+    "t": [
+     -0.071,
+     0.281,
+     0
+    ]
+   },
+   {
+    "name": "axe_dane",
+    "tris": 1797,
+    "size": [
+     0.039,
+     0.6,
+     0.136
+    ],
+    "t": [
+     0.027,
+     0.3,
+     0
+    ]
+   },
+   {
+    "name": "axe_bearded",
+    "tris": 1412,
+    "size": [
+     0.051,
+     0.363,
+     0.11
+    ],
+    "t": [
+     0.132,
+     0.182,
+     0
+    ]
+   },
+   {
+    "name": "axe_hatchet",
+    "tris": 1799,
+    "size": [
+     0.048,
+     0.499,
+     0.141
+    ],
+    "t": [
+     0.241,
+     0.249,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_bows",
+  "kb": 217,
+  "tris": 9434,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 95
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   1.123,
+   0.667,
+   0.194
+  ],
+  "min": [
+   -0.592,
+   0,
+   -0.097
+  ],
+  "max": [
+   0.532,
+   0.667,
+   0.097
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "crossbow_heavy",
+    "tris": 1798,
+    "size": [
+     0.347,
+     0.534,
+     0.167
+    ],
+    "t": [
+     -0.418,
+     0.267,
+     0
+    ]
+   },
+   {
+    "name": "crossbow_light",
+    "tris": 1800,
+    "size": [
+     0.326,
+     0.504,
+     0.194
+    ],
+    "t": [
+     -0.021,
+     0.252,
+     0
+    ]
+   },
+   {
+    "name": "bow_composite",
+    "tris": 1800,
+    "size": [
+     0.044,
+     0.605,
+     0.087
+    ],
+    "t": [
+     0.224,
+     0.303,
+     0
+    ]
+   },
+   {
+    "name": "bow_longbow",
+    "tris": 1168,
+    "size": [
+     0.035,
+     0.667,
+     0.074
+    ],
+    "t": [
+     0.323,
+     0.334,
+     0
+    ]
+   },
+   {
+    "name": "bow_persian",
+    "tris": 1792,
+    "size": [
+     0.035,
+     0.609,
+     0.067
+    ],
+    "t": [
+     0.418,
+     0.305,
+     0
+    ]
+   },
+   {
+    "name": "bow_short",
+    "tris": 1076,
+    "size": [
+     0.036,
+     0.575,
+     0.083
+    ],
+    "t": [
+     0.514,
+     0.288,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_daggers_1",
+  "kb": 250,
+  "tris": 10800,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 126
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.692,
+   0.613,
+   0.139
+  ],
+  "min": [
+   -0.376,
+   0,
+   -0.069
+  ],
+  "max": [
+   0.316,
+   0.613,
+   0.069
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "knives_throwing",
+    "tris": 1800,
+    "size": [
+     0.07,
+     0.446,
+     0.122
+    ],
+    "t": [
+     -0.341,
+     0.223,
+     0
+    ]
+   },
+   {
+    "name": "dagger_dirk",
+    "tris": 1800,
+    "size": [
+     0.073,
+     0.574,
+     0.076
+    ],
+    "t": [
+     -0.21,
+     0.287,
+     0
+    ]
+   },
+   {
+    "name": "dagger_stiletto",
+    "tris": 1800,
+    "size": [
+     0.051,
+     0.595,
+     0.05
+    ],
+    "t": [
+     -0.088,
+     0.297,
+     0
+    ]
+   },
+   {
+    "name": "dagger_kris",
+    "tris": 1800,
+    "size": [
+     0.067,
+     0.613,
+     0.128
+    ],
+    "t": [
+     0.031,
+     0.307,
+     0
+    ]
+   },
+   {
+    "name": "dagger_khanjar",
+    "tris": 1800,
+    "size": [
+     0.069,
+     0.532,
+     0.139
+    ],
+    "t": [
+     0.159,
+     0.266,
+     0
+    ]
+   },
+   {
+    "name": "dagger_straight",
+    "tris": 1800,
+    "size": [
+     0.063,
+     0.559,
+     0.091
+    ],
+    "t": [
+     0.285,
+     0.279,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_daggers_2",
+  "kb": 276,
+  "tris": 10798,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 151
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.761,
+   0.601,
+   0.144
+  ],
+  "min": [
+   -0.411,
+   0,
+   -0.072
+  ],
+  "max": [
+   0.351,
+   0.601,
+   0.072
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "knife_sica",
+    "tris": 1800,
+    "size": [
+     0.09,
+     0.552,
+     0.117
+    ],
+    "t": [
+     -0.366,
+     0.276,
+     0
+    ]
+   },
+   {
+    "name": "dagger_jewelled",
+    "tris": 1800,
+    "size": [
+     0.074,
+     0.588,
+     0.11
+    ],
+    "t": [
+     -0.224,
+     0.294,
+     0
+    ]
+   },
+   {
+    "name": "knife_hunting",
+    "tris": 1798,
+    "size": [
+     0.057,
+     0.561,
+     0.106
+    ],
+    "t": [
+     -0.098,
+     0.281,
+     0
+    ]
+   },
+   {
+    "name": "knife_bone",
+    "tris": 1800,
+    "size": [
+     0.068,
+     0.541,
+     0.079
+    ],
+    "t": [
+     0.025,
+     0.27,
+     0
+    ]
+   },
+   {
+    "name": "knife_tanto",
+    "tris": 1800,
+    "size": [
+     0.091,
+     0.528,
+     0.092
+    ],
+    "t": [
+     0.164,
+     0.264,
+     0
+    ]
+   },
+   {
+    "name": "knife_kukri",
+    "tris": 1800,
+    "size": [
+     0.081,
+     0.601,
+     0.144
+    ],
+    "t": [
+     0.31,
+     0.301,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_exotic",
+  "kb": 231,
+  "tris": 8961,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 125
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.837,
+   0.568,
+   0.164
+  ],
+  "min": [
+   -0.448,
+   0,
+   -0.082
+  ],
+  "max": [
+   0.388,
+   0.568,
+   0.082
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "weapon_blowgun",
+    "tris": 800,
+    "size": [
+     0.037,
+     0.568,
+     0.037
+    ],
+    "t": [
+     -0.43,
+     0.284,
+     0
+    ]
+   },
+   {
+    "name": "weapon_net",
+    "tris": 1713,
+    "size": [
+     0.106,
+     0.476,
+     0.119
+    ],
+    "t": [
+     -0.298,
+     0.238,
+     0
+    ]
+   },
+   {
+    "name": "weapon_bolas",
+    "tris": 1304,
+    "size": [
+     0.073,
+     0.497,
+     0.164
+    ],
+    "t": [
+     -0.148,
+     0.249,
+     0
+    ]
+   },
+   {
+    "name": "weapon_spiked_chain",
+    "tris": 1800,
+    "size": [
+     0.088,
+     0.533,
+     0.148
+    ],
+    "t": [
+     -0.007,
+     0.267,
+     0
+    ]
+   },
+   {
+    "name": "weapon_sling",
+    "tris": 1800,
+    "size": [
+     0.119,
+     0.492,
+     0.132
+    ],
+    "t": [
+     0.156,
+     0.246,
+     0
+    ]
+   },
+   {
+    "name": "weapon_whip",
+    "tris": 1544,
+    "size": [
+     0.113,
+     0.496,
+     0.142
+    ],
+    "t": [
+     0.332,
+     0.248,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_hammers_big",
+  "kb": 257,
+  "tris": 9000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 143
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.843,
+   0.624,
+   0.181
+  ],
+  "min": [
+   -0.451,
+   0,
+   -0.09
+  ],
+  "max": [
+   0.391,
+   0.624,
+   0.09
+  ],
+  "top": 5,
+  "nodes": [
+   {
+    "name": "club_spiked",
+    "tris": 1800,
+    "size": [
+     0.159,
+     0.624,
+     0.127
+    ],
+    "t": [
+     -0.372,
+     0.312,
+     0
+    ]
+   },
+   {
+    "name": "club_stone",
+    "tris": 1800,
+    "size": [
+     0.135,
+     0.596,
+     0.175
+    ],
+    "t": [
+     -0.165,
+     0.298,
+     0
+    ]
+   },
+   {
+    "name": "hammer_smith",
+    "tris": 1800,
+    "size": [
+     0.075,
+     0.523,
+     0.141
+    ],
+    "t": [
+     -0.001,
+     0.261,
+     0
+    ]
+   },
+   {
+    "name": "hammer_sledge",
+    "tris": 1800,
+    "size": [
+     0.107,
+     0.577,
+     0.162
+    ],
+    "t": [
+     0.15,
+     0.288,
+     0
+    ]
+   },
+   {
+    "name": "hammer_maul",
+    "tris": 1800,
+    "size": [
+     0.128,
+     0.62,
+     0.181
+    ],
+    "t": [
+     0.328,
+     0.31,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_hammers_maces",
+  "kb": 248,
+  "tris": 10799,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 122
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.936,
+   0.562,
+   0.169
+  ],
+  "min": [
+   -0.498,
+   0,
+   -0.084
+  ],
+  "max": [
+   0.438,
+   0.562,
+   0.084
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "flail_chain",
+    "tris": 1800,
+    "size": [
+     0.115,
+     0.521,
+     0.169
+    ],
+    "t": [
+     -0.441,
+     0.261,
+     0
+    ]
+   },
+   {
+    "name": "mace_gurz",
+    "tris": 1800,
+    "size": [
+     0.136,
+     0.562,
+     0.133
+    ],
+    "t": [
+     -0.255,
+     0.281,
+     0
+    ]
+   },
+   {
+    "name": "mace_morningstar",
+    "tris": 1800,
+    "size": [
+     0.139,
+     0.537,
+     0.139
+    ],
+    "t": [
+     -0.058,
+     0.268,
+     0
+    ]
+   },
+   {
+    "name": "mace_flanged",
+    "tris": 1800,
+    "size": [
+     0.114,
+     0.559,
+     0.097
+    ],
+    "t": [
+     0.128,
+     0.279,
+     0
+    ]
+   },
+   {
+    "name": "hammer_lucerne",
+    "tris": 1800,
+    "size": [
+     0.065,
+     0.539,
+     0.167
+    ],
+    "t": [
+     0.278,
+     0.269,
+     0
+    ]
+   },
+   {
+    "name": "hammer_war",
+    "tris": 1799,
+    "size": [
+     0.068,
+     0.504,
+     0.147
+    ],
+    "t": [
+     0.404,
+     0.252,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_polearms",
+  "kb": 236,
+  "tris": 10783,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 105
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.577,
+   0.744,
+   0.167
+  ],
+  "min": [
+   -0.318,
+   0,
+   -0.084
+  ],
+  "max": [
+   0.258,
+   0.744,
+   0.084
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "polearm_voulge",
+    "tris": 1795,
+    "size": [
+     0.057,
+     0.692,
+     0.082
+    ],
+    "t": [
+     -0.29,
+     0.346,
+     0
+    ]
+   },
+   {
+    "name": "polearm_poleaxe",
+    "tris": 1800,
+    "size": [
+     0.048,
+     0.696,
+     0.149
+    ],
+    "t": [
+     -0.177,
+     0.348,
+     0
+    ]
+   },
+   {
+    "name": "polearm_bardiche",
+    "tris": 1793,
+    "size": [
+     0.044,
+     0.634,
+     0.167
+    ],
+    "t": [
+     -0.071,
+     0.317,
+     0
+    ]
+   },
+   {
+    "name": "polearm_naginata",
+    "tris": 1799,
+    "size": [
+     0.047,
+     0.72,
+     0.076
+    ],
+    "t": [
+     0.034,
+     0.36,
+     0
+    ]
+   },
+   {
+    "name": "polearm_glaive",
+    "tris": 1796,
+    "size": [
+     0.044,
+     0.697,
+     0.067
+    ],
+    "t": [
+     0.139,
+     0.349,
+     0
+    ]
+   },
+   {
+    "name": "polearm_halberd",
+    "tris": 1800,
+    "size": [
+     0.037,
+     0.744,
+     0.163
+    ],
+    "t": [
+     0.24,
+     0.372,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_shields",
+  "kb": 237,
+  "tris": 10718,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 121
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.825,
+   0.368,
+   0.259
+  ],
+  "min": [
+   -0.443,
+   0,
+   -0.129
+  ],
+  "max": [
+   0.383,
+   0.368,
+   0.129
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "shield_heater",
+    "tris": 1800,
+    "size": [
+     0.066,
+     0.336,
+     0.259
+    ],
+    "t": [
+     -0.41,
+     0.168,
+     0
+    ]
+   },
+   {
+    "name": "shield_buckler",
+    "tris": 1800,
+    "size": [
+     0.099,
+     0.248,
+     0.244
+    ],
+    "t": [
+     -0.268,
+     0.124,
+     0
+    ]
+   },
+   {
+    "name": "shield_kite",
+    "tris": 1800,
+    "size": [
+     0.068,
+     0.336,
+     0.188
+    ],
+    "t": [
+     -0.124,
+     0.168,
+     0
+    ]
+   },
+   {
+    "name": "shield_spara",
+    "tris": 1721,
+    "size": [
+     0.078,
+     0.368,
+     0.182
+    ],
+    "t": [
+     0.009,
+     0.184,
+     0
+    ]
+   },
+   {
+    "name": "shield_round_wood",
+    "tris": 1799,
+    "size": [
+     0.096,
+     0.269,
+     0.254
+    ],
+    "t": [
+     0.156,
+     0.134,
+     0
+    ]
+   },
+   {
+    "name": "shield_tower",
+    "tris": 1798,
+    "size": [
+     0.119,
+     0.337,
+     0.197
+    ],
+    "t": [
+     0.323,
+     0.169,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_spears",
+  "kb": 203,
+  "tris": 10595,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 87
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.606,
+   0.725,
+   0.153
+  ],
+  "min": [
+   -0.333,
+   0,
+   -0.077
+  ],
+  "max": [
+   0.273,
+   0.725,
+   0.077
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "spear_lance",
+    "tris": 1796,
+    "size": [
+     0.107,
+     0.724,
+     0.153
+    ],
+    "t": [
+     -0.28,
+     0.362,
+     0
+    ]
+   },
+   {
+    "name": "spear_javelin",
+    "tris": 1800,
+    "size": [
+     0.048,
+     0.58,
+     0.05
+    ],
+    "t": [
+     -0.143,
+     0.29,
+     0
+    ]
+   },
+   {
+    "name": "spear_pike",
+    "tris": 1599,
+    "size": [
+     0.034,
+     0.725,
+     0.024
+    ],
+    "t": [
+     -0.042,
+     0.362,
+     0
+    ]
+   },
+   {
+    "name": "spear_trident",
+    "tris": 1800,
+    "size": [
+     0.04,
+     0.642,
+     0.121
+    ],
+    "t": [
+     0.055,
+     0.321,
+     0
+    ]
+   },
+   {
+    "name": "spear_long",
+    "tris": 1800,
+    "size": [
+     0.041,
+     0.68,
+     0.044
+    ],
+    "t": [
+     0.155,
+     0.34,
+     0
+    ]
+   },
+   {
+    "name": "spear_short",
+    "tris": 1800,
+    "size": [
+     0.038,
+     0.565,
+     0.042
+    ],
+    "t": [
+     0.254,
+     0.283,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_staffs_basic",
+  "kb": 216,
+  "tris": 10800,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 102
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.591,
+   0.716,
+   0.128
+  ],
+  "min": [
+   -0.326,
+   0,
+   -0.064
+  ],
+  "max": [
+   0.266,
+   0.716,
+   0.064
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "staff_cane",
+    "tris": 1800,
+    "size": [
+     0.041,
+     0.629,
+     0.128
+    ],
+    "t": [
+     -0.305,
+     0.314,
+     0
+    ]
+   },
+   {
+    "name": "staff_monk",
+    "tris": 1800,
+    "size": [
+     0.057,
+     0.685,
+     0.097
+    ],
+    "t": [
+     -0.196,
+     0.343,
+     0
+    ]
+   },
+   {
+    "name": "staff_ironshod",
+    "tris": 1800,
+    "size": [
+     0.063,
+     0.712,
+     0.062
+    ],
+    "t": [
+     -0.076,
+     0.356,
+     0
+    ]
+   },
+   {
+    "name": "staff_quarter",
+    "tris": 1800,
+    "size": [
+     0.037,
+     0.716,
+     0.031
+    ],
+    "t": [
+     0.033,
+     0.358,
+     0
+    ]
+   },
+   {
+    "name": "staff_crook",
+    "tris": 1800,
+    "size": [
+     0.042,
+     0.683,
+     0.122
+    ],
+    "t": [
+     0.132,
+     0.341,
+     0
+    ]
+   },
+   {
+    "name": "staff_walking",
+    "tris": 1800,
+    "size": [
+     0.052,
+     0.657,
+     0.045
+    ],
+    "t": [
+     0.24,
+     0.328,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_staffs_magic",
+  "kb": 277,
+  "tris": 10621,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 142
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.865,
+   0.68,
+   0.146
+  ],
+  "min": [
+   -0.462,
+   0,
+   -0.073
+  ],
+  "max": [
+   0.402,
+   0.68,
+   0.073
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "sceptre_royal",
+    "tris": 1800,
+    "size": [
+     0.111,
+     0.68,
+     0.112
+    ],
+    "t": [
+     -0.407,
+     0.34,
+     0
+    ]
+   },
+   {
+    "name": "staff_bone",
+    "tris": 1797,
+    "size": [
+     0.106,
+     0.633,
+     0.146
+    ],
+    "t": [
+     -0.239,
+     0.316,
+     0
+    ]
+   },
+   {
+    "name": "staff_ice",
+    "tris": 1800,
+    "size": [
+     0.074,
+     0.672,
+     0.108
+    ],
+    "t": [
+     -0.088,
+     0.336,
+     0
+    ]
+   },
+   {
+    "name": "staff_druid",
+    "tris": 1800,
+    "size": [
+     0.077,
+     0.679,
+     0.122
+    ],
+    "t": [
+     0.047,
+     0.339,
+     0
+    ]
+   },
+   {
+    "name": "staff_wizard",
+    "tris": 1800,
+    "size": [
+     0.097,
+     0.657,
+     0.101
+    ],
+    "t": [
+     0.195,
+     0.329,
+     0
+    ]
+   },
+   {
+    "name": "staff_serpent",
+    "tris": 1624,
+    "size": [
+     0.099,
+     0.653,
+     0.084
+    ],
+    "t": [
+     0.353,
+     0.327,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_swords_long",
+  "kb": 233,
+  "tris": 10797,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 108
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.602,
+   0.701,
+   0.157
+  ],
+  "min": [
+   -0.331,
+   0,
+   -0.078
+  ],
+  "max": [
+   0.271,
+   0.701,
+   0.078
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "sword_long_rapier",
+    "tris": 1800,
+    "size": [
+     0.056,
+     0.686,
+     0.137
+    ],
+    "t": [
+     -0.303,
+     0.343,
+     0
+    ]
+   },
+   {
+    "name": "sword_long_flamberge",
+    "tris": 1800,
+    "size": [
+     0.042,
+     0.695,
+     0.157
+    ],
+    "t": [
+     -0.194,
+     0.347,
+     0
+    ]
+   },
+   {
+    "name": "sword_long_tachi",
+    "tris": 1798,
+    "size": [
+     0.069,
+     0.7,
+     0.131
+    ],
+    "t": [
+     -0.078,
+     0.35,
+     0
+    ]
+   },
+   {
+    "name": "sword_long_scimitar",
+    "tris": 1800,
+    "size": [
+     0.041,
+     0.682,
+     0.154
+    ],
+    "t": [
+     0.037,
+     0.341,
+     0
+    ]
+   },
+   {
+    "name": "sword_long_bastard",
+    "tris": 1800,
+    "size": [
+     0.047,
+     0.701,
+     0.155
+    ],
+    "t": [
+     0.141,
+     0.35,
+     0
+    ]
+   },
+   {
+    "name": "sword_long_longsword",
+    "tris": 1799,
+    "size": [
+     0.047,
+     0.681,
+     0.148
+    ],
+    "t": [
+     0.248,
+     0.341,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_swords_medium",
+  "kb": 230,
+  "tris": 10800,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 110
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.665,
+   0.697,
+   0.151
+  ],
+  "min": [
+   -0.362,
+   0,
+   -0.075
+  ],
+  "max": [
+   0.302,
+   0.697,
+   0.075
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "sword_med_viking",
+    "tris": 1800,
+    "size": [
+     0.079,
+     0.68,
+     0.089
+    ],
+    "t": [
+     -0.323,
+     0.34,
+     0
+    ]
+   },
+   {
+    "name": "sword_med_sabre",
+    "tris": 1800,
+    "size": [
+     0.034,
+     0.685,
+     0.105
+    ],
+    "t": [
+     -0.207,
+     0.342,
+     0
+    ]
+   },
+   {
+    "name": "sword_med_kilij",
+    "tris": 1800,
+    "size": [
+     0.056,
+     0.672,
+     0.122
+    ],
+    "t": [
+     -0.102,
+     0.336,
+     0
+    ]
+   },
+   {
+    "name": "sword_med_spatha",
+    "tris": 1800,
+    "size": [
+     0.064,
+     0.679,
+     0.061
+    ],
+    "t": [
+     0.018,
+     0.34,
+     0
+    ]
+   },
+   {
+    "name": "sword_med_arming",
+    "tris": 1800,
+    "size": [
+     0.099,
+     0.697,
+     0.14
+    ],
+    "t": [
+     0.16,
+     0.349,
+     0
+    ]
+   },
+   {
+    "name": "sword_med_shamshir",
+    "tris": 1800,
+    "size": [
+     0.033,
+     0.67,
+     0.151
+    ],
+    "t": [
+     0.286,
+     0.335,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_swords_short",
+  "kb": 246,
+  "tris": 10794,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 120
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.62,
+   0.611,
+   0.15
+  ],
+  "min": [
+   -0.34,
+   0,
+   -0.075
+  ],
+  "max": [
+   0.28,
+   0.611,
+   0.075
+  ],
+  "top": 6,
+  "nodes": [
+   {
+    "name": "sword_short_shamshir",
+    "tris": 1797,
+    "size": [
+     0.041,
+     0.581,
+     0.15
+    ],
+    "t": [
+     -0.32,
+     0.291,
+     0
+    ]
+   },
+   {
+    "name": "sword_short_akinakes",
+    "tris": 1800,
+    "size": [
+     0.06,
+     0.554,
+     0.13
+    ],
+    "t": [
+     -0.209,
+     0.277,
+     0
+    ]
+   },
+   {
+    "name": "sword_short_seax",
+    "tris": 1800,
+    "size": [
+     0.069,
+     0.57,
+     0.078
+    ],
+    "t": [
+     -0.085,
+     0.285,
+     0
+    ]
+   },
+   {
+    "name": "sword_short_kopis",
+    "tris": 1800,
+    "size": [
+     0.041,
+     0.596,
+     0.145
+    ],
+    "t": [
+     0.031,
+     0.298,
+     0
+    ]
+   },
+   {
+    "name": "sword_short_xiphos",
+    "tris": 1797,
+    "size": [
+     0.039,
+     0.579,
+     0.077
+    ],
+    "t": [
+     0.131,
+     0.289,
+     0
+    ]
+   },
+   {
+    "name": "sword_short_gladius",
+    "tris": 1800,
+    "size": [
+     0.07,
+     0.611,
+     0.07
+    ],
+    "t": [
+     0.245,
+     0.306,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_swords_tiers_a",
+  "kb": 221,
+  "tris": 7200,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 132
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.458,
+   0.699,
+   0.182
+  ],
+  "min": [
+   -0.259,
+   0,
+   -0.091
+  ],
+  "max": [
+   0.199,
+   0.699,
+   0.091
+  ],
+  "top": 4,
+  "nodes": [
+   {
+    "name": "sword_tier_gold",
+    "tris": 1800,
+    "size": [
+     0.067,
+     0.698,
+     0.173
+    ],
+    "t": [
+     -0.225,
+     0.349,
+     0
+    ]
+   },
+   {
+    "name": "sword_tier_iron",
+    "tris": 1800,
+    "size": [
+     0.072,
+     0.696,
+     0.182
+    ],
+    "t": [
+     -0.096,
+     0.348,
+     0
+    ]
+   },
+   {
+    "name": "sword_tier_stone",
+    "tris": 1800,
+    "size": [
+     0.073,
+     0.697,
+     0.174
+    ],
+    "t": [
+     0.036,
+     0.349,
+     0
+    ]
+   },
+   {
+    "name": "sword_tier_wood",
+    "tris": 1800,
+    "size": [
+     0.066,
+     0.699,
+     0.173
+    ],
+    "t": [
+     0.166,
+     0.349,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_swords_tiers_b",
+  "kb": 265,
+  "tris": 9000,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 162
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.617,
+   0.653,
+   0.165
+  ],
+  "min": [
+   -0.338,
+   0,
+   -0.083
+  ],
+  "max": [
+   0.278,
+   0.653,
+   0.083
+  ],
+  "top": 5,
+  "nodes": [
+   {
+    "name": "sword_tier_diamond_blue",
+    "tris": 1800,
+    "size": [
+     0.075,
+     0.653,
+     0.16
+    ],
+    "t": [
+     -0.301,
+     0.327,
+     0
+    ]
+   },
+   {
+    "name": "sword_tier_diamond_black",
+    "tris": 1800,
+    "size": [
+     0.076,
+     0.653,
+     0.164
+    ],
+    "t": [
+     -0.165,
+     0.327,
+     0
+    ]
+   },
+   {
+    "name": "sword_tier_diamond_red",
+    "tris": 1800,
+    "size": [
+     0.075,
+     0.653,
+     0.165
+    ],
+    "t": [
+     -0.03,
+     0.326,
+     0
+    ]
+   },
+   {
+    "name": "sword_tier_diamond_green",
+    "tris": 1800,
+    "size": [
+     0.076,
+     0.653,
+     0.164
+    ],
+    "t": [
+     0.105,
+     0.326,
+     0
+    ]
+   },
+   {
+    "name": "sword_tier_diamond_ice",
+    "tris": 1800,
+    "size": [
+     0.075,
+     0.653,
+     0.16
+    ],
+    "t": [
+     0.241,
+     0.326,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "cat": "weapons",
+  "key": "weapons_swords_xlong",
+  "kb": 241,
+  "tris": 8998,
+  "mats": 1,
+  "tex": [
+   {
+    "mime": "image/webp",
+    "size": [
+     1024,
+     1024
+    ],
+    "kb": 118
+   }
+  ],
+  "skins": 0,
+  "joints": 0,
+  "anims": [],
+  "size": [
+   0.551,
+   0.742,
+   0.182
+  ],
+  "min": [
+   -0.305,
+   0,
+   -0.091
+  ],
+  "max": [
+   0.245,
+   0.742,
+   0.091
+  ],
+  "top": 5,
+  "nodes": [
+   {
+    "name": "sword_xl_greatsword",
+    "tris": 1800,
+    "size": [
+     0.075,
+     0.736,
+     0.123
+    ],
+    "t": [
+     -0.268,
+     0.368,
+     0
+    ]
+   },
+   {
+    "name": "sword_xl_flamberge",
+    "tris": 1800,
+    "size": [
+     0.067,
+     0.741,
+     0.156
+    ],
+    "t": [
+     -0.137,
+     0.37,
+     0
+    ]
+   },
+   {
+    "name": "sword_xl_nodachi",
+    "tris": 1798,
+    "size": [
+     0.07,
+     0.742,
+     0.083
+    ],
+    "t": [
+     -0.008,
+     0.371,
+     0
+    ]
+   },
+   {
+    "name": "sword_xl_claymore",
+    "tris": 1800,
+    "size": [
+     0.039,
+     0.717,
+     0.16
+    ],
+    "t": [
+     0.106,
+     0.358,
+     0
+    ]
+   },
+   {
+    "name": "sword_xl_zweihander",
+    "tris": 1800,
+    "size": [
+     0.059,
+     0.734,
+     0.182
+    ],
+    "t": [
+     0.216,
+     0.367,
+     0
+    ]
+   }
+  ]
+ }
+]
