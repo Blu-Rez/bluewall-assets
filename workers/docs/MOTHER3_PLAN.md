@@ -2,7 +2,10 @@
 Read with `claude/GIT_FLOW.md`. Owner: Wingless (Persian, short; tokens are his "time").
 
 ## خلاصه برای وینگلس
-p44 (D1+T1+LD1b+RP1) و p45 (= p44 + P1 محل‌های تولید و آسیاب) هر دو ساخته و روی گیت‌ان (`pkg/p44`, `pkg/p45`)؛ p45 همه‌ی p44 رو داخل خودش داره. منتظر «نصب شد». TR2 همین الان می‌تونه شروع کنه (کیت = p45). لشگر بعد از TR2.
+p44 (D1+T1+LD1b+RP1) و p45 (= p44 + P1 محل‌های تولید و آسیاب) هر دو ساخته و روی گیت‌ان (`pkg/p44`, `pkg/p45`)؛ p45 همه‌ی p44 رو داخل خودش داره. هر دو نصب شد (p45 روی سرور). TR2 همین الان می‌تونه شروع کنه (کیت = p45). لشگر بعد از TR2.
+
+## ترتیب کارها
+ترتیب کامل همه‌ی چت‌ها و بسته‌ها: **`claude/ORDER.md`** (تصمیم مادر، ۱۴ اکتبر). TR2 الان در جریانه؛ مدل ارتش موازی؛ چت ارتش بعد از TR2-S3 + قبول دسته‌ی ۱ مدل ارتش؛ بعد جنگ، اقتصاد/مردم؛ RPG موازی از TR2-S5؛ آخر QA/انتشار.
 
 ## Git state
 `kit` = p44 tree + `workers/` (GIT_FLOW, setup_kit.sh, push_result.sh, mother_pull.sh, dev tests, docs, tools) · `lib-tripo` = 226 GLBs + `tools/` · `pkg/p44` · `inbox/_selftest` (leftover; owner may delete in GitHub UI) · `code-p38` (old; delete once old-kit workers are done).
@@ -11,8 +14,8 @@ p44 (D1+T1+LD1b+RP1) و p45 (= p44 + P1 محل‌های تولید و آسیاب
 | pkg | content | state |
 |---|---|---|
 | p41–p43 | earlier | installed (p43 per owner) |
-| **p44** | D1 death effect · T1 building sheets (`bsheet.js`) · LD1b loader sword · RP1 owner-only hero mode (`opts.owner||opts.rpg`, lazy `web/assets/rpg/*`) · server.py `.js` MIME · gate lines d1/t1/ld1/rp1_server/rp1 files · hero credits | built, `GATE_W: ALL OK` (noRoute 622), sha256 `6a7cb54c…c725a`, awaiting owner install |
-| **p45** | p44 + P1 production lots + mills. `p1_kitext.json` regenerated (`dev/p1_kitext.mjs`, 312 kit pieces) so `p1_test` runs and is in the gate; T1 rule "worksites.js/town_*.js untouched" retired. `GATE_W: ALL OK`, noRoute **667** (limit 700, 33 left), pkgcheck OK, 43 files, sha256 `9344576f…e60b` (branch `pkg/p45`; contains p44 → owner can install p45 directly) | built, awaiting owner install; kit = p45 |
+| **p44** | D1 death effect · T1 building sheets (`bsheet.js`) · LD1b loader sword · RP1 owner-only hero mode (`opts.owner||opts.rpg`, lazy `web/assets/rpg/*`) · server.py `.js` MIME · gate lines d1/t1/ld1/rp1_server/rp1 files · hero credits | built, `GATE_W: ALL OK` (noRoute 622), sha256 `6a7cb54c…c725a`, INSTALLED (superseded by p45) |
+| **p45** | p44 + P1 production lots + mills. `p1_kitext.json` regenerated (`dev/p1_kitext.mjs`, 312 kit pieces) so `p1_test` runs and is in the gate; T1 rule "worksites.js/town_*.js untouched" retired. `GATE_W: ALL OK`, noRoute **667** (limit 700, 33 left), pkgcheck OK, 43 files, sha256 `9344576f…e60b` (branch `pkg/p45`; contains p44 → owner can install p45 directly) | **INSTALLED** 14 Oct 14:29 Tehran (installer screenshot: build bluebot_bluewall_p45, 44 files); committed in `pkg/deployed.sha256`; kit = p45 |
 | p46+ | TR2 stages one at a time (S2 tiers/loader → S3 castle → S4 town/world → S5 layout → S6 new building+defence); server parts (lv50 `MAX_LEVEL=50`, layout API) are mother-only | waits for TR2 pushes |
 
 ## Queue / decisions
