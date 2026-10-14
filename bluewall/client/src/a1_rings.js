@@ -33,6 +33,7 @@ export function createRingTracker(ctx) {
   let open = null;
   const vis = {}, runs = [];                                  // vis[id]: true / false once applied; runs: the collapsible vertex ranges
   let weaponsOf = () => null, patrols = null, installed = false, battle = false, scene = null, coils = { up() {}, hide() {} };
+  const listeners = [];                                       // TR2-S3: castle_tr2.js re-bakes when the set of standing rings changes
 
   function begin(id) {
     if (open) throw new Error('a1_rings: ring ' + open.id + ' is still open');
@@ -48,21 +49,35 @@ export function createRingTracker(ctx) {
     if (fx.picks) for (let i = o.k0; i < fx.picks.length; i++) r.picks.push(fx.picks[i]);
   }
 
-  // ---- find the vertices of every ring in every batched mesh that carries aB (once)
-  function scan() {
+  // ---- find the vertices of every ring in every batched mesh that carries aB (once; TR2-S3: rescan() for meshes built later, castle_tr2.js re-bakes its pieces when a tier changes)
+  const ringMap = () => {
     const ringOf = new Int8Array(ctx.targets.length + 2).fill(-1);
     RING_IDS.forEach((id, k) => { for (const t of R[id].tids) ringOf[t] = k; });
-    scene.traverse((o) => {
-      if (!o.isMesh || !o.geometry || !o.geometry.attributes.aB || !/^(static|troof|props|her-)/.test(o.name || '')) return;
-      const g = o.geometry, ab = g.attributes.aB.array, cloth = o.name === 'her-cloth';
-      const attr = cloth ? g.attributes.aPin : g.attributes.position;
-      if (!attr || attr.isInterleavedBufferAttribute) { if (cloth || attr) console.warn('a1_rings: skipped', o.name); return; }
-      const n = ab.length; let k0 = -1, a0 = 0;
-      for (let i = 0; i <= n; i++) {
-        const t = i < n ? ab[i] : 0, k = t > 0 && t < ringOf.length ? ringOf[t] : -1;
-        if (k !== k0) { if (k0 >= 0) runs.push({ ring: RING_IDS[k0], attr, a: a0, b: i, drop: cloth, saved: null }); k0 = k; a0 = i; }
-      }
-    });
+    return ringOf;
+  };
+  function scanMesh(o, ringOf) {
+    if (!o.isMesh || !o.geometry || !o.geometry.attributes.aB || !/^(static|troof|props|her-)/.test(o.name || '')) return;
+    const g = o.geometry, ab = g.attributes.aB.array, cloth = o.name === 'her-cloth';
+    const attr = cloth ? g.attributes.aPin : g.attributes.position;
+    if (!attr || attr.isInterleavedBufferAttribute) { if (cloth || attr) console.warn('a1_rings: skipped', o.name); return; }
+    const n = ab.length; let k0 = -1, a0 = 0;
+    for (let i = 0; i <= n; i++) {
+      const t = i < n ? ab[i] : 0, k = t > 0 && t < ringOf.length ? ringOf[t] : -1;
+      if (k !== k0) { if (k0 >= 0) runs.push({ ring: RING_IDS[k0], attr, a: a0, b: i, drop: cloth, saved: null, mesh: o }); k0 = k; a0 = i; }
+    }
+  }
+  function scan() {
+    const ringOf = ringMap();
+    scene.traverse((o) => scanMesh(o, ringOf));
+  }
+  // TR2-S3: meshes that were built (added) or thrown away (removed) after install: forget the old runs, find the vertex ranges of the new ones and put the ones of a hidden ring away
+  function rescan(added = [], removed = []) {
+    if (!installed) return;
+    const gone = new Set(removed);
+    for (let k = runs.length - 1; k >= 0; k--) if (runs[k].mesh && gone.has(runs[k].mesh)) runs.splice(k, 1);
+    const ringOf = ringMap(), n0 = runs.length;
+    for (const m of added) m.traverse((o) => scanMesh(o, ringOf));
+    for (let k = n0; k < runs.length; k++) if (vis[runs[k].ring] === false) setRun(runs[k], false);
   }
   function setRun(run, show) {
     const arr = run.attr.array, S = run.attr.itemSize, o = run.a * S, len = (run.b - run.a) * S;
@@ -108,6 +123,7 @@ export function createRingTracker(ctx) {
     if (revived || force) { if (fl && fl.reset) fl.reset(); if (wp && wp.reset && revived) wp.reset(); coils.up(); }
     for (const id of RING_IDS) if (vis[id] === false) for (const tid of R[id].tids) { if (fl && fl.hide) fl.hide(tid); if (wp && wp.hide) wp.hide(tid); coils.hide(tid); }       // (a Tesla coil stands on a tower of the ring: it goes with it)
     if (patrols && patrols.setRings) patrols.setRings(new Set(RING_IDS.filter((i) => vis[i] !== false)));
+    for (const f of listeners) { try { f(); } catch (e) { console.warn('a1_rings listener', e); } }
   }
 
   function install(api) {                                   // world.js, once everything static is built and the level system exists
@@ -115,7 +131,9 @@ export function createRingTracker(ctx) {
     scan(); apply(true);
   }
   return {
-    begin, end, install, apply,
+    begin, end, install, apply, rescan,
+    visible: () => RING_IDS.filter((i) => vis[i] !== false),
+    onChange: (fn) => { listeners.push(fn); },
     setBattle(on) { battle = !!on; apply(true); },
     setPatrols(p) { patrols = p; apply(true); },
     setOrder(order) { L.RING_ORDER.splice(0, L.RING_ORDER.length, ...order); apply(true); },

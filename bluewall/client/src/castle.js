@@ -20,6 +20,9 @@ export function buildCastle(ctx) {
   const put = (geo, mat, m, o) => B.add(geo, mat, m, o);
   const box = (mat, x, y, z, ry, sx, sy, sz, o = {}) => put(BOX, mat, mat4(x, y, z, ry, sx, sy, sz), o);
   const stoneUV = { worldUV: 0.085 };
+  // TR2-S3: the castle from the Tripo library (castle_tr2.js).  When ctx.tr2c exists the stone pieces (wall slabs, towers, gatehouses, keep) are REGISTERED there instead of drawn here; everything else
+  // (targets, picks, weapon sites, torches, tapestries, banners, bridges, water gates, quay) is built exactly as before.  No ctx.tr2c => the procedural castle below, unchanged.
+  const T3 = ctx.tr2c || null;
 
   // ------------------------------------------------ wall run along a polygon
   function wallRun(poly, H, T, towerR, gateSeg, gateHalf, opts) {
@@ -37,39 +40,43 @@ export function buildCastle(ctx) {
       const pieces = []; { let cur = towerR * 0.6; for (const [g0, g1] of gaps) { if (g0 - cur > 0.5) pieces.push([cur, g0]); cur = g1; } if (Ltot - towerR * 0.6 - cur > 0.5) pieces.push([cur, Ltot - towerR * 0.6]); }
       for (const [s0, s1] of pieces) {
         const len = s1 - s0, cx = a[0] + ux * (s0 + len / 2), cz = a[1] + uz * (s0 + len / 2);
-        ctx.tgt({ type: 'wall', ringId: opts.ring, seg: i, x: cx, z: cz, w: len, d: T, h: H, rot: ry, a: [a[0] + ux * s0, a[1] + uz * s0], b: [a[0] + ux * s1, a[1] + uz * s1] });
-        box(M.stoneDark, cx, 0.6, cz, ry, len, 1.2, T + 1.4, { ...stoneUV, tint: 0xc9ccd6 });           // plinth
-        box(M.stone, cx, H / 2, cz, ry, len, H, T, { ...stoneUV, tint: STONE_T });                        // body
-        box(M.stoneDark, cx, H + 0.02, cz, ry, len, 0.25, T - 0.6, { ...stoneUV, tint: 0x9aa0ad });       // walkway
-        // rune bands on both faces
-        for (const side of [1, -1]) {
-          const ox = out[0] * side * (T / 2 + 0.06), oz = out[1] * side * (T / 2 + 0.06);
-          if (opts.runeH > 0) box(M.rune, cx + ox, H * 0.62, cz + oz, ry, len - 0.4, opts.runeH, 0.1, { uvScale: [len / 11, 1] });
-          // cornice under the parapet
-          box(M.stoneDark, cx + out[0] * side * (T / 2 + 0.15), H - 0.35, cz + out[1] * side * (T / 2 + 0.15), ry, len, 0.5, 0.35, { ...stoneUV, tint: 0xb9bdc8 });
-        }
-        // merlons (both edges)
-        const step = 2.3, cnt = Math.max(1, Math.floor((len - 1) / step));
-        for (let k = 0; k < cnt; k++) {
-          const s = s0 + (len - (cnt - 1) * step) / 2 + k * step;
-          const px = a[0] + ux * s, pz = a[1] + uz * s;
+        const wtid = ctx.tgt({ type: 'wall', ringId: opts.ring, seg: i, x: cx, z: cz, w: len, d: T, h: H, rot: ry, a: [a[0] + ux * s0, a[1] + uz * s0], b: [a[0] + ux * s1, a[1] + uz * s1] });
+        const Th = T3 ? T3.tvis(T) : T;                                       // (TR2-S3: the visual thickness of a Tripo slab; the target keeps T)
+        if (T3) T3.wall({ ring: opts.ring, tid: wtid, ax: a[0] + ux * s0, az: a[1] + uz * s0, bx: a[0] + ux * s1, bz: a[1] + uz * s1, H, T });
+        else {
+          box(M.stoneDark, cx, 0.6, cz, ry, len, 1.2, T + 1.4, { ...stoneUV, tint: 0xc9ccd6 });           // plinth
+          box(M.stone, cx, H / 2, cz, ry, len, H, T, { ...stoneUV, tint: STONE_T });                        // body
+          box(M.stoneDark, cx, H + 0.02, cz, ry, len, 0.25, T - 0.6, { ...stoneUV, tint: 0x9aa0ad });       // walkway
+          // rune bands on both faces
           for (const side of [1, -1]) {
-            const e = side * (T / 2 - 0.35);
-            box(M.stone, px + out[0] * e, H + 0.85, pz + out[1] * e, ry, 1.25, 1.7, 0.7, { ...stoneUV, tint: STONE_T });
+            const ox = out[0] * side * (T / 2 + 0.06), oz = out[1] * side * (T / 2 + 0.06);
+            if (opts.runeH > 0) box(M.rune, cx + ox, H * 0.62, cz + oz, ry, len - 0.4, opts.runeH, 0.1, { uvScale: [len / 11, 1] });
+            // cornice under the parapet
+            box(M.stoneDark, cx + out[0] * side * (T / 2 + 0.15), H - 0.35, cz + out[1] * side * (T / 2 + 0.15), ry, len, 0.5, 0.35, { ...stoneUV, tint: 0xb9bdc8 });
+          }
+          // merlons (both edges)
+          const step = 2.3, cnt = Math.max(1, Math.floor((len - 1) / step));
+          for (let k = 0; k < cnt; k++) {
+            const s = s0 + (len - (cnt - 1) * step) / 2 + k * step;
+            const px = a[0] + ux * s, pz = a[1] + uz * s;
+            for (const side of [1, -1]) {
+              const e = side * (T / 2 - 0.35);
+              box(M.stone, px + out[0] * e, H + 0.85, pz + out[1] * e, ry, 1.25, 1.7, 0.7, { ...stoneUV, tint: STONE_T });
+            }
           }
         }
         // tapestries hanging down the outer face, under the cornice (her_flags.js: waving cloth with the realm's crest)
         if (opts.tapestry && len > 16) {
           const n = opts.tapestry, tw = opts.tapW || 2.6, hh = H - 0.72 - (opts.tapFoot || 2.9), h = hh / 1.12, ry2 = Math.atan2(out[0], out[1]);
           for (let k = 0; k < n; k++) {
-            const s = s0 + len * (k + 1) / (n + 1), off = T / 2 + 0.2;
+            const s = s0 + len * (k + 1) / (n + 1), off = Th / 2 + 0.2;
             ctx.banner(a[0] + ux * s + out[0] * off, H - 0.72 - h / 2, a[1] + uz * s + out[1] * off, ry2, tw, h, { tapestry: true });
           }
         }
         // a few torches along long walls (inner face)
         if (opts.torches && len > 26) {
           for (const f of [0.33, 0.66]) {
-            const s = s0 + len * f, px = a[0] + ux * s - out[0] * (T / 2 + 0.3), pz = a[1] + uz * s - out[1] * (T / 2 + 0.3);
+            const s = s0 + len * f, px = a[0] + ux * s - out[0] * (Th / 2 + 0.3), pz = a[1] + uz * s - out[1] * (Th / 2 + 0.3);
             ctx.torch(px, H * 0.55, pz, { pool: true, sconce: true, ry });
           }
         }
@@ -78,6 +85,7 @@ export function buildCastle(ctx) {
     // water gates: where the river runs through the wall
     for (const W of opts.wgates || []) waterGate(poly, W, H, T, opts);
     // towers
+    opts.cen = [poly.reduce((q, p) => q + p[0], 0) / n, poly.reduce((q, p) => q + p[1], 0) / n];         // (TR2-S3: the tower door faces the inside of the ring)
     for (let i = 0; i < n; i++) tower(poly[i][0], poly[i][1], towerR, H, opts, i);
     B.bid(0);
   }
@@ -125,27 +133,45 @@ export function buildCastle(ctx) {
     // p35: of the even (ballista) ones every 2nd is a DRAGONBANE (the big anti-air ballista); of the roofed towers that are not wizards, the 2nd of every 3 carries a FROST SPIRE and the 3rd a FLAME TOWER (the 1st keeps its roof)
     if (!opts.roof(i)) { let k = 0; for (let j = 0; j < i; j++) if (!opts.roof(j)) k++; wk = k % 2 === 0 ? ((k >> 1) % 2 === 1 ? 'dragonbane' : 'ballista') : (((k - 1) >> 1) % 2 === 0 ? 'cannon' : 'quad'); }
     else { let r = 0, q = 0; for (let j = 0; j < i; j++) if (opts.roof(j)) { if (r % 3 !== 2) q++; r++; } if (r % 3 === 2) wk = 'wizard'; else if (q % 3 === 1) wk = 'frost'; else if (q % 3 === 2) wk = 'flame'; }
-    ctx.tgt({ type: opts.roof(i) ? 'tower' : 'ballista', ringId: opts.ring, seg: i, x, z, w: 2 * R + 1, d: 2 * R + 1, h: h + 4, rot: 0, def: true, ...(wk ? { wk } : {}) });
-    put(CYL(R + 0.9, R + 1.3, 1.6), M.stoneDark, mat4(x, 0.8, z), { ...stoneUV, tint: 0xc9ccd6 });
-    put(CYL(R, R + 0.35, h), M.stone, mat4(x, h / 2, z), { ...stoneUV, tint: STONE_T });
-    put(CYL(R + 0.7, R + 0.1, 1.2), M.stoneDark, mat4(x, h - 0.2, z), { ...stoneUV, tint: 0xb9bdc8 });
-    put(CYL(R + 0.7, R + 0.7, 0.5), M.stoneDark, mat4(x, h + 0.55, z), { ...stoneUV, tint: 0x9aa0ad });
-    // rune ring
-    if (opts.runeH > 0) put(new THREE.CylinderGeometry(R + 0.4, R + 0.4, opts.runeH, 18, 1, true), M.rune, mat4(x, H * 0.62, z), { uvScale: [(R * 6.28) / 11, 1] });
-    const mc = Math.round(R * 2.3);
-    for (let k = 0; k < mc; k++) {
-      const a = (k / mc) * Math.PI * 2;
-      box(M.stone, x + Math.cos(a) * (R + 0.35), h + 1.6, z + Math.sin(a) * (R + 0.35), -a, 0.7, 1.7, 1.25, { ...stoneUV, tint: STONE_T });
-    }
-    // windows (warm glow slits) facing outward-ish
-    const wc = 3;
-    for (let k = 0; k < wc; k++) {
-      const a = Math.atan2(z, x) + (k - 1) * 0.9 + r() * 0.2, wy = 4 + k * 2.6 + r() * 1.5;
-      const lit = r() < 0.75;
-      box(lit ? M.window : M.dark, x + Math.cos(a) * (R + 0.2), wy, z + Math.sin(a) * (R + 0.2), -a, 0.3, 1.3, 0.55);
+    const ttid = ctx.tgt({ type: opts.roof(i) ? 'tower' : 'ballista', ringId: opts.ring, seg: i, x, z, w: 2 * R + 1, d: 2 * R + 1, h: h + 4, rot: 0, def: true, ...(wk ? { wk } : {}) });
+    if (T3) { for (let k = 0; k < 9; k++) r(); }                       // (TR2-S3: the old windows drew 9 random numbers: the stream stays the same for everything built after)
+    else {
+      put(CYL(R + 0.9, R + 1.3, 1.6), M.stoneDark, mat4(x, 0.8, z), { ...stoneUV, tint: 0xc9ccd6 });
+      put(CYL(R, R + 0.35, h), M.stone, mat4(x, h / 2, z), { ...stoneUV, tint: STONE_T });
+      put(CYL(R + 0.7, R + 0.1, 1.2), M.stoneDark, mat4(x, h - 0.2, z), { ...stoneUV, tint: 0xb9bdc8 });
+      put(CYL(R + 0.7, R + 0.7, 0.5), M.stoneDark, mat4(x, h + 0.55, z), { ...stoneUV, tint: 0x9aa0ad });
+      // rune ring
+      if (opts.runeH > 0) put(new THREE.CylinderGeometry(R + 0.4, R + 0.4, opts.runeH, 18, 1, true), M.rune, mat4(x, H * 0.62, z), { uvScale: [(R * 6.28) / 11, 1] });
+      const mc = Math.round(R * 2.3);
+      for (let k = 0; k < mc; k++) {
+        const a = (k / mc) * Math.PI * 2;
+        box(M.stone, x + Math.cos(a) * (R + 0.35), h + 1.6, z + Math.sin(a) * (R + 0.35), -a, 0.7, 1.7, 1.25, { ...stoneUV, tint: STONE_T });
+      }
+      // windows (warm glow slits) facing outward-ish
+      const wc = 3;
+      for (let k = 0; k < wc; k++) {
+        const a = Math.atan2(z, x) + (k - 1) * 0.9 + r() * 0.2, wy = 4 + k * 2.6 + r() * 1.5;
+        const lit = r() < 0.75;
+        box(lit ? M.window : M.dark, x + Math.cos(a) * (R + 0.2), wy, z + Math.sin(a) * (R + 0.2), -a, 0.3, 1.3, 0.55);
+      }
     }
     const roofed = opts.roof(i), wiz = roofed && wk === 'wizard', cap = roofed && (wk === 'frost' || wk === 'flame');
-    if (roofed) {
+    if (T3) {
+      // TR2-S3: the Tripo tower (castle_tower_medium_<tier>): a flat crenellated top.  The war machine / spire / mage stands on its platform floor P (the old weapon height); no roofs, no rune ring, no lit slits.
+      const face = opts.cen ? Math.atan2(opts.cen[0] - x, opts.cen[1] - z) : 0;
+      const P = T3.tower({ ring: opts.ring, tid: ttid, i, x, z, R, h, face });
+      if (roofed) {
+        if (wiz) ctx.weapon(x, P + 0.05, z, Math.atan2(z, x), 'wizard');
+        else if (cap) ctx.weapon(x, P, z, Math.atan2(z, x), wk, R);
+        else {                                                    // a plain tower of the town: a flag pole (the roof is gone)
+          put(CYL(0.06, 0.1, 4.5, 6), M.wood, mat4(x, P + 2.25, z), { tint: 0x4a3424 });
+          ctx.flag(x, P + 4.5 - 0.55, z, Math.atan2(z, x) + 0.6, 1.0);
+        }
+      } else {
+        ctx.weapon(x, P, z, Math.atan2(z, x), wk, R);
+        ctx.torch(x + R * 0.5, P + 1.4, z + R * 0.2, { pool: false, post: true });
+      }
+    } else if (roofed) {
       // p32 X1 — the wizard tower: the roof stands on four stone pillars so the little mage can be seen under it, casting; a glowing blue orb crowns it
       const LIFT = wiz ? 3.9 : 0, hr = h + LIFT;
       if (wiz) {
@@ -184,7 +210,9 @@ export function buildCastle(ctx) {
     const a = poly[G.seg], b = poly[(G.seg + 1) % poly.length];
     const al = Math.hypot(b[0] - a[0], b[1] - a[1]), dx = (b[0] - a[0]) / al, dz = (b[1] - a[1]) / al, ry = Math.atan2(-dz, dx);
     const H = 13, half = 5.2, gw = half + 3.2 + 3.6;
-    ctx.tgt({ type: 'gate', ringId: 'town', x: G.x, z: G.z, w: 2 * gw, d: 7.6, h: H + 4, rot: ry, a: [G.x - dx * gw, G.z - dz * gw], b: [G.x + dx * gw, G.z + dz * gw] });
+    const gtid = ctx.tgt({ type: 'gate', ringId: 'town', x: G.x, z: G.z, w: 2 * gw, d: 7.6, h: H + 4, rot: ry, a: [G.x - dx * gw, G.z - dz * gw], b: [G.x + dx * gw, G.z + dz * gw] });
+    const tg = T3 ? T3.gate({ ring: 'town', tid: gtid, x: G.x, z: G.z, nx: G.nx, nz: G.nz, L: 2 * gw }) : null;       // (TR2-S3: the Tripo gatehouse replaces towers + arch + doors)
+    if (!T3) {
     for (const e of [-1, 1]) {
       const tx = G.x + dx * e * (half + 3.2), tz = G.z + dz * e * (half + 3.2);
       box(M.stoneDark, tx, 0.8, tz, ry, 7.2, 1.6, 7.6, { ...stoneUV, tint: 0xc9ccd6 });
@@ -207,8 +235,9 @@ export function buildCastle(ctx) {
     ctx.banner(G.x + G.nx * 2.42, 10.4, G.z + G.nz * 2.42, Math.atan2(G.nx, G.nz), 3.4, 3.2);
     for (let k = -4.6; k <= 4.6; k += 1.15) box(M.metal, G.x + dx * k + G.nx * 0.6, 4.6, G.z + dz * k + G.nz * 0.6, ry, 0.16, 6.6, 0.16);
     for (let yy = 2.2; yy < 8; yy += 1.4) box(M.metal, G.x + G.nx * 0.65, yy, G.z + G.nz * 0.65, ry, 2 * half - 0.4, 0.14, 0.14);
+    }
     ctx.pick({ x: G.x, z: G.z, y0: 0, y1: 16, r: 7 }, 'gate');
-    for (const e of [-1, 1]) ctx.torch(G.x + G.nx * 3 + dx * e * 5.6, 4.4, G.z + G.nz * 3 + dz * e * 5.6, { pool: true, sconce: true, ry: Math.atan2(G.nx, G.nz) });
+    for (const e of [-1, 1]) ctx.torch(G.x + G.nx * (tg ? tg.front + 0.25 : 3) + dx * e * (tg ? tg.sconceDx : 5.6), tg ? tg.sconceY : 4.4, G.z + G.nz * (tg ? tg.front + 0.25 : 3) + dz * e * (tg ? tg.sconceDx : 5.6), { pool: true, sconce: true, ry: Math.atan2(G.nx, G.nz) });
     RT.end();                                                  // (the bridge over the moat is not part of the ring: roads and the nav lists need it at every level)
     B.bid(0);                                                  // the bridge stays up
     // bridge over the outer moat
@@ -293,9 +322,11 @@ export function buildCastle(ctx) {
     const al = Math.hypot(ax, az), dx = ax / al, dz = az / al, ry = Math.atan2(-dz, dx);
     void ux; void uz;
     const H = 17, half = 7.5, gw = half + 1.2 + 4.3;
-    ctx.tgt({ type: 'gate', ringId: 'outer', x: G.x, z: G.z, w: 2 * gw, d: 8.6, h: H + 8, rot: ry, a: [G.x - dx * gw, G.z - dz * gw], b: [G.x + dx * gw, G.z + dz * gw] });
+    const gtid = ctx.tgt({ type: 'gate', ringId: 'outer', x: G.x, z: G.z, w: 2 * gw, d: 8.6, h: H + 8, rot: ry, a: [G.x - dx * gw, G.z - dz * gw], b: [G.x + dx * gw, G.z + dz * gw] });
+    const tg = T3 ? T3.gate({ ring: 'outer', tid: gtid, x: G.x, z: G.z, nx: G.nx, nz: G.nz, L: 2 * gw }) : null;       // (TR2-S3)
     for (const s of [-1, 1]) {
       const tx = G.x + dx * s * (half + 1.2), tz = G.z + dz * s * (half + 1.2);
+      if (T3) { ctx.pick({ x: tx, z: tz, y0: 0, y1: H + 10, r: 5 }, 'gate'); continue; }
       box(M.stoneDark, tx, 0.9, tz, ry, 8.6, 1.8, 8.6, { ...stoneUV, tint: 0xc9ccd6 });
       box(M.stone, tx, H / 2, tz, ry, 7.4, H, 7.4, { ...stoneUV, tint: STONE_WARM });
       box(M.stoneDark, tx, H + 0.3, tz, ry, 8.4, 0.8, 8.4, { ...stoneUV, tint: 0x9aa0ad });
@@ -315,6 +346,8 @@ export function buildCastle(ctx) {
       ctx.pick({ x: tx, z: tz, y0: 0, y1: H + 10, r: 5 }, 'gate');
     }
     // arch + lintel over the gap
+    if (T3) ctx.plaque(G.x + G.nx * (tg.front + 0.12), tg.plaqueY, G.z + G.nz * (tg.front + 0.12), Math.atan2(G.nx, G.nz), tg.plaqueW, tg.plaqueH);
+    else {
     box(M.stone, G.x, 13.2, G.z, ry, 2 * half - 0.6, 5.6, 5.2, { ...stoneUV, tint: STONE_WARM });
     box(M.stoneDark, G.x, 10.2, G.z, ry, 2 * half - 0.6, 0.6, 5.8, { ...stoneUV, tint: 0x9aa0ad });
     for (let k = 0; k < 6; k++) for (const e of [-1, 1]) {
@@ -326,6 +359,7 @@ export function buildCastle(ctx) {
     box(M.wood, G.x - G.nx * 0.4, 5, G.z - G.nz * 0.4, ry, 2 * half - 1.2, 10, 0.8, { tint: 0x8a6a4a, worldUV: 0.25 });
     for (let k = -6; k <= 6; k += 1.1) box(M.metal, G.x + dx * k + G.nx * 0.35, 5.2, G.z + dz * k + G.nz * 0.35, ry, 0.18, 10.4, 0.18);
     for (let yy = 1; yy < 10.5; yy += 1.4) box(M.metal, G.x + G.nx * 0.45, yy, G.z + G.nz * 0.45, ry, 2 * half - 1.2, 0.16, 0.16);
+    }
     ctx.pick({ x: G.x, z: G.z, y0: 0, y1: 18, r: 7 }, 'gate');
     // braziers with real light
     for (const s of [-1, 1]) {
@@ -356,16 +390,24 @@ export function buildCastle(ctx) {
 
   // ------------------------------------------------ keep (the great castle)
   B.tag(ENT.keep);
-  ctx.tgt({ type: 'keep', x: L.KEEP.x, z: L.KEEP.z, w: 26, d: 18, h: 48, rot: L.KEEP.rot, def: true, keep: true });
-  keep(ctx, put, box, stoneUV);
+  const ktid = ctx.tgt({ type: 'keep', x: L.KEEP.x, z: L.KEEP.z, w: 26, d: 18, h: 48, rot: L.KEEP.rot, def: true, keep: true });
+  keep(ctx, put, box, stoneUV, ktid);
   B.bid(0); B.tag(0);
 }
 
-function keep(ctx, put, box, stoneUV) {
+function keep(ctx, put, box, stoneUV, ktid) {
   const { M } = ctx, K = L.KEEP, c = Math.cos(K.rot), s = Math.sin(K.rot);
   const P = (lx, lz) => [K.x + lx * c + lz * s, K.z - lx * s + lz * c];
   const ry = K.rot;
   const B = (lx, y, lz, sx, sy, sz, mat = M.stone, o = {}) => { const [x, z] = P(lx, lz); box(mat, x, y, z, ry, sx, sy, sz, { ...stoneUV, tint: 0xffffff, ...o }); };
+  if (ctx.tr2c) {
+    // TR2-S3 (D7): the keep is the Tripo castle_keep_stone_2 at every level (front = the old keep's local +z); the target, the beacon on the dome, the torches at the door and the tap box stay as they were
+    const g = ctx.tr2c.keep({ tid: ktid, x: K.x, z: K.z, rot: ry });
+    ctx.beacon(K.x, g.domeY, K.z);
+    { const [x, z] = P(0, g.front + 1.9); ctx.torch(x - 2.6 * c, 4.6, z + 2.6 * s, { pool: true, light: true }); ctx.torch(x + 2.6 * c, 4.6, z - 2.6 * s, { pool: true }); }
+    ctx.pick({ x: K.x, z: K.z, y0: 0, y1: 48, r: 13 }, 'keep');
+    return;
+  }
   // base hall
   B(0, 0.8, 0, 25, 1.6, 17, M.stoneDark, { tint: 0xc9ccd6 });
   B(0, 7, 0, 23, 14, 15, M.stone, { tint: 0xeeeae4 });

@@ -21,6 +21,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { BASE, toFloatGeo } from './assets.js';
 import { TIER_KEYS, tiersNeeded, LEVEL_CAP } from './tiers.js';
+import { plainDepthMaterial } from './destruct.js';
 
 /* global __BUILD__ */
 const V = typeof __BUILD__ !== 'undefined' ? '?v=' + __BUILD__ : '';
@@ -82,6 +83,8 @@ export function release(name) {
   FILES.delete(n); return true;
 }
 export const has = (spec) => { const e = FILES.get(fileOf(spec)); return !!(e && e.gltf); };
+// TR2-S3: the swap.json record of a spec ({ ry, fl, ... }): per-model fit numbers measured offline (fl = height of the walk-way / platform floor ÷ model height)
+export const rec = (spec) => { try { return resolve(spec).rec || {}; } catch (e) { return {}; } };
 
 // ---------------------------------------------------------------- parts: oriented + scaled geometry
 function resolve(spec) {
@@ -128,6 +131,53 @@ export function bake(B, spec, matrix, o = {}) {
   return ps.length;
 }
 
+// ---------------------------------------------------------------- TBatcher: the Batcher of util.js for INDEXED Tripo geometry (TR2-S3)
+// util.js Batcher de-indexes every piece (3 vertices per triangle, 48 bytes each: 144 B per triangle, in the GPU AND in the JS heap).  A welded Tripo model has ~0.5 vertex per triangle, so
+// keeping the index buffer cuts the memory of a baked castle / town ~5x (385 k triangles: 55 MB -> 12 MB).  Same API as Batcher where tr2.bake uses it (bid / add / build), same attributes
+// (position, normal, uv, color = white, aB = battle target id), same depth material, so destruct.js / a1_rings.js see no difference.  No tint / skin tags (Tripo models are not tinted).
+export class TBatcher {
+  constructor() { this.groups = new Map(); this.tagB = 0; }
+  tag() { return this; }
+  bid(n = 0) { this.tagB = n; return this; }
+  add(geo, material, matrix, opts = {}) {
+    let grp = this.groups.get(material); if (!grp) this.groups.set(material, grp = { parts: [], verts: 0, idx: 0 });
+    const n = geo.attributes.position.count;
+    grp.parts.push({ geo, m: matrix ? matrix.clone() : null, bid: opts.bid ?? this.tagB }); grp.verts += n; grp.idx += geo.index ? geo.index.count : n;
+  }
+  build(parent, { cast = true, receive = true, name = 'static' } = {}) {
+    const meshes = [], v = new THREE.Vector3(), nm = new THREE.Matrix3();
+    for (const [material, grp] of this.groups) {
+      if (!grp.parts.length) continue;
+      const N = grp.verts, pos = new Float32Array(N * 3), nor = new Float32Array(N * 3), uv = new Float32Array(N * 2), col = new Float32Array(N * 3).fill(1), ab = new Float32Array(N);
+      const idx = N > 65535 ? new Uint32Array(grp.idx) : new Uint16Array(grp.idx);
+      let o = 0, io = 0;
+      for (const { geo, m, bid } of grp.parts) {
+        const P = geo.attributes.position, NO = geo.attributes.normal, UV = geo.attributes.uv, n = P.count;
+        if (m) nm.getNormalMatrix(m);
+        for (let i = 0; i < n; i++) {
+          v.fromBufferAttribute(P, i); if (m) v.applyMatrix4(m); pos[(o + i) * 3] = v.x; pos[(o + i) * 3 + 1] = v.y; pos[(o + i) * 3 + 2] = v.z;
+          if (NO) { v.fromBufferAttribute(NO, i); if (m) v.applyMatrix3(nm).normalize(); nor[(o + i) * 3] = v.x; nor[(o + i) * 3 + 1] = v.y; nor[(o + i) * 3 + 2] = v.z; } else nor[(o + i) * 3 + 1] = 1;
+          if (UV) { uv[(o + i) * 2] = UV.getX(i); uv[(o + i) * 2 + 1] = UV.getY(i); }
+        }
+        if (bid) ab.fill(bid, o, o + n);
+        if (geo.index) { const a = geo.index.array; for (let k = 0; k < a.length; k++) idx[io + k] = a[k] + o; io += a.length; } else { for (let k = 0; k < n; k++) idx[io + k] = o + k; io += n; }
+        o += n;
+      }
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('normal', new THREE.BufferAttribute(nor, 3)); g.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+      g.setAttribute('color', new THREE.BufferAttribute(col, 3)); g.setAttribute('aB', new THREE.BufferAttribute(ab, 1)); g.setIndex(new THREE.BufferAttribute(idx, 1));
+      g.computeBoundingSphere();
+      const mesh = new THREE.Mesh(g, material);
+      mesh.castShadow = cast && !material.transparent; mesh.receiveShadow = receive;
+      if (!material.transparent && !material.alphaTest) mesh.customDepthMaterial = plainDepthMaterial();
+      mesh.name = name; mesh.matrixAutoUpdate = false; mesh.updateMatrix();
+      parent.add(mesh); meshes.push(mesh);
+    }
+    this.groups.clear();
+    return meshes;
+  }
+}
+
 // ---------------------------------------------------------------- InstancedMesh path (not destructible)
 export function instances(parent, spec, matrices, o = {}) {
   if (!matrices.length) return [];
@@ -169,5 +219,5 @@ export function stats() {
   return { glb, textures, texMB: +texMB.toFixed(1), tris: Math.round(tris) };
 }
 
-export const tr2 = { base: BASE + TR2_DIR, init, load, release, drop, has, parts, info, bake, instances, ensureLevel, stats, setSwap, material: tr2Material, cfg: TR2_CFG };
+export const tr2 = { base: BASE + TR2_DIR, init, load, release, drop, has, rec, parts, info, bake, instances, ensureLevel, stats, setSwap, material: tr2Material, cfg: TR2_CFG };
 export default tr2;

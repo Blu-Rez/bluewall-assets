@@ -18,6 +18,8 @@ import { roadDist as roadEdge } from './roads.js';
 import { hamletD, hamlets } from './hamlets.js';
 import { nomads, nomadD, keepClear, treeClear, buildNomads } from './nomads.js';
 import { buildCastle } from './castle.js';
+import { createCastleTr2 } from './castle_tr2.js';                                   // TR2-S3: the castle from the Tripo library
+import { LEVEL_CAP } from './tiers.js';
 import { buildBuildings } from './buildings.js';
 import { buildTown } from './town.js';
 import { startTownPlan, planLots, homeLots, castleLevel } from './town_plan.js';              // p41: B1's town plan -> the town (town_build.js: B2 homes + B3 civic lots)
@@ -221,6 +223,12 @@ export async function buildWorld(renderer, scene, Q, progress) {
     buildFortDay(ctx);
     progress(0.7, 'Building the town…'); await tick();
   } else {
+    // TR2-S3: walls, towers, gatehouses and the keep from the Tripo library.  Any failure (models missing / not loadable, or the dev switch window.__tr2Off) => ctx.tr2c stays null => the procedural castle, unchanged.
+    ctx.tr2c = null;
+    if (!(typeof window !== 'undefined' && window.__tr2Off)) try {
+      const lvN = Math.max(1, Math.min(LEVEL_CAP, Math.round(Q.level0 || 20))), T3 = createCastleTr2();
+      await T3.preload(lvN, lvN); ctx.tr2c = T3;
+    } catch (e) { console.warn('castle_tr2: the old castle stays', e); ctx.tr2c = null; }
     buildCastle(ctx);
     progress(0.7, 'Building the town…'); await tick();
     buildBuildings(ctx);
@@ -362,11 +370,12 @@ export async function buildWorld(renderer, scene, Q, progress) {
   // ------------------------------------------------ update
   const tmpV = new THREE.Vector3();
   let bat = null;                                                  // attack mode state (setBattle)
-  let lodT = -9, mlodT = -9, world_keepClear = 0;
+  let lodT = -9, mlodT = -9, c3T = -9, world_keepClear = 0;
   function update(t, dt, camera) {
     pb();
     weather.update(t, dt, camera); pe('weather');
     if (camera && t - mlodT > 0.3) { mlodT = t; meadowLod(camera); }
+    if (camera && ctx.tr2c && t - c3T > 0.25) { c3T = t; ctx.tr2c.lod(camera); }        // TR2-S3: the castle's cells show their full or their lo model by the camera distance
     sky.update(t, dt, renderer.getPixelRatio(), camera); pe('sky');
     water.update(t); pe('water');
     flames.update(t); pools.update(t); flags.update(t); ffly.update(t); fairies.update(t, dt); pe('flames+fairies');
@@ -543,6 +552,13 @@ export async function buildWorld(renderer, scene, Q, progress) {
   setLevel(Q.level0 || 20);
   // A1: one row of wall up to level 10, two up to 20, three up to 30 (a1_rings.js: the rings that are not built yet at the wall's level are hidden — no rebuild, no draw call)
   if (ctx.rings) { ctx.levelHooks.push(() => ctx.rings.apply()); ctx.rings.install({ scene, weapons: () => extras.ballistas || null, patrols, coils: { up: () => { try { if (tesla) tesla.set(teslaN); } catch (e) { /* not built yet */ } }, hide: (id) => { try { if (tesla) tesla.hide(id); } catch (e) { /* not built yet */ } } } }); }
+  // TR2-S3: the Tripo castle is baked here (after the ring tracker: its meshes carry `aB` like every static piece, so a1_rings.js hides a ring in them too) and re-baked when the tier / half zone of the level changes
+  if (ctx.tr2c) {
+    try {
+      ctx.tr2c.install({ scene, rings: ctx.rings, onMeshes: (ms) => { if (Q.level === 'high' || Q.level === 'ultra') tagReflected(ms); } });
+      ctx.levelHooks.push(() => ctx.tr2c.refresh());
+    } catch (e) { console.warn('castle_tr2 install', e); }
+  }
   // owned creatures (dragons for players who have one — the owner does for now)
   function setOption(k, v) {
     if (k === 'level') setLevel(v);
@@ -663,7 +679,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
   // the green Dragonlings at the Lair (dragonling_home.js): an egg until the shop's egg is bought, then two of them
   const setDragonlings = (owned) => { if (!dlings) { try { dlings = createHomeDragonlings({ scene, height: terrain.fastHeight || height }); ctx.levelHooks.push(() => dlings.refresh()); } catch (e) { console.warn('dragonlings', e); return; } } dlings.set(owned); };
   return {
-    rings: ctx.rings, update, setTime, picks, water, get keptClear() { return world_keepClear; }, get lod() { return forest.ez ? forest.ez.lod : null; }, fastHeight: terrain.fastHeight, setBattle, targetDown, clearZones, key, stage, get ballistas() { return extras.ballistas || null; }, get dragon() { return dragon; }, giants: units.giants, shake: shakeReq, creatures, setOption, startLate, revealLate, lateProgress, setLateBudget, patrols, events, get late() { return extras; },
+    rings: ctx.rings, tr2c: ctx.tr2c, update, setTime, picks, water, get keptClear() { return world_keepClear; }, get lod() { return forest.ez ? forest.ez.lod : null; }, fastHeight: terrain.fastHeight, setBattle, targetDown, clearZones, key, stage, get ballistas() { return extras.ballistas || null; }, get dragon() { return dragon; }, giants: units.giants, shake: shakeReq, creatures, setOption, startLate, revealLate, lateProgress, setLateBudget, patrols, events, get late() { return extras; },
     setWeather: (m, snap) => weather.setMode(m, snap), weatherIcon: (base) => weather.icon() || base, weather,
     // p37 (old N6): a phone's GPU that lost its context comes back with every target EMPTY (the picture went half as bright, the ground black): paint again what was drawn into targets
     restoreGpu() { try { if (terrain.bake && terrain.bake.redo) terrain.bake.redo(null); } catch (e) { console.warn('restore ground', e); } try { rebakeAtlases(renderer); } catch (e) { console.warn('restore cards', e); }
