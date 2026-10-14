@@ -5,16 +5,14 @@
 const PI = Math.PI, TAU = PI * 2;
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
 const wrap = (a) => { a = (a + PI) % TAU; if (a < 0) a += TAU; return a - PI; };
-const WEAPONS = { sword: { url: 'combat/sword_arming.glb', len: 0.95, grip: { b: [-0.8, 0.6, 0], pos: [0, 0.035, 0] }, tip: 0.92, root: 0.62 } };   // len: metres in the hand; grip: blade direction + offset in R_Hand's frame
 const QUALITY = [                                                          // setQuality(step 0..3): 0 = full ... 3 = lowest (as the governor counts); skip = enemy poses refreshed every (skip + 1)th frame, except while they wind up / strike
   { part: 1.0, trail: 1, embers: 1, shake: 1.0, skip: 0 }, { part: 0.7, trail: 1, embers: 1, shake: 1.0, skip: 0 }, { part: 0.4, trail: 1, embers: 0, shake: 0.8, skip: 1 }, { part: 0.0, trail: 0, embers: 0, shake: 0.5, skip: 2 }];
 
 export async function build(ctx) {
-  const { createSim, hud: HUD, foes: FOES, under, hero, opts, SISTERS, ELEMENTS, TUNE, KINDS, base, v } = ctx;
+  const { createSim, kit, hud: HUD, foes: FOES, under, hero, opts, ELEMENTS, TUNE, KINDS, base, v } = ctx;
   const T = opts.THREE, camera = opts.camera, scene = opts.scene || under.scene, root = opts.root, hgt = (under && under.hgt) || opts.hgt || (() => 0);
-  const key = opts.sister || 'elina', kit = SISTERS[key]; if (!kit || !kit.combo) throw new Error('RP4: no combat kit for ' + key);
-  const el = ELEMENTS[kit.element], WP = WEAPONS[kit.weapon] || WEAPONS.sword, hostMove = opts.hostMove || null;
-  const sim = createSim({ seed: opts.seed || 1, sister: key, selfMove: false, collide: null });
+  const key = kit.id, el = ELEMENTS[kit.element], GL = el.glow, hostMove = opts.hostMove || null;
+  const sim = createSim({ kit, seed: opts.seed || 1, selfMove: false, collide: null });
   const perf = { pre: 0, post: 0, frame: 0 };
   let seedF = 0x9E3779B9 ^ (opts.seed || 1); const rnd = () => { seedF ^= seedF << 13; seedF ^= seedF >>> 17; seedF ^= seedF << 5; return ((seedF >>> 0) % 100000) / 100000; };   // visual-only noise (the sim has its own seeded PRNG)
   const col = (hex) => { const c = new T.Color(hex); return [c.r, c.g, c.b]; };
@@ -22,18 +20,20 @@ export async function build(ctx) {
 
   // ------------------------------------------------------------------ assets: the hero GLB's own clips (RP0B: slash_a/b/c, heavy, block ...) + the sword
   const get = async (rel) => { const r = await fetch(base + rel + (v || '')); if (!r.ok) throw new Error('RP4 asset ' + rel + ' ' + r.status); return opts.parseGLB(await r.arrayBuffer(), base + 'combat/'); };
-  const swordG = await get(WP.url);
+  const weaponG = await Promise.all(kit.weapons.map((w) => get(w.url)));
   const mixer = hero.mixer, CL = {};
   const addClip = (c) => { if (!c || CL[c.name]) return; const a = mixer.clipAction(c); a.play(); a.timeScale = 0; a.setEffectiveWeight(0); CL[c.name] = { a, d: c.duration, w: 0, shared: !!(hero.acts && hero.acts[c.name] && hero.acts[c.name].a === a) }; };
   for (const n of kit.clips) { addClip((hero.clips || []).find((c) => c.name === n) || (hero.acts && hero.acts[n] && hero.acts[n].a.getClip())); if (!CL[n]) throw new Error('RP4: the hero GLB has no clip ' + n); }
-  // the sword rides on R_Hand (the pack's sword is cut to length 1, grip centre at the origin: scale = length / model scale)
-  const hand = hero.model.getObjectByName('R_Hand'); let sword = null;
-  if (hand) {
-    sword = new T.Group(); const m = swordG.scene.children[0] || swordG.scene; sword.add(m); m.traverse((o) => { if (o.isMesh) { o.frustumCulled = false; o.castShadow = false; } });
-    const msc = hero.model.scale.x || 1, b = new T.Vector3(...WP.grip.b).normalize(), wv = new T.Vector3(b.y, -b.x, 0).normalize(), zz = new T.Vector3().crossVectors(wv, b);
-    sword.quaternion.setFromRotationMatrix(new T.Matrix4().makeBasis(wv, b, zz)); sword.position.set(...WP.grip.pos); sword.scale.setScalar(WP.len / msc); hand.add(sword);
-  }
-  const heroMats = []; hero.model.traverse((o) => { if ((o.isMesh || o.isSkinnedMesh) && o !== sword && o.material && o.material.emissive && !(sword && sword.getObjectById(o.id))) { if (!heroMats.includes(o.material)) heroMats.push(o.material); } });
+  // the weapons ride on R_Hand / L_Hand (a library weapon is cut to length 1, grip centre at the origin: scale = length / model scale)
+  const weapons = [];
+  kit.weapons.forEach((w, i) => {
+    const hand = hero.model.getObjectByName(w.slot === 'L' ? 'L_Hand' : 'R_Hand'); if (!hand) return;
+    const grp = new T.Group(), m = weaponG[i].scene.children[0] || weaponG[i].scene; grp.add(m); m.traverse((o) => { if (o.isMesh) { o.frustumCulled = false; o.castShadow = false; } });
+    const msc = hero.model.scale.x || 1, b = new T.Vector3(...w.grip.b).normalize(), wv0 = new T.Vector3(b.y, -b.x, 0).normalize(), zz = new T.Vector3().crossVectors(wv0, b);
+    grp.quaternion.setFromRotationMatrix(new T.Matrix4().makeBasis(wv0, b, zz)); grp.position.set(...w.grip.pos); grp.scale.setScalar(w.len / msc); hand.add(grp); weapons.push({ obj: grp, w });
+  });
+  const tw0 = kit.trail ? (weapons[kit.trailWeapon] || weapons[0] || null) : null, sword = tw0 ? tw0.obj : null, WP = tw0 ? tw0.w : null;      // (the weapon that draws the trail)
+  const heroMats = []; hero.model.traverse((o) => { if ((o.isMesh || o.isSkinnedMesh) && o.material && o.material.emissive && !weapons.some((q) => q.obj.getObjectById(o.id))) { if (!heroMats.includes(o.material)) heroMats.push(o.material); } });
   const foes = FOES.create({ T, scene, parseGLB: opts.parseGLB, base, v, hgt });
   const kinds = opts.kinds || ['soldier', 'beast', 'brute'];
   const foeInfo = await foes.load(kinds);
@@ -112,9 +112,9 @@ export async function build(ctx) {
   const SHAKE_T = 0.18; function shake(a) { a *= TUNE.shake * Q.shake; const cur = shk.t < SHAKE_T ? shk.a0 * Math.pow(1 - shk.t / SHAKE_T, 2) : 0; if (a > cur) { shk.a0 = a; shk.t = 0; } }
   // The camera is the host's (behind the hero).  While a fight is on it is nudged OVER THE SHOULDER (right 0.55 m, up 0.25 m, back 0.7 m: eased in 0.4 s, out 0.9 s) so her back does not hide the enemy in front of her; the shake rides on top.
   const FRAME = TUNE.frame || { right: 0.8, shift: 0.4, up: 0.3, back: 0.6 };
-  function fightOn() { if (HS.hasLock || HS.state === 'atk' || HS.state === 'skill' || HS.state === 'hit' || HS.state === 'down') return 1; for (const e of sim.enemies) { if (e.state === 'dead' || e.passive) continue; if (e.state !== 'idle' && Math.hypot(e.x - HS.x, e.z - HS.z) < 14) return 1; } return 0; }
+  function fightOn() { if (HS.hasLock || HS.state === 'atk' || HS.state === 'skill' || HS.state === 'hit' || HS.state === 'down' || HS.state === 'block') return 1; for (const e of sim.enemies) { if (e.state === 'dead' || e.passive) continue; if (e.state !== 'idle' && Math.hypot(e.x - HS.x, e.z - HS.z) < 14) return 1; } return 0; }
   const cols = under && under.colliders, BND = (under && under.BOUND) || 1e9; let frameOn = 1;
-  function camBlocked(x, z) { if (Math.abs(x) > BND - 0.4 || Math.abs(z) > BND - 0.4) return true; if (cols) for (let i = 0; i < cols.length; i++) { const c = cols[i], dx = x - c[0], dz = z - c[1], rr = c[2] + 0.4; if (dx * dx + dz * dz < rr * rr) return true; } return false; }
+  function camBlocked(x, z) { if (x * x + z * z > (BND - 0.4) * (BND - 0.4)) return true; if (cols) for (let i = 0; i < cols.length; i++) { const c = cols[i], dx = x - c[0], dz = z - c[1], rr = c[2] + 0.4; if (dx * dx + dz * dz < rr * rr) return true; } return false; }
   function cameraApply(dt) {
     let tgt = HS.state === 'dead' ? 0 : fightOn() * frameOn;
     vR.set(1, 0, 0).applyQuaternion(camera.quaternion); vU.set(0, 1, 0).applyQuaternion(camera.quaternion); vF.set(0, 0, -1).applyQuaternion(camera.quaternion);
@@ -133,10 +133,10 @@ export async function build(ctx) {
 
   // ------------------------------------------------------------------ HUD + screen projection
   const emblem = opts.emblem === undefined ? base + 'e_' + key + '.png' : opts.emblem;
-  const keyq = { attack: false, dodge: false, skill1: false, skill2: false, lock: false, lockNext: false };
+  const keyq = { attack: false, dodge: false, skill1: false, skill2: false, lock: false, lockNext: false }; let blockTouch = false;
   const press = (n) => { if (n === 'lock') { if (sim.hero.hasLock && tLockT > 0 && performance.now() - tLockT < 400) keyq.lockNext = true; else keyq.lock = true; tLockT = performance.now(); } else if (n in keyq) keyq[n] = true; };
   let tLockT = 0;
-  const hud = HUD.create({ root, accent: el.color, emblem, onPress: (n, down) => { if (down) press(n); } });
+  const hud = HUD.create({ root, accent: el.color, emblem, icons: kit.icons, combo: kit.combo.length, onPress: (n, down) => { if (n === 'block') blockTouch = !!down; else if (down) press(n); } });
   if (opts.btns) hud.moveHost(opts.btns);
   let W = 1, Hh = 1, wcheck = 0; const vP = new T.Vector3();
   const sizeUpd = () => { W = root.clientWidth || 1; Hh = root.clientHeight || 1; const dpr = opts.pixelRatio || (typeof devicePixelRatio === 'number' ? devicePixelRatio : 1); pmat.uniforms.uScale.value = Hh * dpr / (2 * Math.tan(camera.fov * PI / 360)); pmat.uniforms.uMax.value = Hh * dpr * 0.07; };
@@ -164,11 +164,12 @@ export async function build(ctx) {
   // ------------------------------------------------------------------ events -> effects
   const heroPos = { x: 0, y: 0, z: 0 };
   function fxHit(e) {
+    if (e.kind === 'burn') { const sb = project(e.x, e.y + 0.55, e.z); if (sb.on) hud.digit(sb.x + (rnd() - 0.5) * 20, sb.y, String(Math.round(e.dmg)), '#ff9a3a', 0.8, (rnd() - 0.5) * 20); if (Q.part > 0) emit(e.x, e.y + 0.3, e.z, 0, 1.2, 0, 0.3, 0.14, C0, 1, -1, 1); return; }
     const fin = e.kind === 'finisher', big = fin || e.kind === 'burst', pw = e.mult > 1.01 ? 1 : e.mult < 0.99 ? -1 : 0;
     const n = nP((e.kind === 'burst' ? 8 : 12) + (big ? 8 : 0));
     for (let i = 0; i < n; i++) { const sp = 3 + rnd() * 5, ang = (rnd() - 0.5) * 2.1, ca = Math.cos(ang), sa = Math.sin(ang), dx = e.a * ca - e.b * sa, dz = e.a * sa + e.b * ca; emit(e.x, e.y + (rnd() - 0.5) * 0.4, e.z, dx * sp, 1.2 + rnd() * 3.2, dz * sp, 0.22 + rnd() * 0.24, 0.11 + rnd() * 0.1, rnd() < 0.5 ? C1 : CE, 1, 9, 1.2); }
     if (Q.part > 0) emit(e.x, e.y, e.z, 0, 0, 0, 0.12, big ? 1.5 : 1.0, [1, 0.8, 0.45], 1, 0, 0);          // impact flare
-    shake((big ? 0.05 : e.kind === 'wave' ? 0.03 : 0.015) * (pw > 0 ? 1.2 : 1));
+    shake((big ? 0.05 : e.kind === 'proj' ? 0.03 : 0.015) * (pw > 0 ? 1.2 : 1));
     const s = project(e.x, e.y + 0.55, e.z); if (s.on) hud.digit(s.x + (rnd() - 0.5) * 26, s.y, String(Math.round(e.dmg)), pw > 0 ? '#ffd24a' : pw < 0 ? '#a9b4bf' : '#ffffff', (fin ? 1.3 : 1) * (pw > 0 ? 1.3 : pw < 0 ? 0.82 : 1), (rnd() - 0.5) * 30);
     const en = sim.enemyById(e.id); if (en) hud.target(e.hp / en.hpMax, e.hp, (ELEMENTS[en.element] || el).color);
     hud.hot(true); hotT = 0.1;
@@ -184,9 +185,22 @@ export async function build(ctx) {
         case 'dodge': { const n = nP(7); for (let k = 0; k < n; k++) { const a = rnd() * TAU; emit(HS.x, heroY + 0.08, HS.z, Math.cos(a) * 1.6, 0.4 + rnd(), Math.sin(a) * 1.6, 0.35, 0.16, [0.55, 0.6, 0.65], 0.7, -1, 2); } break; }
         case 'dodge-perfect': { flashPerfect = 0.35; const n = nP(14); for (let k = 0; k < n; k++) { const a = (k / 14) * TAU; emit(HS.x, heroY + 1.0, HS.z, Math.cos(a) * 4, 0.3, Math.sin(a) * 4, 0.4, 0.1, [0.5, 0.95, 1], 1, 0, 2.5); } if (Q.part > 0) emit(HS.x, heroY + 1.0, HS.z, 0, 0, 0, 0.22, 1.5, [0.5, 0.95, 1], 1, 0, 0); break; }
         case 'hero-hit': { flashRed = 0.14; hud.hurt(); shake(e.flag ? 0.05 : 0.03); const n = nP(9); for (let k = 0; k < n; k++) { const a = rnd() * TAU; emit(HS.x, heroY + 1.1, HS.z, Math.cos(a) * 3, 1 + rnd() * 2, Math.sin(a) * 3, 0.3, 0.08, [1, 0.35, 0.25], 1, 8, 1.5); } const s = project(HS.x, heroY + 1.9, HS.z); if (s.on) hud.digit(s.x, s.y, String(Math.round(e.dmg)), '#ff5a4a', 1.15, 0); break; }
-        case 'burst': { burstFx.t = 0; burstFx.x = e.x; burstFx.z = e.z; burstFx.R = e.a; burstFx.on = true; shake(0.05); const n = nP(26); for (let k = 0; k < n; k++) { const a = rnd() * TAU, sp = 2 + rnd() * 6; emit(e.x, heroY + 0.3, e.z, Math.cos(a) * sp, 1 + rnd() * 4, Math.sin(a) * sp, 0.5 + rnd() * 0.4, 0.12 + rnd() * 0.1, rnd() < 0.5 ? C0 : C1, 1, 4, 1.2); } if (Q.part > 0) emit(e.x, heroY + 0.6, e.z, 0, 0, 0, 0.2, 2.2, C1, 1, 0, 0); break; }
+        case 'burst': { burstFx.t = 0; burstFx.x = e.x; burstFx.z = e.z; burstFx.R = e.a; burstFx.yaw = e.c; burstFx.arc = e.b; burstFx.on = true; shake(0.05); const n = nP(26); for (let k = 0; k < n; k++) { const a = e.b >= TAU - 0.01 ? rnd() * TAU : (HS.yaw ? 0 : 0) + e.c + (rnd() - 0.5) * e.b, sp = 2 + rnd() * 6, ca = e.b >= TAU - 0.01 ? Math.cos(a) : Math.sin(a), sa = e.b >= TAU - 0.01 ? Math.sin(a) : Math.cos(a); emit(e.x, heroY + 0.3, e.z, ca * sp, 1 + rnd() * 4, sa * sp, 0.5 + rnd() * 0.4, 0.12 + rnd() * 0.1, rnd() < 0.5 ? C0 : C1, 1, 4, 1.2); } if (Q.part > 0) emit(e.x, heroY + 0.6, e.z, 0, 0, 0, 0.2, 2.2, C1, 1, 0, 0); break; }
         case 'swing': trailBreak = true; break;
-        case 'skill': if (e.kind === 'wave') trailBreak = true; break;
+        case 'skill': trailBreak = true; break;
+        case 'proj': if (Q.part > 0) emit(e.x, heroY + 1.1, e.z, 0, 0, 0, 0.12, 1.0, C1, 1, 0, 0); break;
+        case 'block': {                                                  // a blocked hit: sparks off the guard, a flare, a short shake; a broken guard is red
+          const fr = e.flag, gx = HS.x + Math.sin(HS.yaw) * 0.85, gz = HS.z + Math.cos(HS.yaw) * 0.85, n = nP(fr ? 16 : 10);
+          for (let k = 0; k < n; k++) { const a = HS.yaw + (rnd() - 0.5) * 2.4, sp = 2.5 + rnd() * 4; emit(gx, heroY + 1.05 + (rnd() - 0.5) * 0.5, gz, Math.sin(a) * sp, 0.6 + rnd() * 2.4, Math.cos(a) * sp, 0.18 + rnd() * 0.2, 0.09 + rnd() * 0.08, rnd() < 0.5 ? [0.78, 0.92, 1] : C1, 1, 7, 1.4); }
+          if (Q.part > 0) emit(gx, heroY + 1.05, gz, 0, 0, 0, 0.14, fr ? 1.9 : 1.3, fr ? [1, 0.4, 0.3] : [0.8, 0.95, 1], 1, 0, 0);
+          shake(fr ? 0.05 : 0.022);
+          if (fr) { flashRed = 0.14; hud.hurt(); } else { const sb = project(HS.x, heroY + 1.9, HS.z); if (sb.on) hud.digit(sb.x + (rnd() - 0.5) * 16, sb.y, String(Math.round(e.dmg)), '#9fd8ff', 0.8, (rnd() - 0.5) * 20); }
+          break; }
+        case 'absorb': { const n = nP(8); for (let k = 0; k < n; k++) { const a = rnd() * TAU; emit(HS.x + Math.sin(a) * 0.5, heroY + 1.1, HS.z + Math.cos(a) * 0.5, Math.sin(a) * 2.5, 0.5 + rnd() * 1.5, Math.cos(a) * 2.5, 0.25, 0.1, [1, 1, 1], 1, 2, 1.5); } shake(0.015); const sb = project(HS.x, heroY + 1.9, HS.z); if (sb.on) hud.digit(sb.x, sb.y, String(Math.round(e.dmg)), '#dfe8ef', 0.85, 0); break; }
+        case 'heal': { const n = nP(16); for (let k = 0; k < n; k++) { const a = rnd() * TAU, r = 0.3 + rnd() * 0.6; emit(HS.x + Math.cos(a) * r, heroY + 0.1 + rnd() * 0.5, HS.z + Math.sin(a) * r, 0, 1.2 + rnd() * 1.4, 0, 0.7 + rnd() * 0.4, 0.14, rnd() < 0.5 ? [0.55, 1, 0.7] : C1, 0.9, -0.5, 0.5); } if (Q.part > 0) emit(HS.x, heroY + 1.0, HS.z, 0, 0, 0, 0.2, 1.6, [0.6, 1, 0.75], 1, 0, 0); const sb = project(HS.x, heroY + 2.0, HS.z); if (sb.on) { if (e.b > 0) hud.digit(sb.x + 38, sb.y + 10, '+' + Math.round(e.a / e.b) + '/s', '#aaffd0', 0.8, 14); else hud.digit(sb.x, sb.y, '+' + Math.round(e.a), '#7dffb0', 1.1, 0); } break; }
+        case 'shield': { const n = nP(16); for (let k = 0; k < n; k++) { const a = (k / 16) * TAU; emit(HS.x + Math.sin(a) * 0.9, heroY + 0.9, HS.z + Math.cos(a) * 0.9, Math.sin(a) * 0.6, 0.4, Math.cos(a) * 0.6, 0.5, 0.13, k & 1 ? [1, 1, 1] : C1, 1, 0, 1.5); } if (Q.part > 0) emit(HS.x, heroY + 1.0, HS.z, 0, 0, 0, 0.22, 1.7, [1, 1, 1], 1, 0, 0); break; }
+        case 'buff': case 'stamina': { const n = nP(12), c2 = e.type === 'stamina' ? [1, 0.9, 0.4] : C1; for (let k = 0; k < n; k++) { const a = rnd() * TAU; emit(HS.x + Math.cos(a) * 0.5, heroY + 0.2, HS.z + Math.sin(a) * 0.5, 0, 1.6 + rnd() * 1.6, 0, 0.55, 0.11, rnd() < 0.5 ? c2 : C0, 1, -0.5, 0.6); } break; }
+        case 'status': { const en = sim.enemyById(e.id), h = (en ? foes.heightOf(en.kind) : 1.8) * 0.55, c2 = e.kind === 'freeze' ? [0.7, 0.92, 1] : e.kind === 'burn' ? [1, 0.5, 0.15] : e.kind === 'root' ? [0.5, 1, 0.45] : [0.5, 0.75, 1], n = nP(e.kind === 'freeze' ? 14 : 8); for (let k = 0; k < n; k++) { const a = rnd() * TAU; emit(e.x + Math.cos(a) * 0.4, h + (rnd() - 0.5) * 0.8, e.z + Math.sin(a) * 0.4, Math.cos(a) * 1.6, 0.4 + rnd() * 1.2, Math.sin(a) * 1.6, 0.4, 0.1, c2, 1, 2, 1.2); } if (Q.part > 0) emit(e.x, h, e.z, 0, 0, 0, 0.18, 1.3, c2, 1, 0, 0); break; }
         case 'stagger': if (Q.part > 0) emit(e.x, 2.1, e.z, 0, 0.6, 0, 0.35, 0.55, [1, 0.9, 0.4], 1, 0, 0); break;
         case 'windup': if (Q.part > 0) { const en = sim.enemyById(e.id); emit(e.x, (en ? foes.heightOf(en.kind) : 1.8) + 0.45, e.z, 0, 0.8, 0, 0.3, 0.7, [1, 0.25, 0.15], 1, 0, 0); } break;
         default: break;
@@ -194,7 +208,7 @@ export async function build(ctx) {
     }
   }
   let trailBreak = false;
-  const burstFx = { on: false, t: 0, x: 0, z: 0, R: 5 };
+  const burstFx = { on: false, t: 0, x: 0, z: 0, R: 5, yaw: 0, arc: TAU };
 
   // ------------------------------------------------------------------ ribbon writers
   function telegraphWrite() {
@@ -214,11 +228,16 @@ export async function build(ctx) {
   function waveWrite(dt) {
     let k = 0;
     for (const pr of sim.projectiles) {
-      if (!pr.on || k >= NWV) continue; const b = OFF_W + k * WV; k++; const s = pr.sk, dx = pr.dx, dz = pr.dz, lx = -dz, lz = dx, gy = hgt(pr.x, pr.z), life = clamp(pr.t / (s.range / s.speed), 0, 1), fade = 1 - Math.pow(life, 3), Rw = s.radius;
+      if (!pr.on) continue; const s = pr.sk, gy = hgt(pr.x, pr.z);
+      if (s.vis !== 'crescent') {                                          // a bolt: a bright head + a few sparks (Points only)
+        if (Q.part > 0) { emit(pr.x, gy + 1.05, pr.z, 0, 0, 0, 0.07, 0.8, C1, 1, 0, 0); if (rnd() < 0.7) emit(pr.x + (rnd() - 0.5) * 0.2, gy + 1.0 + (rnd() - 0.5) * 0.25, pr.z + (rnd() - 0.5) * 0.2, -pr.dx * 1.2 + (rnd() - 0.5) * 0.6, (rnd() - 0.5) * 0.8, -pr.dz * 1.2 + (rnd() - 0.5) * 0.6, 0.25 + rnd() * 0.15, 0.12, C0, 0.9, 0, 1.2); }
+        continue;
+      }
+      if (k >= NWV) continue; const b = OFF_W + k * WV; k++; const dx = pr.dx, dz = pr.dz, lx = -dz, lz = dx, life = clamp(pr.t / (s.range / s.speed), 0, 1), fade = 1 - Math.pow(life, 3), Rw = s.radius;
       for (let i = 0; i < 13; i++) {
         const f = i / 12, phi = (f - 0.5) * PI * 0.96, sn = Math.sin(phi), cs = Math.cos(phi), lat = sn * Rw, up = 0.12 + cs * 0.95, fwd = -0.45 * (1 - cs) * 1.6, th = 0.38 * cs * cs;
         const ox = pr.x + lx * lat + dx * fwd, oz = pr.z + lz * lat + dz * fwd, ix = pr.x + lx * lat * 0.96 + dx * (fwd - th), iz = pr.z + lz * lat * 0.96 + dz * (fwd - th);
-        wv(b + i * 2, ox, gy + up, oz, 1, 0.72, 0.28, fade * (0.25 + 0.75 * cs)); wv(b + i * 2 + 1, ix, gy + up - th * 0.9, iz, 1, 0.3, 0.08, fade * 0.55 * cs);
+        wv(b + i * 2, ox, gy + up, oz, GL[0][0], GL[0][1], GL[0][2], fade * (0.25 + 0.75 * cs)); wv(b + i * 2 + 1, ix, gy + up - th * 0.9, iz, GL[1][0], GL[1][1], GL[1][2], fade * 0.55 * cs);
       }
       if (Q.embers && rnd() < 0.55) { const f = (rnd() - 0.5) * 1.7; emit(pr.x + lx * f * Rw * 0.9, gy + 0.2 + rnd() * 0.9, pr.z + lz * f * Rw * 0.9, -dx * 0.8 + (rnd() - 0.5), 0.8 + rnd() * 1.4, -dz * 0.8 + (rnd() - 0.5), 0.35 + rnd() * 0.3, 0.1 + rnd() * 0.08, rnd() < 0.5 ? C0 : C1, 1, -1.5, 0.8); }
     }
@@ -228,11 +247,11 @@ export async function build(ctx) {
     zero(OFF_B, NBR * BV); if (!burstFx.on) return; burstFx.t += dt; const t = burstFx.t, D = 0.55; if (t >= D) { burstFx.on = false; return; }
     const k = t / D, gy = hgt(burstFx.x, burstFx.z) + 0.08;
     for (let r = 0; r < NBR; r++) { const b = OFF_B + r * BV, kk = clamp(k * (r ? 0.8 : 1), 0, 1), R = burstFx.R * (1 - Math.pow(1 - kk, 2.6)), w = (r ? 0.28 : 0.6) * (1 - kk) + 0.12, a = Math.pow(1 - kk, 1.1) * (r ? 0.6 : 1);
-      for (let i = 0; i < 29; i++) { const an = (i / 28) * TAU, s = Math.sin(an), c = Math.cos(an); wv(b + i * 2, burstFx.x + s * R, gy, burstFx.z + c * R, 1, 0.78, 0.35, a); wv(b + i * 2 + 1, burstFx.x + s * Math.max(0, R - w), gy, burstFx.z + c * Math.max(0, R - w), 1, 0.3, 0.08, a * 0.6); } }
+      for (let i = 0; i < 29; i++) { const an = burstFx.yaw - burstFx.arc / 2 + (i / 28) * burstFx.arc, s = Math.sin(an), c = Math.cos(an); wv(b + i * 2, burstFx.x + s * R, gy, burstFx.z + c * R, GL[0][0], GL[0][1], GL[0][2], a); wv(b + i * 2 + 1, burstFx.x + s * Math.max(0, R - w), gy, burstFx.z + c * Math.max(0, R - w), GL[1][0], GL[1][1], GL[1][2], a * 0.6); } }
   }
 
   // ------------------------------------------------------------------ the controller
-  const mv = { x: 0, z: 0 }, inp = { mx: 0, mz: 0, camYaw: 0, attack: false, dodge: false, skill1: false, skill2: false, lock: false, lockNext: false };
+  const mv = { x: 0, z: 0 }, inp = { mx: 0, mz: 0, camYaw: 0, block: false, attack: false, dodge: false, skill1: false, skill2: false, lock: false, lockNext: false };
   let deadT = 0, wasBusy = false, enabled = true, spawnN = opts.spawn | 0;
   const ctrl = {
     sim, foes, hud, VERSION: ctx.VERSION, quality: 3, info: { foes: foeInfo },
@@ -242,7 +261,7 @@ export async function build(ctx) {
       const L = Math.hypot(wantX, wantZ) || 1; inp.mx = m > 0 ? (wantX / L) * m : 0; inp.mz = m > 0 ? (wantZ / L) * m : 0; inp.camYaw = S.camYaw;
       if (S.reqDodge) { keyq.dodge = true; S.reqDodge = false; }                    // the host's own dodge button / keys feed the sim's roll
       const air = S.grounded === false || S.mode === 'first';                         // (no combat in the air or in first person)
-      inp.attack = keyq.attack && !air; inp.dodge = keyq.dodge && !air; inp.skill1 = keyq.skill1 && !air; inp.skill2 = keyq.skill2 && !air; inp.lock = keyq.lock; inp.lockNext = keyq.lockNext; keyq.attack = keyq.dodge = keyq.skill1 = keyq.skill2 = keyq.lock = keyq.lockNext = false;
+      inp.attack = keyq.attack && !air; inp.dodge = keyq.dodge && !air; inp.skill1 = keyq.skill1 && !air; inp.skill2 = keyq.skill2 && !air; inp.lock = keyq.lock; inp.lockNext = keyq.lockNext; inp.block = (blockTouch || !!(S.keys && S.keys.has('KeyF'))) && !air; keyq.attack = keyq.dodge = keyq.skill1 = keyq.skill2 = keyq.lock = keyq.lockNext = false;
       sim.syncHero(S.x, S.z, S.body); if (spawnN) { ctrl.spawnTest(spawnN); spawnN = 0; }            // (opts.spawn: placeholder enemies around the hero's FIRST synced position)
       if (enabled) sim.update(dt, inp); else sim.update(0, inp);
       sim.takeMove(mv); if ((mv.x || mv.z) && hostMove) hostMove(mv.x, mv.z);
@@ -257,7 +276,7 @@ export async function build(ctx) {
     post(dt) {
       const t0 = performance.now(); poseApply(dt);
       if (sword && Q.trail) {
-        let on = false; if (HS.state === 'atk') { const c = kit.combo[HS.n]; const tw = c.trail; if (tw) { for (let i = 0; i < tw.length; i++) if (HS.sT >= tw[i][0] && HS.sT <= tw[i][1]) on = true; } else on = HS.sT >= c.hit[0] - 0.12 && HS.sT <= c.hit[1] + 0.14; } else if (HS.state === 'skill') { const s = kit.skills[HS.skill]; on = HS.skill === 0 && HS.sT >= s.at - 0.14 && HS.sT <= s.at + 0.14; }
+        let on = false; if (HS.state === 'atk') { const c = kit.combo[HS.n]; const tw = c.trail; if (c.type === 'shot') on = false; else if (tw) { for (let i = 0; i < tw.length; i++) if (HS.sT >= tw[i][0] && HS.sT <= tw[i][1]) on = true; } else on = HS.sT >= c.hit[0] - 0.12 && HS.sT <= c.hit[1] + 0.14; } else if (HS.state === 'skill') { const s = kit.skills[HS.skill]; on = s.effects.some((f) => f.type === 'projectile' && f.vis === 'crescent') && HS.sT >= s.at - 0.14 && HS.sT <= s.at + 0.14; }
         if (on && !HS.freeze) { trailPush(trailBreak || !tr.on); trailBreak = false; } tr.on = on; if (!on) trailBreak = true;
       }
       perf.post += (performance.now() - t0 - perf.post) * 0.1;
@@ -271,7 +290,7 @@ export async function build(ctx) {
       rg.attributes.position.needsUpdate = true; rg.attributes.color.needsUpdate = true; pgeo.attributes.position.needsUpdate = true; pgeo.attributes.aCol.needsUpdate = true; pgeo.attributes.aSize.needsUpdate = true;
       // hero tint: i-frames (cyan pulse, truthful: it follows sim.invulnerable()), perfect dodge (white), hurt (red)
       flashRed = Math.max(0, flashRed - dt); flashPerfect = Math.max(0, flashPerfect - dt);
-      const inv = sim.invulnerable() ? 1 : 0, pul = 0.55 + 0.45 * Math.sin((now || 0) * 0.04), er = flashRed / 0.14 * 0.5 + flashPerfect * 0.9 + inv * 0.02 * pul, eg = flashPerfect * 1.0 + inv * 0.2 * pul + flashRed / 0.14 * 0.1, eb = flashPerfect * 1.1 + inv * 0.26 * pul + flashRed / 0.14 * 0.08;
+      const inv = sim.invulnerable() ? 1 : 0, pul = 0.55 + 0.45 * Math.sin((now || 0) * 0.04), shd = HS.sh > 0 ? 0.045 + 0.03 * pul : 0, gd = sim.guarding() ? 0.035 : 0, er = flashRed / 0.14 * 0.5 + flashPerfect * 0.9 + inv * 0.02 * pul + CE[0] * shd + gd * 0.4, eg = flashPerfect * 1.0 + inv * 0.2 * pul + flashRed / 0.14 * 0.1 + CE[1] * shd + gd * 0.9, eb = flashPerfect * 1.1 + inv * 0.26 * pul + flashRed / 0.14 * 0.08 + CE[2] * shd + gd;
       for (const m of heroMats) m.emissive.setRGB(er, eg, eb);
       // attackers outside the frame (behind her): a red arrow on the screen edge towards each enemy that is winding up / striking
       camera.matrixWorldInverse.copy(camera.matrixWorld).invert(); let ai = 0;
@@ -288,19 +307,19 @@ export async function build(ctx) {
       // HUD
       hotT -= dt; if (hotT <= 0) hud.hot(false);
       const tg = sim.lockTarget(); if (tg) { const s = project(tg.x, hgt(tg.x, tg.z) + foes.heightOf(tg.kind) * 0.62, tg.z); hud.marker(s.x, s.y, s.on); hud.target(tg.hp / tg.hpMax, tg.hp, (ELEMENTS[tg.element] || el).color, 0.5); } else hud.marker(0, 0, false);
-      hud.set({ hp: HS.hp, hpMax: HS.hpMax, st: HS.st, stMax: HS.stMax, cd: HS.cd, cdMax: HS.cdMax, n: HS.state === 'atk' ? HS.n : HS.grace > 0 ? HS.graceN : -1, lock: HS.hasLock }, dt); hud.digits(dt);
+      hud.set({ hp: HS.hp, hpMax: HS.hpMax, st: HS.st, stMax: HS.stMax, cd: HS.cd, cdMax: HS.cdMax, n: HS.state === 'atk' ? HS.n : HS.grace > 0 ? HS.graceN : -1, lock: HS.hasLock, sh: HS.sh > 0 ? HS.sh / HS.shMax : 0, guard: HS.state === 'block' }, dt); hud.digits(dt);
       perf.frame += (performance.now() - t0 - perf.frame) * 0.1;
     },
-    press, key(code) { const m = { KeyJ: 'attack', KeyK: 'dodge', KeyU: 'skill1', KeyI: 'skill2', KeyL: 'lock', KeyO: 'lockNext' }[code]; if (!m) return false; keyq[m] = true; return true; },
+    press, setBlock(b) { blockTouch = !!b; }, key(code) { const m = { KeyJ: 'attack', KeyK: 'dodge', KeyU: 'skill1', KeyI: 'skill2', KeyL: 'lock', KeyO: 'lockNext' }[code]; if (!m) return false; keyq[m] = true; return true; },
     setQuality(step) { qStep = clamp(step | 0, 0, 3); Q = QUALITY[qStep]; ctrl.quality = qStep; foes.setSkip(Q.skip); if (!Q.trail) { tr.n = 0; } if (!Q.part) { pl.fill(0); ps.fill(0); } },
     spawnTest(n, kindsList) {                                               // n placeholder enemies in a half ring in front of the hero
       const ks = kindsList || kinds, out = []; for (let i = 0; i < n; i++) { const a = HS.yaw + (n === 1 ? 0 : (i / (n - 1) - 0.5) * 2.2), r = 7 + (i % 2) * 1.5, e = sim.spawn(ks[i % ks.length], HS.x + Math.sin(a) * r, HS.z + Math.cos(a) * r, { yaw: a + PI }); if (e) out.push(e); } return out;
     },
-    setEnabled(b) { enabled = !!b; ribbon.visible = points.visible = !!b && true; if (sword) sword.visible = !!b; hud.setVisible(!!b); if (!b) foes.dispose(); },
+    setEnabled(b) { enabled = !!b; ribbon.visible = points.visible = !!b && true; for (const q of weapons) q.obj.visible = !!b; hud.setVisible(!!b); if (!b) foes.dispose(); },
     stats() { const f = foes.stats(); return { jsMs: +(perf.pre + perf.post + perf.frame).toFixed(3), pre: +perf.pre.toFixed(3), post: +perf.post.toFixed(3), frame: +perf.frame.toFixed(3), foeCalls: f.calls, foeTris: f.tris, ownCalls: 3, ownTris: ri.length / 3 + NP * 0 + (swordTris), swordTris, trailLive: tr.n, ribbonVerts: NV, particles: NP, partLive: (() => { let c = 0; for (let i = 0; i < NP; i++) if (pl[i] > 0) c++; return c; })(), quality: qStep, alerts: nAlert, frameK: +SH.k.toFixed(3) }; },
     burstFx, shake, setFrame(k) { frameOn = k; },
-    dispose() { shakeUndo(); scene.remove(ribbon); scene.remove(points); rg.dispose(); pgeo.dispose(); rmat.dispose(); pmat.dispose(); if (sword) sword.removeFromParent(); for (const m of heroMats) m.emissive.setRGB(0, 0, 0); for (const n in CL) { CL[n].a.stop(); } foes.dispose(); hud.dispose(); },
+    dispose() { shakeUndo(); scene.remove(ribbon); scene.remove(points); rg.dispose(); pgeo.dispose(); rmat.dispose(); pmat.dispose(); for (const q of weapons) q.obj.removeFromParent(); for (const m of heroMats) m.emissive.setRGB(0, 0, 0); for (const n in CL) { CL[n].a.stop(); } foes.dispose(); hud.dispose(); },
   };
-  let swordTris = 0; if (sword) sword.traverse((o) => { if (o.isMesh) { const g = o.geometry; swordTris += (g.index ? g.index.count : g.attributes.position.count) / 3; } });
+  let swordTris = 0; for (const q of weapons) q.obj.traverse((o) => { if (o.isMesh) { const g = o.geometry; swordTris += (g.index ? g.index.count : g.attributes.position.count) / 3; } });
   return ctrl;
 }

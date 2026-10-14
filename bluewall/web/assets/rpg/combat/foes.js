@@ -85,7 +85,9 @@ export function create(ctx) {
         inst.seen = sim.S.ticks;
         const y = hgt(e.x, e.z) - (inst.sink || 0); inst.root.position.set(e.x, y, e.z); inst.root.rotation.y = e.yaw;
         if (!skip || e.state === 'windup' || e.state === 'attack' || (frameNo + e.id) % (skip + 1) === 0) setPose(inst, e, dt);
-        const f = e.flash > 0 ? Math.min(1, e.flash / 0.12) : 0, wp = e.state === 'windup' ? Math.min(1, e.sT / e.K.tele) : 0, pul = wp * (0.35 + 0.25 * Math.sin(e.sT * 34)); for (const m of inst.mats) { m.emissive.setRGB(f * 0.55 + pul * 0.9 + inst.e0[0], f * 0.33 + pul * 0.08 + inst.e0[1], f * 0.18 + pul * 0.04 + inst.e0[2]); }
+        const f = e.flash > 0 ? Math.min(1, e.flash / 0.12) : 0, wp = e.state === 'windup' ? Math.min(1, e.sT / e.K.tele) : 0, pul = wp * (0.35 + 0.25 * Math.sin(e.sT * 34)); const fz = e.fzT > 0 ? 1 : 0, bn = e.burnT > 0 ? 0.55 + 0.25 * Math.sin(e.sT * 21 + e.id) : 0, sl = e.slowT > 0 ? 1 : 0, rt = e.rootT > 0 ? 1 : 0;   // status tints: freeze = ice blue, burn = flickering orange, slow = pale blue, root = green
+        const er = f * 0.55 + pul * 0.9 + inst.e0[0] + bn * 0.7 + fz * 0.20 + sl * 0.03, eg = f * 0.33 + pul * 0.08 + inst.e0[1] + bn * 0.25 + fz * 0.50 + sl * 0.10 + rt * 0.30, eb = f * 0.18 + pul * 0.04 + inst.e0[2] + fz * 0.70 + sl * 0.22 + rt * 0.05;
+        for (const m of inst.mats) m.emissive.setRGB(er, eg, eb);
         calls += inst.M.meshes; tris += inst.M.tris;
       }
       for (const [id, inst] of live) if (inst.seen !== sim.S.ticks) { live.delete(id); inst.root.removeFromParent(); inst.root.visible = false; (free[inst.kind] || (free[inst.kind] = [])).push(inst); }

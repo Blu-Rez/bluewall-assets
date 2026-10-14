@@ -11,6 +11,7 @@ const CSS = (`
 .rp4-b.atk svg.ic{width:50%;height:50%;filter:drop-shadow(0 0 5px var(--ac))}
 .rp4-b.hot{box-shadow:0 0 22px var(--ac),inset 0 0 18px rgba(255,255,255,.22)}
 .rp4-b.off{opacity:.42}
+.rp4-b.on{border-color:rgba(61,245,224,.95);box-shadow:0 0 16px rgba(61,245,224,.6),inset 0 0 12px rgba(61,245,224,.22)}
 .rp4-b svg.rg{position:absolute;inset:-3px;width:calc(100% + 6px);height:calc(100% + 6px);transform:rotate(-90deg);pointer-events:none}
 .rp4-b svg.rg circle{fill:none;stroke-width:3}
 .rp4-cd{position:absolute;font:700 17px/1 Exo2,system-ui,sans-serif;color:#fff;text-shadow:0 0 6px #000,0 0 3px #000;pointer-events:none}
@@ -33,17 +34,36 @@ const CSS = (`
 .rp4-a{position:absolute;z-index:41;left:0;top:0;width:36px;height:36px;margin:-18px 0 0 -18px;pointer-events:none;display:none;will-change:transform,opacity}.rp4-a svg{width:100%;height:100%;fill:#ff3b2f;stroke:#fff;stroke-width:1.4;stroke-linejoin:round;filter:drop-shadow(0 0 7px rgba(255,60,40,.95))}
 .rp4-v{position:absolute;inset:0;z-index:40;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 50% 50%,rgba(255,40,40,0) 55%,rgba(255,40,40,.55) 100%)}
 `).split('env(safe-area-inset-top,0px)').join(TOP);
+const SV = (d) => '<svg class="ic" viewBox="0 0 24 24">' + d + '</svg>';
 const ICON = {
-  attack: '<svg class="ic" viewBox="0 0 24 24"><path d="M20 4l-9.6 9.6"/><path d="M20 4h-4.2M20 4v4.2"/><path d="M8.2 11.8l4 4"/><path d="M10 14l-5.5 5.5"/><circle cx="4" cy="20" r="1.1"/></svg>',
-  skill1: '<svg class="ic" viewBox="0 0 24 24"><path d="M12 2.5c1 4.4 5.6 5.7 5.6 10.7a5.6 5.6 0 0 1-11.2 0c0-2.2 1.1-3.5 2.2-4.6.2 2 1.1 3 2.2 3.4C11.2 8.8 10.9 5.6 12 2.5z"/></svg>',
-  skill2: '<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l2.8 2.8M16.2 16.2L19 19M19 5l-2.8 2.8M7.8 16.2L5 19"/></svg>',
-  lock: '<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5.6"/><circle cx="12" cy="12" r="1.2"/><path d="M12 2.4v4M12 17.6v4M2.4 12h4M17.6 12h4"/></svg>',
-  dodge: '<svg class="ic" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.4-5.5"/><path d="M19.8 3.6v4.2h-4.2"/><circle cx="12" cy="12" r="1.7"/><path d="M1.5 9.5h3M1 12.5h3.4M1.5 15.5h3"/></svg>',
-  jump: '<svg class="ic" viewBox="0 0 24 24"><path d="M12 19V6M6 11l6-6 6 6"/><path d="M7 21h10"/></svg>',
-  sprint: '<svg class="ic" viewBox="0 0 24 24"><path d="M13.5 2.5L5.5 13.5h6l-1.2 8 8-11.5h-6z"/></svg>',
+  // — the names a kit may pick (combat.js ICONS; the test checks that both lists are the same) —
+  sword: SV('<path d="M20 4l-9.6 9.6"/><path d="M20 4h-4.2M20 4v4.2"/><path d="M8.2 11.8l4 4"/><path d="M10 14l-5.5 5.5"/><circle cx="4" cy="20" r="1.1"/>'),
+  dagger: SV('<path d="M19 5L10 14l-1.5-1.5L17.5 3.5z"/><path d="M8 11l5 5"/><path d="M9.5 14.5L5 19"/>'),
+  bow: SV('<path d="M7 3c9 2 9 16 0 18"/><path d="M7 3v18"/><path d="M3.5 12H19M15.5 8.8L19 12l-3.5 3.2"/>'),
+  hammer: SV('<rect x="4.5" y="3.5" width="13" height="6.5" rx="1.3"/><path d="M11 10v11"/>'),
+  staff: SV('<path d="M5.5 21L15.5 8"/><circle cx="17.3" cy="5.7" r="3"/><path d="M16 7.4l-1.5-1.5"/>'),
+  spear: SV('<path d="M4 20L15 9"/><path d="M12.6 6.4L20.5 3l-3.4 7.9z"/>'),
+  flame: SV('<path d="M12 2.5c1 4.4 5.6 5.7 5.6 10.7a5.6 5.6 0 0 1-11.2 0c0-2.2 1.1-3.5 2.2-4.6.2 2 1.1 3 2.2 3.4C11.2 8.8 10.9 5.6 12 2.5z"/>'),
+  burst: SV('<circle cx="12" cy="12" r="3.2"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l2.8 2.8M16.2 16.2L19 19M19 5l-2.8 2.8M7.8 16.2L5 19"/>'),
+  wave: SV('<path d="M3 17c3-8 9-11 18-10-5 2-7 6-7 11"/><path d="M3 17c4 1.2 8 1.2 11 1"/>'),
+  heal: SV('<circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/>'),
+  shield: SV('<path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/>'),
+  gust: SV('<path d="M3 9h11a3 3 0 1 0-3-3"/><path d="M3 14h16a3 3 0 1 1-3 3"/><path d="M3 19h7"/>'),
+  bolt: SV('<path d="M13.5 2.5L5.5 13.5h6l-1.2 8 8-11.5h-6z"/>'),
+  snow: SV('<path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9"/><path d="M9.5 4.5L12 7l2.5-2.5M9.5 19.5L12 17l2.5 2.5"/>'),
+  leaf: SV('<path d="M5 19C5 9 11 4 20 4c0 9-5 15-15 15z"/><path d="M5 19L14 10"/>'),
+  quake: SV('<path d="M3 20h18"/><path d="M12 4l-2 6 4 2-3 6"/><path d="M6 20l2-3M18 20l-2-3"/>'),
+  beads: SV('<circle cx="7" cy="16" r="3"/><circle cx="14" cy="9" r="3"/><circle cx="19" cy="17" r="2.2"/>'),
+  buff: SV('<path d="M12 3l7 8h-4.5v10h-5V11H5z"/>'),
+  // — host-style buttons —
+  lock: SV('<circle cx="12" cy="12" r="5.6"/><circle cx="12" cy="12" r="1.2"/><path d="M12 2.4v4M12 17.6v4M2.4 12h4M17.6 12h4"/>'),
+  dodge: SV('<path d="M19.5 12a7.5 7.5 0 1 1-2.4-5.5"/><path d="M19.8 3.6v4.2h-4.2"/><circle cx="12" cy="12" r="1.7"/><path d="M1.5 9.5h3M1 12.5h3.4M1.5 15.5h3"/>'),
+  jump: SV('<path d="M12 19V6M6 11l6-6 6 6"/><path d="M7 21h10"/>'),
+  sprint: SV('<path d="M13.5 2.5L5.5 13.5h6l-1.2 8 8-11.5h-6z"/>'),
 };
+export const ICON_NAMES = ['sword', 'dagger', 'bow', 'hammer', 'staff', 'spear', 'flame', 'burst', 'wave', 'heal', 'shield', 'gust', 'bolt', 'snow', 'leaf', 'quake', 'beads', 'buff'];
 // centre of each button, in px from the right / bottom edge, and its size (thumb arc around the attack button)
-export const LAYOUT = { attack: { size: 88, cx: 64, cy: 86 }, dodge: { size: 60, cx: 160, cy: 52 }, skill1: { size: 54, cx: 160, cy: 128 }, skill2: { size: 54, cx: 120, cy: 192 }, jump: { size: 56, cx: 46, cy: 188 }, sprint: { size: 48, cx: 44, cy: 254 }, lock: { size: 44, left: 12, top: 172 } };
+export const LAYOUT = { attack: { size: 88, cx: 64, cy: 86 }, dodge: { size: 60, cx: 160, cy: 52 }, skill1: { size: 54, cx: 160, cy: 128 }, skill2: { size: 54, cx: 120, cy: 192 }, jump: { size: 56, cx: 46, cy: 188 }, sprint: { size: 48, cx: 44, cy: 254 }, lock: { size: 44, left: 12, top: 172 }, block: { size: 52, cx: 226, cy: 96 } };
 
 export function create(ctx) {
   const root = ctx.root, doc = root.ownerDocument, els = {}, hold = {}, digits = [], live = [];
@@ -53,21 +73,22 @@ export function create(ctx) {
   const wrap = doc.createElement('div'); wrap.style.cssText = '--ac:' + ac + ';position:absolute;inset:0;pointer-events:none;z-index:40'; wrap.className = 'rp4 rp-k'; root.appendChild(wrap);                // (rp-k: the host's hero mode hides every other child of the game root)
   const mk = (tag, cls, html, css) => { const e = doc.createElement(tag); if (cls) e.className = cls; if (html) e.innerHTML = html; if (css) e.style.cssText = css; return e; };
   const place = (e, L) => { if (L.left != null) { e.style.left = 'calc(env(safe-area-inset-left,0px) + ' + L.left + 'px)'; e.style.top = 'calc(' + TOP + ' + ' + L.top + 'px)'; e.style.right = e.style.bottom = 'auto'; } else { e.style.right = 'calc(' + SR + ' + ' + (L.cx - L.size / 2) + 'px)'; e.style.bottom = 'calc(' + SB + ' + ' + (L.cy - L.size / 2) + 'px)'; e.style.left = e.style.top = 'auto'; } e.style.width = e.style.height = L.size + 'px'; };
+  const DEFAULT_ICON = { attack: 'sword', skill1: 'flame', skill2: 'burst', block: 'shield' };
   const C = 2 * Math.PI * 25.5;                                               // cooldown ring (r = 25.5 in a 56-box)
   function button(name, L, o = {}) {
-    const b = mk('div', 'rp4-b' + (o.cls ? ' ' + o.cls : ''), (o.svg || ICON[name]) + (o.ring ? '<svg class="rg" viewBox="0 0 56 56"><circle cx="28" cy="28" r="25.5" stroke="rgba(255,255,255,.12)"/><circle class="v" cx="28" cy="28" r="25.5" stroke="' + ac + '" stroke-dasharray="' + C.toFixed(1) + ' ' + C.toFixed(1) + '" stroke-dashoffset="0" stroke-linecap="round"/></svg><span class="rp4-cd"></span>' : ''));
+    const b = mk('div', 'rp4-b' + (o.cls ? ' ' + o.cls : ''), (o.svg || ICON[(ctx.icons && ctx.icons[name]) || DEFAULT_ICON[name] || name] || ICON.burst) + (o.ring ? '<svg class="rg" viewBox="0 0 56 56"><circle cx="28" cy="28" r="25.5" stroke="rgba(255,255,255,.12)"/><circle class="v" cx="28" cy="28" r="25.5" stroke="' + ac + '" stroke-dasharray="' + C.toFixed(1) + ' ' + C.toFixed(1) + '" stroke-dashoffset="0" stroke-linecap="round"/></svg><span class="rp4-cd"></span>' : ''));
     b.style.pointerEvents = 'auto'; place(b, L); wrap.appendChild(b); els[name] = b; if (o.ring) { b._v = b.querySelector('circle.v'); b._cd = b.querySelector('.rp4-cd'); }
     const down = (e) => { e.preventDefault(); b.classList.add('dn'); if (name === 'attack') hold.attack = 0.33; (o.cb || ctx.onPress)(name, true); try { b.setPointerCapture(e.pointerId); } catch (_) { } };
     const up = () => { b.classList.remove('dn'); if (name === 'attack') hold.attack = 0; (o.cb || ctx.onPress)(name, false); };
-    b.addEventListener('pointerdown', down); b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('contextmenu', (e) => e.preventDefault());
+    b.addEventListener('pointerdown', down); b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); if (name === 'block') b.addEventListener('lostpointercapture', () => { if (b.classList.contains('dn')) up(); }); b.addEventListener('contextmenu', (e) => e.preventDefault());
     return b;
   }
-  button('attack', LAYOUT.attack, { cls: 'atk' }); button('skill1', LAYOUT.skill1, { ring: true }); button('skill2', LAYOUT.skill2, { ring: true }); button('lock', LAYOUT.lock);
-  const pips = mk('div', 'rp4-pips', '<i></i><i></i><i></i><i></i>'); pips.style.right = 'calc(' + SR + ' + ' + (LAYOUT.attack.cx - 17) + 'px)'; pips.style.bottom = 'calc(' + SB + ' + ' + (LAYOUT.attack.cy + LAYOUT.attack.size / 2 + 5) + 'px)'; wrap.appendChild(pips);
+  button('attack', LAYOUT.attack, { cls: 'atk' }); button('skill1', LAYOUT.skill1, { ring: true }); button('skill2', LAYOUT.skill2, { ring: true }); button('lock', LAYOUT.lock); button('block', LAYOUT.block);
+  const pips = mk('div', 'rp4-pips', '<i></i>'.repeat(Math.max(1, Math.min(6, ctx.combo || 4)))); pips.style.right = 'calc(' + SR + ' + ' + (LAYOUT.attack.cx - 17) + 'px)'; pips.style.bottom = 'calc(' + SB + ' + ' + (LAYOUT.attack.cy + LAYOUT.attack.size / 2 + 5) + 'px)'; wrap.appendChild(pips);
   // gauge: HP (outer arc) + stamina (inner arc) around the element emblem, digits under it
   const R1 = 27, R2 = 20, A1 = 2 * Math.PI * R1 * 0.75, A2 = 2 * Math.PI * R2 * 0.75, F1 = 2 * Math.PI * R1, F2 = 2 * Math.PI * R2;
-  const g = mk('div', 'rp4-g', '<svg viewBox="0 0 62 62" style="transform:rotate(135deg)"><circle cx="31" cy="31" r="' + R1 + '" fill="rgba(14,18,24,.55)" stroke="rgba(205,214,224,.22)" stroke-width="5" stroke-dasharray="' + A1.toFixed(1) + ' ' + F1.toFixed(1) + '" stroke-linecap="round"/><circle class="hp" cx="31" cy="31" r="' + R1 + '" fill="none" stroke="#3df5e0" stroke-width="5" stroke-dasharray="' + A1.toFixed(1) + ' ' + F1.toFixed(1) + '" stroke-linecap="round"/><circle cx="31" cy="31" r="' + R2 + '" fill="none" stroke="rgba(205,214,224,.2)" stroke-width="3.5" stroke-dasharray="' + A2.toFixed(1) + ' ' + F2.toFixed(1) + '" stroke-linecap="round"/><circle class="st" cx="31" cy="31" r="' + R2 + '" fill="none" stroke="#ffe08a" stroke-width="3.5" stroke-dasharray="' + A2.toFixed(1) + ' ' + F2.toFixed(1) + '" stroke-linecap="round"/></svg><img alt="" src="' + (ctx.emblem || '') + '"><b>0</b>');
-  g.style.setProperty('--ac', ac); wrap.appendChild(g); const gHp = g.querySelector('circle.hp'), gSt = g.querySelector('circle.st'), gNum = g.querySelector('b'); if (!ctx.emblem) g.querySelector('img').style.display = 'none';
+  const g = mk('div', 'rp4-g', '<svg viewBox="0 0 62 62" style="transform:rotate(135deg)"><circle cx="31" cy="31" r="' + R1 + '" fill="rgba(14,18,24,.55)" stroke="rgba(205,214,224,.22)" stroke-width="5" stroke-dasharray="' + A1.toFixed(1) + ' ' + F1.toFixed(1) + '" stroke-linecap="round"/><circle class="hp" cx="31" cy="31" r="' + R1 + '" fill="none" stroke="#3df5e0" stroke-width="5" stroke-dasharray="' + A1.toFixed(1) + ' ' + F1.toFixed(1) + '" stroke-linecap="round"/> <circle class="sh" cx="31" cy="31" r="30" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="0 ' + (2 * Math.PI * 30).toFixed(1) + '" stroke-linecap="round" opacity=".85"/><circle cx="31" cy="31" r="' + R2 + '" fill="none" stroke="rgba(205,214,224,.2)" stroke-width="3.5" stroke-dasharray="' + A2.toFixed(1) + ' ' + F2.toFixed(1) + '" stroke-linecap="round"/><circle class="st" cx="31" cy="31" r="' + R2 + '" fill="none" stroke="#ffe08a" stroke-width="3.5" stroke-dasharray="' + A2.toFixed(1) + ' ' + F2.toFixed(1) + '" stroke-linecap="round"/></svg><img alt="" src="' + (ctx.emblem || '') + '"><b>0</b>');
+  g.style.setProperty('--ac', ac); wrap.appendChild(g); const gHp = g.querySelector('circle.hp'), gSt = g.querySelector('circle.st'), gSh = g.querySelector('circle.sh'), gNum = g.querySelector('b'), A3 = 2 * Math.PI * 30 * 0.75, F3 = 2 * Math.PI * 30; let lastSh = -1; if (!ctx.emblem) g.querySelector('img').style.display = 'none';
   const tb = mk('div', 'rp4-t', '<u></u><i></i>'); tb.style.setProperty('--ec', '#ff6a3a'); wrap.appendChild(tb); const tbI = tb.querySelector('i'), tbU = tb.querySelector('u'); const th = mk('div', 'rp4-th', ''); wrap.appendChild(th);
   const alerts = []; for (let i = 0; i < 3; i++) { const a = mk('div', 'rp4-a', '<svg viewBox="0 0 24 24"><path d="M3 4.5L21 12 3 19.5 7.5 12z"/></svg>'); wrap.appendChild(a); alerts.push(a); }
   const mkr = mk('div', 'rp4-m'); wrap.appendChild(mkr); const vig = mk('div', 'rp4-v'); wrap.appendChild(vig);
@@ -86,8 +107,10 @@ export function create(ctx) {
       const hpf = s.hpMax > 0 ? Math.max(0, Math.min(1, s.hp / s.hpMax)) : 0, stf = Math.max(0, Math.min(1, s.st / s.stMax));
       if (hpf !== lastHp) { gHp.style.strokeDasharray = (A1 * hpf).toFixed(1) + ' ' + F1.toFixed(1); gHp.setAttribute('stroke', hpf < 0.3 ? '#ff5a4a' : '#3df5e0'); gNum.textContent = Math.ceil(s.hp); lastHp = hpf; }
       if (stf !== lastSt) { gSt.style.strokeDasharray = (A2 * stf).toFixed(1) + ' ' + F2.toFixed(1); lastSt = stf; }
+      { const shf = s.sh > 0 ? Math.max(0.02, Math.min(1, s.sh)) : 0; if (shf !== lastSh) { lastSh = shf; gSh.style.strokeDasharray = (A3 * shf).toFixed(1) + ' ' + F3.toFixed(1); } }
+      els.block.classList.toggle('on', !!s.guard);
       for (let i = 0; i < 2; i++) { const b = els['skill' + (i + 1)], cd = s.cd[i], f = cd > 0 ? cd / s.cdMax[i] : 0; b._v.style.strokeDashoffset = (C * f).toFixed(1); b.classList.toggle('off', cd > 0); const cs = cd > 0 ? String(Math.ceil(cd)) : ''; if (b._cs !== cs) { b._cs = cs; b._cd.textContent = cs; } }
-      const ps = pips.children; for (let i = 0; i < 4; i++) { const on = i <= s.n; if (ps[i]._on !== on) { ps[i]._on = on; ps[i].classList.toggle('on', on); } }
+      const ps = pips.children; for (let i = 0; i < ps.length; i++) { const on = i <= s.n; if (ps[i]._on !== on) { ps[i]._on = on; ps[i].classList.toggle('on', on); } }
       els.lock.style.borderColor = s.lock ? 'rgba(61,245,224,.95)' : ''; els.lock.style.boxShadow = s.lock ? '0 0 16px rgba(61,245,224,.7),inset 0 0 12px rgba(61,245,224,.25)' : '';
       if (hold.attack > 0) { hold.attack -= dt; if (hold.attack <= 0) { hold.attack = 0.33; ctx.onPress('attack', true); } }
       if (vigT > 0) { vigT -= dt; vig.style.opacity = Math.max(0, vigT / 0.35).toFixed(2); }

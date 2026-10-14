@@ -2,6 +2,7 @@
 // Built by dev/rp4_dev_build.sh (three + loader bundled; combat.js and combat/*.js are loaded as real ES modules from assets/rpg/, like in the game).
 // Dev API for the proof driver: window.__rp4.  Enemies are PLACEHOLDERS (the game's own legionary / werewolf / troll): test only, owner only.
 import * as THREE from 'three';
+import { ALL as FIXTURES } from './rp4_kit_fixtures.js';   // dev only: test archetype kits (never shipped)
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
@@ -80,7 +81,7 @@ async function boot() {
   await loadHero(); hero.grp.position.set(S.x, S.y, S.z);
   if (q.get('nocmb') != null) { window.__rp4 = api; window.__ready = true; return; }
   const mod = await import(base + 'rpg/combat.js' + (q.get('v') ? '?v=' + q.get('v') : ''));
-  cmb = await mod.attach({ scene, hgt }, hero, { THREE, camera, scene, root, base: rpgBase, v: '', parseGLB, hostMove, hgt, pixelRatio: +(q.get('dpr') || 1), btns: null, kinds: (q.get('kinds') || 'soldier,beast,brute').split(','), seed: +(q.get('seed') || 1) });
+  cmb = await mod.attach({ scene, hgt }, hero, { THREE, camera, scene, root, base: rpgBase, v: '', parseGLB, hostMove, hgt, pixelRatio: +(q.get('dpr') || 1), btns: null, kinds: (q.get('kinds') || 'soldier,beast,brute').split(','), seed: +(q.get('seed') || 1), sister: q.get('sister') || 'elina', kit: q.get('fixture') ? FIXTURES[q.get('fixture').toUpperCase()] : undefined });
   // dev-only extra buttons (the game has its own jump / dodge / sprint)
   const L = cmb.hud.LAYOUT; cmb.hud.add('dodge', L.dodge, undefined, (n, d) => { if (d) cmb.press('dodge'); });
   window.__rp4 = api; window.__ready = true;
