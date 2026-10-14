@@ -25,10 +25,10 @@ export class Flames {
         varying vec3 vC; varying float vA;
         void main(){ vec3 p = position; float f = sin(uTime*11.0+seed)*0.5+sin(uTime*17.3+seed*2.1)*0.3;
           p.y += f*0.06*size; vec4 mv = modelViewMatrix*vec4(p,1.0); gl_Position = projectionMatrix*mv;
-          gl_PointSize = size*(1.0+f*0.18)*uScale/-mv.z; vC = col; vA = 0.85+f*0.15; }`,
+          gl_PointSize = min(size*(1.0+f*0.18)*uScale/-mv.z, uScale*0.075); vC = col; vA = (0.85+f*0.15)*smoothstep(1.0, 5.0, -mv.z); }`,   // GLARE: a flame next to the camera used to grow to the whole screen (size/z): capped at 7.5 % of the screen height and faded out inside 5 m
       fragmentShader: `uniform sampler2D uTex; uniform float uNight; varying vec3 vC; varying float vA;
         void main(){ vec4 t = texture2D(uTex, gl_PointCoord); float core = smoothstep(0.35,0.0,length(gl_PointCoord-vec2(0.5,0.55)));
-          float k = 0.3 + 0.7 * uNight; gl_FragColor = vec4((vC*t.a*1.6 + vec3(1.0,0.95,0.8)*core*1.4) * k, t.a*vA*k); }`,
+          float k = 0.3 + 0.7 * uNight; gl_FragColor = vec4((vC*t.a*1.3 + vec3(1.0,0.95,0.8)*core*0.9) * k, t.a*vA*k); }`,
     });
     this.points = new THREE.Points(g, this.mat); this.points.frustumCulled = false; this.points.renderOrder = 5;
     scene.add(this.points);
@@ -152,7 +152,7 @@ export class Particles {
       transparent: true, depthWrite: false, blending, fog: false,
       uniforms: { uTex: { value: tex }, uScale: PX.scale, uCol: { value: new THREE.Color(...color) } },
       vertexShader: `attribute float size; attribute float alpha; uniform float uScale; varying float vA;
-        void main(){ vec4 mv = modelViewMatrix*vec4(position,1.0); gl_Position = projectionMatrix*mv; gl_PointSize = size*uScale/-mv.z; vA = alpha; }`,
+        void main(){ vec4 mv = modelViewMatrix*vec4(position,1.0); gl_Position = projectionMatrix*mv; gl_PointSize = min(size*uScale/-mv.z, uScale*0.5); vA = alpha*smoothstep(0.5, 2.5, -mv.z); }`,   // GLARE: no screen-filling puffs next to the camera
       fragmentShader: `uniform sampler2D uTex; uniform vec3 uCol; varying float vA;
         void main(){ float a = texture2D(uTex, gl_PointCoord).a*vA; if (a < 0.003) discard; gl_FragColor = vec4(uCol*a, a); }`,
     });
@@ -204,7 +204,7 @@ export function fireflies(scene, tex, spots, height) {
     vertexShader: `attribute float phase; uniform float uTime; uniform float uScale; varying float vA;
       void main(){ vec3 p = position; p.x += sin(uTime*0.6+phase)*1.6; p.y += sin(uTime*0.9+phase*1.7)*0.7; p.z += cos(uTime*0.5+phase*0.7)*1.6;
         vec4 mv = modelViewMatrix*vec4(p,1.0); gl_Position = projectionMatrix*mv; vA = pow(max(0.0, sin(uTime*1.3+phase*3.0)), 3.0);
-        gl_PointSize = 0.9*uScale/-mv.z; }`,
+        gl_PointSize = min(0.9*uScale/-mv.z, uScale*0.02); vA *= smoothstep(1.0, 4.0, -mv.z); }`,
     fragmentShader: `uniform sampler2D uTex; uniform float uNight; varying float vA; void main(){ float a = texture2D(uTex, gl_PointCoord).a*vA*uNight; gl_FragColor = vec4(vec3(0.75,1.0,0.45)*a*1.6, a); }`,
   });
   const pts = new THREE.Points(g, mat); pts.frustumCulled = false;

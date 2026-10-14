@@ -8,6 +8,7 @@
 //   TRADES / CART_OF   where the workers stand and what the carts carry (wslife.js merges them: see REPORT_C2 "what the mother must wire")
 //   SOLID_R / MINOR    nav radii of the big pieces · the small pieces that only appear near the camera
 // Every number that is a game rule (unlock levels, in / out ids) is a placeholder `(ph)` — the economy package decides.
+import { LEVEL_CAP } from './tiers.js';   // TR2-S4b: the level cap (30 today, 50 when the server says so)
 
 export const KINDS = {
   // the three that exist already: only the economy fields are added (their unlock / paint stay those of worksites.js)
@@ -20,9 +21,9 @@ export const KINDS = {
   smelter:  { fa: 'کوره‌ی ذوب',   unlock: 9, paint: '140,76,60',   place: 'free', role: 'P', in: 'ironore', out: 'ironbars', inTown: true, r: 17 },
 };
 
-const N = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, lv) - 1) / 29);            // a at level 1 -> b at level 30
-const tierOf = (lv) => (lv <= 0 ? 0 : 1 + Math.min(4, Math.floor((lv - 1) / 6)));         // 1..5 (same steps as worksites.js)
-const kS = (lv, a = 0.8) => a + (1 - a) * (Math.max(1, lv) - 1) / 29;                       // the main building grows a little (the rest is MORE of everything)
+const N = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, lv) - 1) / (LEVEL_CAP - 1));            // a at level 1 -> b at level 30
+const tierOf = (lv) => (lv <= 0 ? 0 : 1 + Math.min(4, Math.floor(((lv - 1) * 5) / LEVEL_CAP)));         // 1..5 (same steps as worksites.js)
+const kS = (lv, a = 0.8) => a + (1 - a) * (Math.max(1, lv) - 1) / (LEVEL_CAP - 1);                       // the main building grows a little (the rest is MORE of everything)
 const P = (n, x, z, ry = 0, s = 1) => ({ n, x, z, ry, s });
 function row(out, name, n, x0, z0, x1, z1, ry = 0, s = 1, R = null, jit = 0) {
   for (let i = 0; i < n; i++) { const t = n === 1 ? 0.5 : i / (n - 1); out.push(P(name, x0 + (x1 - x0) * t + (R ? (R() - 0.5) * jit : 0), z0 + (z1 - z0) * t + (R ? (R() - 0.5) * jit : 0), ry + (R ? (R() - 0.5) * jit * 0.2 : 0), s)); }

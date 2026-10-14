@@ -3,6 +3,7 @@
 // PROC functions have the signature of wsbuild's PROC: (M, lv, R) with M = { S, P3, F, box, cyl, disc, gquad } in the site's local frame.
 import * as THREE from 'three';
 import { TANKS, TANK_R, BULLETS, MINT_YARD, CHESTS } from './c3_kinds.js';
+import { LEVEL_CAP } from './tiers.js';   // TR2-S4b: the level cap (30 today, 50 when the server says so)
 
 const col = (h) => new THREE.Color(h);
 const C = { steel: col('#8fa0b8'), steelL: col('#a9b8cf'), steelD: col('#56657f'), navy: col('#25375a'), black: col('#1b1f2a'), pipe: col('#3a4b6c'), pipeL: col('#5a6d90'),
@@ -11,7 +12,7 @@ const C = { steel: col('#8fa0b8'), steelL: col('#a9b8cf'), steelD: col('#56657f'
 // wsbuild's maker() writes every face with the winding that points INSIDE (box / cyl / gquad: the soup is DoubleSide, so the lighting is right, but the shadow lookup uses the vertex normal
 // and, with the game's normalBias, samples under the surface -> every soup surface is in its own shadow and renders almost black).  The C3 parts flip the winding of what they emit.
 const flipped = (M) => ({ ...M, S: { quad: (a, b, c, d, k) => M.S.quad(a, d, c, b, k), tri: (a, b, c, k) => M.S.tri(a, c, b, k) } });
-const NN = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, lv) - 1) / 29);
+const NN = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, lv) - 1) / (LEVEL_CAP - 1));
 
 // a tube between two points (local x, y above the pad, z); `cap` closes the two ends
 function tube(M, a, b, r, k, seg = 8, cap = false) {

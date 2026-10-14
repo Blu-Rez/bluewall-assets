@@ -15,6 +15,8 @@ import { MINOR as C3_MINOR, FX as c3fx } from './c3_kinds.js';         // C3 (go
 import { C3_PROC } from './c3_proc.js';                                // C3: the procedural parts of the mint, the refinery, the gold heaps
 import { PROC as C4PROC, MINOR as C4MINOR, smokers as c4smokers, movers as c4movers } from './c4_kinds.js';      // C4 (food family)
 import { makeC4Anim } from './c4_anim.js';                             // C4: the turning sails / water wheel
+import * as WT from './ws_tr2.js';                                    // TR2-S4b: the Tripo models of the worksites (replace the old kit pieces / procedural parts when loaded)
+import { LEVEL_CAP } from './tiers.js';   // TR2-S4b: the level cap (30 today, 50 when the server says so)
 
 const col = (hex) => new THREE.Color(hex);
 class Soup {
@@ -91,7 +93,7 @@ function maker(site, hf) {
 // ------------------------------------------------------------------ the procedural parts of each kind
 const PROC = {
   farm(M, lv, R) {
-    const n = counts({ kind: 'farm' }, lv).plots, kinds = [C.wheat, C.green, C.corn, C.bean, C.wheat, C.green2, C.corn, C.bean];
+    const n = (M.no && M.no.has('farmplots')) ? 0 : counts({ kind: 'farm' }, lv).plots, kinds = [C.wheat, C.green, C.corn, C.bean, C.wheat, C.green2, C.corn, C.bean];      // TR2-S4b: the Tripo fields replace the procedural plots
     const slots = [[-20, -2], [20, -2], [-20, 7], [20, 7], [-20, -11], [20, -11], [-6, -22], [8, -22]];
     for (let i = 0; i < n; i++) {
       const [cx, cz] = slots[i], w = 9, d = 7, k = kinds[i];
@@ -106,7 +108,7 @@ const PROC = {
     if (lv >= 12) { M.cyl(M.S, 0, -21, 0, 1.8, 2.2, 9, C.hay, 0.2); M.cyl(M.S, 0, -21, 2.2, 0.5, 0.8, 9, C.hay2, 0.05); }
   },
   greenhouse(M, lv, R) {
-    const n = counts({ kind: 'greenhouse' }, lv).houses, slots = [[-6.2, -9], [6.2, -9], [-6.2, -2.6], [6.2, -2.6], [-6.2, 3.8], [6.2, 3.8]];
+    const n = (M.no && M.no.has('greenhouse')) ? 0 : counts({ kind: 'greenhouse' }, lv).houses, slots = [[-6.2, -9], [6.2, -9], [-6.2, -2.6], [6.2, -2.6], [-6.2, 3.8], [6.2, 3.8]];
     for (let i = 0; i < n; i++) {
       const [cx, cz] = slots[i], L = 11, W = 5.2, H = 2.7, Rg = 4.1;
       const hl = L / 2, hw = W / 2;
@@ -137,7 +139,7 @@ const PROC = {
     }
   },
   oil(M, lv, R) {
-    const n = counts({ kind: 'oil' }, lv).wells, t = tierOf(lv);
+    const n0 = counts({ kind: 'oil' }, lv).wells, n = (M.no && M.no.has('oilpits')) ? 0 : n0, t = tierOf(lv);      // TR2-S4b: the Tripo derricks replace the pits + windlasses (the flare stack stays)
     const spots = [[0, 0, 3.6], [-8.5, -5, 2.8], [8, -4, 2.8], [-5, 5.5, 2.4], [6.5, 6, 2.4], [-12, 1, 2.2], [12, 2, 2.2]];
     for (let i = 0; i < n; i++) {
       const [cx, cz, r] = spots[i];
@@ -160,6 +162,7 @@ const PROC = {
   gold(M, lv, R) { rails(M, lv, R, C.goldp); },
   quarry(M, lv, R) {
     // a timber crane (lv >= 10): A-frame, boom, rope and a hanging stone block
+    if (M.no && M.no.has('quarry')) return;                                                   // TR2-S4b: the Tripo quarry has its own crane, blocks and rubble
     if (lv >= 10) {
       const bx = 9, bz = -3;
       for (const sd of [-1, 1]) { M.box(M.S, bx + sd * 0.9, bz, 0, 0.3, 7.5, 0.3, 0, C.wood[0]); M.box(M.S, bx + sd * 0.6, bz - 2.2, 0, 0.3, 6, 0.3, 0, C.wood[1]); }
@@ -172,7 +175,7 @@ const PROC = {
     for (let i = 0; i < 9; i++) M.box(M.S, -14 + R() * 28, -14 + R() * 8, 0, 0.6 + R() * 0.9, 0.4 + R() * 0.5, 0.6 + R() * 0.8, R() * 3, R() < 0.5 ? C.stone : C.stone2);
   },
   livestock(M, lv, R) {
-    const pens = counts({ kind: 'livestock' }, lv).pens, cells = [[-9, 4], [9, 4], [-9, 16], [9, 16]];
+    const pens = (M.no && M.no.has('pens')) ? 0 : counts({ kind: 'livestock' }, lv).pens, cells = [[-9, 4], [9, 4], [-9, 16], [9, 16]];      // TR2-S4b: the Tripo pens replace the procedural floors / troughs
     for (let p = 0; p < pens; p++) {
       const [cx, cz] = cells[p];
       M.gquad(M.S, cx - 6, cz - 4, cx + 6, cz + 4, C.soil2, 0.12, 3, 2);                         // trampled floor
@@ -231,7 +234,8 @@ export function buildWorksites(scene, gltf0, hf, { shadows = false, castle = 30,
     for (let i = flames.length - 1; i >= 0; i--) if (flames[i].site === site.id) flames.splice(i, 1);
     if (lv > 0) {
       const c = Math.cos(site.ry), s = Math.sin(site.ry), list = [], l3 = [], l4 = [], bid = (tids && tids.get(site.id)) || 0;      // P1: a town lot's pieces belong to the battle target of its block (destruct.js)
-      for (const p of pieces(site, lv)) {
+      const T2 = WT.plan(site, lv, pieces(site, lv));        // TR2-S4b: which pieces a Tripo model draws instead (T2.keep = the old kit pieces still drawn)
+      for (const p of T2.keep) {
         const wx = site.x + p.x * c + p.z * s, wz = site.z - p.x * s + p.z * c;
         m4.compose(v.set(wx, hf(wx, wz) - 0.04, wz), q.setFromAxisAngle(up, site.ry + p.ry), sc.set(p.s, p.s, p.s));
         (isC3(p.n) ? l3 : isC4(p.n) ? l4 : list).push({ name: p.n, matrix: m4.clone(), bid });      // 'c3_*' come from kit_c3.glb, 'c4_*' from kit_c4.glb (skipped silently while a kit is not loaded), the rest from kit_ws (+ C1 / C2)
@@ -250,17 +254,20 @@ export function buildWorksites(scene, gltf0, hf, { shadows = false, castle = 30,
         bakePieces(g, kitC4, l4.filter((o) => !C4MINOR.test(o.name)), { shadows, tag: 'ws:' + site.id + ':c4' });
         bakePieces(minor, kitC4, l4.filter((o) => C4MINOR.test(o.name)), { shadows: false, tag: 'ws:' + site.id + ':c4m' });
       }
-      if (c4a) c4a.set(site.id, c4movers(site.kind, lv, site).filter((m) => inClip(site.clip, m.x, m.z)).map((m) => { const wx = site.x + m.x * c + m.z * s, wz = site.z - m.x * s + m.z * c; return { n: m.n, x: wx, y: hf(wx, wz) - 0.04, z: wz, yaw: site.ry + m.ry, s: m.s, spin: m.spin }; }));
-      const M = maker(site, hf), R = rng(((site.x * 31) ^ (site.z * 17)) >>> 0 || 5);
+      if (T2.tr2.length) g.userData.lod = WT.bake(g, site, hf, T2.tr2, { shadows, bid, name: 'ws:' + site.id + ':tr2', farMat: MAT.soup });      // TR2-S4b: { near, far } meshes, switched by distance in update()      // TR2-S4b: one mesh per Tripo texture, destruct-patched
+      if (c4a) c4a.set(site.id, (T2.noMovers ? [] : c4movers(site.kind, lv, site)).filter((m) => inClip(site.clip, m.x, m.z)).map((m) => { const wx = site.x + m.x * c + m.z * s, wz = site.z - m.x * s + m.z * c; return { n: m.n, x: wx, y: hf(wx, wz) - 0.04, z: wz, yaw: site.ry + m.ry, s: m.s, spin: m.spin }; }));
+      const M = maker(site, hf), R = rng(((site.x * 31) ^ (site.z * 17)) >>> 0 || 5); M.no = T2.noProc;
       (PROC[site.kind] || (() => {}))(M, lv, R); (PROC_C1[site.kind] || (() => {}))(M, lv, R, site); (C4PROC[site.kind] || (() => {}))(M, lv, R, site);
       // smoke + flame points (site-local -> world): every chimney becomes a world.js smoker record, every flame a point in `flames`
       const sm = [], W = (f) => [site.x + f.x * c + f.z * s, site.z - f.x * s + f.z * c];
-      const smoke = (f, heavy) => { if (!inClip(site.clip, f.x, f.z)) return; const [wx, wz] = W(f), r = { x: wx, y: hf(wx, wz) + f.y, z: wz, heavy: !!heavy, acc: Math.random(), off: false }; smokers.push(r); sm.push(r); };
+      const smoke = (f, heavy, own) => { if (!inClip(site.clip, f.x, f.z) || (!own && T2.gone(f.x, f.z))) return;      // TR2-S4b: no old chimney inside a piece a Tripo building replaced
+      const [wx, wz] = W(f), r = { x: wx, y: hf(wx, wz) + f.y, z: wz, heavy: !!heavy, acc: Math.random(), off: false }; smokers.push(r); sm.push(r); };
       const flame = (f, size, colr) => { if (!inClip(site.clip, f.x, f.z)) return; const [wx, wz] = W(f); flames.push({ x: wx, y: hf(wx, wz) + (f.y || 0), z: wz, size: size || 1.6, col: colr || [1, 0.55, 0.18], site: site.id }); };
       for (const f of C1.smokers(site.kind, lv)) smoke(f, f.heavy);
       for (const f of C2_FX(site.kind, lv)) { if (f.k === 'smoke') smoke(f, f.heavy); else flame(f, 1.8, [1, 0.55, 0.18]); }
       { const fx = c3fx(site.kind, lv); for (const f of fx.flames) flame(f, f.size, f.col); for (const f of fx.smoke) smoke(f, false); }
       for (const f of c4smokers(site.kind, lv, site)) smoke(f, f.heavy);
+      for (const f of T2.smoke) smoke(f, f.heavy, true);                                                       // TR2-S4b: the chimneys of the Tripo buildings
       g.userData.smokers = sm;
       for (const [S, mat, nm] of [[M.S, MAT.soup, 'soup'], [M.Gl, MAT.glass, 'glass'], [M.Oil, MAT.oil, 'oil']]) { const mesh = S.mesh(mat, 'ws:' + site.id + ':' + nm, shadows && nm !== 'glass'); if (mesh) { if (nm === 'glass') mesh.renderOrder = 2; g.add(mesh); } }
     }
@@ -268,11 +275,18 @@ export function buildWorksites(scene, gltf0, hf, { shadows = false, castle = 30,
   }
   function levels(arg) {                           // arg: a castle level, or { kind: level }
     const out = {};
-    for (const s of sites()) out[s.id] = typeof arg === 'number' ? wsLevel(s, arg) : Math.max(0, Math.min(30, arg[s.kind] | 0));
+    for (const s of sites()) out[s.id] = typeof arg === 'number' ? wsLevel(s, arg) : Math.max(0, Math.min(LEVEL_CAP, arg[s.kind] | 0));
     return out;
+  }
+  let t2Wait = null; const t2Tried = new Set();
+  function t2Check(arg) {                           // TR2-S4b: Tripo files the sites need but that are not loaded yet -> load them once, then redraw (the old pieces stand in meanwhile)
+    if (typeof window === 'undefined') return;                                  // (node tests: no downloads)
+    const key = JSON.stringify(arg); if (t2Wait || t2Tried.has(key) || !WT.missing(arg).length) return; t2Tried.add(key);
+    t2Wait = WT.preload(arg).then(() => { t2Wait = null; for (const o of state.values()) o.lv = -1; rebuild(arg); });
   }
   function rebuild(arg = castle) {
     const L = levels(arg); let changed = 0;
+    t2Check(arg);
     for (const s of sites()) {
       const old = state.get(s.id);
       if (old && old.lv === L[s.id] && old.x === s.x && old.z === s.z && old.ry === s.ry) continue;
@@ -289,6 +303,7 @@ export function buildWorksites(scene, gltf0, hf, { shadows = false, castle = 30,
     for (const o of state.values()) {
       const d = Math.hypot(cp.x - o.x, cp.z - o.z, cp.y * 0.5);
       o.g.visible = d < WS_FAR; const mn = o.g.userData.minor; if (mn) mn.visible = d < WS_NEAR;
+      { const L = o.g.userData.lod; if (L && L.far.length) { const nr = d < WT.LOD_NEAR; for (const m of L.near) m.visible = nr; for (const m of L.far) m.visible = !nr; } }      // TR2-S4b: full Tripo meshes near, the simplified ones far
       for (const r of o.g.userData.smokers || []) r.off = d > 190;       // (smoke only where it can be seen)
     }
   }

@@ -34,7 +34,7 @@ GEMS = PR.GEMS
 def S(old_level: int) -> int:
     """p35 (owner 5 Oct 2026: 30 levels instead of 20): a level of the old 20-level game mapped on the 30-level game, round(1 + (L - 1) * 29 / 19).
     Used for everything that is indexed by level: unit unlocks, defence unlocks, guardian unlocks, the garrison table."""
-    return int(round(1 + (int(old_level) - 1) * (PR.MAX_LEVEL - 1) / 19.0))
+    return int(round(1 + (int(old_level) - 1) * (PR.BASE_LEVELS - 1) / 19.0))      # (15 Oct: stays on the 30-level design; the castle may go to PR.MAX_LEVEL = 50)
 
 # ------------------------------------------------------------------ units
 # id: dict(fam=building that trains it, lv=its level needed (set by RARITY: Common 1-4, Rare 5-8, Epic 9-12, Legendary 13-16, Mythic 17-20 - the stronger a soldier, the later it opens), space, hp, dps, rng (metres, 0 = melee), spd, cost, t = seconds each, air, role)
@@ -176,7 +176,8 @@ def guardian_slots(level: int) -> Dict[str, int]:
         if level < g["unlock"]:
             continue
         n0, n1 = g["n"]
-        out[k] = int(n0 + (n1 - n0) * (level - g["unlock"]) / max(1, PR.MAX_LEVEL - g["unlock"]) + 1e-9)
+        lv = min(int(level), PR.BASE_LEVELS)                                          # (15 Oct: levels 31-50 hold the level-30 count until the owner decides)
+        out[k] = int(n0 + (n1 - n0) * (lv - g["unlock"]) / max(1, PR.BASE_LEVELS - g["unlock"]) + 1e-9)
     return out
 
 

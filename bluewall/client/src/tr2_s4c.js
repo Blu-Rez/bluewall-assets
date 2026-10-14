@@ -18,6 +18,10 @@ import { seasonWeights } from './terrain.js';
 const QS = typeof location !== 'undefined' ? location.search : '';
 export const S4C = { on: !/[?&]s4c=0(\b|$)/.test(QS), ready: false, count: {} };          // count: how many of what the build placed (dev numbers for the report)
 const cnt = (k, n = 1, x, y, z) => { S4C.count[k] = (S4C.count[k] || 0) + n; if (x != null && S4C.count[k] <= 400) (S4C.at = S4C.at || []).push([k, +x.toFixed(1), +y.toFixed(1), +z.toFixed(1)]); };      // (dev: where the first few of each kind stand, for the close-up frames)
+// per-part switches (15 Oct, owner: «the new trees / rocks look like giant coral and blobs — keep what was good before, delete what is bad»): the Tripo TREES and ROCKS are OFF by default (the EZ-Tree forest and
+// the old rocks are back), lamps / torches / props / stalls / bushes / meadow stay Tripo.  URL: ?s4c_trees=1 / ?s4c_rocks=1 turn the Tripo ones on again for A/B.
+const part = (k, dflt) => { const m = QS.match(new RegExp('[?&]s4c_' + k + '=(\\d)')); return m ? m[1] !== '0' : dflt; };
+S4C.part = { trees: part('trees', false), rocks: part('rocks', false) };
 if (typeof window !== 'undefined') window.__S4C = S4C;
 const PACKS = ['trees_conifer', 'trees_broadleaf', 'trees_special', 'trees_season', 'bushes', 'rocks_boulder', 'rocks_small', 'flowers', 'ground_cover',
   'lamps_wall_street', 'lamps_torches_braziers', 'props_town', 'market_stalls'];
@@ -117,10 +121,10 @@ S4C.lamp = function lamp(B, gy, x, y, z, o, targets) {
     const pool = o.pool ? POSTS : POSTS.slice(1);                                   // street lamps (glass lantern) only along the lit streets; braziers elsewhere
     const tot = pool.reduce((a, p) => a + p[1], 0); let t = hash(x, z) * tot, spec = pool[0][0];
     for (const [s, wgt] of pool) { if ((t -= wgt) < 0) { spec = s; break; } }
-    const a = anchor(spec), H = hf / a.y, ry = hash(z, x) * 6.283;
+    const a = anchor(spec), H = hf / a.y * (spec === 'lamps_wall_street/lamp_post' ? 0.72 : 1), ry = hash(z, x) * 6.283;       // (15 Oct, owner: the street lamp towered over the hero and glared: 0.72 x, its lantern is still bigger than a real one)
     const c = Math.cos(ry), s = Math.sin(ry), ax = (a.x * c + a.z * s) * H, az = (-a.x * s + a.z * c) * H;     // keep the flame on the pole's axis
     tr2.bake(B, spec, place(x - ax, gy - 0.04, z - az, ry), { h: H }); cnt('post:' + spec.split('/')[1], 1, x, gy, z);
-    return { x, y: y + 0.35, z };
+    return { x, y: gy + a.y * H, z };
   }
   if (o.sconce) {
     // a wall torch: plate on the nearest face of the structure this torch belongs to (its battle target), head turned away from it; far from any face (or no rectangular target): a plain hand torch upright

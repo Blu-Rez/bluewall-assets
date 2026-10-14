@@ -4,17 +4,18 @@ import * as THREE from 'three';
 import { bakePieces } from './village.js';
 import { defItems, planDefs } from './defplan.js';
 import * as L from './layout.js';
+import { LEVEL_CAP } from './tiers.js';   // TR2-S4b: the level cap (30 today, 50 when the server says so)
 
 export const DEF_NEAR = 230, DEF_FAR = 560;                      // m from the camera: the small traps appear inside DEF_NEAR, a whole gate's field vanishes beyond DEF_FAR
 const BIG = new Set(['hedgehog', 'watchtower', 'brazier', 'ballista', 'firestone', 'tesla', 'crossbow']);     // seen from far (silhouette); the rest only from near by
 
-export function buildDefField(parent, gltf, hf, { shadows = true, level = 30 } = {}) {
+export function buildDefField(parent, gltf, hf, { shadows = true, level = LEVEL_CAP } = {}) {
   const group = new THREE.Group(); group.name = 'deffield'; parent.add(group);
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), up = new THREE.Vector3(0, 1, 0), v = new THREE.Vector3(), sc = new THREE.Vector3(), cp = new THREE.Vector3();
   let cur = -1, parts = [], shown = 0;
   const dispose = (g) => { g.traverse((o) => { if (o.isMesh && o.geometry) o.geometry.dispose(); }); group.remove(g); };
   function rebuild(lv = level) {
-    lv = Math.max(0, Math.min(30, Math.round(lv))); if (lv === cur) return 0; cur = lv;
+    lv = Math.max(0, Math.min(LEVEL_CAP, Math.round(lv))); if (lv === cur) return 0; cur = lv;
     for (const p of parts) dispose(p.g); parts = [];
     const items = defItems(lv); shown = items.length;
     const gates = L.TGATES || [];

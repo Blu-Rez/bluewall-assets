@@ -37,6 +37,7 @@ import { createLevels } from './levels.js';
 import { applySkin, ENT, levelOf } from './skin.js';
 import { wsD, sites as wsSites } from './worksites.js';
 import { buildWorksites } from './wsbuild.js';
+import * as wsTr2 from './ws_tr2.js';                                                         // TR2-S4b: the Tripo models of the worksites (production lots, mines, mills, farms, fisheries)
 import { buildDefField } from './defbuild.js';
 import { buildWsLife } from './wslife.js';
 import { patchDestruct, initDestruct } from './destruct.js';
@@ -159,7 +160,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
       if (o.pool) pools.add(x, height(x, z) + 0.06, z, o.big ? 7.5 : o.forge ? 8 : 5.2);
       if (o.light && lightBudget > 0) {
         lightBudget--;
-        const l = new THREE.PointLight(o.forge ? 0xff7a2a : 0xff9a45, o.big ? 180 : 120, o.big ? 30 : 24, 1.8);
+        const l = new THREE.PointLight(o.forge ? 0xff7a2a : 0xff9a45, o.big ? 120 : 80, o.big ? 30 : 22, 1.8);      // (15 Oct, owner: the lamps glare at night — was 180 / 120)
         l.position.set(x, y + 1.2, z); scene.add(l); lights.push({ l, base: l.intensity, seed: Math.random() * 10 });
       }
     },
@@ -540,7 +541,9 @@ export async function buildWorld(renderer, scene, Q, progress) {
   function startLate() {
     if (lateP) return lateP;
     lateP = new Promise((res) => { lateDone = res; });
-    loadLate(A, LATE, (n, g) => buildQ.push([n, g])).then(() => { loadDone = true; });
+    // TR2-S4b: the Tripo models the worksites need at this level download beside the late models (capped at 6 s; a file that is late is drawn when it arrives, the old pieces stand in)
+    const t2 = Promise.race([wsTr2.preload(castleLevel(levelOf('keep'))), new Promise((r) => setTimeout(r, 6000))]);
+    loadLate(A, LATE, (n, g) => buildQ.push([n, g])).then(() => t2).then(() => { loadDone = true; });
     return lateP;
   }
   // 0..1 progress of loading + building the late content; the budget (ms per frame) is raised while the loading screen is up

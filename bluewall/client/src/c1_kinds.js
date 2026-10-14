@@ -6,9 +6,10 @@
 //   The pad is flat inside 0.72 r of the water sites (r = 22 -> 15.8 m); the shore lies at about z = 14 +- 2: everything that must stay dry stands at z < 12 (and inside 15 m of the middle),
 //   only the wading workers and the sluice outlets go beyond.  Units: lv 1..30, every number grows with the level ("MORE of everything", not only a bigger model).
 //   Levels, costs, unlocks are placeholders (ph): the economy package (E1) / the server owner decide them.
+import { LEVEL_CAP } from './tiers.js';   // TR2-S4b: the level cap (30 today, 50 when the server says so)
 
-const N = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, lv) - 1) / 29);            // a at level 1 -> b at level 30 (same as worksites.js countAt)
-const tierOf = (lv) => (lv <= 0 ? 0 : 1 + Math.min(4, Math.floor((lv - 1) / 6)));        // 1..5
+const N = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, lv) - 1) / (LEVEL_CAP - 1));            // a at level 1 -> b at level 30 (same as worksites.js countAt)
+const tierOf = (lv) => (lv <= 0 ? 0 : 1 + Math.min(4, Math.floor(((lv - 1) * 5) / LEVEL_CAP)));        // 1..5
 const P = (n, x, z, ry = 0, s = 1) => ({ n, x, z, ry, s });
 const DEG = Math.PI / 180;
 

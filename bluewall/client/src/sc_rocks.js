@@ -191,7 +191,7 @@ export const ROCKS = { kit: null };
 const KINDS0 = ['boulder', 'crag', 'stone'];                   // (a slab is a flattened boulder: one draw call less)
 export function rockKit(T, Q, { snow = 0 } = {}) {
   const low = Q.level === 'low', det = low ? 1 : 2;
-  const TR = S4C.on && S4C.ready ? S4C.rocks() : null;                      // TR2-S4c: { geo, tex } of the Tripo rocks (unit rock 2 m across, a fifth buried)
+  const TR = S4C.on && S4C.ready && S4C.part.rocks ? S4C.rocks() : null;                      // TR2-S4c: { geo, tex } of the Tripo rocks (unit rock 2 m across, a fifth buried)
   const geo = TR ? TR.geo : { boulder: rockGeometry(3, det, 'boulder'), crag: rockGeometry(12, det, 'crag'), stone: rockGeometry(5, 1, 'stone') };
   const mat = rockMaterial(T, { snow });
   const KINDS = TR ? Object.keys(TR.geo) : KINDS0, MATS = {};

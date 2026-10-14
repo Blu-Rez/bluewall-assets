@@ -19,6 +19,7 @@ import { sites, counts, wsLevel, tierOf, inClip } from './worksites.js';
 import { planStores } from './stores.js';
 import * as C1 from './c1_kinds.js';       // C1: workers / carts of the panning + smokehouse sites
 import * as C2 from './c2_kinds.js';       // C2: workers / carts of the sawmill / masonry / smelter sites
+import { LEVEL_CAP } from './tiers.js';   // TR2-S4b: the level cap (30 today, 50 when the server says so)
 
 const PS0 = 1.75 * 0.95;                        // the people's scale (pas_life.js); the Tripo villagers are calibrated to metres: scale 1
 const rnd = (() => { let s = 90210; return () => { s = (s * 16807) % 2147483647; return s / 2147483647; }; })();
@@ -357,7 +358,7 @@ export function buildWsLife(group, height, opt) {
   function refresh(c = castle) {
     castle = c; if (!alive.people && !alive.animals) return 0; let n = 0;
     for (const s of sites()) {
-      const lv = typeof c === 'number' ? wsLevel(s, c) : Math.max(0, Math.min(30, c[s.kind] | 0)), old = SITES_LIFE.get(s.id); if (old && old.lv === lv) continue;
+      const lv = typeof c === 'number' ? wsLevel(s, c) : Math.max(0, Math.min(LEVEL_CAP, c[s.kind] | 0)), old = SITES_LIFE.get(s.id); if (old && old.lv === lv) continue;
       if (old) clearSite(old); SITES_LIFE.set(s.id, spawnSite(s, lv)); n++;
     }
     populated = true; return n;

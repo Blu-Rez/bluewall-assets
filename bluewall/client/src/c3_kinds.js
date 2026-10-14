@@ -4,6 +4,7 @@
 // This file is data only (no THREE, no imports): the pieces come from web/assets/kit_c3.glb (names c3_*) or, for the two old kinds, from the existing kit_ws.glb (ws_*);
 // the procedural parts (tanks, pipes, column, flare stack) are in c3_proc.js.  Numbers (unlock levels, counts) are placeholders (ph) — the economy design (E1) decides later.
 //   chain:  gold mine (ore) -> mint (coins) -> treasury   ·   oil field (crude) -> refinery (oil) -> oil store
+import { LEVEL_CAP } from './tiers.js';   // TR2-S4b: the level cap (30 today, 50 when the server says so)
 
 export const KINDS = {
   gold:     { fa: 'معدن طلا',   unlock: 14, paint: '124,110,72', place: 'mount', role: 'S', in: ['ore'],              out: ['goldore'] },
@@ -12,8 +13,8 @@ export const KINDS = {
   refinery: { fa: 'پالایشگاه',  unlock: 18, paint: '46,52,66',   place: 'free',  role: 'P', in: ['crude'],            out: ['oil'],    inTown: true, r: 18, front: '+z', edge: true },
 };
 
-const NN = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, lv) - 1) / 29);                 // a at level 1 -> b at level 30 (same as worksites.countAt)
-const tier = (lv) => (lv <= 0 ? 0 : 1 + Math.min(4, Math.floor((lv - 1) / 6)));                  // 1..5
+const NN = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, lv) - 1) / (LEVEL_CAP - 1));                 // a at level 1 -> b at level 30 (same as worksites.countAt)
+const tier = (lv) => (lv <= 0 ? 0 : 1 + Math.min(4, Math.floor(((lv - 1) * 5) / LEVEL_CAP)));                  // 1..5
 const P = (n, x, z, ry = 0, s = 1) => ({ n: (/^(ws|c3)_/.test(n) ? '' : 'c3_') + n, x, z, ry, s });
 function row(o, name, n, x0, z0, x1, z1, ry = 0, s = 1, R = null, jit = 0) {
   for (let i = 0; i < n; i++) { const t = n === 1 ? 0.5 : i / (n - 1); o.push(P(name, x0 + (x1 - x0) * t + (R ? (R() - 0.5) * jit : 0), z0 + (z1 - z0) * t + (R ? (R() - 0.5) * jit : 0), ry + (R ? (R() - 0.5) * jit * 0.25 : 0), s)); }
@@ -35,7 +36,7 @@ export const BUILD = {
   // MINT: a walled compound.  Back left the striking hall (forge + chimney), back right the stone strong-room (the vault, door to the front); in the yard the coin presses (screw presses),
   // anvils, rows of coin chests, gold-bar stacks, braziers at the vault door and at the gate.  The wall, the gate and the guard towers grow with the level.
   mint(lv, R) {
-    const o = [], t = tier(lv), k = 0.9 + 0.1 * (lv - 1) / 29, { X, Z } = MINT_YARD;
+    const o = [], t = tier(lv), k = 0.9 + 0.1 * (lv - 1) / (LEVEL_CAP - 1), { X, Z } = MINT_YARD;
     o.push(P('vault', 4.9, -6.2, 0, k), P('hall', -4.3, -6.1, 0, 0.84 * k));
     o.push(P('brazier', 4.9, -0.9, 0, 0.75));                                                            // the pair of flame posts at the vault door
     row(o, 'press', NN(lv, 1, 4), -6.6, 3.0, 3.6, 3.0, 0, 1, R, 0.3);

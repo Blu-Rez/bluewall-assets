@@ -5,6 +5,7 @@
 import * as L from './layout.js';
 import { roadDist } from './roads.js';
 import { rng } from './noise.js';
+import { LEVEL_CAP } from './tiers.js';   // TR2-S4b: the level cap (30 today, 50 when the server says so)
 
 export const DEF_KINDS = {
   // ---- the ten traps (+ the grenade): small things on the ground in front of the gates
@@ -30,7 +31,7 @@ export const DEF_KINDS = {
 const ZONE_RANK = { gate: 0, post: 1, shoulder: 2 };
 export const DEF_ORDER = Object.keys(DEF_KINDS).sort((a, b) => (ZONE_RANK[DEF_KINDS[a].zone] ?? 3) - (ZONE_RANK[DEF_KINDS[b].zone] ?? 3));
 
-const countAt = (lv, k) => (lv < k.unlock ? 0 : Math.max(1, Math.min(k.max, 1 + Math.floor((k.max - 1) * (lv - k.unlock) / Math.max(1, 30 - k.unlock) + 1e-9))));
+const countAt = (lv, k) => (lv < k.unlock ? 0 : Math.max(1, Math.min(k.max, 1 + Math.floor((k.max - 1) * (lv - k.unlock) / Math.max(1, LEVEL_CAP - k.unlock) + 1e-9))));
 let PLAN = null, PLAN_KEY = '';
 const dist = (a, b, c, d) => Math.hypot(a - c, b - d);
 const SCALE = (k) => (k.role === 'trap' ? 1.4 : 1);                                  // traps are drawn 40 % bigger than their model size so they read from the walls' distance
@@ -76,7 +77,7 @@ export function planDefs() {
 
 // what stands at a castle level: the first `count` of every kind (the order of planning is the order of growth)
 export function defItems(level) {
-  const lv = Math.max(0, Math.min(30, Math.round(level))), per = {}, out = [];
+  const lv = Math.max(0, Math.min(LEVEL_CAP, Math.round(level))), per = {}, out = [];
   for (const it of planDefs()) {
     const k = DEF_KINDS[it.id], c = countAt(lv, k), n = (per[it.id + it.gate] = (per[it.id + it.gate] || 0) + 1);
     if (n <= (it.gate === 0 ? c : Math.max(c ? 1 : 0, Math.ceil(c * 0.5)))) out.push(it);
@@ -84,7 +85,7 @@ export function defItems(level) {
   return out;
 }
 export const defCounts = (level) => { const o = {}; for (const it of defItems(level)) o[it.id] = (o[it.id] || 0) + 1; return o; };
-export function defSolids(level = 30) {
+export function defSolids(level = LEVEL_CAP) {
   const out = [];
   for (const it of defItems(level)) { const k = DEF_KINDS[it.id]; if (k.solid) out.push([it.x, it.z, k.solid]); }
   return out;

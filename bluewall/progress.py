@@ -29,7 +29,8 @@ from typing import Any, Dict, List, Optional, Tuple
 from . import boost as BO
 
 GEMS = ("ruby", "emerald", "turq")
-MAX_LEVEL = 30                          # p35 (owner 5 Oct 2026): 30 levels
+BASE_LEVELS = 30                         # p35 (owner 5 Oct 2026): the economy, the unit unlock levels and the defence counts were fitted on 30 levels: levels 1-30 never change
+MAX_LEVEL = 50                          # 15 Oct 2026 (owner: «لول ۵۰»): the castle goes to 50.  Levels 31-50 are PLACEHOLDERS (T_HOURS / COST_K continue the 26-30 slope; waits for the E1 table the owner approves)
 RESERVE_MAX = 2
 CANCEL_REFUND = 0.5                    # of the paid gems when an *active* upgrade is cancelled (reserved ones refund fully)
 SPEEDUP_FREE_S = 180.0                 # an upgrade with less than 3 minutes left finishes for free
@@ -48,12 +49,19 @@ T_HOURS = [
     0.167, 28.1, 10.6, 12.9, 33.2, 70.2, 87.9, 109.0, 112.0, 115.0,
     115.0, 115.0, 115.0, 119.0, 123.0, 127.0, 128.0, 129.0, 131.0, 132.0,
     132.0, 132.0, 132.0, 132.0, 132.0, 134.0, 139.0, 144.0, 150.0, 155.0,
+    # ---- 31-50: PLACEHOLDERS (15 Oct 2026): +5 h per level (the 26-30 slope), 160 h at 31 ... 255 h at 50
+    160.0, 165.0, 170.0, 175.0, 180.0, 185.0, 190.0, 195.0, 200.0, 205.0,
+    210.0, 215.0, 220.0, 225.0, 230.0, 235.0, 240.0, 245.0, 250.0, 255.0,
 ]
 COST_K = [
     0.669, 0.669, 1.568, 1.496, 0.763, 0.389, 0.520, 0.696, 0.734, 0.774,
     0.707, 0.645, 0.589, 0.537, 0.586, 0.640, 0.698, 0.762, 0.832, 0.908,
     0.916, 0.923, 0.931, 0.939, 0.947, 0.955, 0.963, 0.971, 0.979, 0.987,
+    # ---- 31-50: PLACEHOLDERS: +0.008 per level
+    0.995, 1.003, 1.011, 1.019, 1.027, 1.035, 1.043, 1.051, 1.059, 1.067,
+    1.075, 1.083, 1.091, 1.099, 1.107, 1.115, 1.123, 1.131, 1.139, 1.147,
 ]
+assert len(T_HOURS) == MAX_LEVEL and len(COST_K) == MAX_LEVEL, "T_HOURS / COST_K must have MAX_LEVEL entries"
 # ---- gems: a level costs  K[gem] * (hours it takes) * (structure's weight for that gem) * (mine output per hour of the level below); never less than 12 * weight
 GEM_K = {"emerald": 0.985, "ruby": 0.885, "turq": 1.97}
 

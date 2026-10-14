@@ -17,6 +17,7 @@ import * as C1 from './c1_kinds.js';           // C1 (the water family): panning
 import * as C2 from './c2_kinds.js';           // C2 (timber, stone, metal): sawmill / masonry / smelter + extras on lumber / quarry / iron
 import * as C3 from './c3_kinds.js';           // C3 (gold, oil): mint + refinery, extras on gold / oil
 import * as C4 from './c4_kinds.js';           // C4 (food family): mill / bakery / butcher, the improved farm / slaughter
+import { LEVEL_CAP } from './tiers.js';   // TR2-S4b: the level cap (30 today, 50 when the server says so)
 
 export const WS_KINDS = {
   lumber:     { fa: 'چوب‌بری',      unlock: 1,  paint: '124,100,64' },
@@ -62,11 +63,11 @@ export function sites() {
 }
 export const siteById = (id) => sites().find((s) => s.id === id);
 export const unlockOf = (site) => (site.unlock != null ? site.unlock : WS_KINDS[site.kind].unlock);       // (a site may carry its own level: the legacy windmill stands from 1, the 2nd sawmill opens later ...)
-export const wsLevel = (site, castle) => (castle >= unlockOf(site) ? Math.max(1, Math.min(30, Math.round(castle))) : 0);
+export const wsLevel = (site, castle) => (castle >= unlockOf(site) ? Math.max(1, Math.min(LEVEL_CAP, Math.round(castle))) : 0);
 export const inClip = (c, x, z) => !c || (x >= c.x0 && x <= c.x1 && z >= c.z0 && z <= c.z1);
-const N = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, lv) - 1) / 29);            // a at level 1 -> b at level 30
-export const tierOf = (lv) => (lv <= 0 ? 0 : 1 + Math.min(4, Math.floor((lv - 1) / 6)));  // 1..5 (same steps as the structure looks, skin.js)
-const kScale = (lv) => 0.76 + 0.24 * (Math.max(1, lv) - 1) / 29;                           // the main building grows a little with the level (the rest is MORE of everything)
+const N = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, lv) - 1) / (LEVEL_CAP - 1));            // a at level 1 -> b at the level cap
+export const tierOf = (lv) => (lv <= 0 ? 0 : 1 + Math.min(4, Math.floor(((lv - 1) * 5) / LEVEL_CAP)));  // 1..5 (steps every CAP / 5 levels: 6 at cap 30 = the old (lv - 1) / 6; 10 at cap 50)
+const kScale = (lv) => 0.76 + 0.24 * (Math.max(1, lv) - 1) / (LEVEL_CAP - 1);                           // the main building grows a little with the level (the rest is MORE of everything)
 
 export function wsD(x, z) {
   let d = 1e9;
@@ -139,7 +140,7 @@ const BUILD = {
   // iron: the mine mouth at the back, rails + ore carts, the smelter (smithy) beside it
   iron(lv, R, s) {
     const o = [], t = tierOf(lv);
-    o.push(P('mine', 0, -10, 0, 0.9 + 0.1 * (lv / 30)));
+    o.push(P('mine', 0, -10, 0, 0.9 + 0.1 * (lv / LEVEL_CAP)));
     row(o, 'minecart', N(lv, 1, 4), -3, 1, -3, 14, 0.0, 1, R, 0.3);
     row(o, 'orecart', N(lv, 1, 4), 3, 1, 3, 12, 0.1, 1, R, 0.3);
     if (lv >= 5) o.push(P('smithy', -15, 0, 0.5, 1.0));
@@ -155,7 +156,7 @@ const BUILD = {
   // gold: like the iron mine, but with panned nuggets, bars and a counting house under guard
   gold(lv, R, s) {
     const o = [], t = tierOf(lv);
-    o.push(P('mine', 0, -10, 0, 0.9 + 0.1 * (lv / 30)));
+    o.push(P('mine', 0, -10, 0, 0.9 + 0.1 * (lv / LEVEL_CAP)));
     row(o, 'minecart', N(lv, 1, 4), -3, 1, -3, 13, 0.0, 1, R, 0.3);
     row(o, 'orecart', N(lv, 1, 3), 3, 2, 3, 11, 0.1, 1, R, 0.3);
     o.push(P('stageC', -15, 2, 0.5, 1.0), P('workbench', 9, 3, -0.2), P('cage_small', 8, 8, 0.4), P('barrel_holder', 11, 7, 0.3));
@@ -216,7 +217,7 @@ const BUILD = {
   // slaughterhouse (clean, no gore): the butcher's hall, holding cages, meat racks, cart + barrels, a fenced yard
   slaughter(lv, R, s) {
     const o = [], t = tierOf(lv);
-    o.push(P('butcher', 0, -6, 0, 1.4 + 0.2 * (lv / 30)));
+    o.push(P('butcher', 0, -6, 0, 1.4 + 0.2 * (lv / LEVEL_CAP)));
     o.push(P('smallbarn', -13, -6, 0.2, 0.85));
     row(o, 'cage_small', N(lv, 1, 4), -12, 4, 2, 4.5, 0.1, 1, R, 0.5);
     row(o, 'fishrack', N(lv, 1, 3), 4, 4, 14, 4, 0, 0.95, R, 0.6);
@@ -293,8 +294,8 @@ export function wsSolids() {
   const out = [];
   for (const s of sites()) {
     const c = Math.cos(s.ry), sn = Math.sin(s.ry);
-    for (const p of pieces(s, 30)) { const r = SOLID_R[p.n.replace(/^ws_/, '')]; if (r) out.push([s.x + p.x * c + p.z * sn, s.z - p.x * sn + p.z * c, r * p.s]); }
-    const sp = C3.SOLIDS_PROC[s.kind]; if (sp) for (const [x, z, r] of sp(30)) if (inClip(s.clip, x, z)) out.push([s.x + x * c + z * sn, s.z - x * sn + z * c, r]);       // C3: the refinery's procedural tanks / column
+    for (const p of pieces(s, LEVEL_CAP)) { const r = SOLID_R[p.n.replace(/^ws_/, '')]; if (r) out.push([s.x + p.x * c + p.z * sn, s.z - p.x * sn + p.z * c, r * p.s]); }
+    const sp = C3.SOLIDS_PROC[s.kind]; if (sp) for (const [x, z, r] of sp(LEVEL_CAP)) if (inClip(s.clip, x, z)) out.push([s.x + x * c + z * sn, s.z - x * sn + z * c, r]);       // C3: the refinery's procedural tanks / column
   }
   return out;
 }

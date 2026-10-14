@@ -9,10 +9,11 @@
 //   placeRule(site)      -> 'free' | 'water'   (the water mill must touch the shore)
 // Nothing here is hard-wired to a spot: every thing is relative to the site record { id, kind, x, z, ry, r, variant? } so the layout editor can move it.
 import * as THREE from 'three';
+import { LEVEL_CAP } from './tiers.js';   // TR2-S4b: the level cap (30 today, 50 when the server says so)
 
-export const N = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, lv) - 1) / 29);                  // a at level 1 -> b at level 30
-export const tierOf = (lv) => (lv <= 0 ? 0 : 1 + Math.min(4, Math.floor((lv - 1) / 6)));              // 1..5 (same steps as worksites.js)
-const kS = (lv, a = 0.84, b = 1.1) => a + (b - a) * (Math.max(1, lv) - 1) / 29;                       // the main building grows a little (the rest is MORE of everything)
+export const N = (lv, a, b) => Math.round(a + (b - a) * (Math.max(1, lv) - 1) / (LEVEL_CAP - 1));                  // a at level 1 -> b at level 30
+export const tierOf = (lv) => (lv <= 0 ? 0 : 1 + Math.min(4, Math.floor(((lv - 1) * 5) / LEVEL_CAP)));              // 1..5 (same steps as worksites.js)
+const kS = (lv, a = 0.84, b = 1.1) => a + (b - a) * (Math.max(1, lv) - 1) / (LEVEL_CAP - 1);                       // the main building grows a little (the rest is MORE of everything)
 
 // ---------------------------------------------------------------------------------------------------- the kinds
 export const KINDS = {
@@ -110,7 +111,7 @@ export const BUILD = {
   slaughter(lv, R, s) {
     const o = [], t = tierOf(lv), k = kS(lv, 0.72, 0.9);
     o.push(Q('slaughterhall', 0, -8.5, 0, k));
-    o.push(W('butcher', 13.5, -3.5, -0.5, 1.15 + 0.15 * (lv / 30)));
+    o.push(W('butcher', 13.5, -3.5, -0.5, 1.15 + 0.15 * (lv / LEVEL_CAP)));
     row(o, piece('ws_cage_small'), N(lv, 1, 4), -12, 4, 2, 4.5, 0.1, 1, R, 0.5);
     row(o, piece('ws_workbench'), N(lv, 1, 3), 8, 1.5, 14, 1.5, 1.57, 1, R, 0.3);
     row(o, piece('ws_barrel'), N(lv, 2, 6), -5, 9, 8, 9.5, 0.1, 1, R, 0.8);
@@ -122,7 +123,7 @@ export const BUILD = {
   },
   // FARM (improved): the p38 farm + scarecrows standing in the crop plots (they multiply with the plots)
   farm(lv, R, s) {
-    const o = [], t = tierOf(lv), k = (0.76 + 0.24 * (Math.max(1, lv) - 1) / 29);
+    const o = [], t = tierOf(lv), k = (0.76 + 0.24 * (Math.max(1, lv) - 1) / (LEVEL_CAP - 1));
     o.push(W('barn', 0, -9, 0, 0.82 * k + 0.1));
     row(o, piece('ws_silo'), N(lv, 1, 2), 11, -9, 11, -9 + 5 * (N(lv, 1, 2) - 1), 0, 1, R, 0.2);
     row(o, piece('ws_coop'), N(lv, 1, 3), -12, -3, -12, -3 + 4.5 * (N(lv, 1, 3) - 1), 1.57, 1, R, 0.2);

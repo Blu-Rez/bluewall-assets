@@ -85,14 +85,14 @@ function bakeImpostor(renderer, v, group, light = 1) {
     cardFadeShader(sh, 0.1, 0.4);
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <normal_fragment_begin>', '#include <normal_fragment_begin>\n#ifdef DOUBLE_SIDED\n  normal *= faceDirection;\n#endif')
-      .replace('#include <alphatest_fragment>', `{ vec2 tz = vMapUv * vec2(${W}.0, ${H}.0); float lod = log2(max(1.0, max(length(dFdx(tz)), length(dFdy(tz))))); diffuseColor.a *= 1.0 + lod * ${S4C.on && S4C.ready ? '0.6' : '0.32'}; }\n#include <alphatest_fragment>`);
+      .replace('#include <alphatest_fragment>', `{ vec2 tz = vMapUv * vec2(${W}.0, ${H}.0); float lod = log2(max(1.0, max(length(dFdx(tz)), length(dFdy(tz))))); diffuseColor.a *= 1.0 + lod * ${S4C.on && S4C.ready && S4C.part.trees ? '0.6' : '0.32'}; }\n#include <alphatest_fragment>`);
   };
   mat.customProgramCacheKey = () => 'bwimp2';
   return { geometry: g, material: mat };
 }
 
 export function buildTrees(renderer, scene, A, near, far, Q, rnd, season = null) {
-  const TRI = S4C.on && S4C.ready ? S4C.treeSet(season) : null;         // TR2-S4c
+  const TRI = S4C.on && S4C.ready && S4C.part.trees ? S4C.treeSet(season) : null;         // TR2-S4c
   const VARIANTS = TRI ? TRI.VAR : OLD_VARIANTS;
   const names = Object.keys(VARIANTS).filter((k) => TRI || A.models[k]);
   if (!names.length) return null;
