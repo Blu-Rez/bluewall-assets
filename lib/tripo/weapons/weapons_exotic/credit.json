@@ -1,0 +1,67 @@
+{
+ "name": "weapons_exotic",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#319",
+ "tris": 8961,
+ "kb": 231,
+ "objects": [
+  {
+   "name": "weapon_blowgun",
+   "tris": 800,
+   "size_rel": [
+    0.037,
+    0.568,
+    0.038
+   ]
+  },
+  {
+   "name": "weapon_net",
+   "tris": 1713,
+   "size_rel": [
+    0.106,
+    0.476,
+    0.119
+   ]
+  },
+  {
+   "name": "weapon_bolas",
+   "tris": 1304,
+   "size_rel": [
+    0.073,
+    0.497,
+    0.164
+   ]
+  },
+  {
+   "name": "weapon_spiked_chain",
+   "tris": 1800,
+   "size_rel": [
+    0.088,
+    0.533,
+    0.148
+   ]
+  },
+  {
+   "name": "weapon_sling",
+   "tris": 1800,
+   "size_rel": [
+    0.119,
+    0.492,
+    0.132
+   ]
+  },
+  {
+   "name": "weapon_whip",
+   "tris": 1544,
+   "size_rel": [
+    0.113,
+    0.496,
+    0.142
+   ]
+  }
+ ],
+ "note": "net is sloppy-simplified (1.7k), slightly ragged; blowgun is thin",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

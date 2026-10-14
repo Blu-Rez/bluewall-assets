@@ -1,0 +1,57 @@
+{
+ "name": "weapons_axes_double",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#307",
+ "tris": 8994,
+ "kb": 274,
+ "objects": [
+  {
+   "name": "axe2_golden",
+   "tris": 1798,
+   "size_rel": [
+    0.067,
+    0.586,
+    0.185
+   ]
+  },
+  {
+   "name": "axe2_crescent",
+   "tris": 1800,
+   "size_rel": [
+    0.059,
+    0.58,
+    0.181
+   ]
+  },
+  {
+   "name": "axe2_great",
+   "tris": 1799,
+   "size_rel": [
+    0.067,
+    0.638,
+    0.218
+   ]
+  },
+  {
+   "name": "axe2_labrys",
+   "tris": 1800,
+   "size_rel": [
+    0.051,
+    0.566,
+    0.166
+   ]
+  },
+  {
+   "name": "axe2_battle",
+   "tris": 1797,
+   "size_rel": [
+    0.066,
+    0.585,
+    0.18
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

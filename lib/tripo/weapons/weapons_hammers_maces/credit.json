@@ -1,0 +1,66 @@
+{
+ "name": "weapons_hammers_maces",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#308",
+ "tris": 10799,
+ "kb": 248,
+ "objects": [
+  {
+   "name": "flail_chain",
+   "tris": 1800,
+   "size_rel": [
+    0.115,
+    0.521,
+    0.169
+   ]
+  },
+  {
+   "name": "mace_gurz",
+   "tris": 1800,
+   "size_rel": [
+    0.136,
+    0.562,
+    0.133
+   ]
+  },
+  {
+   "name": "mace_morningstar",
+   "tris": 1800,
+   "size_rel": [
+    0.139,
+    0.537,
+    0.139
+   ]
+  },
+  {
+   "name": "mace_flanged",
+   "tris": 1800,
+   "size_rel": [
+    0.114,
+    0.559,
+    0.098
+   ]
+  },
+  {
+   "name": "hammer_lucerne",
+   "tris": 1800,
+   "size_rel": [
+    0.065,
+    0.539,
+    0.167
+   ]
+  },
+  {
+   "name": "hammer_war",
+   "tris": 1799,
+   "size_rel": [
+    0.068,
+    0.504,
+    0.147
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

@@ -1,0 +1,57 @@
+{
+ "name": "weapons_swords_tiers_b",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#305",
+ "tris": 9000,
+ "kb": 265,
+ "objects": [
+  {
+   "name": "sword_tier_diamond_blue",
+   "tris": 1800,
+   "size_rel": [
+    0.075,
+    0.653,
+    0.16
+   ]
+  },
+  {
+   "name": "sword_tier_diamond_black",
+   "tris": 1800,
+   "size_rel": [
+    0.076,
+    0.653,
+    0.164
+   ]
+  },
+  {
+   "name": "sword_tier_diamond_red",
+   "tris": 1800,
+   "size_rel": [
+    0.075,
+    0.653,
+    0.165
+   ]
+  },
+  {
+   "name": "sword_tier_diamond_green",
+   "tris": 1800,
+   "size_rel": [
+    0.076,
+    0.653,
+    0.164
+   ]
+  },
+  {
+   "name": "sword_tier_diamond_ice",
+   "tris": 1800,
+   "size_rel": [
+    0.075,
+    0.653,
+    0.16
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

@@ -1,0 +1,58 @@
+{
+ "name": "weapons_swords_xlong",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#303",
+ "tris": 8998,
+ "kb": 241,
+ "objects": [
+  {
+   "name": "sword_xl_greatsword",
+   "tris": 1800,
+   "size_rel": [
+    0.075,
+    0.736,
+    0.123
+   ]
+  },
+  {
+   "name": "sword_xl_flamberge",
+   "tris": 1800,
+   "size_rel": [
+    0.067,
+    0.741,
+    0.156
+   ]
+  },
+  {
+   "name": "sword_xl_nodachi",
+   "tris": 1798,
+   "size_rel": [
+    0.07,
+    0.742,
+    0.083
+   ]
+  },
+  {
+   "name": "sword_xl_claymore",
+   "tris": 1800,
+   "size_rel": [
+    0.039,
+    0.717,
+    0.16
+   ]
+  },
+  {
+   "name": "sword_xl_zweihander",
+   "tris": 1800,
+   "size_rel": [
+    0.06,
+    0.734,
+    0.182
+   ]
+  }
+ ],
+ "note": "claymore vs zweihander named by guard size",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

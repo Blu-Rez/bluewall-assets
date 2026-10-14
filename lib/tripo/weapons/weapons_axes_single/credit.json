@@ -1,0 +1,67 @@
+{
+ "name": "weapons_axes_single",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#306",
+ "tris": 10402,
+ "kb": 233,
+ "objects": [
+  {
+   "name": "axe_felling",
+   "tris": 1799,
+   "size_rel": [
+    0.069,
+    0.509,
+    0.155
+   ]
+  },
+  {
+   "name": "axe_francisca",
+   "tris": 1797,
+   "size_rel": [
+    0.045,
+    0.471,
+    0.131
+   ]
+  },
+  {
+   "name": "axe_tabar",
+   "tris": 1798,
+   "size_rel": [
+    0.039,
+    0.562,
+    0.145
+   ]
+  },
+  {
+   "name": "axe_dane",
+   "tris": 1797,
+   "size_rel": [
+    0.039,
+    0.6,
+    0.136
+   ]
+  },
+  {
+   "name": "axe_bearded",
+   "tris": 1412,
+   "size_rel": [
+    0.051,
+    0.363,
+    0.11
+   ]
+  },
+  {
+   "name": "axe_hatchet",
+   "tris": 1799,
+   "size_rel": [
+    0.048,
+    0.499,
+    0.141
+   ]
+  }
+ ],
+ "note": "axe_hatchet and axe_bearded were rescaled with the pack; real sizes differ",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

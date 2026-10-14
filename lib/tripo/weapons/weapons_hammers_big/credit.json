@@ -1,0 +1,57 @@
+{
+ "name": "weapons_hammers_big",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#309",
+ "tris": 9000,
+ "kb": 257,
+ "objects": [
+  {
+   "name": "club_spiked",
+   "tris": 1800,
+   "size_rel": [
+    0.159,
+    0.624,
+    0.127
+   ]
+  },
+  {
+   "name": "club_stone",
+   "tris": 1800,
+   "size_rel": [
+    0.135,
+    0.596,
+    0.175
+   ]
+  },
+  {
+   "name": "hammer_smith",
+   "tris": 1800,
+   "size_rel": [
+    0.075,
+    0.523,
+    0.141
+   ]
+  },
+  {
+   "name": "hammer_sledge",
+   "tris": 1800,
+   "size_rel": [
+    0.107,
+    0.577,
+    0.162
+   ]
+  },
+  {
+   "name": "hammer_maul",
+   "tris": 1800,
+   "size_rel": [
+    0.128,
+    0.62,
+    0.181
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

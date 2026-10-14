@@ -1,0 +1,48 @@
+{
+ "name": "weapons_swords_tiers_a",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#304",
+ "tris": 7200,
+ "kb": 221,
+ "objects": [
+  {
+   "name": "sword_tier_gold",
+   "tris": 1800,
+   "size_rel": [
+    0.067,
+    0.698,
+    0.173
+   ]
+  },
+  {
+   "name": "sword_tier_iron",
+   "tris": 1800,
+   "size_rel": [
+    0.072,
+    0.696,
+    0.182
+   ]
+  },
+  {
+   "name": "sword_tier_stone",
+   "tris": 1800,
+   "size_rel": [
+    0.073,
+    0.697,
+    0.174
+   ]
+  },
+  {
+   "name": "sword_tier_wood",
+   "tris": 1800,
+   "size_rel": [
+    0.066,
+    0.699,
+    0.173
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

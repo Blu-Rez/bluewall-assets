@@ -1,0 +1,66 @@
+{
+ "name": "weapons_arrows_quivers",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#311",
+ "tris": 7458,
+ "kb": 245,
+ "objects": [
+  {
+   "name": "quiver_persian",
+   "tris": 1798,
+   "size_rel": [
+    0.145,
+    0.583,
+    0.153
+   ]
+  },
+  {
+   "name": "quiver_leather",
+   "tris": 1800,
+   "size_rel": [
+    0.148,
+    0.585,
+    0.169
+   ]
+  },
+  {
+   "name": "bolts_pair",
+   "tris": 860,
+   "size_rel": [
+    0.063,
+    0.599,
+    0.081
+   ]
+  },
+  {
+   "name": "arrow_fire",
+   "tris": 502,
+   "size_rel": [
+    0.06,
+    0.599,
+    0.065
+   ]
+  },
+  {
+   "name": "arrow_war",
+   "tris": 698,
+   "size_rel": [
+    0.052,
+    0.615,
+    0.06
+   ]
+  },
+  {
+   "name": "arrows_bundle",
+   "tris": 1800,
+   "size_rel": [
+    0.079,
+    0.599,
+    0.151
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

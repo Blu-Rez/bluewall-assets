@@ -1,0 +1,66 @@
+{
+ "name": "weapons_swords_long",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#302",
+ "tris": 10797,
+ "kb": 233,
+ "objects": [
+  {
+   "name": "sword_long_rapier",
+   "tris": 1800,
+   "size_rel": [
+    0.056,
+    0.686,
+    0.137
+   ]
+  },
+  {
+   "name": "sword_long_flamberge",
+   "tris": 1800,
+   "size_rel": [
+    0.042,
+    0.695,
+    0.157
+   ]
+  },
+  {
+   "name": "sword_long_tachi",
+   "tris": 1798,
+   "size_rel": [
+    0.069,
+    0.7,
+    0.131
+   ]
+  },
+  {
+   "name": "sword_long_scimitar",
+   "tris": 1800,
+   "size_rel": [
+    0.041,
+    0.682,
+    0.154
+   ]
+  },
+  {
+   "name": "sword_long_bastard",
+   "tris": 1800,
+   "size_rel": [
+    0.047,
+    0.701,
+    0.155
+   ]
+  },
+  {
+   "name": "sword_long_longsword",
+   "tris": 1799,
+   "size_rel": [
+    0.047,
+    0.681,
+    0.148
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

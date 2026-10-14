@@ -1,0 +1,66 @@
+{
+ "name": "weapons_staffs_basic",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#314",
+ "tris": 10800,
+ "kb": 216,
+ "objects": [
+  {
+   "name": "staff_cane",
+   "tris": 1800,
+   "size_rel": [
+    0.041,
+    0.629,
+    0.128
+   ]
+  },
+  {
+   "name": "staff_monk",
+   "tris": 1800,
+   "size_rel": [
+    0.057,
+    0.685,
+    0.097
+   ]
+  },
+  {
+   "name": "staff_ironshod",
+   "tris": 1800,
+   "size_rel": [
+    0.063,
+    0.712,
+    0.062
+   ]
+  },
+  {
+   "name": "staff_quarter",
+   "tris": 1800,
+   "size_rel": [
+    0.037,
+    0.716,
+    0.031
+   ]
+  },
+  {
+   "name": "staff_crook",
+   "tris": 1800,
+   "size_rel": [
+    0.042,
+    0.683,
+    0.122
+   ]
+  },
+  {
+   "name": "staff_walking",
+   "tris": 1800,
+   "size_rel": [
+    0.052,
+    0.657,
+    0.045
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

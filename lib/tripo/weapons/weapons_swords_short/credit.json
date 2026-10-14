@@ -1,0 +1,66 @@
+{
+ "name": "weapons_swords_short",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#300",
+ "tris": 10794,
+ "kb": 246,
+ "objects": [
+  {
+   "name": "sword_short_shamshir",
+   "tris": 1797,
+   "size_rel": [
+    0.041,
+    0.581,
+    0.15
+   ]
+  },
+  {
+   "name": "sword_short_akinakes",
+   "tris": 1800,
+   "size_rel": [
+    0.06,
+    0.554,
+    0.13
+   ]
+  },
+  {
+   "name": "sword_short_seax",
+   "tris": 1800,
+   "size_rel": [
+    0.069,
+    0.57,
+    0.078
+   ]
+  },
+  {
+   "name": "sword_short_kopis",
+   "tris": 1800,
+   "size_rel": [
+    0.041,
+    0.596,
+    0.145
+   ]
+  },
+  {
+   "name": "sword_short_xiphos",
+   "tris": 1797,
+   "size_rel": [
+    0.039,
+    0.579,
+    0.077
+   ]
+  },
+  {
+   "name": "sword_short_gladius",
+   "tris": 1800,
+   "size_rel": [
+    0.07,
+    0.611,
+    0.07
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

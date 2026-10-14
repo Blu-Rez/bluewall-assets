@@ -1,0 +1,66 @@
+{
+ "name": "weapons_staffs_magic",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#315",
+ "tris": 10621,
+ "kb": 277,
+ "objects": [
+  {
+   "name": "sceptre_royal",
+   "tris": 1800,
+   "size_rel": [
+    0.111,
+    0.68,
+    0.112
+   ]
+  },
+  {
+   "name": "staff_bone",
+   "tris": 1797,
+   "size_rel": [
+    0.106,
+    0.633,
+    0.146
+   ]
+  },
+  {
+   "name": "staff_ice",
+   "tris": 1800,
+   "size_rel": [
+    0.074,
+    0.672,
+    0.108
+   ]
+  },
+  {
+   "name": "staff_druid",
+   "tris": 1800,
+   "size_rel": [
+    0.077,
+    0.679,
+    0.122
+   ]
+  },
+  {
+   "name": "staff_wizard",
+   "tris": 1800,
+   "size_rel": [
+    0.097,
+    0.657,
+    0.101
+   ]
+  },
+  {
+   "name": "staff_serpent",
+   "tris": 1624,
+   "size_rel": [
+    0.099,
+    0.653,
+    0.084
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

@@ -1,0 +1,67 @@
+{
+ "name": "weapons_shields",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#318",
+ "tris": 10718,
+ "kb": 237,
+ "objects": [
+  {
+   "name": "shield_heater",
+   "tris": 1800,
+   "size_rel": [
+    0.066,
+    0.336,
+    0.259
+   ]
+  },
+  {
+   "name": "shield_buckler",
+   "tris": 1800,
+   "size_rel": [
+    0.099,
+    0.248,
+    0.244
+   ]
+  },
+  {
+   "name": "shield_kite",
+   "tris": 1800,
+   "size_rel": [
+    0.068,
+    0.336,
+    0.188
+   ]
+  },
+  {
+   "name": "shield_spara",
+   "tris": 1721,
+   "size_rel": [
+    0.078,
+    0.368,
+    0.182
+   ]
+  },
+  {
+   "name": "shield_round_wood",
+   "tris": 1799,
+   "size_rel": [
+    0.096,
+    0.269,
+    0.254
+   ]
+  },
+  {
+   "name": "shield_tower",
+   "tris": 1798,
+   "size_rel": [
+    0.119,
+    0.337,
+    0.197
+   ]
+  }
+ ],
+ "note": "spara (wicker) shield is sloppy-simplified (1.7k), slightly ragged",
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}

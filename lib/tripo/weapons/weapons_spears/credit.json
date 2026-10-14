@@ -1,0 +1,66 @@
+{
+ "name": "weapons_spears",
+ "source": "Tripo Studio (owner's paid account)",
+ "license": "owned by the game",
+ "old_model": "new (pack of separate objects; one named node per object, each recentred at its own pivot, ymin=0, node translation only spreads them for preview)",
+ "picture": "#312",
+ "tris": 10595,
+ "kb": 203,
+ "objects": [
+  {
+   "name": "spear_lance",
+   "tris": 1796,
+   "size_rel": [
+    0.107,
+    0.724,
+    0.153
+   ]
+  },
+  {
+   "name": "spear_javelin",
+   "tris": 1800,
+   "size_rel": [
+    0.048,
+    0.58,
+    0.049
+   ]
+  },
+  {
+   "name": "spear_pike",
+   "tris": 1599,
+   "size_rel": [
+    0.034,
+    0.725,
+    0.024
+   ]
+  },
+  {
+   "name": "spear_trident",
+   "tris": 1800,
+   "size_rel": [
+    0.04,
+    0.642,
+    0.121
+   ]
+  },
+  {
+   "name": "spear_long",
+   "tris": 1800,
+   "size_rel": [
+    0.041,
+    0.68,
+    0.044
+   ]
+  },
+  {
+   "name": "spear_short",
+   "tris": 1800,
+   "size_rel": [
+    0.038,
+    0.565,
+    0.042
+   ]
+  }
+ ],
+ "status": "candidate: facing/scale/pivot not yet fixed (round 4); size_rel is relative inside the pack (each pack was normalised to ~0.6 tall), absolute scale comes later; objects are upright, unlit (no flame)"
+}
