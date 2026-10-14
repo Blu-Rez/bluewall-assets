@@ -1,0 +1,1 @@
+{"clips":[{"name":"idle","src":"idle","mode":"keep","loop":false},{"name":"walk","src":"walk","mode":"keep","loop":false},{"name":"run","src":"run","mode":"keep","loop":false},{"name":"jump","src":"jump","mode":"keep","loop":false}],"face_plus_z":true}

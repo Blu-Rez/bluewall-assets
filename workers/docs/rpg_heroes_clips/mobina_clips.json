@@ -1,6 +1,6 @@
 {
  "hero": "mobina",
- "source": "Tripo Studio export (v1.0 biped rig, 78 joints): native idle/walk/run/jump; the other 18 clips = Elina's Tripo clips retargeted (world-space rotation delta, hip travel scaled by hip height, ground contact matched); RP0B adds 11 clips (33 total)",
+ "source": "Tripo Studio export (v1.0 biped rig, 78 joints): native idle/walk/run/jump; the other 18 clips = Elina's Tripo clips retargeted (world-space rotation delta, hip travel scaled by hip height, ground contact matched); RP0B adds 11 clips (33 total); MODEL REPLACED 15 Oct 2026 (owner's new Tripo Mobina, back-made, long velvet gown): same 33 names; on this long gown the leg-heavy borrowed clips are damped (local thigh rotation pulled toward rest: kick_a/kick_b 0.55, cheer 0.6, death/hit 0.7, dodge 0.75) so the skirt does not shred; stretched-triangle counts (edge > 4x): kick_a 24, kick_b 11, run 47, cheer 90, death 80, slash_a/b/c 66-73, heavy 98, climb 93 of 18 359 tris",
  "facing": "+Z",
  "units": "model height 0.979 u, feet on y=0",
  "clips": [
@@ -64,7 +64,7 @@
    "dur_s": 1.7,
    "loop": false,
    "root": "in place (XZ locked)",
-   "note": "dive roll cut from Tripo 'dive' (wind-up removed); play at timeScale ~2 for a 0.85 s dodge",
+   "note": "dive roll cut from Tripo 'dive' (wind-up removed); play at timeScale ~2 for a 0.85 s dodge | gown: thigh rotation damped (new Mobina)",
    "origin": "retargeted from Elina"
   },
   {
@@ -73,7 +73,7 @@
    "dur_s": 1.29,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "flinch, 1.3 s",
+   "note": "flinch, 1.3 s | gown: thigh rotation damped (new Mobina)",
    "origin": "retargeted from Elina"
   },
   {
@@ -82,7 +82,7 @@
    "dur_s": 4.0,
    "loop": false,
    "root": "as authored (body moves)",
-   "note": "shot → stagger → kneel → fall → lies; clamp on the last frame; root keeps its travel",
+   "note": "shot → stagger → kneel → fall → lies; clamp on the last frame; root keeps its travel | gown: thigh rotation damped (new Mobina)",
    "origin": "retargeted from Elina"
   },
   {
@@ -118,7 +118,7 @@
    "dur_s": 2.5,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "spinning kick (Tripo front_kick_01, body yaws ~190°)",
+   "note": "spinning kick (Tripo front_kick_01, body yaws ~190°) | gown: thigh rotation damped (new Mobina)",
    "origin": "retargeted from Elina"
   },
   {
@@ -127,7 +127,7 @@
    "dur_s": 1.38,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "back kick (Tripo front_kick_02)",
+   "note": "back kick (Tripo front_kick_02) | gown: thigh rotation damped (new Mobina)",
    "origin": "retargeted from Elina"
   },
   {
@@ -190,7 +190,7 @@
    "dur_s": 5.0,
    "loop": false,
    "root": "in place (net drift removed)",
-   "note": "first 5 s of Tripo cheer",
+   "note": "first 5 s of Tripo cheer | gown: thigh rotation damped (new Mobina)",
    "origin": "retargeted from Elina"
   },
   {
