@@ -24,6 +24,8 @@ for s, m in (('L', 'Left'), ('R', 'Right')):
 MIX2GAME = {v: k for k, v in SRC2MIX.items() if k != 'NeckTwist01'}      # the game has no «Neck» joint: ours keeps its mixamo name «Neck»
 MIX2GAME['mixamorig:Neck'] = 'Neck'
 MIX2GAME['mixamorig:Hips'] = 'Hip'
+# the game mounts quivers / blades on `Spine02` (native y 0.68 m, the mixamo chest `Spine1` is at 0.71, `Spine2` at 0.77): the NAME goes to the bone at the same height (the retarget pairs above are unchanged)
+MIX2GAME['mixamorig:Spine'] = 'Spine01'; MIX2GAME['mixamorig:Spine1'] = 'Spine02'; MIX2GAME['mixamorig:Spine2'] = 'Spine03'
 # every other mixamo joint: strip the prefix, keep unique
 FEET_S = ['L_Foot', 'R_Foot', 'L_ToeBase', 'R_ToeBase']
 FEET_D = ['mixamorig:LeftFoot', 'mixamorig:RightFoot', 'mixamorig:LeftToeBase', 'mixamorig:RightToeBase']
