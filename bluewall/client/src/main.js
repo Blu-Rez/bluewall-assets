@@ -7,7 +7,7 @@ import { createGpuTimer } from './gputime.js';
 import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { createPerf } from './perf.js';
+import { createPerf, createCap, installMatrixSkip } from './perf.js';   // PF1: adaptive frame cap
 import { createShaderWarm } from './shaderwarm.js';
 import { createReflect } from './reflect.js';
 import { createCoach } from './coach.js';
@@ -40,7 +40,8 @@ import { setEmblem } from './textures.js';
 import { setGateName } from './her_flags.js';
 import { setShieldCrest } from './gear_shield.js';
 import { DS, DU } from './destruct.js';
-import { REACH } from './reach.js';                                   // RP1B: the owner's hero mode lowers draw distance / pixel ratio / update rate here (all neutral = 1 for everyone else)
+import { createProbe } from './pf_probe.js';                      // PF1: the measuring probe (?pf=1) + the owner's phone benchmark window.BW_bench (nothing runs without ?pf=1 / owner)
+import { REACH } from './reach.js';                                  // RP1B: the owner's hero mode lowers draw distance / pixel ratio / update rate here (all neutral = 1 for everyone else)
 
 const VERSION = '4.0';
 const PRESETS = {
@@ -73,17 +74,19 @@ async function start(opts) {
   const pinned = () => devH;
   const hourNow = () => { const p = pinned(); return p != null ? p : gameHour(); };
 
+  const PFOFF = /[?&]pfoff=1/.test(location.search);   // PF1: ?pfoff=1 = every PF1 behaviour change off (old frame cap, pixel floor, audio timing, matrices): the A/B switch for BW_bench on a phone
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ antialias: Q.level !== 'low', powerPreference: 'high-performance', stencil: false });
+    renderer = new THREE.WebGLRenderer({ antialias: Q.level !== 'low' && !/[?&]aa=0/.test(location.search), powerPreference: 'high-performance', stencil: false });   // PF1: MSAA stays as it was (the hero view draws at ~1.7x, where the edges show); ?aa=0 = MSAA off, only to A/B on a phone with BW_bench
   } catch (e) { throw new Error('webgl'); }
   if (!renderer.capabilities.isWebGL2) Q.msaa = 0;
-  const DYN = { s: 1 };                                   // dynamic resolution scale (keeps the frame rate up)
+  const MSKIP = PFOFF ? { on: false, skip: 0, run: 0 } : installMatrixSkip(THREE, !/[?&]nomskip=1/.test(location.search));   // PF1: unchanged objects keep their matrices (bit-identical result; ?nomskip=1 = off)
+  const DYN = { s: 1, hero: false }, CAP = createCap(PFOFF);   // PF1: DYN.hero = the sharp hero view (pixel-ratio floor 1.0); CAP = adaptive frame cap (perf.js)   // dynamic resolution scale (keeps the frame rate up)
   // p28 thermal governor: after a long, continuous, full-rate session (or when the frame time creeps up = the phone is throttling) it steps the sustained load down in small,
   // hard-to-notice steps (render scale, shadow / mirror refresh); resting (idle, panels, hidden) cools it back. "Cool mode" (settings) is the manual, stronger version.
   const GOV = { lvl: 0, active: 0, win: 0, wn: 0, base: 0, since: 0, steps: 0 }, GOVK = [1, 0.95, 0.9, 0.82];
   const cool = () => !!settings.coolMode;
-  const dpr = () => { let b = Math.min(window.devicePixelRatio || 1, REACH.cap || Q.dpr); if (cool()) b = Math.min(b, 1); return Math.max(REACH.own ? 0.5 : 0.75, b * (+settings.resScale || 1) * (REACH.own ? 1 : DYN.s) * REACH.dpr * (cool() ? 0.9 : (REACH.own ? 1 : GOVK[GOV.lvl]))); };   // RP1C: in hero mode the hero's own governor owns the resolution (REACH.cap / REACH.own)
+  const dpr = () => { let b = Math.min(window.devicePixelRatio || 1, REACH.cap || Q.dpr); if (cool()) b = Math.min(b, 1); return Math.max(REACH.own ? 0.5 : DYN.hero ? 1 : 0.75, b * (+settings.resScale || 1) * (REACH.own ? 1 : DYN.s) * REACH.dpr * (cool() ? 0.9 : (REACH.own ? 1 : GOVK[GOV.lvl]))); };   // RP1C: in hero mode the hero's own governor owns the resolution (REACH.cap / REACH.own)   // PF1 + RP1C (merged by the mother): floor 1.0 in the hero view unless RP1C's own hero governor is in charge (it cuts shadows / crowd / bloom first and may take the pixel ratio down to 0.5 as the very last step)
   renderer.setPixelRatio(dpr());
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.2;
@@ -166,7 +169,7 @@ async function start(opts) {
 
   // ------------------------------------------------ UI, sound, picking
   const audio = new Ambience();
-  const ui = new UI({ tg, mount: root, version: VERSION, owner: !!(opts.owner || opts.dev), onOwner: async (k) => { const p = econ.prem(), b = k === 'max' ? { max: true } : k === 'royal' ? { own: { tesla: 4, dragonling: true } } : k === 'plain' ? { own: { tesla: 0, dragonling: false } } : { prem: { sap: p.sap + 200, onyx: p.onyx + 40 } }; const j = await econ.dev(b); const ok = !!(j && j.ok); if (ok && k === 'max') { saveLevelHint(30); setTimeout(() => location.reload(), 1100); }     /* (p36: the houses take their colours when the world is built: a fresh start shows the whole level-30 realm) */ return ok; }, onClick: () => audio.click && audio.click(), onShop: (k) => shop && shop.open(k), onTutorial: () => { ui.openSettings(false); coach.reset(); setTimeout(() => coach.home(true), 450); } });
+  const ui = new UI({ tg, mount: root, version: VERSION, owner: !!(opts.owner || opts.dev), onOwner: async (k) => { if (k === 'bench') { try { ui.openSettings(false); } catch (e) { /* ignore */ } setTimeout(() => { try { window.BW_bench && window.BW_bench.run(); } catch (e) { /* ignore */ } }, 700); return !!window.BW_bench; }   /* mother: PF1's phone benchmark (closes the settings panel first: the bench refuses to run behind an open panel) */ const p = econ.prem(), b = k === 'max' ? { max: true } : k === 'royal' ? { own: { tesla: 4, dragonling: true } } : k === 'plain' ? { own: { tesla: 0, dragonling: false } } : { prem: { sap: p.sap + 200, onyx: p.onyx + 40 } }; const j = await econ.dev(b); const ok = !!(j && j.ok); if (ok && k === 'max') { saveLevelHint(30); setTimeout(() => location.reload(), 1100); }     /* (p36: the houses take their colours when the world is built: a fresh start shows the whole level-30 realm) */ return ok; }, onClick: () => audio.click && audio.click(), onShop: (k) => shop && shop.open(k), onTutorial: () => { ui.openSettings(false); coach.reset(); setTimeout(() => coach.home(true), 450); } });
   const econ = new Econ({ token: opts.token || null, level: opts.level || Q.level0 || 20 });
   if (!opts.token && opts.gems) Object.assign(econ.st.gems, opts.gems);
   ui.setProfile({ name: opts.name || 'Blꪊe', level: econ.st.level });
@@ -398,12 +401,15 @@ async function start(opts) {
   const hud = createPerfHud({ root, renderer, info: renderer.info, gpu });
   if (cool()) refl.off = true;
   if (settings.perfInfo) hud.set(true);
+  const PFH = { make: null };                                       // PF1: (set below: the owner's hero loader, for the benchmark's hero walk)
+  createProbe({ renderer, scene, camera, ctl, world, Q, DYN, GOV, ui, PFH, MSKIP, CAP, owner: !!(opts.owner || opts.dev || opts.rpg), token: () => econ.token, getHero: () => hero, getBattle: () => battle, getComposer: () => composer, getBloom: () => bloom });     // PF1: null for a player
   // RP1 — owner-only hero mode (the code is a separate module, fetched when the button is tapped: a normal player never downloads it)
   let hero = null;
   if (opts.owner || opts.rpg) {
     const hb = document.createElement('button'); hb.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l4.6 4.2L12 5.5l3.9 7.2 4.6-4.2-1.8 10H5.3z"/><path d="M5.8 21h12.4"/></svg>'; hb.className = 'rp-open';
     hb.style.cssText = 'position:absolute;z-index:6;left:10px;top:' + (opts.rpgTop || 'calc(env(safe-area-inset-top,0px) + 150px)') + ';width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1.5px solid rgba(205,214,224,.5);background:radial-gradient(circle at 50% 35%,rgba(66,74,84,.62),rgba(22,26,32,.72));box-shadow:0 0 12px rgba(61,245,224,.25);color:#e6ecf2';
     const mkHero = async (q) => { hero = (await import(/* @vite-ignore */ new URL(heroKit.base + 'rpg/rpg.js' + (q || heroKit.v), document.baseURI).href)).create({ THREE, renderer, scene, camera, root, ctl, world, L, buildNav, bridgesFromLayout, staticSolids, createLoadView, base: new URL(heroKit.base, document.baseURI).href, v: heroKit.v, parseGLB: heroKit.parse, reach: REACH, resize: wantResize, sheets, SM: SHEET_MAP, dev: !!opts.dev }); if (opts.dev) window.__rp = hero.dev; return hero; };
+    PFH.make = async () => hero || mkHero();                        // PF1
     hb.onclick = async () => { if (hero) return hero.openPick(); hb.disabled = true; try { (await mkHero()).openPick(); } catch (e) { console.warn('hero', e); } hb.disabled = false; };
     if (opts.dev) window.__rpLoad = async (q) => { if (hero) { hero.exit(); hero.closePick(); } return mkHero(q); };
     root.appendChild(hb); setInterval(() => { hb.style.display = (hero && hero.active) || (battle && battle.active) || root.classList.contains('wel') ? 'none' : ''; }, 400);
@@ -415,6 +421,7 @@ async function start(opts) {
     if (!running) return;
     if (rafPrev) { const d = now - rafPrev; if (d > 3 && d < dyn.rmin) dyn.rmin = d; } rafPrev = now;       // display refresh interval (smallest gap seen)
     const inBattle = !!(battle && battle.active), inHero = !!(hero && hero.active), uw = inHero && hero.scene !== scene;
+    DYN.hero = inHero && !PFOFF;   // PF1
     // p37: an attack is drawn by day, straight to the screen: the bloom composer (a half-float multisampled target + the blur chain = the biggest idle block of GPU memory) is parked for its duration and
     // built again when the home map is back — one more thing less to run out of on a phone that is short of GPU memory (a lost context was the one way the picture could go half as bright / the ground black)
     if (inBattle && composer && !composerParked && P && P.night <= 0.25) { composerParked = true; dropComposer(); }
@@ -422,8 +429,8 @@ async function start(opts) {
     const slow = settings.fps === 30 || cool() || (!inBattle && (!!(ctl.intro && ctl.intro.hold) || (settings.idleEco && !ctl.intro && !inHero && ctl.ptrs.size === 0 && now - lastInput > 3500)));   // (the held scene behind the welcome card: 30 fps is plenty)
     bbox.phase(inBattle ? (battle.loading ? 'battle:load' : 'battle') : (ctl.intro ? 'home:intro' : 'home')); bbox.frame(now);
     if (now - panelChk > 450) { panelChk = now; panelUp = !inBattle && !!root.querySelector(PANELS); }
-    if (now - lastDraw < (panelUp ? 60 : slow ? 29 : 10)) return;                                                   // ~60-90 fps cap (30 when idle): 120 Hz -> every 2nd vsync = 60; 90 Hz keeps every frame
-    lastDraw = now;
+    const gapMs = panelUp ? 60 : slow ? 29 : CAP.gap(); if (now - lastDraw < gapMs) return;   // PF1: the cap is adaptive (perf.js createCap) ~60-90 fps / ~45 / 30 when idle: 120 Hz -> every 2nd vsync = 60; 90 Hz keeps every frame
+    const gapReal = now - lastDraw, w0 = performance.now(); lastDraw = now;   // PF1: the REAL interval and the JS time of this frame feed the cap
     if (pendingResize) { pendingResize = false; resize(); }
     if (restoreGpu) { restoreGpu = false; try { world.restoreGpu && world.restoreGpu(); } catch (e) { console.warn('restoreGpu', e); } }
     fpsm.max = Math.max(fpsm.max, now - last);
@@ -449,31 +456,32 @@ async function start(opts) {
     if (inHero) hero.frame(now, dt);
     pe('battle');                                                           // (the attack plays on this very map: sim, camera, units, destruction)
     // shadows: refresh every 3rd drawn frame (every 2nd on ultra): the sun/moon move slowly and it is the biggest steady GPU cost
-    if (renderer.shadowMap.enabled) { renderer.shadowMap.autoUpdate = false; if (frames % (cool() ? 6 : (Q.level === 'ultra' ? (slow && !inBattle ? 3 : 2) : (slow || panelUp) && !inBattle ? 5 : 3) + (slow || panelUp ? 0 : GOV.lvl) + REACH.sh) === 0) renderer.shadowMap.needsUpdate = true; }
+    if (renderer.shadowMap.enabled) { renderer.shadowMap.autoUpdate = false; if (frames % (cool() ? 6 : (Q.level === 'ultra' ? (slow && !inBattle ? 3 : 2) : (slow || panelUp) && !inBattle ? 5 : 3) + (slow || panelUp ? 0 : GOV.lvl + CAP.lvl) + REACH.sh) === 0) renderer.shadowMap.needsUpdate = true; }   // PF1: shadows are the first thing a struggling frame gives up (+1 per cap step)
     // behind the loading screen nobody sees the frames: draw a third of them (the explicit warm-up renders still draw everything)
     if (!(inBattle && battle.loading) && (lateReady || frames % 3 === 0)) { if (hud.on) gpu.begin(renderer.shadowMap.needsUpdate ? 's' : 'p'); pb(); if (uw) renderer.render(hero.scene, camera); else { refl.update(dt, { battle: inBattle || REACH.norefl }); pe('refl'); if (useComposer()) composer.render(); else renderer.render(scene, camera); } if (opts.dev && window.__bwLumOn) lumSample(); pe('render(submit)'); if (hud.on) gpu.end(); }
+    CAP.frame(gapReal, performance.now() - w0, dyn.rmin < 90 ? dyn.rmin : 0, now, slow || panelUp || !!ctl.intro || document.hidden || !!(inBattle && battle.loading));   // PF1: adaptive cap (perf.js)
     // dynamic resolution: keep up with the frame cap (60, or 30 when slow). A resize re-allocates the render targets (a hitch of its own), so:
     // change only after two bad windows in a row, in steps of 0.1, ignore the window that contains the resize, and after a drop stay down for a minute.
     dyn.acc += dt; dyn.n++;
-    const dk = panelUp ? 2 : slow ? 1 : 0;                                                          // (behind a panel the rate is capped on purpose: never judge the GPU there)
+    const dk = (panelUp ? 2 : slow ? 1 : 0) + 3 * CAP.lvl;                                                          // (behind a panel the rate is capped on purpose: never judge the GPU there)
     if (dyn.slow !== dk) { dyn.slow = dk; dyn.acc = 0; dyn.n = 0; dyn.bad = 0; dyn.good = 0; }
     if (dyn.acc > 1.5 && !ctl.intro && !panelUp && !(opts.dev && window.__bwFixDyn)) {
       const avg = dyn.acc / dyn.n; dyn.acc = 0; dyn.n = 0;
       const rf = Math.min(34, Math.max(4, dyn.rmin)); dyn.rmin = 99;                                  // ms between display frames
       if (dyn.skip) { dyn.skip = 0; dyn.bad = 0; dyn.good = 0; }
       else {
-        const expect = Math.max(slow ? 0.0333 : 0.0167, rf * Math.ceil((slow ? 29 : 10) / rf) / 1000);   // seconds per drawn frame when the GPU keeps up (never expect better than 60 fps: a 90 Hz screen must not push the quality down)
+        const expect = Math.max(gapMs > 25 ? 0.0333 : gapMs > 15 ? 0.0222 : 0.0167, rf * Math.ceil(gapMs / rf) / 1000);   // seconds per drawn frame when the GPU keeps up (never expect better than 60 fps: a 90 Hz screen must not push the quality down)
         let ns = DYN.s;
-        if (avg > expect * 1.3) { dyn.good = 0; if (++dyn.bad >= 2) { ns = Math.max(0.6, DYN.s - (avg > expect * 1.8 ? 0.2 : 0.1)); dyn.bad = 0; dyn.noRaise = now + 60000; } }
+        if (avg > expect * 1.3) { dyn.good = 0; if ((PFOFF || slow || CAP.lvl > 1) && !CAP.cpuBound && ++dyn.bad >= 2) { ns = Math.max(0.6, DYN.s - (avg > expect * 1.8 ? 0.2 : 0.1)); dyn.bad = 0; dyn.noRaise = now + 60000; } }
         else if (avg < expect * 1.08) { dyn.bad = 0; if (++dyn.good >= 4 && now > dyn.noRaise) { ns = Math.min(1, DYN.s + 0.1); dyn.good = 0; } }
         else { dyn.bad = 0; dyn.good = 0; }
         if (Math.abs(ns - DYN.s) > 0.01) { DYN.s = ns; dyn.skip = 1; wantResize(); }
       }
     }
-    if (hud.on) hud.frame(dt, () => { const sz = renderer.getDrawingBufferSize(new THREE.Vector2()); return { dpr: renderer.getPixelRatio(), basedpr: Math.min(window.devicePixelRatio || 1, Q.dpr), dyn: DYN.s, w: sz.x, h: sz.y, preset: Q.level, shadow: renderer.shadowMap.enabled ? '1/' + (cool() ? 6 : (Q.level === 'ultra' ? (slow && !inBattle ? 3 : 2) : (slow || panelUp) && !inBattle ? 5 : 3) + (slow || panelUp ? 0 : GOV.lvl) + REACH.sh) : 'off', refl: refl.enabled && !refl.off ? 'on' : 'off', bloom: composer && P.night > 0.25 && !cool() ? 'on' : (composer ? 'idle' : 'off'), cap: slow ? 30 : 60, cool: cool() ? 'on' : 'off', gov: GOV.lvl }; });
+    if (hud.on) hud.frame(dt, () => { const sz = renderer.getDrawingBufferSize(new THREE.Vector2()); return { dpr: renderer.getPixelRatio(), basedpr: Math.min(window.devicePixelRatio || 1, Q.dpr), dyn: DYN.s, w: sz.x, h: sz.y, preset: Q.level, shadow: renderer.shadowMap.enabled ? '1/' + (cool() ? 6 : (Q.level === 'ultra' ? (slow && !inBattle ? 3 : 2) : (slow || panelUp) && !inBattle ? 5 : 3) + (slow || panelUp ? 0 : GOV.lvl + CAP.lvl) + REACH.sh) : 'off', refl: refl.enabled && !refl.off ? 'on' : 'off', bloom: composer && P.night > 0.25 && !cool() ? 'on' : (composer ? 'idle' : 'off'), cap: slow ? 30 : 60, cool: cool() ? 'on' : 'off', gov: GOV.lvl, mode: inHero ? (uw ? 'hero/under' : 'hero') : inBattle ? 'battle' : 'map', cap: CAP.lvl }; });     // PF1: mode for the readout
     // governor: count full-rate play time; judge the average frame time over 30 s windows
     {
-      if (slow || panelUp || document.hidden) { GOV.active = Math.max(0, GOV.active - dt * 2); GOV.win = 0; GOV.wn = 0; }
+      if (slow || panelUp || document.hidden || CAP.lvl) { GOV.active = Math.max(0, GOV.active - dt * 2); GOV.win = 0; GOV.wn = 0; }   // PF1: a capped frame rate is not 'creep'
       else {
         GOV.active += dt; GOV.win += dt * 1000; GOV.wn++; GOV.since += dt;
         if (GOV.active > 30 * (GOV.steps + 1) && GOV.wn > 200) {                         // a 30 s window of full-rate frames is over
@@ -489,7 +497,7 @@ async function start(opts) {
     if (opts.dev && window.__bwLumOn) lumSample('end');                                  // (dev: what the canvas holds when the frame is handed to the browser)
     pframe(); frames++;
     if (inBattle) { fpsm.n++; fpsm.t += dt; if (fpsm.t >= 1) { ui.setFPS(Math.round(fpsm.n / fpsm.t), Math.round(fpsm.max)); fpsm.n = 0; fpsm.t = 0; fpsm.max = 0; } return; }
-    if (frames === 2) audio.prepare(P.night > 0.55 ? 'night' : 'day');
+    if (PFOFF ? frames === 2 : (lateReady || frames > 1800) && frames % 30 === 2 && !audio.ctx) audio.prepare(P.night > 0.55 ? 'night' : 'day');   // PF1: the ~5.8 MB of sound is fetched AFTER the models (it used to compete with the 14 MB late stage at frame 2); a tap before that still prepares it at once (audio.unlock)
     if (!audio.ctx && world.takeThunder && frames % 30 === 0) world.takeThunder();   // no stale claps on the first tap
     if (frames === 4 && world.startLate) { if (opts.nolate) { lateReady = true; prog(1, 'Ready!'); if (opts.ready) opts.ready(); startWelcome(); } else lateSequence(); }   // (nolate: dev pages only)
     fpsm.n++; fpsm.t += dt; if (fpsm.t >= 1) { ui.setFPS(Math.round(fpsm.n / fpsm.t), Math.round(fpsm.max)); fpsm.n = 0; fpsm.t = 0; fpsm.max = 0; }

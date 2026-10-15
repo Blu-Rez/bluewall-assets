@@ -55,7 +55,7 @@ export function createCull(H, S, diet) {
     for (const c of kids) { if (Object.prototype.hasOwnProperty.call(c, 'updateMatrixWorld')) continue; c.updateMatrixWorld = NOOP; f.n += 1; }
     let n = 0; for (const c of kids) c.traverse(() => n++); f.nodes = n; mx.frozen.push(f);
   }
-  function mxThaw(f) { for (const c of f.kids) if (c.updateMatrixWorld === NOOP) delete c.updateMatrixWorld; }
+  function mxThaw(f) { for (const c of f.kids) { if (c.updateMatrixWorld === NOOP) delete c.updateMatrixWorld; c.matrixWorldNeedsUpdate = true; } }      // mother (PF1 merge): a frozen subtree misses the parent's force; vanilla updateMatrix() raised this flag itself, PF1's matrix skip does not (dev/pf1/unit.mjs, section 3)
   function mxScan() {                                                                                                // the topmost invisible nodes that have children (a hidden pool of units, a hidden prop group)
     const keep = new Set(), roots = [];
     const walk = (o) => { const ch = o.children; for (let i = 0; i < ch.length; i++) { const c = ch[i]; if (!c.visible && c.children.length && !c.userData.rpHero) roots.push(c); else if (c.children.length) walk(c); } };

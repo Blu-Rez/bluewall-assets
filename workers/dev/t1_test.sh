@@ -21,7 +21,7 @@ chk ".bw-toast z 90" "grep -q '.bw-toast{position:absolute;z-index:90' $S/ui.js"
 chk ".bw-gems has no pointer-events:auto" "grep -E '^\.bw-gems\{' $S/ui.js | grep -q 'pointer-events:none'"
 chk "old sheet: no bounce (cubic-bezier .2,.9,.25,1.1 gone)" "! grep -q '1.1)}' $S/ui.js || ! grep -q 'cubic-bezier(.2,.9,.25,1.1)' $S/ui.js"
 chk "old sheet hides the corner buttons (sheet-on)" "grep -q \"root.classList.add('sheet-on')\" $S/ui.js && grep -q 'sheet-on>.bwa-btn' $F"
-chk "main.js: only the T1 lines (import + sheet line + onTap) and the RP1 hero hook + the 3 RP1B hooks changed (<= 60 lines; T1 alone was <= 8)" "[ \$(diff <(cd /home/claude/base_snapshot/client/src && cat main.js) $S/main.js | grep -c '^[<>]') -le 60 ]"
+chk "main.js: only the T1 lines (import + sheet line + onTap) and the RP1 hero hook + the 3 RP1B hooks changed (<= 120 lines: T1 <= 8, RP1B 3 hooks, RP1C-R2 2, PF1 <= 30, mother 2; raised from 60 on 15 Oct when PF1 merged)" "[ \$(diff <(cd /home/claude/base_snapshot/client/src && cat main.js) $S/main.js | grep -c '^[<>]') -le 120 ]"
 chk "onTap asks the sheet first, the old behaviour stays after it" "grep -q 'sheets.tap(best, SM)' $S/main.js && grep -q 'ui.show(best)' $S/main.js"
 chk "armyui (AR1 cards, owned by AR1: <= 260 changed lines) / upgradeui only gained the small API" "[ \$(diff /home/claude/base_snapshot/client/src/armyui.js $S/armyui.js | grep -c '^[<>]') -le 260 ] && [ \$(diff /home/claude/base_snapshot/client/src/upgradeui.js $S/upgradeui.js | grep -c '^[<>]') -le 40 ]"
 # (rule "worksites.js / town_*.js untouched" retired in p45: P1 owns those files now; T1 never touched them)

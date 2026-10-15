@@ -79,3 +79,63 @@ export function createPerf({ renderer, tier, token }) {
     send,
   };
 }
+
+// PF1: adaptive frame cap (60 -> 45 -> 30).  A steady 30 beats a swinging 60 on a hot phone, and a lower pixel ratio does nothing for a frame that is bound by the CPU.
+//   gap()      the minimum ms between two drawn frames at the current level (10 = the old 60-90 fps cap, 20 = ~45 fps, 29 = 30 fps).  On a 60 Hz screen 45 can only be 30 (a frame comes every 16.7 ms), on 90 / 120 Hz it is 45 / 40.
+//   frame(...) once per drawn frame: `real` = the real time since the previous drawn frame (ms, NOT the clamped dt of the simulation), `work` = the ms this frame spent in JS, `rf` = the display's frame interval.
+//              Over 3 s windows: the real frame time above the budget (> 20 ms at the top level) steps DOWN; only after `wait` ms (10 s, doubled when the last step up had to be undone within 40 s, never above 80 s) of headroom
+//              (frames on time AND the JS work under 70 % of the next level's budget) does it step UP again.  A stall (tab switch, panel, intro, loading screen) resets the window: it is not a trend.
+//   cpuBound   the last window's JS work was >= 80 % of its frame time: lowering the resolution would not help (main.js leaves the pixel ratio alone then).
+export function createCap(off) {
+  const G = [10, 20, 29], C = { off: !!off, lvl: 0, cpuBound: false, wait: 10000, hold: 0, upAt: -1e9, t: 0, n: 0, js: 0, rf: 16.7, log: [] };
+  const exp = (g) => C.rf * Math.ceil(g / C.rf);
+  C.gap = () => G[C.lvl];
+  C.reset = () => { C.t = C.n = C.js = 0; };
+  C.frame = (real, work, rf, now, skip) => {
+    if (C.off) return;
+    if (rf > 3 && rf < 40) C.rf = rf;
+    if (skip || real > 250) { C.reset(); return; }
+    C.t += real; C.n++; C.js += work;
+    if (C.t < 3000) return;
+    const avg = C.t / C.n, js = C.js / C.n; C.cpuBound = js >= 0.8 * avg; C.jsm = js; C.reset();
+    if (C.lvl < 2 && avg > Math.max(20, exp(G[C.lvl]) * 1.15)) {
+      if (now - C.upAt < 40000) C.wait = Math.min(80000, C.wait * 2);
+      C.lvl++; C.hold = 0; if (C.log.length < 12) C.log.push([Math.round(now / 1000), C.lvl, Math.round(avg), Math.round(js)]);
+    } else if (C.lvl > 0 && avg <= exp(G[C.lvl]) * 1.1 && js < exp(G[C.lvl - 1]) * 0.7) {
+      C.hold += 3000;
+      if (C.hold >= C.wait) { C.lvl--; C.hold = 0; C.upAt = now; if (C.log.length < 12) C.log.push([Math.round(now / 1000), C.lvl, Math.round(avg), Math.round(js)]); }
+    } else C.hold = 0;
+  };
+  return C;
+}
+
+// PF1: matrix skip.  three.js recomputes (compose + multiply, ~2.5 ms and ~2 MB of garbage per frame on this scene) the local and world matrix of EVERY auto-updating object each frame, 4,900 of them, while
+// ~80 % never move.  This keeps the numbers each object was last composed from (position, quaternion, scale, parent) and, when all ten are bit-identical, skips the compose AND leaves `matrixWorldNeedsUpdate`
+// alone, so neither the local nor the world matrix is recomputed (a moved ancestor still forces its whole subtree: updateMatrixWorld passes `force` down, untouched).  The result is bit-for-bit the matrix the old code
+// produced, so nothing on screen changes.  `?nomskip=1` switches it off (A/B on a phone with BW_bench); window.__pf.mskip.check() proves the invariant on the live scene.
+export function installMatrixSkip(THREE, on = true) {
+  const P = THREE.Object3D.prototype, orig = P.updateMatrix, S = { on, skip: 0, run: 0 };
+  P.updateMatrix = function () {
+    const c = this._pq;
+    if (c !== undefined && S.on && this._pp === this.parent && this.pivot === null) {
+      const p = this.position, q = this.quaternion, s = this.scale;
+      if (c[0] === p.x && c[1] === p.y && c[2] === p.z && c[3] === q._x && c[4] === q._y && c[5] === q._z && c[6] === q._w && c[7] === s.x && c[8] === s.y && c[9] === s.z) { S.skip++; return; }
+    }
+    S.run++; orig.call(this);
+    if (this.pivot === null) {
+      const p = this.position, q = this.quaternion, s = this.scale;
+      if (c === undefined) this._pq = new Float64Array([p.x, p.y, p.z, q._x, q._y, q._z, q._w, s.x, s.y, s.z]);
+      else { c[0] = p.x; c[1] = p.y; c[2] = p.z; c[3] = q._x; c[4] = q._y; c[5] = q._z; c[6] = q._w; c[7] = s.x; c[8] = s.y; c[9] = s.z; }
+      this._pp = this.parent;
+    }
+  };
+  // Two things vanilla gets for free because updateMatrix() ALWAYS raised matrixWorldNeedsUpdate, and the skip must give back:
+  //  (1) r186 updateWorldMatrix() (getWorldPosition, lookAt, attach, ...) refreshes the ANCESTORS of a node and clears their flag without touching their other children.  Raise the flag before (so a skipped
+  //      updateMatrix cannot leave a stale world behind) and again after (so the next scene.updateMatrixWorld() redoes this node and forces its children, as it always did).
+  //  (2) a node taken out and put back under the SAME parent while that parent moved: its cached matrices are dropped on remove(), so the next update recomputes it.
+  const ouw = P.updateWorldMatrix, orm = P.remove;
+  P.updateWorldMatrix = function (up, uc, force) { if (S.on && this.matrixAutoUpdate) this.matrixWorldNeedsUpdate = true; ouw.call(this, up, uc, force); if (S.on && this.matrixAutoUpdate) this.matrixWorldNeedsUpdate = true; };
+  P.remove = function (...objs) { for (let i = 0; i < objs.length; i++) if (objs[i]) objs[i]._pq = undefined; return orm.apply(this, objs); };
+  P._pq = undefined; P._pp = null;
+  return S;
+}

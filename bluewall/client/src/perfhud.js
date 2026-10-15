@@ -8,7 +8,7 @@ export function createPerfHud({ root, renderer, info, gpu }) {
   function ensure() {
     if (el) return;
     el = document.createElement('div');
-    el.style.cssText = 'position:absolute;left:6px;top:calc(var(--st,0px) + 150px);z-index:60;font:600 8.5px/1.25 ui-monospace,Menlo,Consolas,monospace;color:#bfe6ff;background:rgba(0,10,28,.62);padding:4px 6px;border-radius:6px;pointer-events:none;white-space:pre-wrap;word-break:break-word;max-width:calc(100vw - 14px);overflow:hidden';
+    el.style.cssText = 'position:absolute;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 6px);z-index:99998;visibility:visible!important;font:600 9.5px/1.25 ui-monospace,Menlo,Consolas,monospace;color:#bfe6ff;background:rgba(0,10,28,.62);padding:4px 6px;border-radius:6px;pointer-events:none;white-space:pre-wrap;word-break:break-word;max-width:min(58vw,500px);overflow:hidden';
     root.appendChild(el);
   }
   function battery() {
@@ -32,9 +32,10 @@ export function createPerfHud({ root, renderer, info, gpu }) {
       const st = state(), a = PROF.avg, ks = Object.keys(a).sort((x, y) => a[y] - a[x]); let tot = 0; for (const k of ks) tot += a[k];
       const top = ks.slice(0, 6).map((k) => k.replace('render(submit)', 'render') + ' ' + a[k].toFixed(1)).join(' · ');
       const m = info.memory, fps = n / acc;
-      text = `${fps.toFixed(0)} fps · ${(1000 * acc / n).toFixed(1)} ms · worst ${worst.toFixed(0)} ms${batt ? ' · 🔋' + batt : ''}\n` +
-        `res ${st.dpr.toFixed(2)} (dpr ${st.basedpr.toFixed(2)} × dyn ${st.dyn.toFixed(2)}) · ${st.w}×${st.h}\n` +
-        `calls ${(snap.calls / n) | 0} · tris ${fmt(snap.tris / n)} · prog ${info.programs ? info.programs.length : '?'} · tex ${m.textures} · geo ${m.geometries}\n` +
+      // PF1: line 1 is the same in the map and in the hero view (a plain screenshot is enough): mode · fps · ms · calls · tris · px · q
+      text = `${st.mode || 'map'} · ${fps.toFixed(0)} fps · ${(1000 * acc / n).toFixed(1)} ms · ${(snap.calls / n) | 0} calls · ${fmt(snap.tris / n)} tris · ${fmt(st.w * st.h)} px · q ${st.preset}\n` +
+        `worst ${worst.toFixed(0)} ms · cap ${['60', '45', '30'][st.cap | 0]}${batt ? ' · 🔋' + batt : ''} · res ${st.dpr.toFixed(2)} (dpr ${st.basedpr.toFixed(2)} × dyn ${st.dyn.toFixed(2)}) · ${st.w}×${st.h}\n` +
+        `prog ${info.programs ? info.programs.length : '?'} · tex ${m.textures} · geo ${m.geometries}\n` +
         `JS ${tot.toFixed(1)} ms: ${top}\n` +
         `${gpu ? gpu.summary() : 'gpu n/a'}\n` +
         `${st.preset} · shadow ${st.shadow} · refl ${st.refl} · bloom ${st.bloom} · cap ${st.cap} · cool ${st.cool}${st.gov ? ' · gov ' + st.gov : ''}`;
