@@ -20,6 +20,7 @@ from typing import Any, Dict, Optional
 
 from . import boost as BO
 from . import bridge as BR
+from . import layout as LY
 from . import progress as PR
 from . import military as MI
 from . import shop as SH
@@ -667,6 +668,47 @@ class Store:
             out = self.view(st, None, uid)
             out.update({"ok": why == "ok", "why": None if why == "ok" else why, "info": info})
             return out
+
+    # ---- layout: the player's own map arrangement (layout.py; TR2-S5).  st["layout"] = the EFFECTIVE record {v, g, m}; a missing key = the default town
+    async def layout_get(self, uid: int) -> Optional[Dict[str, Any]]:
+        G = LY.geom()
+        async with self._lock(uid):
+            rec = (await self.load(uid)).get("layout")
+        if not isinstance(rec, dict) or not rec.get("m"):
+            return None
+        if G is None or rec.get("g") == G["planId"]:
+            return rec
+        res = await LY.judge(G, {"v": 1, "m": rec.get("m")})                                  # (the plan changed after a deploy: judge the record again and keep the result)
+        new = {"v": 1, "g": G["planId"], "m": res["effective"]} if res["status"] == "ok" and res["effective"] else None
+        async with self._lock(uid):
+            st = await self.load(uid)
+            if st.get("layout") != rec:                                                       # (saved by someone else meanwhile: that one is newer)
+                cur = st.get("layout")
+                return cur if isinstance(cur, dict) and cur.get("m") else None
+            if new:
+                st["layout"] = new
+            else:
+                st.pop("layout", None)
+            await self.save(uid, st)
+        return new
+
+    async def layout_put(self, uid: int, rec: Any) -> Dict[str, Any]:
+        """-> {"status": "off"} (no map data) | {"status": "reject", "why"} | {"status": "ok", "layout": effective record, "dropped": [ids]}.  Nothing is stored unless it is ok."""
+        G = LY.geom()
+        if G is None:
+            return {"status": "off"}
+        res = await LY.judge(G, rec)
+        if res["status"] != "ok":
+            return res
+        eff = {"v": 1, "g": G["planId"], "m": res["effective"]}
+        async with self._lock(uid):
+            st = await self.load(uid)
+            if eff["m"]:
+                st["layout"] = eff
+            else:
+                st.pop("layout", None)                                                        # (an empty record = no layout)
+            await self.save(uid, st)
+        return {"status": "ok", "layout": eff, "dropped": res["dropped"]}
 
     async def _candidates(self, uid: int, limit: int = 60) -> list:
         """(uid, state) of other kingdoms that look attackable (offline > 10 min, no shield).  Redis SCAN, bounded."""

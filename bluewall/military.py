@@ -869,8 +869,12 @@ def player_target(me: Dict[str, Any], victim: Dict[str, Any], vuid: int, rng: ra
     for g in GEMS:
         cap = PR.mine_rate(g, k) * PLAYER_LOOT_HOURS * gap_factor(lv["keep"], k)                      # (what a player can take is limited by his own castle level and the gap, like a bot's)
         loot[g] = int(min(cap, 0.20 * int(victim["gems"].get(g, 0))))
-    return {"kind": "player", "name": (str(victim.get("name") or "").strip() or NM.pick(rng))[:24], "emblem": emblem_of(victim, vuid), "ratio": round(ratio, 3), "levels": lv, "seed": rng.randrange(1, 2 ** 31),
+    spec = {"kind": "player", "name": (str(victim.get("name") or "").strip() or NM.pick(rng))[:24], "emblem": emblem_of(victim, vuid), "ratio": round(ratio, 3), "levels": lv, "seed": rng.randrange(1, 2 ** 31),
             "power": int(d), "loot": loot, "tesla": tesla, "guard": victim_guard(victim), "_victim": vuid}
+    lay = victim.get("layout")                                                                      # (TR2-S5: the attacker fights the DEFENDER's own arrangement; the effective record, only when he really moved something - made-up kingdoms never carry one)
+    if isinstance(lay, dict) and lay.get("m"):
+        spec["layout"] = lay
+    return spec
 
 
 def scout_wait(st: Dict[str, Any], now: float, cooldown: Optional[float] = None) -> float:

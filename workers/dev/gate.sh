@@ -36,6 +36,8 @@ for t in social_test.py gift_test.py clan_test.py prem_test.py econ_test.py hero
 bash srv.sh stop; bash srv.sh start >/dev/null
 PYTHONPATH=/home/claude/dev/stubcfg timeout 150 python3 bot_xfer_test.py >/tmp/gate_t.out 2>&1 && ok "bot_xfer_test (BlueBot -> Blue Wall conversions)" || { bad "bot_xfer_test"; tail -3 /tmp/gate_t.out; }
 timeout 100 python3 api_test6.py >/tmp/gate_t.out 2>&1 && ok "api_test6 (log / friends / clans)" || { bad "api_test6"; tail -3 /tmp/gate_t.out; }
+# TR2-S5 server half: /api/layout, the Python port of the 12 placement rules == the reference, rate limit, player_target.layout (mother)
+timeout 200 python3 -I /home/claude/dev/layout_server_test.py >/tmp/gate_t.out 2>&1; tail -1 /tmp/gate_t.out | grep -q "LAYOUT SERVER OK" && ok "layout_server_test (/api/layout + port of the 12 rules + rate + player_target)" || { bad "layout_server_test"; grep FAIL /tmp/gate_t.out | head -3; }
 bash srv.sh stop
 timeout 120 bash bsw.sh 1.15 >/tmp/gate_bsw.out 2>&1; tail -2 /tmp/gate_bsw.out
 grep -q "crossings.*0\|0 crossings" /tmp/gate_bsw.out && ok "battle sim: no wall crossings" || echo "??   check /tmp/gate_bsw.out"

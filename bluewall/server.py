@@ -18,6 +18,8 @@ Routes
   POST /api/army/{train|cancel|speedup|get}  {u,n | fam} -> train soldiers / creatures (barracks, training ground, stable, lair, workshop), housing = training ground
   POST /api/scout    next attack target (bot 10 % weaker .. 50 % stronger, or an offline player) — owner-only until battles are simulated server-side
   POST /api/battle/end  {id, rep:{sent,lost,destruction,stars,loot}} -> validated result: losses, loot, stars (owner-only for now)
+  GET  /api/layout   the player's own map arrangement (TR2-S5): {ok, layout: {v,g,m} | null}
+  POST /api/layout   {layout} -> judged with the 12 placement rules (layout.py): {ok, layout (effective), dropped} | 400 {why} | 413 | 429 {why:"rate"}
   POST /api/dev      owner only: {max | all:n | set:{ent:lv} | gems:n | fill | finish | reset} (preview tiers, test upgrades)
   GET  /healthz
 """
@@ -38,6 +40,7 @@ from aiohttp import web
 
 from . import access
 from . import auth as A
+from . import layout as LY
 from .state import STORE, StateUnavailable
 from . import progress as PR
 from . import military as MI
@@ -471,6 +474,36 @@ async def h_battle_end(req: web.Request) -> web.Response:
     return _nocache(web.json_response(out))
 
 
+async def h_layout(req: web.Request) -> web.Response:
+    # TR2-S5: the player's own map arrangement.  The client is the first line (it never sends a pose that breaks a rule); this is the check against tampering and against a changed plan.
+    uid = _bearer_uid(req)
+    if uid is None:
+        return _nocache(web.json_response({"ok": False, "reason": "locked"}, status=403))      # (no `why`: the client keeps its record and tries again; a `why` would mean «the server judged it»)
+    if req.method == "GET":
+        if _limited("y:" + str(uid), 120):
+            return _nocache(web.json_response({"ok": False, "reason": "slow"}, status=429))
+        return _nocache(web.json_response({"ok": True, "layout": await STORE.layout_get(uid)}))
+    if LY.limited(uid):                                                                         # (at most 5 accepted POSTs in any 5 s; the client sends one per >= 500 ms while he drags things about)
+        return _nocache(web.json_response({"ok": False, "why": "rate"}, status=429))
+    if (req.content_length or 0) > LY.MAX_BODY:
+        return _nocache(web.json_response({"ok": False, "why": "size"}, status=413))
+    raw = await req.read()                                                                      # (capped at 64 KB by the app; chunked bodies have no content_length)
+    if len(raw) > LY.MAX_BODY:
+        return _nocache(web.json_response({"ok": False, "why": "size"}, status=413))
+    try:
+        body = json.loads(raw.decode("utf-8"))
+    except Exception:  # noqa: BLE001
+        return _nocache(web.json_response({"ok": False, "why": "bad"}, status=400))
+    out = await STORE.layout_put(uid, body.get("layout") if isinstance(body, dict) else None)
+    if out["status"] == "off":
+        return _nocache(web.json_response({"ok": False, "why": "off"}, status=503))
+    if out["status"] == "reject":
+        log.info("layout uid=%s rejected: %s", uid, str(out["why"])[:40])
+        return _nocache(web.json_response({"ok": False, "why": out["why"]}, status=400))
+    log.info("layout uid=%s moved=%d dropped=%d", uid, len(out["layout"]["m"]), len(out["dropped"]))
+    return _nocache(web.json_response({"ok": True, "layout": out["layout"], "dropped": out["dropped"]}))
+
+
 async def h_perf(req: web.Request) -> web.Response:
     # the client's flight recorder (client/src/perf.js): slow frames + a device snapshot, one JSON line per report in the service log
     uid = _bearer_uid(req)
@@ -538,6 +571,8 @@ def make_app() -> web.Application:
     app.router.add_post("/api/scout", h_scout)
     app.router.add_post("/api/shop/buy", h_shop)
     app.router.add_post("/api/battle/end", h_battle_end)
+    app.router.add_get("/api/layout", h_layout)
+    app.router.add_post("/api/layout", h_layout)
     app.router.add_post("/api/dev", h_dev)
     app.router.add_post("/api/perf", h_perf)
     return app
