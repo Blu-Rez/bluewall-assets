@@ -83,7 +83,7 @@ async function start(opts) {
   // hard-to-notice steps (render scale, shadow / mirror refresh); resting (idle, panels, hidden) cools it back. "Cool mode" (settings) is the manual, stronger version.
   const GOV = { lvl: 0, active: 0, win: 0, wn: 0, base: 0, since: 0, steps: 0 }, GOVK = [1, 0.95, 0.9, 0.82];
   const cool = () => !!settings.coolMode;
-  const dpr = () => { let b = Math.min(window.devicePixelRatio || 1, Q.dpr); if (cool()) b = Math.min(b, 1); return Math.max(0.75, b * (+settings.resScale || 1) * DYN.s * REACH.dpr * (cool() ? 0.9 : GOVK[GOV.lvl])); };
+  const dpr = () => { let b = Math.min(window.devicePixelRatio || 1, REACH.cap || Q.dpr); if (cool()) b = Math.min(b, 1); return Math.max(REACH.own ? 0.5 : 0.75, b * (+settings.resScale || 1) * (REACH.own ? 1 : DYN.s) * REACH.dpr * (cool() ? 0.9 : (REACH.own ? 1 : GOVK[GOV.lvl]))); };   // RP1C: in hero mode the hero's own governor owns the resolution (REACH.cap / REACH.own)
   renderer.setPixelRatio(dpr());
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.2;
@@ -444,6 +444,7 @@ async function start(opts) {
     renderer.toneMappingExposure = P.exposure * (world.exposureMul ? world.exposureMul(inBattle) : 1);
     if (bloom) bloom.strength = P.bloom;
     pe('main:time'); hdt += dt; if (!uw && (!inHero || REACH.upd < 2 || frames % REACH.upd === 0)) { world.update(t, inHero ? Math.min(hdt, 0.1) : dt, camera); hdt = 0; } else if (!inHero || uw) hdt = 0; pb();      // (RP1B: in hero mode the world may update every 2nd drawn frame, with the time it missed)
+    scene.matrixWorldAutoUpdate = !(inHero && !uw && REACH.mtx && REACH.upd > 1 && frames % REACH.upd !== 0);       // RP1C: hero mode: between two world updates only the hero's own nodes get new matrices (cull.js era()); the world's nodes only move inside world.update
     if (inBattle) battle.frame(now, dt);
     if (inHero) hero.frame(now, dt);
     pe('battle');                                                           // (the attack plays on this very map: sim, camera, units, destruction)

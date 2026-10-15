@@ -23,6 +23,7 @@
 //   keep   castle_keep_stone_2 (D7: one look at every level), front (door) along the old keep's local +z, 27 m wide
 import * as THREE from 'three';
 import { mat4 } from './util.js';
+import { REACH } from './reach.js';                                  // RP1C: the hero mode's castle LOD radius (neutral = 0)
 import { tr2, TBatcher } from './tr2lib.js';
 import { TIER_KEYS, pieceTier, singleTier, tiersNeeded, tierState, fromInternal20 } from './tiers.js';
 import { levelOf } from './skin.js';
@@ -54,7 +55,7 @@ export function cellDist(pts, cam) {
   for (let i = 0; i < pts.length; i += 2) { const dx = pts[i] - cam.x, dz = pts[i + 1] - cam.z, d = dx * dx + dz * dz; if (d < m) m = d; }
   return Math.max(0, Math.sqrt(m + cy) - 12);
 }
-export const lodPick = (d, cur) => (cur === 'lo' ? (d < LOD_NEAR ? 'hi' : 'lo') : (d > LOD_FAR ? 'lo' : 'hi'));
+export const lodPick = (d, cur, n = REACH.lod || LOD_NEAR) => (cur === 'lo' ? (d < n ? 'hi' : 'lo') : (d > n + LOD_FAR - LOD_NEAR ? 'lo' : 'hi'));   // RP1C: hero mode (REACH.lod = 50) shows the full model within 50 m, not 80; REACH.lod 0 = unchanged
 export const towerWidth = (ring, R) => (ring === 'inner' ? INNER_TOWER_W : 2 * R + 0.6);
 // platform floor of a tower: the old weapon height, capped so the model is not stretched by more than MAX_STRETCH
 export const towerPlatform = (ring, R, h) => Math.min(h + 0.8, MAX_STRETCH * MED_NAT * towerWidth(ring, R));

@@ -17,6 +17,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { tr2 } from './tr2lib.js';
 import { createKind } from './crowd.js';
+import { REACH } from './reach.js';                                              // RP1C: hero mode: life beyond REACH.life metres is not packed or animated (neutral = 0 for everyone else)
 
 /* global __BUILD__ */
 const V = typeof __BUILD__ !== 'undefined' ? '?v=' + __BUILD__ : '';
@@ -97,6 +98,7 @@ export function fauna(spec, { len = 2, capacity = 32, shadows = true, name = '' 
   kind.t = 0;
   const list = [];
   kind.update = (t, camera, { maxDist = 700 } = {}) => {
+    if (REACH.life) maxDist = Math.min(maxDist, REACH.life);       // RP1C: hero mode: only the animals near her are packed
     kind.t = t;
     _pm.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse); _fr.setFromProjectionMatrix(_pm);
     list.length = 0; const cp = camera.position;
@@ -137,7 +139,8 @@ export function horses({ len = 5.6, capacity = 28, shadows = true } = {}) {
   const o = { group, kinds: ks, fit: { k: 1, y: 0 }, len, static: true, people: false, stats: {}, info: {}, has: ks[0].has };
   o.add = (spec = {}) => { const c = ((spec.coat | 0) % 3 + 3) % 3, p = ks[c].add(spec); p.coat = c; return p; };
   o.remove = (p) => p.kind && p.kind.remove(p);
-  o.update = (t, camera, opts) => { for (const k of ks) k.update(t, camera, opts); };
+  const _lo = {};
+  o.update = (t, camera, opts) => { if (REACH.life) { opts = Object.assign(_lo, opts); _lo.maxDist = Math.min(_lo.maxDist || 700, REACH.life); } for (const k of ks) k.update(t, camera, opts); };       // RP1C: hero mode: only the villagers near her are animated
   Object.defineProperty(o, 'instances', { get: () => ks.flatMap((k) => k.instances) });
   return o;
 }
