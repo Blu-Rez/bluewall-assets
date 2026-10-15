@@ -3,6 +3,7 @@
 // sun & moon directions, and the Jalali date 800 years ago for the HUD.
 import * as THREE from 'three';
 import { tintP } from './theme.js';
+import { horizonAt, horizonTinted } from './skyhaze.js';       // GR1:
 
 export const CYCLE_MIN = 60;
 
@@ -58,7 +59,8 @@ export function sample(h) {
   const src = h > 5.8 && h < 18.4 ? P.sunDir : P.moonDir;
   P.keyDir.copy(src); if (P.keyDir.y < 0.28) { P.keyDir.y = 0.28; P.keyDir.normalize(); }
   P.hour = h;
-  return tintP(P);                      // p35 P9: the castle level's mood (theme.js) tints light / sky / fog; at level 30 nothing changes
+  horizonAt(h, P);                      // GR1: the fog IS the sky's colour at the horizon at every hour (P.hzn, P.hznSun = the same, toward the light)
+  return horizonTinted(tintP(P));       // GR1:                      // p35 P9: the castle level's mood (theme.js) tints light / sky / fog; at level 30 nothing changes
 }
 
 // ------------------------------------------------------------------ Jalali date (kingdom era: 1405 -> 750)

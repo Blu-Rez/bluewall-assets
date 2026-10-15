@@ -32,8 +32,15 @@ export function buildSky(scene, M, { flare = true, stars: withStars = true, env 
   DU.turbidity.value = 4; DU.rayleigh.value = 1.6; DU.mieCoefficient.value = 0.005; DU.mieDirectionalG.value = 0.8;
   DU.cloudScale.value = 0.00022; DU.cloudSpeed.value = 0.00003; DU.cloudCoverage.value = 0.35; DU.cloudDensity.value = 0.55; DU.cloudElevation.value = 0.55;
   day.material.uniforms.uGain = { value: 1.0 }; day.material.uniforms.uFlash = { value: 0 }; day.material.uniforms.uGrey = { value: 0 };
+  // GR1_R2: the horizon band — the sky paints EXACTLY the fog colour (tod: P.hzn, weather-greyed like the fog) within ~11° of the horizon, warmer toward the light (uHzS)
+  const HZ = { L: { value: new THREE.Color() }, S: { value: new THREE.Color() }, K: { value: new THREE.Vector2(1, 0) }, W: { value: env ? 0 : 1 }, H: { value: 0.2 } };
+  Object.assign(DU, { uHzL: HZ.L, uHzS: HZ.S, uHzK: HZ.K, uHzW: HZ.W, uHzH: HZ.H });
+  const HZ_DECL = 'uniform vec3 uHzL; uniform vec3 uHzS; uniform vec2 uHzK; uniform float uHzW; uniform float uHzH;';
   day.material.fragmentShader = day.material.fragmentShader
-    .replace('uniform float time;', 'uniform float time; uniform float uGain; uniform float uFlash; uniform float uGrey;')
+    .replace('uniform float time;', 'uniform float time; uniform float uGain; uniform float uFlash; uniform float uGrey; ' + HZ_DECL)
+    .replace('#include <colorspace_fragment>', `{ float ws = pow(clamp(0.5 + 0.5 * dot(normalize(direction.xz + vec2(1e-5)), uHzK), 0.0, 1.0), 3.0);
+        float we = (1.0 - smoothstep(0.0, uHzH, direction.y)) * uHzW; gl_FragColor.rgb = mix(gl_FragColor.rgb, mix(uHzL, uHzS, ws), we); }
+      #include <colorspace_fragment>`)
     .replace(/gl_FragColor = vec4\(\s*([a-zA-Z]+)\s*,\s*1\.0\s*\);/, (m, v) => `{ vec3 c = ${v} * uGain; float l = dot(c, vec3(0.3,0.55,0.15)); c = mix(c, vec3(l)*vec3(0.92,0.96,1.05), uGrey); c += vec3(0.55,0.65,0.9)*uFlash; gl_FragColor = vec4(c, 1.0); }`);
   group.add(day);
 
@@ -42,11 +49,13 @@ export function buildSky(scene, M, { flare = true, stars: withStars = true, env 
     uZen: { value: new THREE.Color() }, uMid: { value: new THREE.Color() }, uHor: { value: new THREE.Color() },
     uMoon: { value: new THREE.Vector3(0, 1, 0) }, uMoonUp: { value: 1 }, uA: { value: 1 },
     uCover: { value: 0.3 }, uTime: { value: 0 }, uFlash: { value: 0 }, uCloudCol: { value: new THREE.Color(0.06, 0.08, 0.14) },
+    uHzL: HZ.L, uHzS: HZ.S, uHzK: HZ.K, uHzW: HZ.W, uHzH: HZ.H,
   };
   const dome = new THREE.Mesh(new THREE.SphereGeometry(1400, 48, 24), new THREE.ShaderMaterial({
     side: THREE.BackSide, depthWrite: false, fog: false, transparent: true, uniforms: U,
     vertexShader: 'varying vec3 vDir; void main(){ vDir = normalize(position); vec4 p = modelViewMatrix*vec4(position,1.0); gl_Position = projectionMatrix*p; gl_Position.z = gl_Position.w; }',
-    fragmentShader: `varying vec3 vDir; uniform vec3 uZen, uMid, uHor, uMoon, uCloudCol; uniform float uMoonUp, uA, uCover, uTime, uFlash;
+    fragmentShader: `varying vec3 vDir; uniform vec3 uZen, uMid, uHor, uMoon, uCloudCol; uniform float uMoonUp, uA, uCover, uTime, uFlash; ${HZ_DECL}
+      vec3 hzSRGB(vec3 c){ return mix(c * 12.92, 1.055 * pow(max(c, vec3(0.0)), vec3(1.0 / 2.4)) - 0.055, step(0.0031308, c)); }
       ${NOISE_GLSL}
       void main(){
         vec3 d = normalize(vDir); float h = clamp(d.y, -0.25, 1.0);
@@ -64,6 +73,9 @@ export function buildSky(scene, M, { flare = true, stars: withStars = true, env 
           c = mix(c, cc, mask * 0.92);
         }
         c += vec3(0.5, 0.6, 0.9) * uFlash * 0.35;
+        c = hzSRGB(c);         // GR1_R2: the tod keyframes are sRGB hex colours (-> linear in P): write them back as sRGB (this shader has no colorspace chunk, so it used to show the linear numbers = near black at night, brown at dusk)
+        { float ws = pow(clamp(0.5 + 0.5 * dot(normalize(d.xz + vec2(1e-5)), uHzK), 0.0, 1.0), 3.0);        // same horizon band as the day sky (display values here)
+          float we = (1.0 - smoothstep(0.0, uHzH, d.y)) * uHzW; c = mix(c, hzSRGB(mix(uHzL, uHzS, ws)), we); }
         gl_FragColor = vec4(c, uA);
       }`,
   }));
@@ -137,15 +149,22 @@ export function buildSky(scene, M, { flare = true, stars: withStars = true, env 
     DU.cloudCoverage.value = cover; DU.cloudDensity.value = 0.45 + cover * 0.45;
     DU.showSunDisc.value = env ? 0 : 1 - THREE.MathUtils.smoothstep(cover, 0.55, 0.85);
     DU.uGain.value = (env ? 0.17 : 0.34) * (1 - grey * 0.45) * THREE.MathUtils.lerp(1, 0.32, THREE.MathUtils.smoothstep(P.sunDir.y, 0.1, 0.9)); DU.uGrey.value = grey; DU.uFlash.value = flash;
+    { const fg = scene.fog ? scene.fog.color : P.hzn;                       // GR1_R2: the horizon band = the fog colour (weather greys both the same way)
+      HZ.L.value.copy(fg || P.fog); HZ.S.value.copy(P.hznSun || fg || P.fog).lerp(HZ.L.value, grey);
+      HZ.K.value.set(P.keyDir.x, P.keyDir.z); if (HZ.K.value.lengthSq() < 1e-6) HZ.K.value.set(1, 0); else HZ.K.value.normalize(); }
     U.uZen.value.copy(P.zen); U.uMid.value.copy(P.mid); U.uHor.value.copy(P.hor);
     U.uMoon.value.copy(P.moonDir); U.uMoonUp.value = P.moonUp * P.night * (1 - cover * 0.6);
-    U.uA.value = THREE.MathUtils.smoothstep(P.night, 0.05, 0.75); U.uCover.value = cover; U.uFlash.value = flash;
+    // GR1_R2: twilight — the Preetham sky goes dark-brown / black as the sun reaches the horizon, so from sun-on-the-horizon down the authored dome gradient (tod hor -> mid -> zen)
+    // takes over (up to 90 %), instead of a black sky over a pink horizon; by day (sun > 10°) nothing changes
+    const tw = env ? 0 : 0.9 * (1 - THREE.MathUtils.smoothstep(P.sunDir.y, 0.02, 0.18)) * (1 - grey * 0.7);
+    HZ.H.value = 0.2 + 0.3 * Math.max(P.night, env ? 0 : 1 - THREE.MathUtils.smoothstep(P.sunDir.y, 0.02, 0.18));      // the glow band climbs from ~11° (day) to ~30° (twilight / night), so the ridges never stand against a black sky
+    U.uA.value = Math.max(THREE.MathUtils.smoothstep(P.night, 0.05, 0.75), tw); U.uCover.value = cover; U.uFlash.value = flash;
     U.uCloudCol.value.setRGB(0.05 + 0.04 * (1 - grey), 0.065 + 0.04 * (1 - grey), 0.11 + 0.04 * (1 - grey));
     dome.visible = U.uA.value > 0.002;
     starMat.uniforms.uA.value = P.stars * (1 - cover * 0.95);
     moon.position.copy(P.moonDir).multiplyScalar(1250); halo.position.copy(moon.position);
     moon.material.opacity = P.moonUp * (1 - cover * 0.8); halo.material.opacity = 0.55 * P.moonUp * P.night * (1 - cover * 0.7);
-    sunGlow.position.copy(P.sunDir).multiplyScalar(1250); sunGlow.material.opacity = 0.75 * P.sunUp * (1 - cover * 0.9);
+    sunGlow.position.copy(P.sunDir).multiplyScalar(1250); sunGlow.material.opacity = 0.75 * P.sunUp * (1 - cover * 0.9) * (1 - 0.5 * THREE.MathUtils.smoothstep(P.sunDir.y, 0.3, 0.85));   // GR1_R2: a high sun is a small bright disc, not a white-blue blob
     sunGlow.material.color.copy(P.key);
     if (lens) {
       lens.carrier.position.copy(P.sunDir).multiplyScalar(1200);

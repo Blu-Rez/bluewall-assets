@@ -8,6 +8,7 @@ import { nomads, nomadD, stableGrounds } from './nomads.js';
 import { wsD, WS_KINDS } from './worksites.js';
 import { season } from './tod.js';
 import { createGround } from './ground_near.js';       // GR1
+import { createBackdrop } from './backdrop.js';         // GR1_R2
 
 const SPLAT = 336;       // world units covered by the detailed painted ground map (castle + town)
 const FAR = 1100;        // world units covered by the coarse painted map (roads, fields, camp, mines)
@@ -43,6 +44,26 @@ export function buildTerrain(scene, M, quality, T = null, renderer = null, opts 
     const k = j * n + i, x = xs[i], z = xs[j], h = L.height(x, z);
     hs[k] = h; pos[k * 3] = x; pos[k * 3 + 1] = h; pos[k * 3 + 2] = z;
   }
+  // GR1_R2: the needle tips of the mountain ring (ridged noise: saw-tooth spires 20-250 m wide that stood against the sky as a black jagged ceiling) lose most of their detail:
+  // h' = blur(h) + (h - blur(h)) * (1 - 0.7 w): the massifs keep their height and shape, the crests and spires between 20 and 200 m shrink to 30 %.  w fades in from r = 430 to 540 m,
+  // only on high ground (> 40 m) and never in the forest (forestDensity, so no tree is left floating).  (frC: the forest density, kept for the colour pass)
+  const frC = new Float32Array(n * n).fill(-1);
+  {
+    const R0 = 430, R1 = 540, wS = new Float32Array(n * n); let any = false;
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const k = j * n + i, r = Math.hypot(xs[i], xs[j]); if (r <= R0) continue;
+      const fr = forestDensity(xs[i], xs[j]); frC[k] = fr;
+      const w = smooth(R0, R1, r) * (1 - smooth(0.005, 0.06, fr)) * smooth(40, 100, hs[k]); wS[k] = w; if (w > 0) any = true;
+    }
+    if (any) {
+      const hb = Float32Array.from(hs), tmp = new Float32Array(n * n);
+      for (let it = 0; it < 50; it++) {
+        for (let j = 1; j < n - 1; j++) for (let i = 1; i < n - 1; i++) { const k = j * n + i; tmp[k] = wS[k] > 0 ? (hb[k - 1] + hb[k + 1] + hb[k - n] + hb[k + n]) * 0.25 : hb[k]; }
+        for (let j = 1; j < n - 1; j++) for (let i = 1; i < n - 1; i++) hb[j * n + i] = tmp[j * n + i];
+      }
+      for (let k = 0; k < n * n; k++) if (wS[k] > 0) { hs[k] = hb[k] + (hs[k] - hb[k]) * (1 - 0.7 * wS[k]); pos[k * 3 + 1] = hs[k]; }
+    }
+  }
   const N = L.NOISE, c = new THREE.Color();
   // how far (m) every vertex is from open water: a two-pass chamfer over the real grid spacing. It drives the lush bank meadow in the ground bake
   const LVW = L.MOAT.level, wdist = new Float32Array(n * n).fill(1e4);
@@ -70,7 +91,7 @@ export function buildTerrain(scene, M, quality, T = null, renderer = null, opts 
     const i0 = Math.max(0, i - 1), i1 = Math.min(SEG, i + 1), j0 = Math.max(0, j - 1), j1 = Math.min(SEG, j + 1);
     const sx = (hs[j * n + i1] - hs[j * n + i0]) / (xs[i1] - xs[i0]), sz = (hs[j1 * n + i] - hs[j0 * n + i]) / (xs[j1] - xs[j0]);
     const slope = Math.hypot(sx, sz);
-    const nv = N.fbm(x * 0.03, z * 0.03, 3) * 0.5 + 0.5, fr = forestDensity(x, z);
+    const nv = N.fbm(x * 0.03, z * 0.03, 3) * 0.5 + 0.5, fr = frC[k] >= 0 ? frC[k] : forestDensity(x, z);
     c.copy(COL.grassA).lerp(COL.grassB, nv * 0.8);
     c.lerp(COL.dry, smooth(0.55, 0.85, N.fbm(x * 0.01 + 7, z * 0.01, 2) * 0.5 + 0.5) * 0.5);
     c.lerp(COL.forest, fr * 0.8);
@@ -128,19 +149,20 @@ export function buildTerrain(scene, M, quality, T = null, renderer = null, opts 
     } catch (e) { console.warn('GR1 ground', e); G = null; }
   }
   const FLATN = new THREE.DataTexture(new Uint8Array([128, 128, 255, 255]), 1, 1); FLATN.needsUpdate = true; FLATN.wrapS = FLATN.wrapT = THREE.RepeatWrapping;
+  const MTH = { value: 1 };            // GR1_R2: strength of the mountain aerial perspective (1 = on; 0 = off, for A/B frames)
   const mat = new THREE.MeshStandardMaterial({ vertexColors: !bake, roughness: 0.97, metalness: 0, envMapIntensity: 0.2 });
   if (bake) {
     mat.customProgramCacheKey = () => 'bwterrain-bake';
     mat.onBeforeCompile = (sh) => {
       Object.assign(sh.uniforms, { uBakeN: { value: bake.near }, uBakeF: { value: bake.far }, uNear: { value: NEAR }, uDetail: { value: M.detail },
-        uMeadow: { value: T.ph_rock }, uMeadowL: { value: bake.meadowL }, uCliff: { value: T.ph_mossrock || T.ph_rock }, uCliffN: { value: T.ph_mossrock_n || FLATN }, uCliffL: { value: bake.cliffL } });
+        uMeadow: { value: T.ph_rock }, uMeadowL: { value: bake.meadowL }, uCliff: { value: T.ph_mossrock || T.ph_rock }, uCliffN: { value: T.ph_mossrock_n || FLATN }, uCliffL: { value: bake.cliffL }, uMtHaze: MTH });
       sh.vertexShader = sh.vertexShader
         .replace('#include <common>', '#include <common>\nvarying vec3 vWP; varying float vNy; varying vec2 vTUv; varying vec3 vNrm;')
         .replace('#include <beginnormal_vertex>', '#include <beginnormal_vertex>\nvNy = objectNormal.y; vNrm = objectNormal;')
         .replace('#include <begin_vertex>', '#include <begin_vertex>\nvWP = (modelMatrix * vec4(transformed, 1.0)).xyz; vTUv = uv;');
       sh.fragmentShader = sh.fragmentShader
         .replace('#include <common>', `#include <common>
-          uniform sampler2D uBakeN, uBakeF, uDetail, uMeadow, uCliff, uCliffN; uniform float uNear, uMeadowL, uCliffL; varying vec3 vWP; varying float vNy; varying vec2 vTUv; varying vec3 vNrm;
+          uniform sampler2D uBakeN, uBakeF, uDetail, uMeadow, uCliff, uCliffN; uniform float uNear, uMeadowL, uCliffL, uMtHaze; varying vec3 vWP; varying float vNy; varying vec2 vTUv; varying vec3 vNrm;
           float gStp = 0.0; vec3 gW = vec3(0.0);`)
         .replace('#include <color_fragment>', `#include <color_fragment>
           {
@@ -187,6 +209,13 @@ export function buildTerrain(scene, M, quality, T = null, renderer = null, opts 
             float k = gStp * (1.0 - smoothstep(350.0, 800.0, distance(vWP, cameraPosition)));
             normal = normalize(mix(normal, normalize((viewMatrix * vec4(Nb, 0.0)).xyz), k * 0.9));
           }`);
+      // GR1_R2: aerial perspective for the mountains — high ground more than ~150 m away melts toward the fog (= the sky's horizon colour) instead of staying dark rock:
+      // by 600 m a slope is ~90 % haze, so the ring reads as pale layered ridges, not a black ceiling. (the valley floor, y < 8 m, is untouched; thinner from a high camera: the strategic view keeps its mountain colours)
+      sh.fragmentShader = sh.fragmentShader.replace('#include <fog_fragment>', `#include <fog_fragment>
+        #ifdef USE_FOG
+        { float mtK = smoothstep(8.0, 120.0, vWP.y) * smoothstep(130.0, 640.0, distance(vWP, cameraPosition)) * max(exp(-max(cameraPosition.y - 20.0, 0.0) / 140.0), 0.5) * uMtHaze;
+          gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, clamp(mtK * 0.86, 0.0, 0.86)); }
+        #endif`);
       if (G) G.patch(sh);       // GR1
     };
   } else {
@@ -221,6 +250,7 @@ export function buildTerrain(scene, M, quality, T = null, renderer = null, opts 
     return tx + tz <= 1 ? a + (b - a) * tx + (c - a) * tz : d + (c - d) * (1 - tx) + (b - d) * (1 - tz);
   };
   if (G) { G.attach(fastHeight); if (G.detail() > 0) G.build(); }       // GR1 (the map's water test reads the grid, not the noise; 'low' builds nothing until setDetail(>0))
+  mesh.userData.mtHaze = MTH;
   return { mesh, height: L.height, fastHeight, bake, ground: G };
 }
 
@@ -548,40 +578,8 @@ function paintGroundDay() {
 }
 
 // ------------------------------------------------------------------ distant ranges
-// Two rings of far mountains beyond the playable terrain: jagged ridgelines with
-// snow caps that fade into the haze (aerial perspective comes from the fog).
-export function buildBackdrop(scene) {
-  const N = L.NOISE, SEG = 300, rings = [[EXTENT * 0.98, 1250, 0], [1350, 2200, 1]];
-  const meshes = [];
-  for (const [r0, r1, layer] of rings) {
-    const RS = 7, pos = [], col = [], idx = [], c = new THREE.Color();
-    const rockA = new THREE.Color(layer ? '#46505f' : '#3d424a'), rockB = new THREE.Color(layer ? '#5f6b7e' : '#5c5f66'), snow = new THREE.Color('#eef3f8'), forest = new THREE.Color('#33452f');
-    for (let j = 0; j <= RS; j++) for (let i = 0; i <= SEG; i++) {
-      const a = (i / SEG) * Math.PI * 2, t = j / RS, r = r0 + (r1 - r0) * t;
-      const ax = Math.cos(a), az = Math.sin(a);
-      const ridge = N.ridged(ax * 3.2 + layer * 7, az * 3.2 + 11, 6), big = N.fbm(ax * 1.4 + layer * 3, az * 1.4 - 5, 3) * 0.5 + 0.5;
-      const prof = Math.sin(Math.min(1, t * 1.25) * Math.PI) ** 0.7;                 // rises from the inner edge, falls behind the crest
-      let h = prof * (layer ? 380 + 620 * big * (0.55 + ridge) : 160 + 360 * big * (0.5 + ridge));
-      h += N.fbm(ax * 18 + t * 3, az * 18, 3) * 26 * prof;
-      if (j === 0) h = layer ? 120 : -10;
-      const x = ax * r, z = az * r;
-      pos.push(x, h, z);
-      const sn = Math.max(0, Math.min(1, (h - (layer ? 520 : 330) + N.fbm(ax * 30, az * 30, 2) * 60) / 60));
-      c.copy(rockA).lerp(rockB, ridge);
-      if (!layer) c.lerp(forest, Math.max(0, 1 - h / 120) * 0.8);
-      c.lerp(snow, sn);
-      col.push(c.r, c.g, c.b);
-    }
-    for (let j = 0; j < RS; j++) for (let i = 0; i < SEG; i++) { const a2 = j * (SEG + 1) + i, b = a2 + 1, d = a2 + SEG + 1, e = d + 1; idx.push(a2, d, b, b, d, e); }
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-    g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
-    g.setIndex(idx); g.computeVertexNormals();
-    const m = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ vertexColors: true }));
-    m.name = 'backdrop' + layer; m.frustumCulled = false; m.matrixAutoUpdate = false; scene.add(m); meshes.push(m);
-  }
-  return meshes;
-}
+// GR1_R2: the far mountains live in backdrop.js now (one mesh, four soft layered ridges, aerial perspective baked per hour toward the sky's own horizon colour).
+export function buildBackdrop(scene, opts) { return createBackdrop(scene, opts); }
 
 // ------------------------------------------------------------------ water
 // The one water surface of the kingdom (town moat, river, lake): a single plane shaded from a baked map
