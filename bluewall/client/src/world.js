@@ -253,6 +253,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     } catch (e) { console.warn('townplan', e); tplan = null; }
     ctx.tr2town = !!tplan && await Promise.race([warmTr2Town, new Promise((r) => setTimeout(() => r(false), 8000))]);          // TR2-S4a-R2: models there => buildTown leaves the generic + hamlet houses to the Tripo ones (town_build.js), else it draws its own
     ctx.town = buildTown(ctx, A, Q, scene, tplan);
+    if (terrain.ground) terrain.ground.setFootprints([...(ctx.town.houses || []), ...(tplan ? tplan.lots : [])]); // GR1: contact shadows under the houses
     if (tplan) try { ctx.townTids = registerTownTargets(ctx, lv0); } catch (e) { console.warn('town targets', e); ctx.townTids = new Map(); }
     ctx.mines = buildMines(ctx, A, Q, scene, anim);
     ctx.military = buildMilitary(ctx, { scene, A, Q });
@@ -384,6 +385,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
   let lodT = -9, mlodT = -9, c3T = -9, world_keepClear = 0;
   function update(t, dt, camera) {
     pb();
+    if (camera && terrain.ground) terrain.ground.update(camera, dt, t); // GR1: tufts around the hero
     weather.update(t, dt, camera); pe('weather');
     if (camera && t - mlodT > 0.3) { mlodT = t; meadowLod(camera); }
     if (camera && ctx.tr2c && t - c3T > 0.25) { c3T = t; ctx.tr2c.lod(camera); }        // TR2-S3: the castle's cells show their full or their lo model by the camera distance
@@ -693,6 +695,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
   // the green Dragonlings at the Lair (dragonling_home.js): an egg until the shop's egg is bought, then two of them
   const setDragonlings = (owned) => { if (!dlings) { try { dlings = createHomeDragonlings({ scene, height: terrain.fastHeight || height }); ctx.levelHooks.push(() => dlings.refresh()); } catch (e) { console.warn('dragonlings', e); return; } } dlings.set(owned); };
   return {
+    ground: terrain.ground, // GR1: near ground (setLook / setDetail / groundH)
     rings: ctx.rings, tr2c: ctx.tr2c, update, setTime, picks, water, get keptClear() { return world_keepClear; }, get lod() { return forest.ez ? forest.ez.lod : null; }, fastHeight: terrain.fastHeight, setBattle, targetDown, clearZones, key, stage, get ballistas() { return extras.ballistas || null; }, get dragon() { return dragon; }, giants: units.giants, shake: shakeReq, creatures, setOption, startLate, revealLate, lateProgress, setLateBudget, patrols, events, get late() { return extras; },
     setWeather: (m, snap) => weather.setMode(m, snap), weatherIcon: (base) => weather.icon() || base, weather,
     // p37 (old N6): a phone's GPU that lost its context comes back with every target EMPTY (the picture went half as bright, the ground black): paint again what was drawn into targets

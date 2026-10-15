@@ -32,6 +32,7 @@ PY
 ( bash /home/claude/dev/m43_units_test.sh 2>&1 | tail -1 | grep -q "M43 OK" ) && ok "m43_units_test (U1-U4 assets: files / size / credits / stories / LATE)" || bad "m43_units_test (U1-U4 assets)"
 ( bash /home/claude/dev/d1_test.sh 2>&1 | tail -1 | grep -q "D1 OK" ) && ok "d1_test (one death effect, 31 types)" || bad "d1_test (one death effect)"
 ( bash /home/claude/dev/st1_test.sh 2>&1 | tail -1 | grep -q "ST1 OK" ) && ok "st1_test (Treasury Quarter: nine storages, doors, fit, skin ids, family files)" || bad "st1_test (Treasury Quarter)"
+( bash /home/claude/dev/gr1_test.sh 2>&1 | tail -1 | grep -q "GR1 OK" ) && ok "gr1_test (roads: dead ends / water / tiers; near-ground map + shader budget)" || bad "gr1_test (roads + near ground)"
 ( bash /home/claude/dev/t1_test.sh 2>&1 | tail -1 | grep -q "T1 OK" ) && ok "t1_test (building sheets)" || bad "t1_test (building sheets)"
 ( bash /home/claude/dev/ld1_test.sh 2>&1 | tail -1 | grep -q "LD1 OK" ) && ok "ld1_test (loader sword)" || bad "ld1_test (loader sword)"
 ( bash /home/claude/dev/p1_test.sh 2>&1 | tail -1 | grep -q "P1 OK" ) && ok "p1_test (production lots + mills)" || bad "p1_test (production lots + mills)"

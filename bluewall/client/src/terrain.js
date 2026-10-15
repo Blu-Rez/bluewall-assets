@@ -7,6 +7,7 @@ import { hamlets, hamletD } from './hamlets.js';
 import { nomads, nomadD, stableGrounds } from './nomads.js';
 import { wsD, WS_KINDS } from './worksites.js';
 import { season } from './tod.js';
+import { createGround } from './ground_near.js';       // GR1
 
 const SPLAT = 336;       // world units covered by the detailed painted ground map (castle + town)
 const FAR = 1100;        // world units covered by the coarse painted map (roads, fields, camp, mines)
@@ -115,6 +116,17 @@ export function buildTerrain(scene, M, quality, T = null, renderer = null, opts 
     splat.near.dispose(); splat.far.dispose();
     for (const k of ['ph_grass2', 'ph_snow', 'ph_mud', 'ph_leaves', 'ph_path']) if (T[k]) T[k].dispose();       // (ph_mossrock stays: the cliffs use it at run time)
   }
+  // GR1: near ground (road/wear map, photo layers, looks) — patches this same program, no extra program
+  let G = null;
+  if (bake) {
+    try {
+      G = createGround({ renderer, T, quality, scene });
+      const MK = marketSpot();
+      G.setPaved([...innerLanes(), ...(L.PLAZA ? [{ disc: true, x: L.PLAZA.x, z: L.PLAZA.z, r: L.PLAZA.r }] : []), ...(MK ? [{ disc: true, x: MK.x, z: MK.z, r: MK.r }] : [])]);
+      { const sw0 = seasonWeights(opts.season); G.setSeason(sw0.w, sw0.snow); }
+      const redo0 = bake.redo; bake.redo = (s) => { redo0(s); if (s) { const q = seasonWeights(s); G.setSeason(q.w, q.snow); } };
+    } catch (e) { console.warn('GR1 ground', e); G = null; }
+  }
   const FLATN = new THREE.DataTexture(new Uint8Array([128, 128, 255, 255]), 1, 1); FLATN.needsUpdate = true; FLATN.wrapS = FLATN.wrapT = THREE.RepeatWrapping;
   const mat = new THREE.MeshStandardMaterial({ vertexColors: !bake, roughness: 0.97, metalness: 0, envMapIntensity: 0.2 });
   if (bake) {
@@ -175,6 +187,7 @@ export function buildTerrain(scene, M, quality, T = null, renderer = null, opts 
             float k = gStp * (1.0 - smoothstep(350.0, 800.0, distance(vWP, cameraPosition)));
             normal = normalize(mix(normal, normalize((viewMatrix * vec4(Nb, 0.0)).xyz), k * 0.9));
           }`);
+      if (G) G.patch(sh);       // GR1
     };
   } else {
     // fallback (no textures / no renderer): plain vertex colours with the splat painting on top
@@ -189,7 +202,7 @@ export function buildTerrain(scene, M, quality, T = null, renderer = null, opts 
     };
   }
   const mesh = new THREE.Mesh(g, mat);
-  mesh.receiveShadow = true; mesh.name = 'terrain'; mesh.userData.bake = bake;
+  mesh.receiveShadow = true; mesh.name = 'terrain'; mesh.userData.bake = bake; mesh.userData.ground = G;
   mesh.matrixAutoUpdate = false;
   scene.add(mesh);
   // O(1) height lookup on the rendered grid (per-frame users: camera, herds, riders, carts)
@@ -207,7 +220,8 @@ export function buildTerrain(scene, M, quality, T = null, renderer = null, opts 
     // same diagonal split as the mesh triangles (a,d,b)/(b,d,e)
     return tx + tz <= 1 ? a + (b - a) * tx + (c - a) * tz : d + (c - d) * (1 - tx) + (b - d) * (1 - tz);
   };
-  return { mesh, height: L.height, fastHeight, bake };
+  if (G) { G.attach(fastHeight); if (G.detail() > 0) G.build(); }       // GR1 (the map's water test reads the grid, not the noise; 'low' builds nothing until setDetail(>0))
+  return { mesh, height: L.height, fastHeight, bake, ground: G };
 }
 
 // ------------------------------------------------------------------ ground bake
@@ -363,6 +377,12 @@ export const roadPoints = () => ROAD;
 function computeRoad() { buildRoads(); const m = ROADS.find((r) => r.name === 'main'); ROAD = m ? m.pts : []; }
 function blankTex() { const t = new THREE.DataTexture(new Uint8Array(4), 1, 1); t.needsUpdate = true; return t; }
 
+// GR1: the castle's painted lanes (also drawn into the near-ground map, so they get the same crisp edges and cobble detail)
+export function innerLanes() {
+  const pz = L.PLAZA, ig = L.segMid(L.INNER, L.INNER_GATE_SEG), W = [5, 4.5, 3.5, 3.5, 3];
+  return [[[L.GATE.x - L.GATE.nx * 2, L.GATE.z - L.GATE.nz * 2], [34, 18], [pz.x, pz.z]], [[pz.x, pz.z], [ig[0] + 6, ig[1] + 2], [ig[0], ig[1]]],
+    [[pz.x, pz.z], [30, -14], [34, -26]], [[pz.x, pz.z], [-10, 22], [-30, 22]], [[pz.x, pz.z], [6, 30]]].map((pts, i) => ({ pts, w: W[i] }));
+}
 function paintGround() {
   const S = 2048, c = document.createElement('canvas'); c.width = c.height = S;
   const g = c.getContext('2d'), rnd = Math.random;
@@ -403,13 +423,11 @@ function paintGround() {
   g.restore();
   // cobbled streets: courtyard lanes + the town's streets
   const cob = 'rgba(92,90,88,0.95)', gut = 'rgba(58,52,44,0.6)';
-  const pz = L.PLAZA, ig = L.segMid(L.INNER, L.INNER_GATE_SEG);
-  const inner = [[[L.GATE.x - L.GATE.nx * 2, L.GATE.z - L.GATE.nz * 2], [34, 18], [pz.x, pz.z]], [[pz.x, pz.z], [ig[0] + 6, ig[1] + 2], [ig[0], ig[1]]],
-    [[pz.x, pz.z], [30, -14], [34, -26]], [[pz.x, pz.z], [-10, 22], [-30, 22]], [[pz.x, pz.z], [6, 30]]];
+  const pz = L.PLAZA, inner = innerLanes().map((q) => q.pts);
   const streets = ROADS.filter((r) => r.kind === 'cobble');
   for (const R of streets) line(R.pts, R.w + 1.2, gut);
   for (const R of streets) line(R.pts, R.w, cob);
-  inner.forEach((pts, i) => line(pts, [5, 4.5, 3.5, 3.5, 3][i], cob));
+  innerLanes().forEach((q) => line(q.pts, q.w, cob));
   const MK = marketSpot();
   if (MK) {
     g.fillStyle = gut; g.beginPath(); g.arc(W(MK.x), W(MK.z), (MK.r + 0.8) * PX, 0, 6.29); g.fill();

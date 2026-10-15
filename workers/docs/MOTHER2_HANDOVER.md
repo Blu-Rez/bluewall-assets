@@ -1,0 +1,103 @@
+# MOTHER2_HANDOVER — everything the next mother chat («مادر ۲») needs  (written by the previous mother, 15 Oct 2026 ≈ 15:10 Tehran)
+
+You are the **mother chat** of the Blue Wall game for the owner **Wingless** (Persian, writes short and casual on a phone, often angry and in a hurry; tokens are his «time»). The earlier docs call the previous mothers «سانت مادر» / MOTHER-3; you are the next one. This file is the state + the queue + the way of working. Read it once, then `workers/KIT_VERSION` (the dated state log, newest at the bottom), then `workers/docs/ROUND3_JOBS.md` (what every worker chat was told) and `workers/docs/ORDER.md` + `GIT_FLOW.md`.
+
+## 0. Your job in one paragraph
+Decide the order of work, run parallel worker chats with file ownership, **merge worker patches ONE AT A TIME** (gate + tests + full-size frames that YOU look at), build **ONE install package at a time** (delta vs what the server has), give the owner copy-ready commands and copy-ready messages for the chats, tell him when to go to Tripo, and keep an honest list of what is NOT proven. You also own the things no worker may touch: server `*.py`, `pkg/`, `dev/gate*.sh`, `web/app/*`.
+
+## 1. Bootstrap (3 commands, ≈ 5 min; the repo is public: `Blu-Rez/bluewall-assets`, NEVER clone `main` — 4 GB)
+```
+git clone --depth 1 --branch kit https://github.com/Blu-Rez/bluewall-assets.git /home/claude/bot/bluebot_v2
+bash /home/claude/bot/bluebot_v2/workers/setup_kit.sh      # npm, python deps, build, quick checks; installs the mother tools too
+bash /home/claude/dev/gate_w.sh                            # expect: GATE_W: ALL OK   (≈ 4 min; run it in the background, see §8)
+```
+`setup_kit.sh` puts `mkpatch.sh / applypatch.sh / pkgcheck.sh` in `/home/claude/mother/tools/`, `mkpkg.sh` + `deployed.sha256` in `/home/claude/pkg/`, the tests in `/home/claude/dev/`, the docs in `/home/claude/docs/`. For pushing keep a **second clone** so your working tree and the commit tree never mix: `git clone --depth 1 --branch kit https://github.com/Blu-Rez/bluewall-assets.git /home/claude/work/verify_kit` — after every merge copy the changed files from the gate tree (`/home/claude/bot/bluebot_v2/bluewall/…`) into `verify_kit/bluewall/…` (`diff -rq` shows what), add a dated line to `verify_kit/workers/KIT_VERSION`, `git add -A && git commit && git push origin HEAD:kit`. If a push is refused, the session needs push access to the repo (`add_repo` with access=push) — ask the owner once.
+Worker results arrive as branches `inbox/<ID>`: poll with `git ls-remote --heads origin 'inbox/*'` **run from `verify_kit`**, pull with `bash work/verify_kit/workers/mother_pull.sh <ID>` → `/home/claude/inbox/<ID>/` (`patch_<ID>.tar.gz`, `photos_<ID>.tar.gz`, `report_<ID>.md`).
+
+## 2. State right now
+* **Server (what the owner's server runs): package p53** — `workers/pkg/deployed.sha256` still says p53. The owner **installed p54 and p55** (screenshots 11:40–11:43) but pasted no installer output, so they were never `--commit`ted; p55/p56 are built as deltas vs p53 and therefore carry them. After he pastes the installer output of the newest package run `cd /home/claude/pkg && bash mkpkg.sh --commit <name>`, copy `pkg/deployed.sha256` to `verify_kit/workers/pkg/` and push.
+* **Kit (= the gate tree) = everything merged below.** `GATE_W: ALL OK`, battle-sim `noRoute` **647** (limit 700; baseline was 614 — ST1 +35, GR1 −2; leave ≤ 20 for the army chat).
+* **Merged (all in `kit`, newest first):** GR1 (ground at eye level + real roads, with two mother decisions, §3) · ST1 (Treasury Quarter: nine storages + central crystal) · AN1_R2 (villagers / animals walk right, `walk_kit.js`) · PF1 (adaptive 60/45/30 cap, bit-exact matrix skip, probe, **owner-only «Phone benchmark» button**, HUD readout in both modes; + mother fix in `cull.js` `mxThaw`) · RP1C_R2 (hero: face never visible ≤ 55°, jump 0.57 m, feet p99 2 cm, hero ×1.12 + sharper, governor 8 levels, owner readout on long-press of the eye button) · UI1_R3 (landscape HUD, layout 3 default) · day-dominant day/night (`tod.js`, 1 real hour = 1 game day, bright ≈ 74 %, night ≈ 16 %) · blue «rotate your phone» card + landscape lock (`web/index.html`).
+* **Package p56** = everything above vs p53 (see the last lines of `KIT_VERSION` for its sha256 and the install block). If it is not yet installed, remind the owner (one package at a time: a newer package supersedes an older one that was never installed).
+
+## 3. Mother decisions that are not in the workers' reports (so you do not undo them)
+* **GR1 × ST1 road conflict.** GR1 ran lane 118 on to the first ring street, straight through the corner of ST1's iron yard (-60, 93) → ST1 dropped its whole plan (`slot iron no longer fits`) and `p1_test` failed. In `roads.js`: `LANE118_ON = false` (lane 118 ends at the iron yard's door, a destination) and lane 300's «end ON ring2's centre line» is off (`false && ring2` — with it on, the B1 town plan overlaps `mint_00` / `c3_hall` and `cottage_00`). GR1's ring-lane trimming and the moat-bank ends are kept. `dev/gr1_test.js` + `gr1_audit_roads.js`: the doors of the Treasury Quarter count as destinations and the «touching a street» tolerance is 2.75 m instead of 2.5. `dev/st1_test.sh` and `dev/gr1_test.sh` are now in `gate_w.sh`. If the TR2 chat ever changes the town plan or the roads, expect these two tests to say so.
+* **PF1 × RP1C matrix interplay.** RP1C's `cull.js` freezes the children of hidden nodes (an own-property no-op `updateMatrixWorld`); PF1's matrix skip assumes a parent's «moved» force always reaches the children → a thawed child stayed at its OLD world position. Fix: `mxThaw` sets `matrixWorldNeedsUpdate = true` (one line, marked `mother`); `dev/pf1/unit.mjs` section 3 proves the bug with a negative control. `t1_test` allows 120 changed lines in `main.js` (was 60).
+* **AN1_R2 × RP1C** both touched `tr2_life.js`: merged with `git merge-file` against the pre-RP1C snapshot (no conflict).
+
+## 4. The queue (what is waiting where)
+| item | state | what you do |
+|---|---|---|
+| **WC1** (weapon carry: short sword on the hip, big sword on the back, staff in hand, bow on the shoulder; `combat/carry.js`) | pushed, `inbox/WC1`; dry-run: both shared diffs apply on the current tree | `mother_pull.sh WC1` → `applypatch.sh` → `rp4_test.sh`, `wc1_test.sh`, gate, frames (hero from behind + side, walk / idle / fight / sheathe) → copy `RP4_KIT_API.md` into the Project doc `claude/RP4_KIT_API.md` |
+| **TR2_S5** (player edits his own map) + `TR2_S5_server` (spec for the server half) | pushed; **`patch.diff` does NOT apply any more**: `stores.js` (ST1 rewrote it), `world.js` hunk 3, `wslife.js` hunk 2 (AN1), `main.js` hunk 4 (PF1) fail | send the TR2-S5 chat «rebase onto kit commit X, regenerate `tr2_s5_vectors.sh` (ST1 + GR1 changed streets / heights / planId), push `TR2_S5_R2`» — the ORDER rule is that the later patch is rebased by its worker. Then merge it **last**. |
+| **TR2-S5 server half** (MOTHER-ONLY) | not started | `GET/POST /api/layout` (401 / 413 / 429 / 400), record `{v:1,g:<planId>,m:{id:[x,z,ry]}}` ≤ 8192 B, canonical load = drop the first sorted bad id up to 400 times, 12 rules, rate limit 5 / 5 s per user, storage in the user state; port the rules from `workers/docs/tr2_s5_ref_rules.py` (**PORT OK / FUZZ OK** must pass on `tr2_s5_vectors.json` + `tr2_s5_fuzz.json`), geometry JSON file; `military.player_target` adds `"layout": victim.get("layout")` (only when the player moved something, never for bots). Spec: `workers/docs/layout_api.md`. |
+| **BT1** (attack map = home map) | chat opened 10:12, **not pushed yet** | wait; when pushed: apply, `bt1_test.sh`, frames home-vs-attack lv 1 / 13 / 30 / 50; it must not break `noRoute` |
+| **RP1C_R3** (crown marker + same-colour light, ramps, groundH, hero-entry programs) | not pushed | see §5 |
+| **SL1** (sleigh) | blocked: needs a Tripo `sleigh` model; riding is not built (no mounted clip) | after RP1C_R3 |
+| p57 | = the next package after WC1 / TR2_S5 / BT1 / RP1C_R3 | one package at a time |
+
+## 5. What is MISSING against the owner's list (09:55 + later)
+| owner asked | status | missing / next |
+|---|---|---|
+| all storages + the central gem | **done** (ST1) | food store is north of the keep (outlier); optional Tripo `storage_food`; dusk / dawn look and the attack map not checked |
+| roads / ground / order | **done** (GR1; default look A «Meadow» + soft house shadows from B — he never answered the sheet) | road × house overlap `stores_wood` ×2 on ring2 is from the OLD store plan (gone with ST1) — re-audit once; Tripo optional: small pier |
+| hero bigger / sharper | done (×1.12) | judge on the phone |
+| feet on the ground — hero | done (p99 2 cm in the 33 scenarios) | phone |
+| feet on the ground — villagers / animals | done (AN1_R2: ratio 1.0, sunk 24 % → 9 %) | **raised town geometry** (bridge decks, steps; dogs 18 %, cart drivers 9–10 % still > 8 cm sunk) → AN1_R3 with GR1's `groundH` (`ground_near.js`) |
+| neon crown + same-colour light above EVERY character | **NOT DONE** | RP1C_R3 (`rp_marker.js`; 3-look sheet: crown / crown + halo / crown + halo + ground ring, default 3) — the owner has asked for it twice |
+| hero camera never shows the face | done by script (≤ 55° in 33 scenarios) | **phone check** (he cursed about it at 11:43) |
+| jump lower | done (0.57 m) | phone |
+| ramps, no wall-climb exploit | **NOT DONE** (climb is off) | RP1C_R3 Job 6 |
+| the player edits his own map | pushed, **not merged**, server half not built | §4 |
+| landscape only | done (lock + blue rotate card) | **Telegram `lockOrientation` on a real phone** never checked |
+| HUD / button placement | done (layout 3) | phone |
+| animals + villagers walk right | done | sheep / pig have no walk clip (static); no turn-in-place clip; workers only walk / idle |
+| attack map = home map | **NOT DONE** | BT1 not pushed |
+| sleigh | **NOT DONE** | needs Tripo model; riding clip missing |
+| weapon carry | pushed, **not merged** | WC1 |
+| lag | PF1 + RP1C_R2 reduced it: hero JS −15…−25 %, matrix skip −12…−14 %; targets **NOT reached** (hero 238–376 calls / ≈ 1.5 M tris, target ≤ 150 / ≤ 400 k; map 590–620 calls) | the owner's own numbers say 56 fps steady — what he feels is probably **hitches** (346 shader programs on his phone: +15 from lights added after the first compile, +44 / +82 for the second render path, +24 on entering the hero at night). → **PF2** (§6). **We still have no phone number for hero mode** — ask him to run the benchmark button (§9). |
+| day not always night | done | — |
+
+## 6. Dispatch — who gets what NEXT (copy-ready text goes to the owner in Persian; one chat = one job; all say «full access, no questions»)
+1. **TR2-S5 chat** → rebase onto the new kit commit, regenerate vectors, push `TR2_S5_R2` (and keep `TR2_S5_server` in sync).
+2. **RP1C chat** → `RP1C_R3`: Job 8 crown + light (ROUND3_JOBS «RP1C ADDENDUM 3»), Job 6 ramps, PF1 F9 (warm the +24 hero programs at hero load, not at first frame; use `groundH` if it helps), then more hero lag (calls / tris), judge the face rule from the phone screenshot he sends.
+3. **PF1 chat → PF2** (new text, write it from PF1's report §4): F1 (create every point light before `sw.compile`: ≈ 15 programs compiled twice), F2 (warm the composer path only when night is about to start), F3 (instanceColor always-or-never), F8 (glb weight: meshopt / lazy troll, pegasus, prowler; first frame needs ≈ 51 MB). Give it temporary ownership of the ≤ 6 point-light creation lines in `world.js` / `dragon.js` / `weather.js` / `battle.js` and of `shaderwarm.js`; after TR2-S5 and BT1 are merged (those chats touch the same files).
+4. **TR2 chat** → F4 (merge static castle + town meshes: 590–620 calls at the map) and F7 (`homes-far` / `civic` atlas to half size ≈ −36 MB; roughness maps 512²), after S5 is merged.
+5. **AN1 chat** → `AN1_R3`: F6 (update-rate LOD for far villagers / animals / worksite packs, same `lodStep` pattern as `creature.js`), `groundH` for raised town geometry, carts' last 0.7 % box hits and fords.
+6. **BT1 chat** → nothing until it pushes; if silent, ask the owner to open it.
+7. **WC1 / RP4 chat** → nothing until merged; then RP5a–f (the other five sisters' kits) say what they carry (`carry:` field in `RP4_KIT_API.md`).
+8. **ST1 / GR1 / UI1 / AN1_R2 / PF1 / RP1C_R2 chats** → done; the owner can close them.
+9. **ARMY chat** (supersedes M1–M3 / AR1 / U5 / A3 / O1) — «after this round»: only when BT1 + TR2-S5 are merged; it needs the noRoute headroom.
+
+## 7. Owner decisions pending (numbered sheets; the default stands after 15 min of silence — say which default you took)
+TR2-S5 scope (default ② of 1 / 2 / 3) · GR1 look (default A + soft shadow B) · ST1 look (default 3 = the Tripo halls) · UI1 layout (default 3) · crown / light sheet (default crown + halo + ground ring) · RP3 (underworld) picks · RP4 sword (default #1) · card mapping by contact-sheet number (AR1) · menu entry for the Characters gallery · E1 economy table: 5 questions + approval of the lv 31–50 placeholders · Mobina skirt-shard decision (`mobina_clips.json` doc) · repo stays public until release (default) · Tripo plan licence check. **No model enters the game without his number from a sheet.**
+
+## 8. How to work (learned the hard way)
+* **Gate:** `cd /home/claude && (setsid nohup bash dev/gate_w.sh > /tmp/gate.log 2>&1 &)` then poll `tail -3 /tmp/gate.log` in chunks < 100 s; the last line must be `GATE_W: ALL OK`, noRoute < 700. **Never run a browser job at the same time** (screenshot timeouts); `timeout=240000` on screenshots.
+* **Merge one patch:** snapshot `client/src` first (`cp -r … /home/claude/work/snap_pre_<ID>`); mkpkg-format patches → `mother/tools/applypatch.sh <patch>` (owned files are base-hash checked, shared via diff, `dev/*` copied); plain diffs → `patch -p1` from `/home/claude/bot/bluebot_v2` (dry-run first); **delete `*.orig` / `*.rej`** (mkpkg would ship them); two patches on one file → `git merge-file ours base theirs` with the pre-merge snapshot as base. Then gate → the worker's own test → frames → sync to `verify_kit` → `KIT_VERSION` line → push.
+* **Worker tests whose «ownership» checks fail** (`an1_r2_test`, `rp1c2_test`: «forbidden file changed», «army file changed», «crowd.js differs from the base») compare against `/home/claude/base_snapshot`, made at setup — after a merge they can say FAIL for files that belong to OTHER merged patches. Read the line; functional checks are what count.
+* **Frames you look at yourself** (full size, 844×390 landscape): `bash dev/ui1r2_rig_build.sh <tag>` (builds the CURRENT source into `dev/ui1r2_<tag>.html`; needs the static server: `bash dev/up.sh`, port 8777, restart it if `ERR_CONNECTION_REFUSED`), then `python3 dev/mother_hud_shot.py <tag> <outdir> 844x390` (home + hero frame; `HOUR=auto` keeps the real hour; ≈ 5 min in software GL; ignore its «after_exit» frame) and `PAGE=ui1r2_<tag>.html VIEWS=town CLOSE=1 ONLY=quarter_free,quarter_west,crystal python3 dev/st1_shots.py <tag> 30` (Treasury Quarter). Software GL gives call / triangle / program counts, **not phone milliseconds**.
+* **Package:** `cd /home/claude/pkg && bash mkpkg.sh <name> "<title>"` (runs the client build; delta vs `deployed.sha256`) → `/home/claude/mother/tools/pkgcheck.sh <name>.tar.gz` → orphan branch in `/home/claude/work/pkgpush/<name>` (README.md, SHA256, tar.gz) → `git -c push.negotiate=false push origin HEAD:refs/heads/pkg/<name>` → verify the hash from a fresh clone in /tmp → give the owner the install block:
+```
+cd /root && rm -rf bw_pkg && git clone -q --depth 1 --branch pkg/<name> https://github.com/Blu-Rez/bluewall-assets.git bw_pkg && echo "<sha>  bw_pkg/<name>.tar.gz" | sha256sum -c && tar xzf bw_pkg/<name>.tar.gz && bash <name>/install.sh
+```
+  He pastes the installer's output back (or not — then ask once). Then `mkpkg.sh --commit <name>`.
+* **Day / night** is `tod.js` (`DAY_MAP`, test `dev/tod_cycle_test.sh`). **Rotate card** is `#bw-rot` in `web/index.html`.
+* **Reading owner numbers:** the benchmark POSTs to `/api/perf`; read it on the server with `journalctl -u bluebot-wall --since "30 min ago" | grep perf | tail -40` (the owner runs it; you cannot reach his server).
+* **Messages to the owner:** Persian, short, one thing per message, commands in code blocks he can copy, no jargon dump. Never claim «proven» for what ran only in software GL; say what is NOT proven. Never put the words «bot / ربات» in game texts. No secrets in the repo, packages or docs (`pkgcheck.sh` scans). Workers: own files only, shared lines marked `// <ID>:`, forbidden files listed in ROUND3_JOBS «Common facts». The owner told the workers: **full access, no questions** (the only thing they may ask is a numbered look-sheet).
+* Tripo credit is low: **no chat except TR1 uses Tripo**; every «needs Tripo» item goes on one list for him (§10).
+
+## 9. Phone checks to collect from the owner (nothing has been measured on a phone since p53: strategic map 53 FPS / 50 ms)
+1. Install p56 (or newer); in the game open Settings → OWNER TOOLS → **Phone benchmark** (30 s, hands off) → you read the result with `journalctl` above, or he sends the on-screen card.
+2. A hero-mode screenshot with the fps readout (long-press the eye button).
+3. Face rule + jump + feet + the new HUD in hero mode; Telegram landscape lock; the day / night rhythm.
+4. Two screenshots of the Treasury Quarter and of a village walking scene.
+
+## 10. Needs Tripo (one list for the owner; none is blocking)
+`sleigh` (spec: wooden two-runner sleigh, 2.2 × 1.0 m, curled front runners, a bench seat, light blue banner, no animals) · mounted / riding clip · swim + climb clips (RP1C lists them; they are clips, check the library first) · `storage_food` granary (12 × 9.6 × 7 m, straw-yellow thatch + pale plank) · scabbard, back-sling strap, quiver (WC1) · sheep / pig walk clips · turn-in-place clip · villager work / carry / sit clips · tools in hands · small pier (GR1, optional).
+
+## 11. Housekeeping nobody has done (MJ-10 + others)
+Reset the two leaked Sketchfab tokens · delete the old GitHub deploy key · remove branch `code-p38` and `inbox/_selftest` once no old-kit worker needs them · repo stays public until release, then private · the `rp1b_test.sh` check «every building / worksite / lot with a sheet yields a button id …» needs ≥ 100 door items and the kit gives 96 (it fails without PF1 too; RP1B's owner should update it) · `lv50_server_spec.md`: the `MAX_LEVEL = 50` server patch is mother-only (after TR2) · `VO1_VOICE_SCRIPTS.md` received, unused · docs in the claude.ai Project («آپدیت ربات») must mirror `workers/docs` (write changed ones with `project_write`).
+
+## 12. First thing to do in your first reply to the owner
+Short Persian message: «مادر ۲ آماده‌ام؛ وضعیت گرفتم، این‌ها رو الان می‌کنم» + the 3–5 copy-ready messages for the chats of §6 (TR2-S5 rebase, RP1C_R3, PF2, AN1_R3), then start merging WC1 while those run.
