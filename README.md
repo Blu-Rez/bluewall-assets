@@ -1,0 +1,2 @@
+Install package p55 of Blue Wall (built by the mother chat, 15 Oct 2026 ~12:20 Tehran). Delta on top of p53 (so it also carries everything from p54: landscape-only, the new landscape HUD layout, hero button arc, Max label). New in p55: the day / night cycle is now day-dominant (≈ 74 % bright, ≈ 10 real minutes of full night per hour instead of ≈ 25), and the «rotate your phone» card is blue with a rotating-phone icon. No server change. Rollback: bash /root/p55/rollback.sh
+On the server:  cd /root && tar xzf p55.tar.gz && bash p55/install.sh
