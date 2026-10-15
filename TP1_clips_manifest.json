@@ -1,0 +1,921 @@
+{
+ "rig": "Tripo Studio mixamo, 65 joints (mixamorig:*)",
+ "fps": 24.0,
+ "source": "all.glb",
+ "clips": [
+  {
+   "src_index": 53,
+   "src_prompt": "Walking",
+   "name": "walk",
+   "mode": "loop",
+   "loop": true,
+   "verdict": "ok",
+   "note": "Walk preset; root motion removed (it walked 4.3 m)",
+   "duration": 4.96,
+   "active": [
+    0.0,
+    4.96
+   ],
+   "mean_deg_per_frame": 53.9,
+   "seam_deg": 0.12,
+   "kb": 73.1
+  },
+  {
+   "src_index": 32,
+   "src_prompt": "Sprinting fast, in place: strong forward lean, big arm drive, l",
+   "name": "sprint",
+   "mode": "loop",
+   "loop": true,
+   "verdict": "ok",
+   "note": "Sprinting, in place",
+   "duration": 9.96,
+   "active": [
+    0.75,
+    9.96
+   ],
+   "mean_deg_per_frame": 88.3,
+   "seam_deg": 0.23,
+   "kb": 121.4
+  },
+  {
+   "src_index": 45,
+   "src_prompt": "Standing jump, in place. Quick crouch with knees bent and arms ",
+   "name": "jump_stand",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "standing jump",
+   "duration": 4.96,
+   "active": [
+    0.17,
+    2.38
+   ],
+   "mean_deg_per_frame": 40.0,
+   "seam_deg": 1.07,
+   "kb": 51.7
+  },
+  {
+   "src_index": 38,
+   "src_prompt": "Landing from a jump, in place: feet touch the ground, knees ben",
+   "name": "land_soft",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "landing from a jump",
+   "duration": 4.96,
+   "active": [
+    0.0,
+    1.88
+   ],
+   "mean_deg_per_frame": 16.8,
+   "seam_deg": 1.8,
+   "kb": 48.9
+  },
+  {
+   "src_index": 31,
+   "src_prompt": "Falling through the air, in place, loopable: body upright, knee",
+   "name": null,
+   "mode": "lock",
+   "loop": false,
+   "verdict": "reject",
+   "note": "'falling through the air' lies down flat on the ground, not a fall; keep the existing fall",
+   "duration": 4.96,
+   "active": [
+    0.0,
+    4.96
+   ],
+   "mean_deg_per_frame": 35.6
+  },
+  {
+   "src_index": 14,
+   "src_prompt": "Climbing up a vertical wall, in place, loopable: alternating ha",
+   "name": "climb_wall",
+   "mode": "lock",
+   "loop": true,
+   "verdict": "ok",
+   "note": "wall climb, hand over hand, 5 s loop",
+   "duration": 4.96,
+   "active": [
+    0.0,
+    4.58
+   ],
+   "mean_deg_per_frame": 86.3,
+   "seam_deg": 0.07,
+   "kb": 74.0
+  },
+  {
+   "src_index": 52,
+   "src_prompt": "Climbing over a ledge at the top of a wall, in place: both hand",
+   "name": "climb_ledge",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "over the ledge at the top of the wall",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 17.4,
+   "seam_deg": 4.41,
+   "kb": 75.5
+  },
+  {
+   "src_index": 25,
+   "src_prompt": "Walking up stairs, in place, loopable: steady pace, each step l",
+   "name": "stairs_up",
+   "mode": "lock",
+   "loop": true,
+   "verdict": "ok",
+   "note": "walking up stairs, 5 s loop",
+   "duration": 4.96,
+   "active": [
+    0.17,
+    4.12
+   ],
+   "mean_deg_per_frame": 83.6,
+   "seam_deg": 0.05,
+   "kb": 67.7
+  },
+  {
+   "src_index": 13,
+   "src_prompt": "Swimming forward at the water surface, breaststroke: body horiz",
+   "name": "swim_breast",
+   "mode": "lock",
+   "loop": true,
+   "verdict": "weak",
+   "note": "breaststroke, body flat; the arms move little",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 5.0,
+   "seam_deg": 0.04,
+   "kb": 59.4
+  },
+  {
+   "src_index": 35,
+   "src_prompt": "Treading water, upright, in place: arms sculling gently at the ",
+   "name": null,
+   "mode": "lock",
+   "loop": false,
+   "verdict": "reject",
+   "note": "treading water: figure lies flat below the ground, no upright pose",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 4.7
+  },
+  {
+   "src_index": 12,
+   "src_prompt": "Getting up from the ground, in place: starts lying flat on her ",
+   "name": "get_up",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "from lying on the ground to standing",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 24.1,
+   "seam_deg": 16.92,
+   "kb": 82.1
+  },
+  {
+   "src_index": 48,
+   "src_prompt": "Friendly wave hello, in place: lifts the right hand above the s",
+   "name": "wave",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "friendly wave",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 14.3,
+   "seam_deg": 1.01,
+   "kb": 65.9
+  },
+  {
+   "src_index": 2,
+   "src_prompt": "Earth spell, in place: crouches, slams the palm of the right ha",
+   "name": "cast_ground",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "earth spell: crouch + palm slam",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 30.6,
+   "seam_deg": 2.93,
+   "kb": 85.6
+  },
+  {
+   "src_index": 4,
+   "src_prompt": "Shooting a bow, in place: stands side-on, pulls the string back",
+   "name": "shoot_bow",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "weak",
+   "note": "bow: small arm motion",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 3.8,
+   "seam_deg": 0.62,
+   "kb": 48.5
+  },
+  {
+   "src_index": 5,
+   "src_prompt": "Spear thrust, in place: steps forward with the left foot and th",
+   "name": "spear_thrust",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "step + thrust",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    7.88
+   ],
+   "mean_deg_per_frame": 16.9,
+   "seam_deg": 6.68,
+   "kb": 68.2
+  },
+  {
+   "src_index": 42,
+   "src_prompt": "Two quick dagger strikes, in place: low crouched stance, the ri",
+   "name": "dagger_stab",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "two quick dagger strikes",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 19.5,
+   "seam_deg": 3.37,
+   "kb": 70.2
+  },
+  {
+   "src_index": 44,
+   "src_prompt": "Casting with a staff, in place: raises a two-handed staff overh",
+   "name": "staff_cast",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "staff raised overhead + cast",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 17.6,
+   "seam_deg": 1.49,
+   "kb": 70.5
+  },
+  {
+   "src_index": 23,
+   "src_prompt": "Defensive guard stance, in place: knees bent, both forearms rai",
+   "name": "guard_hold",
+   "mode": "lock",
+   "loop": true,
+   "verdict": "ok",
+   "note": "defensive guard stance, loop",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 9.9,
+   "seam_deg": 0.21,
+   "kb": 64.2
+  },
+  {
+   "src_index": 34,
+   "src_prompt": "Swings a huge two-handed sword in a wide horizontal arc with bo",
+   "name": "greatsword_swing",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "two-handed horizontal swing",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 29.9,
+   "seam_deg": 9.08,
+   "kb": 71.8
+  },
+  {
+   "src_index": 0,
+   "src_prompt": "Lifts a huge two-handed sword high above the head with both han",
+   "name": "greatsword_overhead",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "weak",
+   "note": "stays in a wide stance for 6 s, the lift is at the end",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 9.0,
+   "seam_deg": 12.06,
+   "kb": 57.5
+  },
+  {
+   "src_index": 11,
+   "src_prompt": "Lifts a heavy war hammer over the shoulder with both hands, the",
+   "name": "hammer_smash",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "hammer over the shoulder, smash",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    7.5
+   ],
+   "mean_deg_per_frame": 29.6,
+   "seam_deg": 12.6,
+   "kb": 86.6
+  },
+  {
+   "src_index": 27,
+   "src_prompt": "Holding a long spear with both hands, sweeps it in a wide horiz",
+   "name": "spear_sweep",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "wide spear sweep",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    3.67
+   ],
+   "mean_deg_per_frame": 26.6,
+   "seam_deg": 7.79,
+   "kb": 69.8
+  },
+  {
+   "src_index": 22,
+   "src_prompt": "Raises a long staff above the head with both hands, then strike",
+   "name": "staff_slam",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "staff overhead, slam on the ground",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 26.9,
+   "seam_deg": 8.29,
+   "kb": 80.8
+  },
+  {
+   "src_index": 41,
+   "src_prompt": "Raises a long staff above the head with both hands, then st.001",
+   "name": "staff_slam_b",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "second take of staff_slam",
+   "duration": 9.96,
+   "active": [
+    0.88,
+    9.96
+   ],
+   "mean_deg_per_frame": 30.3,
+   "seam_deg": 1.86,
+   "kb": 83.8
+  },
+  {
+   "src_index": 51,
+   "src_prompt": "Holding a round shield close in front of the body with the left",
+   "name": "sword_shield_slash",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "slash with the shield held close",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 7.1,
+   "seam_deg": 1.04,
+   "kb": 59.0
+  },
+  {
+   "src_index": 29,
+   "src_prompt": "Rams the left shield straight forward with a strong body push a",
+   "name": "shield_bash",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "shield ram",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 27.1,
+   "seam_deg": 7.65,
+   "kb": 90.3
+  },
+  {
+   "src_index": 30,
+   "src_prompt": "Standing in a ready battle stance, knees slightly bent, weapon ",
+   "name": "battle_idle",
+   "mode": "lock",
+   "loop": true,
+   "verdict": "ok",
+   "note": "ready battle stance, loop",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 1.2,
+   "seam_deg": 0.01,
+   "kb": 40.0
+  },
+  {
+   "src_index": 33,
+   "src_prompt": "Raises a weapon high in the right hand and shouts a loud war cr",
+   "name": "war_cry",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "weapon arm up + shout",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 18.7,
+   "seam_deg": 5.14,
+   "kb": 78.2
+  },
+  {
+   "src_index": 40,
+   "src_prompt": "Raises a banner pole high with both hands, plants the bottom of",
+   "name": "rally_banner",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "banner up, plant",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 13.0,
+   "seam_deg": 3.47,
+   "kb": 69.9
+  },
+  {
+   "src_index": 1,
+   "src_prompt": "Celebrates a victory, raising a weapon overhead with one arm, p",
+   "name": "victory",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "celebration, arm up",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.42
+   ],
+   "mean_deg_per_frame": 22.8,
+   "seam_deg": 2.58,
+   "kb": 76.7
+  },
+  {
+   "src_index": 7,
+   "src_prompt": "Raises a heavy crossbow to the shoulder, aims ahead, fires with",
+   "name": "crossbow_shoot",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "crossbow to the shoulder + fire",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 13.4,
+   "seam_deg": 7.48,
+   "kb": 70.4
+  },
+  {
+   "src_index": 19,
+   "src_prompt": "Holding a crossbow low in front, cranks it back with one hand, ",
+   "name": "crossbow_reload",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "crank + load",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 8.2,
+   "seam_deg": 13.12,
+   "kb": 57.6
+  },
+  {
+   "src_index": 18,
+   "src_prompt": "Raises the right hand and thrusts the open palm forward to laun",
+   "name": "cast_projectile",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "one palm thrust (magic bolt)",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 12.9,
+   "seam_deg": 1.22,
+   "kb": 67.3
+  },
+  {
+   "src_index": 47,
+   "src_prompt": "Both arms stretched forward with open palms, channeling a conti",
+   "name": "cast_channel",
+   "mode": "lock",
+   "loop": true,
+   "verdict": "ok",
+   "note": "both palms forward, continuous channel, loop",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 9.7,
+   "seam_deg": 0.03,
+   "kb": 61.1
+  },
+  {
+   "src_index": 10,
+   "src_prompt": "Slowly raises both arms up high with open palms, head tilted ba",
+   "name": "cast_summon",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "both arms up high",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 19.2,
+   "seam_deg": 2.62,
+   "kb": 74.5
+  },
+  {
+   "src_index": 43,
+   "src_prompt": "Crosses both hands over the chest, then opens the arms wide out",
+   "name": "cast_buff",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "weak",
+   "note": "hands over chest then open; very small motion",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 3.2,
+   "seam_deg": 0.49,
+   "kb": 43.9
+  },
+  {
+   "src_index": 24,
+   "src_prompt": "Gets struck from behind, stumbles forward a step with the back ",
+   "name": "hit_back",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "struck from behind, stumble",
+   "duration": 9.96,
+   "active": [
+    1.38,
+    9.96
+   ],
+   "mean_deg_per_frame": 27.3,
+   "seam_deg": 4.5,
+   "kb": 86.3
+  },
+  {
+   "src_index": 49,
+   "src_prompt": "Gets hit hard in the chest, staggers backward several steps alm",
+   "name": "hit_heavy",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "hit hard in the chest, stagger",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    7.04
+   ],
+   "mean_deg_per_frame": 15.2,
+   "seam_deg": 1.28,
+   "kb": 65.9
+  },
+  {
+   "src_index": 9,
+   "src_prompt": "Stands dazed, swaying slowly from side to side with the head dr",
+   "name": "stun_dizzy",
+   "mode": "lock",
+   "loop": true,
+   "verdict": "weak",
+   "note": "dazed sway, very small motion",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 3.1,
+   "seam_deg": 0.02,
+   "kb": 46.2
+  },
+  {
+   "src_index": 39,
+   "src_prompt": "Collapses forward onto the knees, then falls face down onto the",
+   "name": "death_forward",
+   "mode": "keep",
+   "loop": false,
+   "verdict": "ok",
+   "note": "falls forward on the knees then flat",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 15.5,
+   "seam_deg": 17.47,
+   "kb": 69.7
+  },
+  {
+   "src_index": 3,
+   "src_prompt": "A huge heavy creature swings one big arm in a wide sweeping bac",
+   "name": "giant_swing",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "creature: wide backhand arm swing",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 16.4,
+   "seam_deg": 2.72,
+   "kb": 74.1
+  },
+  {
+   "src_index": 15,
+   "src_prompt": "A huge heavy creature raises both fists high overhead and slams",
+   "name": "giant_smash",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "creature: both fists up, slam",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 16.8,
+   "seam_deg": 3.33,
+   "kb": 73.9
+  },
+  {
+   "src_index": 6,
+   "src_prompt": "A large creature throws its head back and roars with the arms s",
+   "name": "roar",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "creature: roar, arms open",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 20.1,
+   "seam_deg": 2.0,
+   "kb": 80.5
+  },
+  {
+   "src_index": 20,
+   "src_prompt": "Crouches low, then leaps forward with both clawed hands reachin",
+   "name": "beast_leap",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "ok",
+   "note": "crouch, leap forward, land (in place)",
+   "duration": 9.96,
+   "active": [
+    0.75,
+    5.46
+   ],
+   "mean_deg_per_frame": 17.3,
+   "seam_deg": 1.84,
+   "kb": 69.5
+  },
+  {
+   "src_index": 46,
+   "src_prompt": "Sitting upright in a saddle on a horse, in place: back straight",
+   "name": "ride_idle",
+   "mode": "lock",
+   "loop": true,
+   "verdict": "seat",
+   "note": "RIDER: legs stand straight, not seated",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 1.4,
+   "seam_deg": 0.02,
+   "kb": 42.1
+  },
+  {
+   "src_index": 17,
+   "src_prompt": "Riding a horse at a walk, in place: sitting upright in the sadd",
+   "name": "ride_walk",
+   "mode": "lock",
+   "loop": true,
+   "verdict": "seat",
+   "note": "RIDER: upper body only",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 30.5,
+   "seam_deg": 0.1,
+   "kb": 105.7
+  },
+  {
+   "src_index": 36,
+   "src_prompt": "Riding a horse at a gallop, in place: leaning forward in the sa",
+   "name": "ride_gallop",
+   "mode": "lock",
+   "loop": true,
+   "verdict": "seat",
+   "note": "RIDER: upper body only",
+   "duration": 9.96,
+   "active": [
+    0.83,
+    9.96
+   ],
+   "mean_deg_per_frame": 66.0,
+   "seam_deg": 0.24,
+   "kb": 118.5
+  },
+  {
+   "src_index": 50,
+   "src_prompt": "Mounting a horse from the left side: stands beside an invisible",
+   "name": "mount",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "seat",
+   "note": "RIDER: mounting from the left, no horse",
+   "duration": 9.96,
+   "active": [
+    0.79,
+    7.08
+   ],
+   "mean_deg_per_frame": 32.9,
+   "seam_deg": 0.66,
+   "kb": 87.6
+  },
+  {
+   "src_index": 37,
+   "src_prompt": "Dismounting a horse on the left side: swings the right leg back",
+   "name": "dismount",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "seat",
+   "note": "RIDER: dismounting to the left, no horse",
+   "duration": 9.96,
+   "active": [
+    0.42,
+    7.62
+   ],
+   "mean_deg_per_frame": 46.8,
+   "seam_deg": 0.95,
+   "kb": 97.3
+  },
+  {
+   "src_index": 16,
+   "src_prompt": "Sitting on a horse, swings a sword in a sideways slash with the",
+   "name": "ride_slash",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "seat",
+   "note": "RIDER: sideways sword slash, upper body",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 34.8,
+   "seam_deg": 0.9,
+   "kb": 107.3
+  },
+  {
+   "src_index": 8,
+   "src_prompt": "Sitting on a horse, holds a long lance forward under the right ",
+   "name": "ride_lance",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "seat",
+   "note": "RIDER: lance thrust, upper body",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 8.3,
+   "seam_deg": 4.99,
+   "kb": 59.4
+  },
+  {
+   "src_index": 26,
+   "src_prompt": "Sitting on a horse, draws a bow and shoots to the side, the upp",
+   "name": "ride_shoot",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "seat",
+   "note": "RIDER: bow to the side",
+   "duration": 9.96,
+   "active": [
+    0.54,
+    9.96
+   ],
+   "mean_deg_per_frame": 25.9,
+   "seam_deg": 3.06,
+   "kb": 94.1
+  },
+  {
+   "src_index": 28,
+   "src_prompt": "Sitting on a horse, draws a bow and shoots to the side, the.001",
+   "name": "ride_shoot_b",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "seat",
+   "note": "RIDER: second take of ride_shoot",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    9.96
+   ],
+   "mean_deg_per_frame": 17.2,
+   "seam_deg": 1.65,
+   "kb": 78.9
+  },
+  {
+   "src_index": 21,
+   "src_prompt": "Sitting on a horse, gets struck and the upper body jerks back, ",
+   "name": "ride_hit",
+   "mode": "lock",
+   "loop": false,
+   "verdict": "seat",
+   "note": "RIDER: hit reaction, upper body",
+   "duration": 9.96,
+   "active": [
+    0.0,
+    7.17
+   ],
+   "mean_deg_per_frame": 28.1,
+   "seam_deg": 4.46,
+   "kb": 88.5
+  }
+ ]
+}
