@@ -1,0 +1,52 @@
+--- a/bluewall/client/src/crowd.js	2026-10-16 02:08:17.334079594 +0330
++++ b/bluewall/client/src/crowd.js	2026-10-16 02:08:26.548995079 +0330
+@@ -119,11 +119,12 @@
+ }
+ 
+ // ------------------------------------------------------------------ kind
++createKind.lod1Gltf = true;                                                          // SM1: unit_swap.js looks for this before it loads a row's lod1 file (cfg.lod1Gltf = { scene } = the LOD1 mesh)
+ export function createKind(cfg) {
+   const fps = cfg.fps || FPS;
+   // ---- skeleton rigs: LOD0 = whole character, LOD1 = without the small accessories (boots, belts, bracers …)
+-  const mkRig = (skip) => {
+-    const src = cfg.gltf.scene; mergeSkinned(src);
++  const mkRig = (skip, from) => {                                                    // SM1: `from` = another scene of the same skeleton (cfg.lod1Gltf)
++    const src = from || cfg.gltf.scene; mergeSkinned(src);
+     const root = SkeletonUtils.clone(src);
+     if (skip) { const drop = []; root.traverse((o) => { if (o.isMesh && skip.test(o.name || '')) drop.push(o); }); for (const o of drop) o.parent && o.parent.remove(o); }
+     root.updateMatrixWorld(true);
+@@ -131,7 +132,11 @@
+     return { root, meshes };
+   };
+   const rigs = [mkRig(null)];
+-  if (cfg.lod1Skip) { const r1 = mkRig(cfg.lod1Skip); if (r1.meshes.length) rigs.push(r1); }
++  if (cfg.lod1Gltf && cfg.lod1Gltf.scene) {                                             // SM1: LOD1 = a second, cheaper mesh (a Studio soldier: one 6k-triangle mesh -> the same figure at 1.5k) skinned by the SAME 65 bones
++    const r1 = mkRig(null, cfg.lod1Gltf.scene), key = (m) => m.skeleton.bones.map((b) => b.name).join('|');
++    r1.shared = r1.meshes.length > 0 && r1.meshes.every((m) => rigs[0].meshes.some((m0) => key(m0) === key(m)));      // same bone names in the same order: it reads the bone slots of LOD0 (no second bake, no second bone texture)
++    if (r1.meshes.length) rigs.push(r1);
++  } else if (cfg.lod1Skip) { const r1 = mkRig(cfg.lod1Skip); if (r1.meshes.length) rigs.push(r1); }
+ 
+   // ---- clips (same filter the regular units use: only tracks whose bone exists)
+   const all = {}; for (const c of cfg.anims.animations || []) all[c.name] = c;
+@@ -142,7 +147,10 @@
+   // ---- slots: one 4-texel matrix per (mesh, bone) and per prop
+   let slots = 0;
+   const parts = [];                                   // { rig, mesh, base }
+-  rigs.forEach((rg, ri) => rg.meshes.forEach((m) => { parts.push({ ri, mesh: m, base: slots }); slots += m.skeleton.bones.length; }));
++  rigs.forEach((rg, ri) => rg.meshes.forEach((m) => {
++    if (rg.shared) { const key = m.skeleton.bones.map((b) => b.name).join('|'), p0 = parts.find((p) => p.ri === 0 && p.mesh.skeleton.bones.map((b) => b.name).join('|') === key); parts.push({ ri, mesh: m, base: p0.base }); return; }      // SM1
++    parts.push({ ri, mesh: m, base: slots }); slots += m.skeleton.bones.length;
++  }));
+   const props = (cfg.props || []).map((pr) => { const o = { ...pr, slot: slots }; slots += 1; return o; });
+   const W = slots * 4, data = new Float32Array(W * frames * 4);
+   const tex = new THREE.DataTexture(data, W, frames, THREE.RGBAFormat, THREE.FloatType);
+@@ -157,7 +165,8 @@
+   const propBone = props.map((p) => rigs[0].root.getObjectByName(p.bone));
+   const stats = {};
+   for (const ri of rigs.keys()) {
+-    const rg = rigs[ri], mixer = new THREE.AnimationMixer(rg.root);
++    const rg = rigs[ri]; if (rg.shared) continue;                                      // SM1: a shared rig reads LOD0's baked slots
++    const mixer = new THREE.AnimationMixer(rg.root);
+     for (const n of clipNames) {
+       const c = all[n], clip = new THREE.AnimationClip(n, c.duration, c.tracks.filter((tr) => rg.root.getObjectByName(tr.name.split('.')[0])));
+       const act = mixer.clipAction(clip); act.play();
