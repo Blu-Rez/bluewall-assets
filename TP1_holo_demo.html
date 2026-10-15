@@ -1,0 +1,156 @@
+<title>Melika Tripo Test</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap">
+<style>
+/* Layout: one full-bleed 3D stage, a thin caption top-left, one control bar at the bottom. Single dark look on purpose (a stage, like the game's pick screen). */
+:root{--bg:#050d16;--stage:#0c2a3a;--fg:#e6fbf7;--dim:#8fb3b0;--cyan:#33f0dc;--panel:rgba(7,17,29,.8);--line:rgba(51,240,220,.3);--on:#07111d;color-scheme:dark}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:Vazirmatn,system-ui,sans-serif;overflow:hidden;
+ padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));-webkit-tap-highlight-color:transparent}
+#stage{position:fixed;inset:0;background:radial-gradient(120% 90% at 50% 18%,var(--stage) 0%,var(--bg) 72%);touch-action:none}
+#stage canvas{display:block;width:100%;height:100%}
+.cap{position:relative;z-index:2;padding-top:12px;pointer-events:none;direction:rtl}
+.cap b{display:block;font-size:17px;font-weight:900;letter-spacing:.2px}
+.cap span{display:block;margin-top:2px;font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:3;display:flex;flex-direction:column;gap:8px;align-items:center;
+ padding:10px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+ background:linear-gradient(to top,rgba(5,13,22,.92),rgba(5,13,22,0))}
+.row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:100%}
+button{font:inherit;font-size:13px;font-weight:700;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 14px;min-height:38px;cursor:pointer}
+button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+button.on{background:var(--cyan);color:var(--on);border-color:var(--cyan)}
+.clips button{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:400;font-size:12px;padding:6px 12px;min-height:34px}
+#msg{position:fixed;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--dim);background:var(--bg);direction:rtl}
+#msg[hidden]{display:none}
+.cols button{display:flex;align-items:center;gap:6px;padding:5px 11px 5px 9px;min-height:32px;font-size:12px}
+.cols i{display:block;width:11px;height:11px;border-radius:50%;background:var(--c)}
+.cols button.on{background:var(--panel);color:var(--fg);border-color:var(--c);box-shadow:0 0 0 1px var(--c) inset}
+.hint{font-size:11px;color:var(--dim);direction:rtl;text-align:center}
+@media (prefers-reduced-motion:reduce){#stage canvas{transition:none}}
+</style>
+<div id="stage"></div>
+<div class="cap"><b>ملیکا · خروجی Tripo (G1)</b><span>19,169 مثلث · ریگ mixamo · ۴ کلیپ بومی · فقط تست، داخل بازی نیست</span></div>
+<div class="bar">
+ <div class="row modes" role="group" aria-label="حالت نمایش">
+  <button id="bReveal" class="on">ظاهر شدن</button><button id="bHolo">هولوگرام</button><button id="bReal">مدل واقعی</button>
+ </div>
+ <div class="row clips" id="clips" role="group" aria-label="کلیپ"></div>
+ <div class="row cols" id="cols" role="group" aria-label="رنگ هولوگرام"></div>
+ <div class="hint">با انگشت بچرخون؛ از جلو و پشت و کنار نگاه کن</div>
+</div>
+<div id="msg">در حال بارگذاری مدل…</div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const stage = document.getElementById('stage'), msg = document.getElementById('msg');
+const R = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: !!window.__TEST });
+R.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+R.outputColorSpace = THREE.SRGBColorSpace; R.toneMapping = THREE.ACESFilmicToneMapping; R.toneMappingExposure = 1.05;
+stage.appendChild(R.domElement);
+const scene = new THREE.Scene();
+scene.add(new THREE.HemisphereLight(0xdff6ff, 0x1a2a36, 1.5));
+const key = new THREE.DirectionalLight(0xfff0dd, 2.3); scene.add(key); const kp = new THREE.Vector3();
+const rim = new THREE.DirectionalLight(0x7fe06a, 1.6); rim.position.set(-3, 2.5, -3); scene.add(rim);
+const cam = new THREE.PerspectiveCamera(34, 1, 0.05, 50);
+const ctl = new OrbitControls(cam, R.domElement);
+ctl.enableDamping = true; ctl.enablePan = false; ctl.minDistance = 1.3; ctl.maxDistance = 7; ctl.maxPolarAngle = Math.PI * 0.56;
+ctl.autoRotate = true; ctl.autoRotateSpeed = 1.1; ctl.addEventListener('start', () => { ctl.autoRotate = false; });
+function size() { const w = innerWidth, h = innerHeight; R.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); fit(); }
+let dist = 4.2; function fit() { const a = cam.aspect; dist = a < 0.9 ? 4.3 : 3.7; }
+cam.position.set(0, 1.1, dist); ctl.target.set(0, 0.9, 0);
+
+// floor: soft disc + two rings
+const cv = document.createElement('canvas'); cv.width = cv.height = 256; { const g = cv.getContext('2d'), gr = g.createRadialGradient(128, 128, 8, 128, 128, 126); gr.addColorStop(0, 'rgba(255,255,255,.6)'); gr.addColorStop(.55, 'rgba(255,255,255,.13)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 256, 256); }
+const disc = new THREE.Mesh(new THREE.CircleGeometry(1.15, 64), new THREE.MeshBasicMaterial({ color: 0x7fe06a, map: new THREE.CanvasTexture(cv), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+disc.rotation.x = -Math.PI / 2; disc.position.y = 0.002; scene.add(disc);
+const ring = new THREE.Mesh(new THREE.RingGeometry(0.43, 0.46, 96), new THREE.MeshBasicMaterial({ color: 0xd8ffd0, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, depthWrite: false }));
+ring.rotation.x = -Math.PI / 2; scene.add(ring);
+
+// hologram patch: every vertex above the scan height shows as a cyan, fresnel + scan-line ghost; below it the real textured model; a bright band marks the scan height
+const U = { uCol: { value: new THREE.Color(0x7fe06a) }, uEdge: { value: -1 }, uReal: { value: 1 }, uTime: { value: 0 }, uY0: { value: 0 }, uY1: { value: 1.75 } };
+function holoMat(orig) {
+  const m = orig.clone(); m.transparent = true; m.customProgramCacheKey = () => 'tp1holo';
+  m.onBeforeCompile = (sh) => {
+    Object.assign(sh.uniforms, U);
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying float vWY; varying vec3 vWN; varying vec3 vWV;')
+      .replace('#include <project_vertex>', '#include <project_vertex>\n vec4 hwp = modelMatrix * vec4(transformed, 1.0); vWY = hwp.y; vWV = cameraPosition - hwp.xyz; vWN = mat3(modelMatrix) * objectNormal;');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', '#include <common>\nuniform vec3 uCol; uniform float uEdge, uReal, uTime, uY0, uY1; varying float vWY; varying vec3 vWN; varying vec3 vWV;')
+      .replace('#include <dithering_fragment>', `#include <dithering_fragment>
+ float hh = (vWY - uY0) / (uY1 - uY0);
+ float fr = pow(1.0 - clamp(abs(dot(normalize(vWN), normalize(vWV))), 0.0, 1.0), 2.0);
+ float lum = dot(gl_FragColor.rgb, vec3(0.299, 0.587, 0.114));
+ float sl = 0.5 + 0.5 * sin(vWY * 150.0 - uTime * 4.0);
+ vec3 hol = uCol * (0.16 + lum * 0.95 + fr * 1.7) * (0.72 + 0.28 * sl);
+ float ah = clamp(0.30 + fr * 0.65 + lum * 0.22, 0.0, 0.92);
+ float rl = step(uEdge, hh) * uReal;       // real model ABOVE the scan line: the scan runs from the head down to the feet
+ float bd = exp(-pow((hh - uEdge) / 0.016, 2.0));
+ vec3 col = mix(hol, gl_FragColor.rgb, rl) + mix(uCol, vec3(1.0), 0.6) * bd * 1.7;
+ gl_FragColor = vec4(col, max(mix(ah, 1.0, rl), bd));`);
+  };
+  return m;
+}
+
+// load
+let model = null, mixer = null, meshes = [], actions = {}, cur = null, mode = 'reveal', t0 = 0, H = 1.75;
+const clipsEl = document.getElementById('clips');
+const loader = new GLTFLoader();
+const onLoad = (g) => {
+  model = g.scene; scene.add(model);
+  model.updateMatrixWorld(true);
+  const b = new THREE.Box3(); model.traverse((o) => { if (o.isSkinnedMesh) { o.skeleton.update(); o.computeBoundingBox(); b.union(o.boundingBox.clone().applyMatrix4(o.matrixWorld)); } else if (o.isMesh) { b.expandByObject(o, true); } });
+  const s = 1.75 / (b.max.y - b.min.y);
+  model.scale.setScalar(s); model.position.set(-(b.min.x + b.max.x) / 2 * s, -b.min.y * s, -(b.min.z + b.max.z) / 2 * s); model.updateMatrixWorld(true);
+  U.uY0.value = 0; U.uY1.value = 1.75;
+  model.traverse((o) => { if (o.isMesh) { o.frustumCulled = false; meshes.push({ o, orig: o.material, holo: holoMat(o.material) }); } });
+  for (const c of g.animations) for (const t of c.tracks) if (/^mixamorig:?Hips\.position$/.test(t.name)) { const v = t.values; for (let i = 0; i < v.length; i += 3) { v[i] = 0.0019; v[i + 2] = 0.0057; } }   // walk / run carry 3.4 m of root motion: pin the hips to the bind spot so the demo plays in place
+  mixer = new THREE.AnimationMixer(model);
+  for (const c of g.animations) { actions[c.name] = mixer.clipAction(c); const bt = document.createElement('button'); bt.textContent = c.name; bt.dataset.c = c.name; bt.addEventListener('click', () => play(c.name)); clipsEl.appendChild(bt); }
+  play(actions.idle ? 'idle' : g.animations[0].name);
+  msg.hidden = true; setMode('reveal'); size(); cam.position.set(0, 1.1, dist);
+};
+const onErr = (e) => { msg.textContent = 'مدل بارگذاری نشد: ' + (e && e.message || e); };
+fetch('melika_g1.b64.txt').then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); }).then((t) => {
+  const bin = atob(t.trim()), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+  loader.parse(u.buffer, '', onLoad, onErr);
+}).catch(onErr);
+function play(n) { const a = actions[n]; if (!a) return; if (cur && cur !== a) { a.reset().play(); cur.crossFadeTo(a, 0.25, false); } else a.reset().play(); cur = a; [...clipsEl.children].forEach((b) => b.classList.toggle('on', b.dataset.c === n)); }
+function useMat(holo) { for (const m of meshes) m.o.material = holo ? m.holo : m.orig; }
+function setMode(m) {
+  mode = m; t0 = performance.now() / 1000;
+  for (const [id, k] of [['bReveal', 'reveal'], ['bHolo', 'holo'], ['bReal', 'real']]) document.getElementById(id).classList.toggle('on', k === m);
+  if (m === 'real') { useMat(false); ring.visible = false; } else { useMat(true); ring.visible = true; U.uReal.value = m === 'reveal' ? 1 : 0; }
+}
+const SIS = [['الینا', '#ff6a3a'], ['الیکا', '#9fe8ff'], ['ملیکا', '#7fe06a'], ['مبینا', '#f0a666'], ['آیلین', '#4fb0ff'], ['آیلار', '#cfeeff']];   // the game's own accent colours (rpg.js SIS)
+const colsEl = document.getElementById('cols');
+function setCol(hex, btn) { U.uCol.value.set(hex); const c = new THREE.Color(hex); disc.material.color.copy(c); ring.material.color.copy(c).lerp(new THREE.Color(0xffffff), 0.6); rim.color.copy(c); [...colsEl.children].forEach((b) => b.classList.toggle('on', b === btn)); }
+for (const [n, hex] of SIS) { const b = document.createElement('button'); b.innerHTML = '<i></i>' + n; b.style.setProperty('--c', hex); b.addEventListener('click', () => { setCol(hex, b); setMode('reveal'); }); colsEl.appendChild(b); if (n === 'ملیکا') setCol(hex, b); }
+window.__col = (i) => { const [, hex] = SIS[i]; setCol(hex, colsEl.children[i]); };
+document.getElementById('bReveal').onclick = () => setMode('reveal');
+document.getElementById('bHolo').onclick = () => setMode('holo');
+document.getElementById('bReal').onclick = () => setMode('real');
+const ease = (x) => x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+function applyScan(now) {
+  U.uTime.value = now;
+  if (mode === 'reveal') { const p = Math.min(1, (now - t0) / 2.8), e = 1.02 - 1.06 * ease(p); U.uEdge.value = e; ring.position.y = e * 1.75; if (p >= 1) { setMode('real'); } }
+  else if (mode === 'holo') { const e = 1.05 - ((now - t0) * 0.32) % 1.2; U.uEdge.value = e; ring.position.y = Math.max(0, e) * 1.75; }
+}
+window.addEventListener('resize', size);
+let last = performance.now() / 1000;
+function frame() {
+  const now = performance.now() / 1000, dt = Math.min(0.05, now - last); last = now;
+  if (mixer) mixer.update(dt); applyScan(now); ctl.update(); key.position.copy(cam.position).add(kp.set(1.4, 2.2, 0)); R.render(scene, cam);
+  if (!window.__TEST) requestAnimationFrame(frame);
+}
+// test hook (headless screenshots): fixed scan height, mode, azimuth
+window.__still = (edge, real, az, clip, tsec) => {
+  mode = 'test'; useMat(edge < 1.5); U.uReal.value = real; U.uEdge.value = edge; U.uTime.value = 1.3; ring.position.y = Math.max(0, edge) * 1.75; ring.visible = edge < 1.5;
+  if (clip) play(clip); mixer.setTime(tsec || 0.01); const r = dist; cam.position.set(Math.sin(az) * r, 1.1, Math.cos(az) * r); ctl.target.set(0, 0.9, 0); ctl.autoRotate = false; ctl.update(); key.position.copy(cam.position).add(kp.set(1.4, 2.2, 0)); R.render(scene, cam); return R.domElement.toDataURL('image/png');
+};
+window.__ready = () => !!model;
+size(); frame();
+</script>
