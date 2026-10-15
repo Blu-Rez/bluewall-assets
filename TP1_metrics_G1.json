@@ -1,0 +1,360 @@
+{
+ "melika.glb": {
+  "stats": {
+   "MB": 2.82,
+   "tris": 19103,
+   "verts": 12811,
+   "materials": 1,
+   "alpha": [
+    "OPAQUE"
+   ],
+   "textures": [
+    [
+     2048,
+     2048,
+     "jpg"
+    ]
+   ],
+   "skins": 1,
+   "joints": 78,
+   "clips": 33,
+   "ext": []
+  },
+  "clip_names": [
+   "idle",
+   "walk",
+   "run",
+   "jump",
+   "fall",
+   "land",
+   "dodge",
+   "hit",
+   "death",
+   "knockdown",
+   "punch_a",
+   "punch_b",
+   "kick_a",
+   "kick_b",
+   "cast",
+   "aim",
+   "talk",
+   "bow",
+   "cry",
+   "look_around",
+   "cheer",
+   "angry",
+   "sit_down",
+   "sit_idle",
+   "stand_up",
+   "slash_a",
+   "slash_b",
+   "slash_c",
+   "heavy",
+   "block",
+   "swim",
+   "climb",
+   "interact"
+  ],
+  "bones": {
+   "kind": "1:1 with the game rig (core bones present)",
+   "joints": 78,
+   "missing_vs_game": [],
+   "extra_vs_game": [],
+   "missing_core": []
+  },
+  "skin_weights": {
+   "verts": 12811,
+   "weight_sum_min": 0.9999998807907104,
+   "weight_sum_bad_pct": 0.0,
+   "max_influences_pct_4": 45.56240730622122,
+   "unweighted_pct": 0.0,
+   "shoulder_band": {
+    "verts": 2569,
+    "split_2joints_pct": 38.45854418061502,
+    "arm_weight_mean": 0.6545752882957458
+   },
+   "hip_band": {
+    "verts": 3178,
+    "split_2joints_pct": 23.6941472624292,
+    "leg_weight_mean": 0.8314021825790405
+   },
+   "skirt_band": {
+    "verts": 802,
+    "split_2joints_pct": 12.593516209476311
+   }
+  }
+ },
+ "melika_front_game.glb": {
+  "stats": {
+   "MB": 2.77,
+   "tris": 18880,
+   "verts": 12869,
+   "materials": 1,
+   "alpha": [
+    "OPAQUE"
+   ],
+   "textures": [
+    [
+     2048,
+     2048,
+     "jpg"
+    ]
+   ],
+   "skins": 1,
+   "joints": 78,
+   "clips": 22,
+   "ext": []
+  },
+  "clip_names": [
+   "idle",
+   "walk",
+   "run",
+   "jump",
+   "fall",
+   "land",
+   "dodge",
+   "hit",
+   "death",
+   "knockdown",
+   "punch_a",
+   "punch_b",
+   "kick_a",
+   "kick_b",
+   "cast",
+   "aim",
+   "talk",
+   "bow",
+   "cry",
+   "look_around",
+   "cheer",
+   "angry"
+  ],
+  "bones": {
+   "kind": "1:1 with the game rig (core bones present)",
+   "joints": 78,
+   "missing_vs_game": [],
+   "extra_vs_game": [],
+   "missing_core": []
+  },
+  "skin_weights": {
+   "verts": 12869,
+   "weight_sum_min": 0.9999998807907104,
+   "weight_sum_bad_pct": 0.0,
+   "max_influences_pct_4": 36.38200326365685,
+   "unweighted_pct": 0.0,
+   "shoulder_band": {
+    "verts": 2375,
+    "split_2joints_pct": 38.23157894736842,
+    "arm_weight_mean": 0.6497980952262878
+   },
+   "hip_band": {
+    "verts": 3245,
+    "split_2joints_pct": 17.627118644067796,
+    "leg_weight_mean": 0.8092039227485657
+   },
+   "skirt_band": {
+    "verts": 1113,
+    "split_2joints_pct": 12.578616352201259
+   }
+  }
+ },
+ "new.glb (NEW)": {
+  "stats": {
+   "MB": 4.23,
+   "tris": 19169,
+   "verts": 27073,
+   "materials": 1,
+   "alpha": [
+    "OPAQUE"
+   ],
+   "textures": [
+    [
+     2048,
+     2048,
+     "jpg"
+    ],
+    [
+     2048,
+     2048,
+     "jpg"
+    ]
+   ],
+   "skins": 1,
+   "joints": 65,
+   "clips": 4,
+   "ext": []
+  },
+  "clip_names": [
+   "walk",
+   "jump",
+   "idle",
+   "run"
+  ],
+  "bones": {
+   "kind": "mixamo names (needs a name map)",
+   "joints": 65,
+   "missing_vs_game": [
+    "BoneRoot",
+    "FacialBone",
+    "Head",
+    "Hip",
+    "L_Calf",
+    "L_CalfTwist01",
+    "L_CalfTwist02",
+    "L_Clavicle",
+    "L_ElbowShareBone",
+    "L_Eye",
+    "L_Foot",
+    "L_Forearm",
+    "L_ForearmTwist01",
+    "L_ForearmTwist02",
+    "L_Hand",
+    "L_Index1",
+    "L_Index2",
+    "L_Index3",
+    "L_KneeShareBone",
+    "L_Mid1",
+    "L_Mid2",
+    "L_Mid3",
+    "L_Pinky1",
+    "L_Pinky2",
+    "L_Pinky3",
+    "L_Ring1",
+    "L_Ring2",
+    "L_Ring3",
+    "L_Thigh",
+    "L_ThighTwist01",
+    "L_ThighTwist02",
+    "L_Thumb1",
+    "L_Thumb2",
+    "L_Thumb3",
+    "L_ToeBase",
+    "L_Upperarm",
+    "L_UpperarmTwist01",
+    "L_UpperarmTwist02",
+    "NeckTwist01",
+    "NeckTwist02",
+    "Pelvis",
+    "R_Calf",
+    "R_CalfTwist01",
+    "R_CalfTwist02",
+    "R_Clavicle",
+    "R_ElbowShareBone",
+    "R_Eye",
+    "R_Foot",
+    "R_Forearm",
+    "R_ForearmTwist01",
+    "R_ForearmTwist02",
+    "R_Hand",
+    "R_Index1",
+    "R_Index2",
+    "R_Index3",
+    "R_KneeShareBone",
+    "R_Mid1",
+    "R_Mid2",
+    "R_Mid3",
+    "R_Pinky1"
+   ],
+   "extra_vs_game": [
+    "mixamorig:Head",
+    "mixamorig:HeadTop_End",
+    "mixamorig:Hips",
+    "mixamorig:LeftArm",
+    "mixamorig:LeftFoot",
+    "mixamorig:LeftForeArm",
+    "mixamorig:LeftHand",
+    "mixamorig:LeftHandIndex1",
+    "mixamorig:LeftHandIndex2",
+    "mixamorig:LeftHandIndex3",
+    "mixamorig:LeftHandIndex4",
+    "mixamorig:LeftHandMiddle1",
+    "mixamorig:LeftHandMiddle2",
+    "mixamorig:LeftHandMiddle3",
+    "mixamorig:LeftHandMiddle4",
+    "mixamorig:LeftHandPinky1",
+    "mixamorig:LeftHandPinky2",
+    "mixamorig:LeftHandPinky3",
+    "mixamorig:LeftHandPinky4",
+    "mixamorig:LeftHandRing1",
+    "mixamorig:LeftHandRing2",
+    "mixamorig:LeftHandRing3",
+    "mixamorig:LeftHandRing4",
+    "mixamorig:LeftHandThumb1",
+    "mixamorig:LeftHandThumb2",
+    "mixamorig:LeftHandThumb3",
+    "mixamorig:LeftHandThumb4",
+    "mixamorig:LeftLeg",
+    "mixamorig:LeftShoulder",
+    "mixamorig:LeftToeBase",
+    "mixamorig:LeftToe_End",
+    "mixamorig:LeftUpLeg",
+    "mixamorig:Neck",
+    "mixamorig:RightArm",
+    "mixamorig:RightFoot",
+    "mixamorig:RightForeArm",
+    "mixamorig:RightHand",
+    "mixamorig:RightHandIndex1",
+    "mixamorig:RightHandIndex2",
+    "mixamorig:RightHandIndex3",
+    "mixamorig:RightHandIndex4",
+    "mixamorig:RightHandMiddle1",
+    "mixamorig:RightHandMiddle2",
+    "mixamorig:RightHandMiddle3",
+    "mixamorig:RightHandMiddle4",
+    "mixamorig:RightHandPinky1",
+    "mixamorig:RightHandPinky2",
+    "mixamorig:RightHandPinky3",
+    "mixamorig:RightHandPinky4",
+    "mixamorig:RightHandRing1",
+    "mixamorig:RightHandRing2",
+    "mixamorig:RightHandRing3",
+    "mixamorig:RightHandRing4",
+    "mixamorig:RightHandThumb1",
+    "mixamorig:RightHandThumb2",
+    "mixamorig:RightHandThumb3",
+    "mixamorig:RightHandThumb4",
+    "mixamorig:RightLeg",
+    "mixamorig:RightShoulder",
+    "mixamorig:RightToeBase"
+   ],
+   "missing_core": [
+    "Pelvis",
+    "Spine02",
+    "Head",
+    "L_Clavicle",
+    "R_Clavicle",
+    "L_Upperarm",
+    "R_Upperarm",
+    "L_Hand",
+    "R_Hand",
+    "L_Thigh",
+    "R_Thigh",
+    "L_Foot",
+    "R_Foot",
+    "BoneRoot",
+    "Hip"
+   ]
+  },
+  "skin_weights": {
+   "verts": 27073,
+   "weight_sum_min": 0.9999998807907104,
+   "weight_sum_bad_pct": 0.0,
+   "max_influences_pct_4": 42.08251763749862,
+   "unweighted_pct": 0.0,
+   "shoulder_band": {
+    "verts": 3675,
+    "split_2joints_pct": 47.564625850340136,
+    "arm_weight_mean": 0.0
+   },
+   "hip_band": {
+    "verts": 4425,
+    "split_2joints_pct": 23.25423728813559,
+    "leg_weight_mean": 0.07401175051927567
+   },
+   "skirt_band": {
+    "verts": 4757,
+    "split_2joints_pct": 43.66197183098591
+   }
+  }
+ }
+}
