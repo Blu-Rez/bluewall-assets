@@ -49,7 +49,7 @@ export async function preload({ animals = ANIMAL_FILES, people = PEOPLE_FILES } 
     state.useAnimals = animalsWanted();                                                        // AN1: off by default (see the top of the file)
     if (state.useAnimals) { try { const out = await tr2.load(animals); for (const n of animals) state.has[n] = !!out[n]; state.animals = animals.every((n) => state.has[n]); } catch (e) { state.err.push('animals ' + e); } }
     await Promise.all(people.map(async (k) => {
-      try { const g = await getLoader().loadAsync(tr2.base + k + '.glb' + V); const walk = (g.animations || []).find((a) => /walk/i.test(a.name)) || g.animations[0]; if (!walk) throw new Error('no walk clip'); state.vill[k] = { scene: g.scene, walk }; state.has[k] = true; }
+      try { const g = await getLoader().loadAsync(tr2.base + k + '.glb' + V); const walk0 = (g.animations || []).find((a) => /walk/i.test(a.name)) || g.animations[0]; if (!walk0) throw new Error('no walk clip'); const { clip: walk, speed: rootV } = stripRoot(g.scene, walk0); state.vill[k] = { scene: g.scene, walk, walk0, rootV }; state.has[k] = true; }
       catch (e) { state.err.push(k + ' ' + e); state.has[k] = false; }
     }));
     state.people = people.every((k) => state.has[k]);
@@ -172,34 +172,55 @@ function frozenClip(walk, tf, name) {                                           
 // (WALK_SLOW), so `stats.walkSpeed` is the ground speed this slower stride matches and the callers' own rate maths (wslife setSpeed, pas_life manRate, units speed) keep the feet on the ground.
 export const WALK_SLOW = 0.6;
 function slowWalk(walk, f = WALK_SLOW) { return new THREE.AnimationClip('Walk_Loop', walk.duration / f, walk.tracks.map((tr) => tr.clone().scale(1 / f))); }
-// look for the idle frame: the walk frame with the feet closest together (and level) — a standing-like pose.  Returns { tf, ws (walking speed m/s of the clip), minY, height } in the rig's own units.
+// AN1 (15 Oct 2026): the library's walk clip carries ROOT MOTION on its Hip.position track: the whole figure travels ≈ 4.7 m per loop and pops back at the loop point, while the game ALSO moves the instance, so the planted
+// foot slid at the full walking speed (≈ 150-190 cm/s measured) and the figure jumped back every cycle (the frozen idle frame stood ≈ 1.3 m ahead of its spot).  The linear travel is taken out of that track here
+// (code only: the poses, the timing and the file stay as they are).  `speed` = the ground speed the clip was made for (rig units / s at the clip's own rate): the planted foot moves back at exactly that speed.
+function stripRoot(scene, walk) {
+  const rig = SkeletonUtils.clone(scene); rig.updateMatrixWorld(true);
+  let best = null, bl = 0;
+  for (const tr of walk.tracks) { if (!/\.position$/.test(tr.name) || tr.times.length < 3) continue; const v = tr.values, n = tr.times.length, L = Math.hypot(v[(n - 1) * 3] - v[0], v[(n - 1) * 3 + 1] - v[1], v[(n - 1) * 3 + 2] - v[2]); if (L > bl) { bl = L; best = tr; } }
+  if (!best) return { clip: walk, speed: 0 };
+  const bone = rig.getObjectByName(best.name.replace(/\.position$/, '')), mixer = new THREE.AnimationMixer(rig), act = mixer.clipAction(walk); act.setLoop(THREE.LoopOnce, 1); act.clampWhenFinished = true; act.play();      // (once: at t1 a repeating clip would wrap back to t0)
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), t0 = best.times[0], t1 = best.times[best.times.length - 1];
+  mixer.setTime(t0); rig.updateMatrixWorld(true); bone.getWorldPosition(a); mixer.setTime(t1); rig.updateMatrixWorld(true); bone.getWorldPosition(b);
+  const speed = Math.hypot(b.x - a.x, b.z - a.z) / Math.max(1e-3, t1 - t0);
+  const tracks = walk.tracks.map((tr) => {
+    if (tr !== best) return tr.clone();
+    const v = Float32Array.from(tr.values), n = tr.times.length, dx = v[(n - 1) * 3] - v[0], dy = v[(n - 1) * 3 + 1] - v[1], dz = v[(n - 1) * 3 + 2] - v[2];
+    for (let i = 0; i < n; i++) { const u = (tr.times[i] - t0) / (t1 - t0); v[i * 3] -= dx * u; v[i * 3 + 2] -= dz * u; v[i * 3 + 1] -= dy * u; }      // linear travel out; the sway / bob stay
+    return new tr.constructor(tr.name, Array.from(tr.times), Array.from(v));
+  });
+  return { clip: new THREE.AnimationClip(walk.name, walk.duration, tracks), speed };
+}
+// look for the idle frame: the walk frame with the feet closest together (and level) — a standing-like pose.  Returns { tf, minY, height } in the rig's own units.
 function study(scene, walk) {
   const rig = SkeletonUtils.clone(scene); rig.updateMatrixWorld(true);
   const fl = rig.getObjectByName(FOOT_L), fr = rig.getObjectByName(FOOT_R);
   const mixer = new THREE.AnimationMixer(rig), act = mixer.clipAction(walk); act.play();
-  const a = new THREE.Vector3(), b = new THREE.Vector3(), N = 48; let best = 1e9, tf = 0, lo = 1e9, hi = -1e9;
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), N = 48; let best = 1e9, tf = 0;
   for (let i = 0; i < N; i++) {
     const t = (i / N) * walk.duration; mixer.setTime(t); rig.updateMatrixWorld(true);
-    if (fl && fr) { fl.getWorldPosition(a); fr.getWorldPosition(b); const d = Math.abs(a.z - b.z) + 3 * Math.abs(a.y - b.y) + Math.abs(a.x - b.x) * 0.2; if (d < best) { best = d; tf = t; } lo = Math.min(lo, a.z); hi = Math.max(hi, a.z); }
+    if (fl && fr) { fl.getWorldPosition(a); fr.getWorldPosition(b); const d = Math.abs(a.z - b.z) + 3 * Math.abs(a.y - b.y) + Math.abs(a.x - b.x) * 0.2; if (d < best) { best = d; tf = t; } }
   }
   mixer.setTime(tf); rig.updateMatrixWorld(true);
   const box = new THREE.Box3().setFromObject(rig, true), sz = box.getSize(new THREE.Vector3());
-  return { tf, ws: (hi - lo) / (0.6 * walk.duration), minY: box.min.y, height: sz.y, feetSep: best };
+  return { tf, minY: box.min.y, height: sz.y, feetSep: best };
 }
 export function people(key, { capacity = 40, fps = 15, lod2 = null, height = PEOPLE[key] || 3.0 } = {}) {
   const v = state.vill[key]; if (!v) return null;
   const scene = SkeletonUtils.clone(v.scene);
   scene.traverse((o) => { if (o.isMesh && o.material) { const m = o.material; m.metalness = 0; m.roughness = 0.9; m.metalnessMap = null; m.roughnessMap = null; m.envMapIntensity = 0.35; if (m.map) m.map.anisotropy = 4; } });
   scene.updateMatrixWorld(true);
-  const S = study(scene, v.walk), k = height / S.height;
+  const S = study(scene, v.walk), k = height / S.height; S.ws = v.rootV;
   scene.scale.setScalar(k); scene.position.set(0, -S.minY * k, 0); scene.updateMatrixWorld(true);       // metres, feet on y = 0, so callers use scale 1
   const walk = slowWalk(v.walk), idle = frozenClip(v.walk, S.tf, 'Idle_Loop');
   const kind = createKind({ gltf: { scene, animations: [walk] }, anims: { animations: [walk, idle] }, clips: ['Idle_Loop', 'Walk_Loop'], capacity, fps, lod2 });
-  kind.stats.walkSpeed = S.ws * k * WALK_SLOW; kind.people = true; kind.height = height; kind.key = key; kind.study = { ...S, k };
+  kind.stats.walkSpeed = S.ws * k * WALK_SLOW; kind.people = true; kind.height = height; kind.key = key; kind.study = { ...S, k };      // AN1: walkSpeed = the planted foot's speed at rate 1 (was a foot-range guess, 1.7x too high, plus the clip's own root motion)
   const baseAdd = kind.add;
   kind.add = (spec = {}) => {                                                           // the old clip names map onto the two clips we have
     const { clip, speed = 1, phase = 0, ...rest } = spec, p = baseAdd({ ...rest, speed, phase, clip: null }), play = p.play;
     p.play = (name, o) => play(name === 'Walk_Loop' ? 'Walk_Loop' : 'Idle_Loop', o);
+    p.startWalk = (sp = 1) => play('Walk_Loop', { speed: sp, offset: S.tf / WALK_SLOW / sp });       // AN1: the walk begins at the frame the standing pose was cut from (no pop out of the idle pose)
     if (clip) p.play(clip, { fade: false, speed, offset: phase });
     return p;
   };
@@ -212,11 +233,12 @@ export function skinned(key, { height = PEOPLE[key] || 3.0 } = {}) {
   const scene = SkeletonUtils.clone(v.scene);
   scene.traverse((o) => { if (o.isMesh && o.material) { const m = o.material; m.metalness = 0; m.roughness = 0.9; m.metalnessMap = null; m.roughnessMap = null; m.envMapIntensity = 0.35; } });
   scene.updateMatrixWorld(true);
-  const S = v.study || (v.study = study(scene, v.walk)), k = height / S.height;
+  const S = v.study || (v.study = { ...study(scene, v.walk), ws: v.rootV }), k = height / S.height;
   scene.scale.setScalar(k); scene.position.set(0, -S.minY * k, 0);
   const root = new THREE.Group(); root.add(scene);
   root.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; o.frustumCulled = false; } });
   return { root, scene, mixer: new THREE.AnimationMixer(scene), S, k, walk: slowWalk(v.walk), idle: frozenClip(v.walk, S.tf, 'Idle_Loop'), speed: S.ws * k * WALK_SLOW };
 }
 
+if (typeof window !== 'undefined') window.__tr2dev = { state, clone: (o) => SkeletonUtils.clone(o), slowWalk, WALK_SLOW, study };      // AN1: dev peek (the tests read the villager clips)
 export default { state, preload, has, ready, fauna, horses, people, skinned, gltfLike, dyn, PEOPLE };

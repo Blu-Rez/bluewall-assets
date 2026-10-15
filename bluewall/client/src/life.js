@@ -9,11 +9,12 @@ import { makeAxe } from './gear_axe.js';
 import { AXE_RIDE } from './gear_sword.js';
 import * as L from './layout.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { makeCreature, herd, freezeStatic, lodStep } from './creature.js';
+import { makeCreature, herd, freezeStatic, lodStep, gaitSpeed } from './creature.js';
 import { instance } from './assets.js';
 import { buildModelDragon } from './dragon_model.js';
 import { roadPoints } from './terrain.js';
-import { road } from './roads.js';
+import { road, roadDist } from './roads.js';
+import { approach, clampN } from './walk_kit.js';        // AN1_R2
 import { buildPastureLife } from './pas_life.js';
 import * as TL from './tr2_life.js';                       // TR2-S4d: Tripo animals (eagles, crows, hens, dogs, wolves, the pasture) when loaded; the old models stay as the fallback
 
@@ -296,6 +297,7 @@ export function buildLife(sceneRoot, height, Q, hooks) {
         const hg = G2[R.coat], len = R.coat === 'barded' ? 5.6 : 5.6 * HS;
         const h = makeCreature(hg, { length: len * (R.lord ? 1.1 : 1) }); if (!h) return;
         const k = makeCreature(R.axe ? G2.axe : G2.rider, { height: 1 }); if (!k) return;
+        const vn = gaitSpeed(h, new RegExp('^' + R.gait + '$'));          // AN1_R2: measured BEFORE the rider is mounted (his userData.farRef makes the horse's skeleton uncloneable)
         h.root.userData.bwCull = 380; scene.add(h.root);
         h.play(R.gait); h.mixer.update(0.01); h.root.updateMatrixWorld(true);
         if (!mount(h, k, len, 1.24 * (R.lord ? 1.12 : R.axe ? 1.1 : 1))) { k.root.position.y = 2.6; h.root.add(k.root); }
@@ -309,19 +311,28 @@ export function buildLife(sceneRoot, height, Q, hooks) {
         // follow the route (ping-pong on open roads, loop on the ring street)
         const pts = R.pts.map(([x, z]) => new THREE.Vector3(x, 0, z));
         const curve = new THREE.CatmullRomCurve3(pts, !!R.loop, 'centripetal'), len2 = curve.getLength();
-        let s2 = R.off * len2, dir = R.dir, wait = 0; const p = new THREE.Vector3(), p2 = new THREE.Vector3();
-        h.act && (h.act.timeScale = R.gait === 'Gallop' ? 1.1 : 1);
+        let s2 = R.off * len2, dir = R.dir, wait = 0, kv = R.loop ? 0 : 0; const p = new THREE.Vector3(), p2 = new THREE.Vector3();
+        // AN1_R2: the clip is played at the rate of the speed the horse really has (it was 1.0-1.1 whatever the route speed: the hooves slid at 1.5-11 m/s), the speed ramps up and down (a braking
+        // curve into the end of a ping-pong road), turns are limited to 2.2 rad/s (a frame-rate-free version of the old lerp), the ring street / main road lifts the hooves onto the cobble ribbon
+        const vmax = vn > 0.3 ? THREE.MathUtils.clamp(R.speed, (R.gait === 'Gallop' ? 0.7 : 0.55) * vn, 1.45 * vn) : R.speed;       // (a gallop slower than 0.7x its own pace reads as slow motion: the road speed rises to that)
+        const nLift = Math.ceil(len2 / 2) + 1, lift = new Float32Array(nLift), pl = new THREE.Vector3();
+        for (let i = 0; i < nLift; i++) { curve.getPointAt(Math.min(1, (i * 2) / len2), pl); lift[i] = roadDist(pl.x, pl.z, 'cobble') < -0.2 ? 1 : 0; }
+        const liftAt = (u) => { const f = u * len2 / 2, i = Math.min(nLift - 1, Math.floor(f)), j = Math.min(nLift - 1, i + 1), w = f - i; return lift[i] * (1 - w) + lift[j] * w; };
+        h.act && (h.act.timeScale = 1);
         updaters.push((t, dt) => {
-          if (wait > 0) { wait -= dt; if (wait <= 0) h.play(R.gait, { speed: R.gait === 'Gallop' ? 1.1 : 1 }); }
-          else {
-            s2 += dir * dt * R.speed;
-            if (!R.loop && (s2 > len2 - 2 || s2 < 2)) { s2 = THREE.MathUtils.clamp(s2, 2, len2 - 2); dir *= -1; wait = 5 + Math.random() * 4; h.play(/^Idle$|Idle_2/); }
-          }
           const u = ((s2 % len2) + len2) % len2 / len2, u2 = ((s2 + dir * 1.5) % len2 + len2) % len2 / len2;
           curve.getPointAt(u, p); curve.getPointAt(u2, p2);
-          h.root.position.set(p.x, hooks.walkY ? hooks.walkY(p.x, p.z) : height(p.x, p.z), p.z);
-          const want = Math.atan2(p2.x - p.x, p2.z - p.z); let da = want - h.root.rotation.y; da = Math.atan2(Math.sin(da), Math.cos(da));
-          h.root.rotation.y += da * Math.min(1, dt * 5);
+          const want = Math.atan2(p2.x - p.x, p2.z - p.z), err = Math.atan2(Math.sin(want - h.root.rotation.y), Math.cos(want - h.root.rotation.y));
+          h.root.rotation.y += clampN(err, -2.2 * dt, 2.2 * dt);
+          if (wait > 0) { wait -= dt; kv = 0; if (wait <= 0 && Math.abs(err) > 0.3) wait = 0.05; if (wait <= 0) h.play(R.gait, { speed: 0.1 }); }       // (it leaves when it faces the road again)
+          else {
+            const rem = R.loop ? 1e9 : dir > 0 ? len2 - 2 - s2 : s2 - 2;
+            kv = approach(kv, Math.min(vmax, Math.sqrt(2 * 1.8 * 0.8 * Math.max(0, rem)) + 0.15) * clampN(1.6 - Math.abs(err), 0.3, 1), 1.2, 1.8, dt); s2 += dir * kv * dt;
+            if (!R.loop && rem < 0.05) { s2 = THREE.MathUtils.clamp(s2, 2, len2 - 2); dir *= -1; kv = 0; wait = 5 + Math.random() * 4; h.play(/^Idle$|Idle_2/); }
+            else if (h.act && vn > 0.3) h.act.timeScale = clampN(kv / vn, 0.08, 1.8);
+          }
+          const y0 = hooks.walkY ? hooks.walkY(p.x, p.z) : height(p.x, p.z);
+          h.root.position.set(p.x, y0 + 0.07 * liftAt(u), p.z);
           if (!h.root.userData.bwFar) lodStep(h, dt);
         });
         knights.push(h);
@@ -330,13 +341,15 @@ export function buildLife(sceneRoot, height, Q, hooks) {
     wolf(g) {
       // dogs in town (warm tint) by day, grey wolves at the forest edge at night
       const TD = TL.ready() && TL.has('animal_dog') && TL.has('animal_wolf'), gd = TD ? TL.gltfLike('animal_dog') : g, gwf = TD ? TL.gltfLike('animal_wolf') : g;     // TR2-S4d: static Tripo dog / wolf (a procedural trot below)
-      const dogs = herd(scene, gd, 3, { cx: L.PLAZA.x - 6, cz: L.PLAZA.z + 14, r: 14, height, size: 2.2, speed: 2.2, seed: 7,
+      const cobble = (x, z) => height(x, z) + (roadDist(x, z, 'cobble') < -0.15 ? 0.07 : 0);       // AN1_R2: town.js lays the street ribbon 7 cm over the terrain
+      const dogs = herd(scene, gd, 3, { cx: L.PLAZA.x - 6, cz: L.PLAZA.z + 14, r: 14, height, size: 2.2, speed: 2.2, seed: 7, ground: cobble,
         avoid: (x, z) => L.sdPoly(L.OUTER, x, z) > -4 });
       for (const c of dogs.list) c.inner.traverse((o) => { if (o.isMesh) { o.material = o.material.clone(); o.material.color.multiply(new THREE.Color(1.25, 1.0, 0.7)); } });
       updaters.push((t, dt) => dogs.update(dt));
       const wolves = herd(scene, gwf, 4, { cx: 60, cz: -300, r: 30, height, size: 2.8, speed: 1.8, seed: 13 });
       for (const c of wolves.list) nightOnly.push(c.root);
       updaters.push((t, dt) => wolves.update(dt));
+      if (typeof window !== 'undefined') window.__herds = { dogs, wolves };      // AN1: dev peek (tests read the herds)
       if (TD) for (const hd of [dogs, wolves]) for (const c of hd.list) { const by = c.inner.position.y; updaters.push((t) => { if (c.root.userData.bwFar || !c.root.visible) return; const w = c.state === 'walk', u = t * 8 + c.root.id; c.inner.position.y = by + (w ? Math.abs(Math.sin(u)) * 0.05 : 0); c.inner.rotation.z = w ? Math.sin(u) * 0.03 : 0; }); }     // (no legs to move: a small bob + sway while it walks)
     },
     windmill2(g) {

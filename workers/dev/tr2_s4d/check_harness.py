@@ -24,7 +24,7 @@ async def main():
             v = R['people'].get(k)
             if not isinstance(v, dict): ok(False, k + ' missing'); continue
             ok(abs(v['rawH'] * v['k'] - h) < 0.03, '%s calibrated to %.2f m (raw %.2f × k %.3f)' % (k, h, v['rawH'], v['k']))
-            ok(1.6 < v['walkSpeed'] < 2.6, '%s walking speed %.2f m/s (the old peasants walked 2.1; clip stretched ×1 / 0.6)' % (k, v['walkSpeed']))
+            ok(0.9 < v['walkSpeed'] < 1.6, '%s walking speed %.2f m/s (AN1_R2: the true planted-foot speed of the clip stretched ×1 / 0.6 — the old 1.6–2.6 counted the clip\'s own root travel, which the game then added a second time)' % (k, v['walkSpeed']))
             ok(v['feetSep'] < 1.0, '%s idle frame found (feet apart %.2f)' % (k, v['feetSep']))
             ok(set(v['clips']) >= {'Idle_Loop', 'Walk_Loop'}, k + ' has the two clips')
         for sp, bx in R['birds'].items():

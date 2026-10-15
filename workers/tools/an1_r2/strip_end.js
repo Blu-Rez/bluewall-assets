@@ -1,0 +1,1 @@
+const S=window.__st; if(S&&S.g){ S.g.parent&&S.g.parent.remove(S.g); } if(S){ __bw.camera.fov=S.cam0.fov; __bw.camera.updateProjectionMatrix(); } window.__st=null; for(const [el,v] of (window.__stHid||[])) el.style.visibility=v; window.__stHid=[]; return {ok:1};

@@ -24,6 +24,7 @@ import { mergeSkinned } from './creature.js';
 import { SPOTS, STABLE_FX } from './pas_stable.js';
 import { ENT, levelOf } from './skin.js';
 import * as TL from './tr2_life.js';                         // TR2-S4d: Tripo animals + villagers
+import { approach, turnTo, clampN, stanceSpeed } from './walk_kit.js';    // AN1_R2: speed ramps + limited turns (the gait clips are played at the rate of the speed the body really has)
 
 const HS = 1.335, H_LEN = 5.6 * HS;                          // Mesh2Motion horse: bind box (tail straight back) -> a 5.6 m horse
 const COW_LEN = 4.9;
@@ -156,11 +157,9 @@ export function measure(src, clips, gaits = []) {
   const mixer = new THREE.AnimationMixer(rig), out = { size, minY, v: {} };
   // natural ground speed of a gait: a hoof's fore-aft travel happens while it stands on the ground (duty factor of the gait)
   let hoof = null, hy = 1e9; rig.traverse((o) => { if (o.isBone && /foot|hoof|toe|^FF\.|LowerLeg/i.test(o.name)) { o.getWorldPosition(_v); if (_v.y < hy) { hy = _v.y; hoof = o; } } });
-  for (const [name, duty] of gaits) {
-    const c = (src.userData.pasClips || []).find((a) => a.name === name); if (!c || !hoof) continue;
-    const act = mixer.clipAction(c); act.play(); let lo = 1e9, hi = -1e9;
-    for (let f = 0; f < 24; f++) { mixer.setTime((c.duration * f) / 24); rig.updateMatrixWorld(true); hoof.getWorldPosition(_v); lo = Math.min(lo, _v.z); hi = Math.max(hi, _v.z); }
-    act.stop(); out.v[name] = (hi - lo) / (duty * c.duration);
+  for (const [name] of gaits) {                                          // AN1_R2: the planted feet's own speed (walk_kit.stanceSpeed); the old hoof z-range / duty guess read a trot 25 % too slow
+    const c = (src.userData.pasClips || []).find((a) => a.name === name); if (!c) continue;
+    const holder = new THREE.Group(); holder.add(SkeletonUtils.clone(src)); out.v[name] = stanceSpeed(holder.children[0], c, Math.max(12, Math.round(c.duration * 20)));      // (sampled at the 20 fps the crowd bakes: what is on screen is exactly those frames)
   }
   for (const [name, f] of clips) {
     const c = (src.userData.pasClips || []).find((a) => a.name === name); if (!c) continue;
@@ -236,7 +235,13 @@ export function buildPastureLife(group, height, opt) {
     }
   } catch (e) { console.warn('pasture people', e); }
   const PS = TP && pm ? 1 : 1.75 * 0.95;
-  const manRate = (v) => { const ws = (pm && pm.stats.walkSpeed) || 1.25; return THREE.MathUtils.clamp(v / (ws * PS), 0.6, 1.5); };   // Walk_Loop playback for a ground speed (no sliding feet)
+  const manRate = (v) => { const ws = (pm && pm.stats.walkSpeed) || 1.25; return THREE.MathUtils.clamp(v / (ws * PS), 0.2, 1.8); };   // Walk_Loop playback for a ground speed (no sliding feet)
+  // AN1_R2: a person who is moved by a script: his gait follows the speed he REALLY has (measured from his own motion), the idle pose when he stands
+  const follow = (q, st, dt) => {
+    const ws = (pm && pm.stats.walkSpeed) || 1.25, inst = st.has && dt > 0 ? Math.hypot(q.x - st.px, q.z - st.pz) / dt : 0; st.v += (inst - st.v) * Math.min(1, dt * 10); st.px = q.x; st.pz = q.z; st.has = true;
+    if (st.v > 0.14) { if (st.mode !== 'w') { st.mode = 'w'; const sp = Math.max(0.2, st.v / (ws * PS)); if (q.startWalk) q.startWalk(sp); else q.play('Walk_Loop', { speed: sp }); } else q.setSpeed(THREE.MathUtils.clamp(st.v / (ws * PS), 0.15, 1.8)); }
+    else if (st.v < 0.08 && st.mode !== 'i') { st.mode = 'i'; q.play('Idle_Loop'); }
+  };
   const person = (k, x, z, yaw, clip, phase = rnd() * 3) => { const kk = k === 'f' ? pf || pm : pm || pf; if (!kk) return null; const p = kk.add({ x, y: height(x, z), z, yaw, scale: PS, clip, phase }); p.cr = 2.6; yard.push(p); p.homeY = p.y; p.lift = 0; blobList.push([p, 1.7, 1.5]); return p; };
 
   // ---- soft contact shadows under every animal and person (one instanced draw; real shadows only exist where the sun's shadow map reaches)
@@ -281,17 +286,20 @@ export function buildPastureLife(group, height, opt) {
     return null;
   };
   const addAnimal = (p, kind, o = {}) => {
-    const a = { p, kind, rad: kind === 'cow' ? 2.1 : 2.4 * (p.s || 1), state: 'graze', timer: 2 + rnd() * 10, tx: null, tz: null, speed: 0, gait: '', mom: o.mom || null, pitch: 0, roll: 0, sAcc: rnd(), id: animals.length };
+    const a = { p, kind, rad: kind === 'cow' ? 2.1 : 2.4 * (p.s || 1), state: 'graze', timer: 2 + rnd() * 10, tx: null, tz: null, speed: 0, gait: '', mom: o.mom || null, pitch: 0, roll: 0, sAcc: rnd(), id: animals.length, m: { v: 0 }, gait: '' };
     animals.push(a); return a;
   };
   const playA = (a, clip, sp = 1) => { if (a.clip === clip && Math.abs((a.cs || 1) - sp) < 0.01) return; a.clip = clip; a.cs = sp; a.p.play(clip, { speed: sp, offset: rnd() * 2 }); };
+  // AN1_R2: a gait clip whose rate follows the speed: a new clip only when the gait changes, else the running one is re-timed without a jump in its phase
+  const gaitA = (a, clip, rate) => { if (a.clip !== clip) { a.clip = clip; a.cs = rate; a.p.play(clip, { speed: rate, offset: rnd() * 2 }); } else if (Math.abs((a.cs || 1) - rate) > 0.004 && a.p.setSpeed) { a.cs = rate; a.p.setSpeed(rate); } };
   const GRAZE = { horse: 'Eating', cow: 'Eating' };
   let cowV = 1.6;
-  const setGround = (a) => {
+  const setGround = (a, snap = true) => {
     const p = a.p, x = p.x, z = p.z, f = a.kind === 'cow' ? 1.8 : 2.4 * (p.s || 1), sw = 0.9;
     const fx = Math.sin(p.yaw), fz = Math.cos(p.yaw), h0 = height(x, z);
     const hF = height(x + fx * f, z + fz * f), hB = height(x - fx * f, z - fz * f), hL = height(x - fz * sw, z + fx * sw), hR = height(x + fz * sw, z - fx * sw);
-    p.y = Math.min(h0, (hF + hB) / 2) + (p.lift || 0); p.pitch = -Math.atan2(hF - hB, 2 * f) * 0.9; p.roll = Math.atan2(hL - hR, 2 * sw) * 0.6;
+    a.gy = Math.min(h0, (hF + hB) / 2) + (p.lift || 0); a.gp = -Math.atan2(hF - hB, 2 * f) * 0.9; a.gr = Math.atan2(hL - hR, 2 * sw) * 0.6;
+    if (snap || p.pitch === undefined) { p.y = a.gy; p.pitch = a.gp; p.roll = a.gr; }                // (while walking the body eases to the new ground, see think())
   };
   // horses: 3 bay, 2 black, 3 grey, two foals at heel
   const hplan = [['bay', 1.0], ['grey', 1.04], ['black', 0.98], ['bay', 0.95], ['grey', 0.97], ['black', 1.03], ['bay', 1.0], ['grey', 0.92]];
@@ -327,27 +335,39 @@ export function buildPastureLife(group, height, opt) {
       else if (r < 0.86) { a.state = 'graze'; a.timer = 6 + rnd() * 14; }
       else { a.state = 'stand'; a.timer = 3 + rnd() * 7; }
     }
-    // clips + motion
-    let want = 0, gait = null;
-    if (a.state === 'walk') { gait = 'Walk'; want = a.kind === 'cow' ? cowV * 0.8 : gaitV.Walk * 0.72 * (p.s < 0.8 ? 0.85 : 1); }
-    else if (a.state === 'trot') { gait = 'Trot'; want = gaitV.Trot * 0.8 * (p.s < 0.8 ? 0.75 : 1); }
-    else if (a.state === 'step') { gait = 'Walk'; want = a.kind === 'cow' ? cowV * 0.35 : gaitV.Walk * 0.3; }
-    if (gait) {
-      const clip = a.kind === 'cow' ? 'Walk' : gait, rate = a.kind === 'cow' ? want / cowV / (p.s || 1) : want / (gait === 'Walk' ? gaitV.Walk : gaitV.Trot) / (p.s || 1);
-      playA(a, clip, Math.max(0.35, rate));
-      let dx, dz;
-      if (a.state === 'step') { dx = Math.sin(p.yaw); dz = Math.cos(p.yaw); }
-      else { dx = a.tx - p.x; dz = a.tz - p.z; const d = Math.hypot(dx, dz); if (d < 0.8 || a.timer < 0) { a.state = a.face ? 'graze' : rnd() < 0.7 ? 'graze' : 'stand'; a.timer = a.face ? 6 + rnd() * 5 : 6 + rnd() * 12; if (a.face) { p.yawT = Math.atan2(a.face.x - p.x, a.face.z - p.z); a.face = null; } a.tx = a.tz = null; return; } dx /= d; dz /= d; }
+    // clips + motion (AN1_R2): a ground speed with acceleration / braking and a limited turn rate; the gait clip is played at the rate of the speed the body really has (no sliding hooves);
+    // a horse speeds up in Walk and changes to Trot when the walk would be too fast for its legs (and back), a stop is a braking curve into the target
+    const mv = a.m, sz0 = p.s || 1, natW = (a.kind === 'cow' ? cowV : gaitV.Walk) * sz0, natT = gaitV.Trot * sz0;
+    let vt = 0, dx = 0, dz = 0, d = 1e9, st = a.state;
+    if (st === 'walk' || st === 'trot' || st === 'step') {
+      vt = st === 'trot' ? gaitV.Trot * 0.8 * (sz0 < 0.8 ? 0.75 : 1) : st === 'step' ? (a.kind === 'cow' ? cowV * 0.35 : gaitV.Walk * 0.3) : (a.kind === 'cow' ? cowV * 0.8 : gaitV.Walk * 0.72 * (sz0 < 0.8 ? 0.85 : 1));
+      if (st === 'step') { dx = Math.sin(p.yaw); dz = Math.cos(p.yaw); }
+      else {
+        dx = a.tx - p.x; dz = a.tz - p.z; d = Math.hypot(dx, dz);
+        if (d < 0.8 || a.timer < 0) { a.state = a.face ? 'graze' : rnd() < 0.7 ? 'graze' : 'stand'; a.timer = a.face ? 6 + rnd() * 5 : 6 + rnd() * 12; if (a.face) { p.yawT = Math.atan2(a.face.x - p.x, a.face.z - p.z); a.face = null; } a.tx = a.tz = null; st = a.state; vt = 0; d = 1e9; }
+        else { dx /= d; dz /= d; }
+      }
+    }
+    if (vt > 0) {
       // keep clear of the others and of the fence / obstacles
       let sx = 0, sz = 0;
       for (const b of animals) { if (b === a) continue; const ex = p.x - b.p.x, ez = p.z - b.p.z, dd = Math.hypot(ex, ez), lim = a.rad + b.rad + 0.8; if (dd < lim && dd > 1e-3) { const k = (lim - dd) / lim; sx += ex / dd * k * 2.2; sz += ez / dd * k * 2.2; } }
       for (const o of obst) { if (o === a.face) continue; const ex = p.x - o.x, ez = p.z - o.z, dd = Math.hypot(ex, ez), lim = o.r + a.rad; if (dd < lim + 1 && dd > 1e-3) { const k = (lim + 1 - dd) / (lim + 1); sx += ex / dd * k * 3; sz += ez / dd * k * 3; } }
       { const ex = p.x - PA.x, ez = p.z - PA.z, dd = Math.hypot(ex, ez); if (dd > fenceR - 1) { sx -= ex / dd * 2.5; sz -= ez / dd * 2.5; } }
-      const yawT = Math.atan2(dx + sx, dz + sz); let da = wrap(yawT - p.yaw); p.yaw += da * Math.min(1, dt * (a.state === 'trot' ? 2.2 : 1.6));
-      const st = want * dt * Math.max(0.15, Math.cos(da));
-      p.x += Math.sin(p.yaw) * st; p.z += Math.cos(p.yaw) * st;
-      a.sAcc += st; if (a.sAcc > 0.6) { a.sAcc = 0; setGround(a); }
+      const yawT = Math.atan2(dx + sx, dz + sz), tr = st === 'trot' ? 1.3 : 1.0;
+      p.yaw += clampN(wrap(yawT - p.yaw), -tr * dt, tr * dt);
+      vt *= clampN((1.35 - Math.abs(wrap(yawT - p.yaw))) / 0.9, 0.3, 1);                                  // arc round a corner instead of cutting it at full speed
+      if (st !== 'step' && d < 1e8) vt = Math.min(vt, Math.sqrt(2 * 1.0 * Math.max(0, d - 0.8)) + 0.3);    // brake into the target
+    }
+    mv.v += clampN(vt - mv.v, -1.4 * dt, (st === 'trot' || mv.v > natW * 1.1 ? 1.5 : 0.8) * dt); if (mv.v < 0.02 && vt <= 0) mv.v = 0;
+    if (mv.v > 0) { p.x += Math.sin(p.yaw) * mv.v * dt; p.z += Math.cos(p.yaw) * mv.v * dt; a.sAcc += mv.v * dt; if (a.sAcc > 0.6) { a.sAcc = 0; setGround(a, false); } }
+    if (a.gy !== undefined) { const kg = Math.min(1, dt * 7); p.y += (a.gy - p.y) * kg; p.pitch += (a.gp - (p.pitch || 0)) * kg; p.roll += (a.gr - (p.roll || 0)) * kg; }
+    if (mv.v > 0.12 * natW || vt > 0) {                                                                       // (vt > 0: the first frames of a start — the speed has not built up yet, it must not be reset)
+      let gait = a.gait || 'Walk';
+      if (a.kind === 'horse') { if (gait === 'Walk' && mv.v > 1.13 * natW) gait = 'Trot'; else if (gait === 'Trot' && mv.v < 1.0 * natW) gait = 'Walk'; } else gait = 'Walk';
+      a.gait = gait; gaitA(a, gait, clampN(mv.v / (gait === 'Trot' ? natT : natW), 0.04, 1.8));
     } else {
+      a.gait = ''; mv.v = 0;
       if (p.yawT != null) { const da = wrap(p.yawT - p.yaw); p.yaw += da * Math.min(1, dt * 1.2); if (Math.abs(da) < 0.02) p.yawT = null; }
       if (a.state === 'graze') playA(a, GRAZE[a.kind], a.kind === 'cow' ? 1 : 0.85);
       else playA(a, a.kind === 'cow' ? (a.id % 3 === 0 ? 'Idle_2' : a.id % 3 === 1 ? 'Idle_Headlow' : 'Idle') : 'Idle', 0.9);
@@ -379,7 +399,7 @@ export function buildPastureLife(group, height, opt) {
       const pn = SPOTS.pen, p = yh('bay', pn.x + 6.3, pn.z, 0, 'Trot', pn.floor);
       const tr = person('m', pn.x, pn.z, 0, 'Idle_Talking_Loop'); if (tr) { tr.y = pn.floor; tr.homeY = tr.y; }
       const rope = makeLungeLine(); group.add(rope.group);
-      lunge = { p, tr, rope: rope.group, line: rope, pn, ang: rnd() * 6.28, vel: 0, mi: 0, mt: 0, M: [['Trot', 4.6, 24, 1], ['Walk', 2.0, 10, 1], ['Trot', 4.6, 24, -1], ['Walk', 2.0, 10, -1]] };
+      lunge = { p, tr, rope: rope.group, line: rope, pn, ang: rnd() * 6.28, vel: 4.6, gait: '', mi: 0, mt: 0, M: [['Trot', 4.6, 24, 1], ['Walk', 2.0, 10, 1], ['Halt', 0, 4.5, 1], ['Trot', 4.6, 24, -1], ['Walk', 2.0, 10, -1], ['Halt', 0, 4.5, -1]] };     // AN1_R2: the horse halts and turns before it changes direction (it used to reverse at a walk in one step)
     }
     // the stable boy leads a horse from the big door to the pasture gate and back (a rest at both ends)
     if (SPOTS.door && SPOTS.gate) {
@@ -427,41 +447,47 @@ export function buildPastureLife(group, height, opt) {
     setYard(yOn);
     if (yOn) {
       if (lunge) {
-        const L2 = lunge; L2.mt += dt; if (L2.mt > L2.M[L2.mi][2]) { L2.mt = 0; L2.mi = (L2.mi + 1) % L2.M.length; const g = L2.M[L2.mi][0]; L2.p.play(g, { speed: L2.M[L2.mi][1] / gaitV[g] }); }
-        const M = L2.M[L2.mi]; L2.vel += (M[1] - L2.vel) * Math.min(1, dt * 0.8); L2.ang += M[3] * L2.vel / 6.3 * dt;
+        const L2 = lunge; L2.mt += dt; if (L2.mt > L2.M[L2.mi][2]) { L2.mt = 0; L2.mi = (L2.mi + 1) % L2.M.length; }
+        const M = L2.M[L2.mi]; L2.vel = approach(L2.vel, M[1], 1.0, 1.4, dt); L2.ang += M[3] * L2.vel / 6.3 * dt;
         const x = L2.pn.x + Math.cos(L2.ang) * 6.3, z = L2.pn.z + Math.sin(L2.ang) * 6.3, dx = -Math.sin(L2.ang) * M[3], dz = Math.cos(L2.ang) * M[3];
-        L2.p.x = x; L2.p.z = z; let da = wrap(Math.atan2(dx, dz) - L2.p.yaw); L2.p.yaw += da * Math.min(1, dt * 6);
+        L2.p.x = x; L2.p.z = z; { const wantY = L2.vel > 0.4 ? Math.atan2(dx, dz) : Math.atan2(L2.pn.x - x, L2.pn.z - z); turnTo(L2.p, wantY, 1.6, dt); }
+        { const gt = L2.vel < 0.12 * gaitV.Walk ? 'Idle' : L2.vel > (L2.gait === 'Trot' ? gaitV.Walk : gaitV.Walk * 1.13) ? 'Trot' : 'Walk', rate = gt === 'Idle' ? 1 : clampN(L2.vel / gaitV[gt], 0.1, 1.8);
+          if (gt !== L2.gait) { L2.gait = gt; L2.p.play(gt, { speed: rate }); } else if (gt !== 'Idle') L2.p.setSpeed(rate); }
         if (L2.tr) { const want = Math.atan2(x - L2.pn.x, z - L2.pn.z) - 0.25 * M[3]; L2.tr.yaw += wrap(want - L2.tr.yaw) * Math.min(1, dt * 3); }
         // the line: the trainer's hand -> a little sag -> the horse's head
         const hx = L2.pn.x + Math.sin(L2.tr ? L2.tr.yaw : 0) * 0.7, hz = L2.pn.z + Math.cos(L2.tr ? L2.tr.yaw : 0) * 0.7, hy = L2.pn.floor + 2.2;
         const [nx, nz] = fwd(L2.p.yaw, noseI - 0.8), ny = L2.p.y - L2.p.lift + 3.4;
         L2.line.set(hx, hy, hz, x + nx, ny, z + nz, L2.pn.floor + 0.35);
-        if (!L2.started) { L2.started = true; L2.p.play('Trot', { speed: 4.6 / gaitV.Trot }); }
       }
-      if (led) {
-        const D = led, p = D.p, b = D.b;
-        if (D.wait > 0) { D.wait -= dt; if (D.wait <= 0) { p.play('Walk', { speed: 2.0 / gaitV.Walk }); b && b.play('Walk_Loop', { speed: manRate(2.0) }); } }
+      if (led) {                                                          // AN1_R2: wait · turn on the spot (the boy walks round the horse's head) · go with a speed ramp and a braking curve into each end
+        const D = led, p = D.p, b = D.b; if (D.mode === undefined) { D.mode = 'wait'; D.v = 0; D.bst = { v: 0, has: false, mode: '', px: 0, pz: 0 }; D.gait = ''; }
+        const at = (sd) => { const u = Math.max(0, Math.min(1, sd / D.len)); D.curve.getPointAt(u, D.pt); const u2 = Math.max(0, Math.min(1, u + D.dir * 0.02)); D.curve.getPointAt(u2, D.pt2); return Math.atan2(D.pt2.x - D.pt.x, D.pt2.z - D.pt.z); };
+        const gaitD = (clip, rate) => { if (D.gait !== clip) { D.gait = clip; p.play(clip, { speed: rate }); } else if (clip === 'Walk' && p.setSpeed) p.setSpeed(rate); };
+        let yawPath = at(D.s);
+        if (D.mode === 'wait') { D.v = 0; D.wait -= dt; if (D.wait <= 0) { D.mode = 'turn'; gaitD('Idle', 0.85); } }
+        else if (D.mode === 'turn') { D.v = 0; if (turnTo(p, yawPath, 0.7, dt) < 0.12) D.mode = 'go'; }
         else {
-          D.s += D.dir * dt * 2.0;
-          if (D.s >= D.len || D.s <= 0) { D.s = Math.max(0, Math.min(D.len, D.s)); D.dir *= -1; D.wait = 6 + rnd() * 6; p.play(D.dir < 0 ? 'Eating' : 'Idle', { speed: 0.85 }); b && b.play('Idle_Loop'); }
+          const rem = D.dir > 0 ? D.len - D.s : D.s;
+          D.v = approach(D.v, Math.min(1.45, Math.sqrt(2 * 1.0 * Math.max(0, rem)) + 0.1), 1.0, 1.2, dt); D.s += D.dir * D.v * dt;
+          turnTo(p, yawPath, 1.3, dt);
+          if (D.dir > 0 ? D.s >= D.len - 0.03 : D.s <= 0.03) { D.s = Math.max(0, Math.min(D.len, D.s)); D.dir *= -1; D.v = 0; D.mode = 'wait'; D.wait = 6 + rnd() * 6; gaitD(D.dir < 0 ? 'Eating' : 'Idle', 0.85); }
         }
-        const u = D.s / D.len, u2 = Math.max(0, Math.min(1, u + D.dir * 0.02));
-        D.curve.getPointAt(Math.min(1, u), D.pt); D.curve.getPointAt(u2, D.pt2);
-        const want = D.wait > 0 ? p.yaw : Math.atan2(D.pt2.x - D.pt.x, D.pt2.z - D.pt.z);
-        p.yaw += wrap(want - p.yaw) * Math.min(1, dt * 2.5);
-        p.x = D.pt.x; p.z = D.pt.z; p.y = height(p.x, p.z) + p.lift;
-        if (b) { const sx = Math.cos(p.yaw) * 1.7, sz = -Math.sin(p.yaw) * 1.7, [fx, fz] = fwd(p.yaw, 1.6); b.x = p.x - sx + fx; b.z = p.z - sz + fz; b.y = height(b.x, b.z); b.yaw = p.yaw; }
+        if (D.mode === 'go') { if (D.v > 0.12 * gaitV.Walk) gaitD('Walk', clampN(D.v / gaitV.Walk, 0.1, 1.8)); else gaitD('Idle', 0.85); }
+        at(D.s); p.x = D.pt.x; p.z = D.pt.z; p.y = height(p.x, p.z) + p.lift;
+        if (b) { const sx = Math.cos(p.yaw) * 1.7, sz = -Math.sin(p.yaw) * 1.7, [fx, fz] = fwd(p.yaw, 1.6); b.x = p.x - sx + fx; b.z = p.z - sz + fz; b.y = height(b.x, b.z); { const ddx = b.x - D.bst.px, ddz = b.z - D.bst.pz; turnTo(b, D.bst.has && D.bst.v > 0.25 && ddx * ddx + ddz * ddz > 1e-6 ? Math.atan2(ddx, ddz) : p.yaw, 4.0, dt); } follow(b, D.bst, dt); }       // he faces where he goes (round the horse's head too), not where the horse looks
       }
-      if (carrier) {
-        const C2 = carrier, q = C2.q;
-        if (C2.wait > 0) { C2.wait -= dt; if (C2.wait <= 0) q.play('Walk_Loop', { speed: manRate(2.1) }); }
+      if (carrier) {                                                      // AN1_R2: wait (Interact) · turn on the spot · go with a speed ramp / braking curve
+        const C2 = carrier, q = C2.q; if (C2.mode === undefined) { C2.mode = 'go'; C2.v = 0; C2.st = { v: 0, has: false, mode: '', px: 0, pz: 0 }; }
+        const len = Math.hypot(C2.b.x - C2.a.x, C2.b.z - C2.a.z) || 1, yawGo = Math.atan2((C2.b.x - C2.a.x) * C2.dir, (C2.b.z - C2.a.z) * C2.dir);
+        if (C2.mode === 'wait') { C2.v = 0; C2.wait -= dt; if (C2.wait <= 0) { C2.mode = 'turn'; C2.st.mode = ''; } }
+        else if (C2.mode === 'turn') { C2.v = 0; if (turnTo(q, yawGo, 3.0, dt) < 0.1) C2.mode = 'go'; follow(q, C2.st, dt); }
         else {
-          const len = Math.hypot(C2.b.x - C2.a.x, C2.b.z - C2.a.z) || 1; C2.f += C2.dir * dt * 2.1 / len;
-          if (C2.f >= 1 || C2.f <= 0) { C2.f = Math.max(0, Math.min(1, C2.f)); C2.dir *= -1; C2.wait = 2.2; C2.load = C2.dir > 0; q.play('Interact'); }
+          const rem = (C2.dir > 0 ? 1 - C2.f : C2.f) * len; C2.v = approach(C2.v, Math.min(1.45, Math.sqrt(2 * 1.2 * Math.max(0, rem)) + 0.1), 1.3, 1.8, dt); C2.f += C2.dir * C2.v * dt / len; turnTo(q, yawGo, 3.0, dt);
+          if (C2.f >= 1 - 0.0005 || C2.f <= 0.0005) { C2.f = Math.max(0, Math.min(1, C2.f)); C2.dir *= -1; C2.v = 0; C2.mode = 'wait'; C2.wait = 2.2; C2.load = C2.dir > 0; q.play('Interact'); }
+          else follow(q, C2.st, dt);
         }
         q.x = C2.a.x + (C2.b.x - C2.a.x) * C2.f; q.z = C2.a.z + (C2.b.z - C2.a.z) * C2.f; q.y = height(q.x, q.z);
-        const want = Math.atan2((C2.b.x - C2.a.x) * C2.dir, (C2.b.z - C2.a.z) * C2.dir); q.yaw += wrap(want - q.yaw) * Math.min(1, dt * 5);
-        bundle.visible = C2.load && C2.wait <= 0;
+        bundle.visible = C2.load && C2.mode !== 'wait';
         if (bundle.visible) { const sx = Math.cos(q.yaw) * 0.45, sz = -Math.sin(q.yaw) * 0.45; bundle.position.set(q.x + sx, q.y + 3.05, q.z + sz); bundle.rotation.set(0, q.yaw + Math.PI / 2, 0.1); }
       }
     }

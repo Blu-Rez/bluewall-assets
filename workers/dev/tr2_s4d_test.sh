@@ -25,7 +25,7 @@ python3 - <<'PY' || FAIL=1
 import subprocess, re, sys
 APP = '/home/claude/bot/bluebot_v2'
 out = subprocess.run(['git', '-C', APP, 'status', '--porcelain', '--', 'bluewall/client/src', 'bluewall/web/assets/tr2'], capture_output=True, text=True).stdout.splitlines()
-OWN = {'tr2_life.js','pas_life.js','pas_stable.js','life.js','water_life.js','peasanthead.js','crowd.js','wslife.js','world.js','units.js'}
+OWN = {'tr2_life.js','pas_life.js','pas_stable.js','life.js','water_life.js','peasanthead.js','crowd.js','wslife.js','world.js','units.js','creature.js','walk_kit.js'}   # AN1_R2: creature.js + walk_kit.js are the shared walking helpers of the life modules
 ARMY = {'bunits.js','unitlook.js','battlesim.js','army.js','armyplan.js','armyui.js'}
 bad = 0; files = []; other = []
 for l in out:

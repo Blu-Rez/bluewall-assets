@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { toFloatGeo } from './assets.js';
+import { steer, wrapA, clampN, stanceSpeed } from './walk_kit.js';          // AN1_R2: speed ramps + limited turns for the herds
 
 // animation level of detail (B14): the mixer of a far creature steps at half / quarter rate with the time it owes (same speed, fewer updates)
 export function lodStep(c, dt) {
@@ -188,10 +189,19 @@ export function makeCreature(gltf, opts = {}) {
   return c;
 }
 
+// AN1_R2: the ground speed (m/s at timeScale 1, at this creature's size) a gait clip was made for = how fast the planted feet slide back along the body: the four lowest bones, the frames where
+// each is near its lowest point (stance), the mean fore-aft speed of the foot over those frames.  Measured once per clip + size (cached on the clip), 0 when the clip has no clear stance.
+export function gaitSpeed(c, re) {
+  const clip = c.find(re); if (!clip) return 0;
+  if (clip.__gv && clip.__gv.k) return clip.__gv.v * (c.scale / clip.__gv.k);
+  let v = 0; try { const holder = new THREE.Group(); holder.add(SkeletonUtils.clone(c.inner)); v = stanceSpeed(holder.children[0], clip); } catch (e) { v = 0; }       // (a creature with a rider mounted on a bone can't be cloned: no clear stance = the old speeds)
+  clip.__gv = { v, k: c.scale }; return v;
+}
+
 const WALK = /walk/i, IDLE = /idle|(^|_)eat|graz/i, RUN = /run|gallop|trot/i;   // ("Death" contains "eat")
 
 // Herd: wander inside a circle (cx, cz, r) on the terrain
-export function herd(scene, gltf, n, { cx, cz, r, height, size = 2, yaw = 0, speed = 1.3, avoid = () => false, seed = 1 }) {
+export function herd(scene, gltf, n, { cx, cz, r, height, size = 2, yaw = 0, speed = 1.3, avoid = () => false, seed = 1, ground = null }) {
   let s = seed;
   const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
   const list = [];
@@ -201,8 +211,9 @@ export function herd(scene, gltf, n, { cx, cz, r, height, size = 2, yaw = 0, spe
   };
   for (let i = 0; i < n; i++) {
     const c = makeCreature(gltf, { length: size * (0.85 + rnd() * 0.3), yaw }); if (!c) break;
-    const [x, z] = pick(); c.root.position.set(x, height(x, z), z); c.root.rotation.y = rnd() * 6.28;
+    const [x, z] = pick(); c.root.position.set(x, (ground || height)(x, z), z); c.root.rotation.y = rnd() * 6.28;
     c.state = 'idle'; c.timer = rnd() * 6; c.target = null; c.speed = speed * (0.85 + rnd() * 0.3);
+    c.vnat = gaitSpeed(c, WALK); c.pp = { x, z, yaw: c.root.rotation.y }; c.m = { v: 0 };           // AN1_R2: the walk clip's own ground speed; the herd walks at a pace that clip can carry (≤ 1.35× it)
     c.play(IDLE) || c.play(WALK);
     if (c.act) c.act.time = rnd() * 3;
     c.root.userData.bwCull = 320; scene.add(c.root); list.push(c);
@@ -210,16 +221,13 @@ export function herd(scene, gltf, n, { cx, cz, r, height, size = 2, yaw = 0, spe
   function update(dt) {
     for (const c of list) {
       c.timer -= dt;
-      if (c.state === 'idle' && c.timer <= 0) { c.state = 'walk'; c.target = pick(); c.play(WALK, { speed: 1 }); }
+      if (c.state === 'idle' && c.timer <= 0) { c.state = 'walk'; c.target = pick(); c.pp.x = c.root.position.x; c.pp.z = c.root.position.z; c.pp.yaw = c.root.rotation.y; c.m.v = 0; c.m.stuck = 0; c.play(WALK, { speed: 0.1 }); c.moving = false; }
       if (c.state === 'walk') {
-        const p = c.root.position, dx = c.target[0] - p.x, dz = c.target[1] - p.z, d = Math.hypot(dx, dz);
-        if (d < 0.6 || c.timer < -20) { c.state = 'idle'; c.timer = 4 + rnd() * 9; c.play(IDLE) || c.act && (c.act.timeScale = 0.2); }
-        else {
-          const want = Math.atan2(dx, dz); let a = want - c.root.rotation.y; while (a > Math.PI) a -= 6.283; while (a < -Math.PI) a += 6.283;
-          c.root.rotation.y += a * Math.min(1, dt * 2.5);
-          const st = c.speed * dt * Math.max(0, Math.cos(a));
-          p.x += Math.sin(c.root.rotation.y) * st; p.z += Math.cos(c.root.rotation.y) * st; p.y = height(p.x, p.z);
-        }
+        const p = c.root.position, pp = c.pp, vmax = c.vnat > 0.05 ? Math.min(c.speed, 1.35 * c.vnat) : c.speed;
+        const rem = steer(pp, c.m, c.target[0], c.target[1], dt, { vmax, acc: 1.0, dec: 1.6, turn: 2.2, pivot: false, stopD: 0.3 });
+        p.x = pp.x; p.z = pp.z; c.root.rotation.y = pp.yaw; p.y = (ground || height)(p.x, p.z);
+        if (rem < 0.35 || c.timer < -20) { c.state = 'idle'; c.timer = 4 + rnd() * 9; c.m.v = 0; c.play(IDLE) || c.act && (c.act.timeScale = 0.2); }
+        else if (c.act) c.act.timeScale = c.vnat > 0.05 ? clampN(c.m.v / c.vnat, 0.08, 1.8) : 1;     // the feet go back as fast as the body goes forward
       }
       if (!c.root.userData.bwFar) lodStep(c, dt);
     }
