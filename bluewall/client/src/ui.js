@@ -64,7 +64,7 @@ const CSS = `
 .bw-p.pop .gm{animation:bwPop .6s}
 /* ---- misc */
 .bw-fps{position:absolute;left:50%;transform:translateX(-50%);top:calc(var(--st) + 3px);font:700 10px ${FONT};color:#9fe3ff;background:rgba(0,0,0,.4);padding:2px 7px;border-radius:8px;display:none;pointer-events:none;white-space:nowrap}
-.bw-toast{position:absolute;z-index:90;left:50%;transform:translateX(-50%);top:calc(var(--st) + 112px);max-width:86vw;width:max-content;box-sizing:border-box;text-align:center;line-height:1.35;padding:9px 16px;border-radius:18px;background:var(--glass);border:1px solid var(--line);font-size:13px;opacity:0;transition:opacity .6s;pointer-events:none}
+.bw-toast{position:absolute;z-index:90;left:50%;transform:translateX(-50%);top:calc(var(--st) + 112px);max-width:86vw;width:max-content;box-sizing:border-box;text-align:center;line-height:1.35;padding:9px 16px;border-radius:18px;background:var(--glass);border:1px solid var(--line);font-size:13px;opacity:0;transition:opacity .4s;pointer-events:none}   /* UI1_R4: .6 s -> .4 s so that a toast is fully gone 2.5 s after it appeared */
 .bw-toast.on{opacity:1}
 .bw-sheet{pointer-events:auto;position:absolute;z-index:11;left:12px;right:12px;bottom:calc(var(--sb) + 14px);max-width:520px;margin:0 auto;padding:16px 18px 18px;border-radius:20px;background:linear-gradient(180deg,rgba(11,30,66,.95),rgba(3,8,20,.97));border:1px solid var(--line);box-shadow:0 10px 40px rgba(0,0,0,.55);transform:translateY(160%);transition:transform 220ms cubic-bezier(.22,1,.36,1)}
 .bw-sheet.on{transform:none;transition-duration:320ms}
@@ -292,7 +292,7 @@ export class UI {
       box.innerHTML = Object.entries(groups).map(([g, items]) => `<h4>${esc(g)}</h4>` + items.map((it) => `<div>${esc(it.name)} — <b>${esc(it.by)}</b> <span class="lc">(${esc(it.license)})</span></div>`).join('')).join('');
     } catch (e) { box.textContent = 'Quaternius · KayKit · Poly Haven · OpenGameArt (CC0)'; }
   }
-  toast(msg) { const el = this.toastEl; el.textContent = msg; el.classList.add('on'); clearTimeout(this._tt); this._tt = setTimeout(() => el.classList.remove('on'), 2500); }
+  toast(msg) { const el = this.toastEl; el.textContent = msg; el.classList.add('on'); clearTimeout(this._tt); clearTimeout(this._tt2); this._tt = setTimeout(() => el.classList.remove('on'), 2100); this._tt2 = setTimeout(() => { if (!el.classList.contains('on')) el.textContent = ''; }, 2500); }   // UI1_R4: gone within 2.5 s (2.1 s + the .4 s fade) and the text is removed (it stayed in the element for ever)
   // c = { date, time, hour } — shown inside the settings panel only
   setClock(c) { this._clock = c; if (this.settingsOpen) this.paintClock(); }
   paintClock() {

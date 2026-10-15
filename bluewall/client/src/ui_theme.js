@@ -3,6 +3,7 @@
 //   glyphOf(id)            -> the emblem glyph key of a building id / site kind / family
 // Visual layer only: no rules, no data.
 import { injectKit2 } from './ui_theme_r2.js';
+import { injectKit4 } from './ui_theme_r4.js';                       // UI1_R4: landscape two-pane list panels (CSS only)
 const P = {
   // actions / ui
   up: 'M12 20V5M5.5 11.5L12 5l6.5 6.5', train: 'M5 14a7 7 0 0 1 14 0v5H5zM5 14h14M12 7v7', collect: 'M12 3v12M7 10l5 5 5-5M5 20h14', bolt: 'M13 3L5 13.5h6L10 21l8-10.5h-6z',
@@ -71,4 +72,4 @@ export const KIT_CSS = `
 .bw-ui .bwu-up{color:#3a2a14}.bw-ui .bwu-note{color:#c9b48a}
 .bw-ui .bwu-road b{color:#e0b255}.bw-ui .bwu-road span{color:#e6d6b0}.bw-ui .bwu-road.done b{color:#b9d48a}.bw-ui .bwu-road.done span{color:#9c8f6e}
 `;
-export function injectKit() { injectKit2(); if (typeof document === 'undefined' || document.getElementById('k-kit')) return; const st = document.createElement('style'); st.id = 'k-kit'; st.textContent = KIT_CSS; document.head.appendChild(st); }
+export function injectKit() { injectKit2(); if (typeof document === 'undefined' || document.getElementById('k-kit')) return; const st = document.createElement('style'); st.id = 'k-kit'; st.textContent = KIT_CSS; document.head.appendChild(st); injectKit4(); }  // UI1_R4: injectKit4 LAST so its (.bw-ui.bw-ui) rules come after every other layer

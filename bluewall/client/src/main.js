@@ -433,6 +433,7 @@ async function start(opts) {
   const layoutUI = createLayoutUI({ root, world, camera, renderer, ctl, scene, blocked: () => !!((battle && battle.active) || (hero && hero.active) || root.classList.contains('wel') || ui.settingsOpen || panelUp), save: (rec) => layoutSync.save(rec), toast: (m) => ui.toast(m) });
   econ.on((st, ev) => { if (ev === 'load' && !(battle && battle.active)) layoutSync.load().then((rec) => { if (rec && !layoutUI.active) world.layout.load(rec); }).catch((e) => console.warn('layout', e)); });
   let coachBat = false, hdt = 0;
+  let badgesHid = false;                                                                   // UI1_R4: the mines' «+43K» gem pills (3D sprites) are hidden while the hero is out
   const perf = { acc: 0, n: 0, checked: 0 }, fpsm = { n: 0, t: 0, max: 0 };
   const loop = (now) => {
     raf = requestAnimationFrame(loop);
@@ -440,6 +441,7 @@ async function start(opts) {
     if (rafPrev) { const d = now - rafPrev; if (d > 3 && d < dyn.rmin) dyn.rmin = d; } rafPrev = now;       // display refresh interval (smallest gap seen)
     const inBattle = !!(battle && battle.active), inHero = !!(hero && hero.active), uw = inHero && hero.scene !== scene;
     DYN.hero = inHero && !PFOFF;   // PF1
+    if (inHero !== badgesHid) { badgesHid = inHero; for (const b of world.badges || []) b.sprite.visible = !inHero && !inBattle; }   // UI1_R4: in hero mode a ruby «+43K» pill (the gem badge above a mine, 12 x 6 m, 37 m up) hung in the sky in the middle of the view, straight above the hero, and never went away: a kingdom-map sign, not for the hero
     // p37: an attack is drawn by day, straight to the screen: the bloom composer (a half-float multisampled target + the blur chain = the biggest idle block of GPU memory) is parked for its duration and
     // built again when the home map is back — one more thing less to run out of on a phone that is short of GPU memory (a lost context was the one way the picture could go half as bright / the ground black)
     if (inBattle && composer && !composerParked && P && P.night <= 0.25) { composerParked = true; dropComposer(); }

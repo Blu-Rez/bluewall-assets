@@ -232,7 +232,7 @@ const CSS = `
 .bsh-bar i{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(var(--p,0));background:var(--barfg);z-index:1}
 .bsh-bar i.q{background:var(--barq);z-index:0}
 .bsh-hs{display:flex;align-items:center;gap:7px;margin-top:11px;font-size:13px;font-weight:400;color:var(--mu)}.bsh-hs b{color:var(--tx)}.bsh-hs em{font-style:normal;color:var(--ac)}
-.bsh-q{display:flex;gap:6px;margin-top:9px;overflow:hidden}
+.bsh-q{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}   /* UI1_R4: the queue chips wrap (they were clipped sideways, the «+N» chip was cut off) */
 .bsh-q .qi{display:flex;align-items:center;gap:5px;padding:3px 8px 3px 4px;border-radius:999px;background:var(--dchip);border:1px solid var(--dchipb);font-size:12px;color:var(--tx)}
 .bsh-q .qi .pic,.bsh-q .qi img{display:block;width:24px;height:24px}.bsh-q .qi .tm{font-weight:400;color:var(--mu);padding:0;border:0;background:none}
 .bsh-chips{display:flex;gap:9px;margin-top:9px;overflow-x:auto;scrollbar-width:none;padding:2px 1px 3px;-webkit-overflow-scrolling:touch}.bsh-chips::-webkit-scrollbar{display:none}
@@ -354,7 +354,7 @@ export function createSheetUI(mount, { econ, ui, audio, upgrade, army, afterColl
       <div class="bsh-act">${P ? `<div class="bsh-go">${btnHtml(P, 'p')}</div>` : ''}
       <div class="bsh-row">${btnHtml(B, 's')}<button class="bsh-b sec${S.info ? ' on' : ''}" data-b="info"><span class="l">${ico('info', 20)}Info</span></button>${M ? `<button class="bsh-b sec" data-b="mng"><span class="l">${ico('list', 20)}Manage</span></button>` : ''}<button class="bsh-b sec${mv ? '' : ' dis'}" data-b="mv"><span class="l">${ico('move', 20)}Move</span>${mv ? '' : '<small>soon</small>'}</button></div>
       <div class="bsh-info${S.info ? ' on' : ''}">${esc(sp.info ? sp.info(id, c) : '')}</div></div>`;
-    const k2 = sheet.querySelector('[data-keep]'); if (k2) { k2.scrollLeft = sl; const on = k2.querySelector('.on'); if (on && !sl) on.scrollIntoView({ inline: 'nearest', block: 'nearest' }); }
+    const k2 = sheet.querySelector('[data-keep]'); if (k2) { k2.scrollLeft = sl; const on = k2.querySelector('.on'); if (on && !sl) { const kr = k2.getBoundingClientRect(), orc = on.getBoundingClientRect(); if (orc.left < kr.left) k2.scrollLeft += orc.left - kr.left - 6; else if (orc.right > kr.right) k2.scrollLeft += orc.right - kr.right + 6; } }   // UI1_R4: sideways only — scrollIntoView({block:'nearest'}) also scrolled the SHEET itself up on short phones (800x360), so the title and the close button slid out under the top edge
     if (P && P.rdy) { if (S.pulsed !== id) { S.pulsed = id; pulse(); } } else S.pulsed = null;      // the gold pulse: ONCE per "ready" (never endless)
   }
   function refresh() { if (S.open && !S.down && !S.hold && !S.dres && !(performance.now() < S.pulseUntil)) render(); }
