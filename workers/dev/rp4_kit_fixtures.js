@@ -63,4 +63,12 @@ export const STAFF = {             // aylin — water — support healer: water 
     { id: 'spring', icon: 'buff', cd: 16, clip: 'cast', dur: 1.0, at: 0.4, effects: [{ type: 'stamina', amount: 40 }, { type: 'buff', stat: 'atk', mult: 1.3, dur: 8 }] },
   ],
 };
-export const ALL = { RANGED, SPEAR, HAMMER, DAGGERS, STAFF };
+// WC1: the carry classes, one fixture each (the weapon file is always the library sword: only the CLASS / mount logic is tested here; the real models are tested in dev/wc1_dev.js)
+const { grip: _g, ...SWN } = SW;
+export const WC1_SWORD = { ...SPEAR, weapons: [{ ...SWN, kind: 'short_sword' }] };
+export const WC1_BIG = { ...SPEAR, weapons: [{ ...SWN, kind: 'big_sword', len: 1.45 }] };
+export const WC1_PAIR = { ...DAGGERS, weapons: [{ ...SWN, kind: 'dagger', len: 0.4, slot: 'L' }, { ...SWN, kind: 'dagger', len: 0.4, slot: 'R', gem: false }] };
+export const WC1_STAFF = { ...STAFF, weapons: [{ ...SWN, kind: 'staff', len: 1.6 }] };
+export const WC1_BOW = { ...RANGED, weapons: [{ ...SWN, kind: 'bow', len: 1.2, slot: 'L' }, { ...SWN, kind: 'quiver', len: 0.6, slot: 'R' }] };
+export const WC1_BARE = { ...SPEAR, weapons: [{ ...SWN, kind: 'short_sword', carry: 'back', gem: false }] };   // the same weapon with NO carry mesh (no scabbard on the back, no gem) = the pre-WC1 cost, for the budget proof
+export const ALL = { RANGED, SPEAR, HAMMER, DAGGERS, STAFF, WC1_SWORD, WC1_BIG, WC1_PAIR, WC1_STAFF, WC1_BOW, WC1_BARE };
