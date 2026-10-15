@@ -1,0 +1,80 @@
+{
+ "_doc": [
+  "BT1_R2: the CAMP SLOT TABLE.  The attacker's camp is a list of SLOT RECORDS { kind, x, z, ry } (+ squad, k, r), made by camp_slots.js from the plan (campplan.js) and built by camp.js.",
+  "  kind = command | barracks | supply | siege | healer | banner | palisade.   Every kind below names the MODEL that stands in its slot: model = an asset key (web/assets/<key>.glb) or null.",
+  "  model = null  ->  the FALLBACK, which is today's piece: the procedural pavilion (one tent per squad, squad colour, size by head-count), the procedural standard with the attacker's crest, and no palisade at all.",
+  "  A kind whose model is set but fails (file missing / no meshes) keeps the fallback and says why (camp.info.slots[].state, console.warn).  Nothing is drawn by hand here.",
+  "  Which squad gets which tent kind:  byFam maps the squad's unit family (unitdefs.json `fam`) to a tent kind (an edit-me placeholder mapping: the owner picks the real one);  commandRule 'biggest' = the squad with the most heads pitches the COMMAND tent (null = no command tent).",
+  "  A row with a model: h = the model's height in metres (the file is scaled to it), r = its footprint RADIUS in metres (the plan leaves room for it instead of the pavilion's), yaw = degrees to turn the model so its FRONT (door) faces the way a pavilion's door faces (the enemy base).  Model tents do not take the squad colour (no recolouring).",
+  "  banner: model = the pole (h = its height, 17 today); the crest cloth of the attacker is still hung from its top.   palisade: model = ONE fence section, len = its length in metres along its x axis; it is placed end to end round the back and the two sides of the camp.",
+  "  A model enters this table only with the OWNER'S NUMBER (a sheet / a message with the key and the numbers).  Every `model` ships null."
+ ],
+ "commandRule": "biggest",
+ "byFam": {
+  "barracks": "barracks",
+  "training": "barracks",
+  "stable": "supply",
+  "workshop": "siege",
+  "lair": "healer"
+ },
+ "defaultKind": "barracks",
+ "kinds": {
+  "command": {
+   "model": null,
+   "h": null,
+   "r": null,
+   "yaw": 0,
+   "fallback": "pavilion",
+   "note": "the general's pavilion: the biggest tent of the camp, banner-bearing, open flap, a map table inside if it has a door.  Needs Tripo: ~9 m wide, 6 m high, a front (door) and a back."
+  },
+  "barracks": {
+   "model": null,
+   "h": null,
+   "r": null,
+   "yaw": 0,
+   "fallback": "pavilion",
+   "note": "a troop tent: long, low, one door in the short side.  Needs Tripo: 8 m x 5 m, 3.5 m high."
+  },
+  "supply": {
+   "model": null,
+   "h": null,
+   "r": null,
+   "yaw": 0,
+   "fallback": "pavilion",
+   "note": "the stores: an open-sided canvas roof over crates, sacks and barrels.  Needs Tripo: 7 m x 6 m, 3.5 m high, crates under it."
+  },
+  "siege": {
+   "model": null,
+   "h": null,
+   "r": null,
+   "yaw": 0,
+   "fallback": "pavilion",
+   "note": "the workshop: a timber lean-to with a work bench, rope coils and spare beams.  Needs Tripo: 9 m x 6 m, 4 m high."
+  },
+  "healer": {
+   "model": null,
+   "h": null,
+   "r": null,
+   "yaw": 0,
+   "fallback": "pavilion",
+   "note": "the infirmary: a pale tent with a cot inside the open flap and a small cross / herb sign.  Needs Tripo: 6 m x 6 m, 3.5 m high."
+  },
+  "banner": {
+   "model": null,
+   "h": null,
+   "r": null,
+   "yaw": 0,
+   "fallback": "standard",
+   "note": "the standard: a pole with a cross-arm and NO cloth (the attacker's crest cloth is added by the game).  Needs Tripo: 17 m high, 0.5 m thick, a ring or arm at the top."
+  },
+  "palisade": {
+   "model": null,
+   "h": null,
+   "r": null,
+   "yaw": 0,
+   "len": 4,
+   "fallback": "none",
+   "note": "one fence section: sharpened stakes tied with rope, ends that meet the next section.  Needs Tripo: 4 m long, 2.4 m high, 0.4 m thick."
+  }
+ }
+}

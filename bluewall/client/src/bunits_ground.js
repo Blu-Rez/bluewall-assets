@@ -321,11 +321,11 @@ const treantCrown = (F) => {
 const gradeOf = (root, matName, extra) => { let done = false; root.traverse((o) => { if (done || !o.isSkinnedMesh) return; for (const m of [].concat(o.material)) if (m && m.name === matName) { bwExtra.set(m, extra); done = true; } }); return done; };
 
 export async function setupGround(ctx) {
-  const { M, step, TYPE, count, TT, K, ANIMS, BASE, LOD1 } = ctx;
+  const { M, step, TYPE, count, TT, K, ANIMS, BASE, LOD1, lod2Col } = ctx;
   const U1 = await setupU1(ctx);                                                  // (U1: the legionary / captain built from real models; the old hand-built ones below only run when that failed)
   // the soldier body (the Quaternius ranger, hood and all) as a crowd kind: the kingdom's cloth, props on the bones of the hands and head
   const body = (clips, props, cap, tier) => createKind({ gltf: M.ranger_m, anims: ANIMS, clips: [...BASE, ...clips], props, capacity: cap + 6, lod1Skip: LOD1, hue: true, cloth: CLOTH[tier], tier, crest: 'own',
-    lod2: { cloth: 0x2a5fc4, legs: 0x1c2a4a, skin: 0xd9a77f, h: 1.8 } });
+    lod2: lod2Col(true, tier) });
   const F = M.ranger_m ? framesOf(M.ranger_m) : null;
   const pp = (g, bone, s, pos, rot) => ({ gltf: g, bone, s, pos, rot: rot.map(rad) });
   // ---- the legionary: the soldier body with a galea, a scutum (left forearm) and a gladius (right fist)

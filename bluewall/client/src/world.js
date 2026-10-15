@@ -425,7 +425,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     if (!bat) { units.update(dt); patrols && patrols.update(t, dt, camera); }
     pe('units+patrols');
     lateTick(); pe('lateTick');
-    if (!bat) { if (campHome) campHome.update(t); life.update(t, dt, lastP, camera); pe('life'); army.update(t, dt, camera, lastP); pe('army'); }
+    if (!bat) { if (campHome) campHome.update(t, camera); /* BT1_R2: camera = pavilion LOD */ life.update(t, dt, lastP, camera); pe('life'); army.update(t, dt, camera, lastP); pe('army'); }
     if (tesla) { tesla.update(t, dt); if (extras.ballistas && !extras.ballistas.__ts) { extras.ballistas.__ts = 1; syncWeapons(); } }
     if (dlings) dlings.update(t, dt, camera);
     pe('tesla+dlings');

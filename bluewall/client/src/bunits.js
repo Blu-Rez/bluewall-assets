@@ -32,6 +32,7 @@ import { setupFlyers } from './bunits_fly.js';
 import { setupGround } from './bunits_ground.js';
 import { U1_TYPE, U1_CONTACT } from './u1_looks.js';                  // U1: real legionary + captain (u1_looks.js)
 import { U2_TYPE } from './u2_looks.js';                                        // U2: real ogre + treant (u2_looks.js)
+import { applySwaps, SWAP_TABLE } from './unit_swap.js';                       // BT1_R2: the soldier -> model table (unit_models.json), `slots` = one slot per unit key
 
 const freeGL = (root) => root.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m && m.dispose && m.dispose()); if (o.isInstancedMesh) o.dispose(); });   // (GPU buffers of a finished battle: the renderer rebuilds anything still shared)
 
@@ -44,7 +45,17 @@ const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 export const TIER_AT = [1, 6, 12, 18, 24, 30];             // wood, stone, iron, gold, diamond, blue crystal
 export const tierOf = (L) => { let t = 0; for (let i = 0; i < TIER_AT.length; i++) if (L >= TIER_AT[i]) t = i; return t; };
 let seed = 99; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
-const LOD2 = 300;                                          // soldiers farther than this from the camera are drawn as ~100-triangle figures
+// BT1_R2: the levels of detail follow what a figure is ON THE SCREEN, not how many metres it is from the camera.  At the default battle camera a soldier is 8-16 px tall (the battle map is huge, the
+// phone small) and was drawn with 10 000 triangles (LOD2 began at 300 m = never): a figure smaller than LOD2_PX device pixels is drawn as the ~100-triangle figure, one smaller than LOD1_PX loses its accessories.
+const LOD2_PX = 30, LOD1_PX = 90;
+// The far figure is painted with the MEAN colours of the real soldier of the same forge tier (dev/bt1r2_lod2cal.py: the same figure at LOD0 and at LOD2 on a flat field, head / body / legs): the fixed
+// bright blue it had was bolder than every real soldier and turned the army into blue pills at the default camera.   [cloth = chest and arms, legs, skin = the head: hood / helmet]
+const LOD2_TIER = [{ cloth: 0x616465, legs: 0x684736, skin: 0x6c707c }, { cloth: 0x383a4d, legs: 0x53322c, skin: 0x445068 }, { cloth: 0x454b66, legs: 0x5b3c38, skin: 0x545f82 },
+  { cloth: 0x474f6a, legs: 0x5d4039, skin: 0x4d556d }, { cloth: 0x656f72, legs: 0x704c3d, skin: 0x68737b }, { cloth: 0x526d7b, legs: 0x624d3f, skin: 0x56748b }];
+const LOD2_RED = { cloth: 0x652a2c, legs: 0x4f3126, skin: 0x6a2c27 };
+export const lod2Col = (hue, tier) => ({ ...(hue === 'red' ? LOD2_RED : LOD2_TIER[Math.max(0, Math.min(5, tier | 0))]), h: 1.8 });
+const FACE_MOVE = 1.0;                                                    // BT1_R2: m/s above which a soldier looks the way it moves
+const pxDist = (h, px, vh, tf) => (h * vh) / (tf * px);          // the distance at which a figure h metres tall is px pixels tall (vh = screen height in px, tf = 2 tan(fov / 2))
 const nextFrame = () => new Promise((r) => requestAnimationFrame(() => r()));
 
 // ---------------------------------------------------------------- per-type recipes
@@ -107,7 +118,7 @@ Object.assign(TYPE, U1_TYPE);                                                   
 Object.assign(TYPE, U2_TYPE);                                                    // U2: the ogre + treant (real models, u2_looks.js) replace the p35 recipes above
 
 // ---------------------------------------------------------------- the factory
-export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLevel = 1, height = () => 0, hooks = {}, progress }) {
+export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLevel = 1, height = () => 0, hooks = {}, progress, swap = SWAP_TABLE }) {
   const need = async (n) => (M[n] || (M[n] = await loadGLB(n)));
   const units = sim.units, defs = sim.defenders;
   const count = {}; for (const u of units) count[u.type] = (count[u.type] || 0) + 1; for (const d of defs) count['e_' + d.type] = (count['e_' + d.type] || 0) + 1;
@@ -130,7 +141,7 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
   const BASE = ['Walk_Loop', 'Jog_Fwd_Loop', 'Hit_Chest', 'Death01'], LOD1 = /Boots|Belt|Bracer|Pauldron/;
   const sold = (clips, props, cap, hue, tier = 1) => () => createKind({ gltf: M.ranger_m, anims: ANIMS, clips: [...BASE, ...clips], props: props.filter(Boolean), capacity: cap + 6, lod1Skip: LOD1, hue,
     cloth: hue === true ? CLOTH[tier] : null, tier, crest: hue === 'red' ? 'foe' : 'own',
-    lod2: { cloth: hue === 'red' ? 0xa8222e : 0x2a5fc4, legs: hue === 'red' ? 0x3a1418 : 0x1c2a4a, skin: 0xd9a77f, h: 1.8 } });
+    lod2: lod2Col(hue, tier) });
   const helm = (h) => (h ? pr(M[h], 'Head', 0.17, [0, 0.03, 0], [0, 0, 0]) : null);       // (kit per level tier: unitlook.js)
   // shields: painted wood with the crest of the realm that carries them (the attacker's / the defender's: gear_shield.js), steel rim in the tier metal
   const heater = () => pr(shieldModel(M.shield_heater, 'heater'), 'hand_l', 0.27, [0, 0.05, 0.05], [0, 90, 0]), round = () => pr(shieldModel(M.shield_round2, 'round', 0.25), 'hand_l', 0.25, [0, 0.05, 0.05], [0, 90, 0]);
@@ -152,13 +163,14 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
   if ((count.cavalry || count.lord || count.axerider) && M.knight_k3) { dressKnight(M.knight_k3); setPlumeTier((count.cavalry ? TT.cavalry : count.axerider ? TT.axerider : TT.lord) | 0); }     // horsehair plume + crest shield (gear_plume.js)
   if (count.cavalry && M.horse_m2m_grey && M.knight_k3) {             // the sword knights ride white (dapple-grey) horses
     await step('horse', () => createKind({ gltf: M.horse_m2m_grey, anims: { animations: M.horse_m2m_grey.animations }, clips: ['Idle', 'Walk', 'Trot', 'Gallop', 'Death', 'Kick', 'Head_But'], capacity: count.cavalry + 4 }));
-    await step('rider', () => createKind({ gltf: M.knight_k3, anims: { animations: M.knight_k3.animations }, clips: ['RideDrawn', 'RideStrike', 'Ride'], capacity: count.cavalry + 4 }));
+    await step('rider', () => createKind({ gltf: M.knight_k3, anims: { animations: M.knight_k3.animations }, clips: ['RideDrawn', 'RideStrike', 'Ride'], capacity: count.cavalry + 4, lod2: { cloth: 0x7c8795, legs: 0x39404c, skin: 0xd9a77f, h: 1.25 } }));
   }
   if (count.axerider && M.horse_m2m_bay && M.knight_k3) {             // the axe riders: bay horses, the knight's own axe copy (Roman helm, heavier plate) with the long axe in the right fist
     const ak = axeKnight(M.knight_k3);
     if (ak) {
       await step('horse3', () => createKind({ gltf: M.horse_m2m_bay, anims: { animations: M.horse_m2m_bay.animations }, clips: ['Idle', 'Walk', 'Trot', 'Gallop', 'Death', 'Kick', 'Head_But'], capacity: count.axerider + 4 }));
       await step('rider3', () => createKind({ gltf: ak, anims: { animations: ak.animations }, clips: ['AxeShoulder', 'AxeStrike', 'Ride'], capacity: count.axerider + 4,
+        lod2: { cloth: 0x6b7482, legs: 0x333a45, skin: 0xd9a77f, h: 1.25 },
         props: [pr(axeProp({ blued: false, long: true }), 'hand_r', AXE_RIDE.s, AXE_RIDE.pos, AXE_RIDE.rotDeg)].filter(Boolean) }));
     }
   }
@@ -251,7 +263,7 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
   }
 
   // ---- the second wave: elite infantry, creatures, beasts, the hero lord (every one a baked-animation crowd, like the first ten)
-  if (count.imp && M.imp) await step('imp', () => createKind({ gltf: M.imp, anims: ANIMS, clips: [...BASE, 'Idle_Loop', 'Punch_Cross'], capacity: count.imp + 6, hue: 'swap' }));
+  if (count.imp && M.imp) await step('imp', () => createKind({ gltf: M.imp, anims: ANIMS, clips: [...BASE, 'Idle_Loop', 'Punch_Cross'], capacity: count.imp + 6, hue: 'swap', lod2: { cloth: 0x3f6fb0, legs: 0x2a4a7a, skin: 0x5a86c4, h: 1.3 } }));
   if (count.e_hill && M.hill_giant) await step('e_hill', () => createKind({ gltf: M.hill_giant, anims: ANIMS, clips: [...BASE, 'Sword_Idle', 'Sword_Attack'], props: [pr(M.hammer_double, 'hand_r', 0.24, [0, 0, 0], [0, 0, -90])].filter(Boolean), capacity: count.e_hill + 2, hue: 'red', tier: ET, crest: 'foe' }));
   if (count.hill && M.hill_giant) await step('hill', () => createKind({ gltf: M.hill_giant, anims: ANIMS, clips: [...BASE, 'Sword_Idle', 'Sword_Attack'], props: [pr(M.hammer_double, 'hand_r', 0.24, [0, 0, 0], [0, 0, -90])].filter(Boolean), capacity: count.hill + 3, hue: true, tier: TT.hill | 0 }));
   if (count.shieldmaiden && M.shieldmaiden) dressMaiden(M.shieldmaiden);
@@ -268,11 +280,13 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
   }
   if (count.lord && M.horse_m2m_black && M.knight_k3) {
     await step('horse2', () => createKind({ gltf: M.horse_m2m_black, anims: { animations: M.horse_m2m_black.animations }, clips: ['Idle', 'Walk', 'Trot', 'Gallop', 'Death', 'Kick', 'Head_But'], capacity: count.lord + 3 }));
-    await step('rider2', () => createKind({ gltf: M.knight_k3, anims: { animations: M.knight_k3.animations }, clips: ['RideDrawn', 'RideStrike', 'Ride'], capacity: count.lord + 3 }));
+    await step('rider2', () => createKind({ gltf: M.knight_k3, anims: { animations: M.knight_k3.animations }, clips: ['RideDrawn', 'RideStrike', 'Ride'], capacity: count.lord + 3, lod2: { cloth: 0x2d2f3b, legs: 0x1b1d26, skin: 0xd9a77f, h: 1.25 } }));
   }
 
-  if (count.legionary || count.captain || count.ogre || count.lich || count.treant) await setupGround({ M, need, step, TYPE, count, TT, K, ANIMS, BASE, LOD1, ET });
+  if (count.legionary || count.captain || count.ogre || count.lich || count.treant) await setupGround({ M, need, step, TYPE, count, TT, K, ANIMS, BASE, LOD1, ET, lod2Col });
   lateTint();
+  // BT1_R2: units whose row in unit_models.json names a model get their own kind (everything else, and any failure, keeps today's body)
+  const { slots: SLOTS, restore: restoreTypes } = await applySwaps({ table: swap, count, TYPE, K, M, need, step, createKind });
 
   // ---- siege engines: the static model, one InstancedMesh per material (catapult, cannon, ram, trebuchet)
   // type -> [model, length in metres, kick]: kick = how far (m) the engine jerks back on a shot (negative = it lunges forward, the ram)
@@ -295,6 +309,8 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
 
   // ---------------------------------------------------------------- views
   const views = new Map(), list = [];
+  const KH = {};                                                            // BT1_R2: kind -> its figure's height in metres (a ground figure: the recipe's scale x 1.8; a giant / beast: its own absolute size)
+  for (const Tp of Object.values(TYPE)) for (const P of Tp.parts || []) if (!(P.k in KH)) KH[P.k] = Math.max(1.5, P.crAbs ? P.crAbs : P.scale * 1.8);
   const ref = (kind, sc = BS) => ({ jog: (kind.stats.walkSpeed || 0.8) * sc * 2.0, walk: (kind.stats.walkSpeed || 0.8) * sc });
 
   // the run / walk clip of a part for the unit's ground speed right now (with a little hysteresis, so a unit at the threshold does not flicker between the two) and the playback
@@ -333,7 +349,7 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
   function addView(u) {
     const key = u.side === 'D' ? 'e_' + u.type : u.type, Tp = TYPE[key];
     if (!Tp) return null;
-    const v = { u, T: Tp, key, parts: [], yaw: u.face, lx: u.x, lz: u.z, v: 0, state: '', atkUntil: 0, hitUntil: 0, hitCd: 0, ly: 0, vy: 0, dead: false, rnd: rnd(), recoil: 0, bt: 0 };
+    const v = { u, T: Tp, key, parts: [], yaw: u.face, lx: u.x, lz: u.z, v: 0, state: '', atkUntil: 0, hitUntil: 0, hitCd: 0, ly: 0, vy: 0, dead: false, rnd: rnd(), recoil: 0, bt: 0, hx: 0, hz: 0 };
     const sc = (0.97 + rnd() * 0.06) * (u.side === 'A' ? tierScale(u.tier | 0) : 1);
     if (Tp.catapult) {
       const sk = S[key]; if (!sk) return null;
@@ -341,7 +357,7 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
     } else {
       for (const P of Tp.parts) {
         const k = K[P.k]; if (!k) continue;
-        const p = k.add({ x: u.x, y: height(u.x, u.z), z: u.z, yaw: u.face, scale: P.scale * sc }); p.cr = P.crAbs || (P.crK ? P.scale * 1.5 * P.crK : 0);
+        const p = k.add({ x: u.x, y: height(u.x, u.z), z: u.z, yaw: u.face + (P.yawOff || 0), scale: P.scale * sc }); p.cr = P.crAbs || (P.crK ? P.scale * 1.5 * P.crK : 0);
         v.parts.push({ P, k, p, rf: ref(K[INFK[key]] || k, P.scale) });
       }
       if (!v.parts.length) return null;
@@ -423,7 +439,7 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
         if (v.cat) { v.cat.sk = f; v.cat.rise = up; if (t > v.removeAt) { v.sk.list.splice(v.sk.list.indexOf(v.cat), 1); list.splice(i, 1); } continue; }
         for (const pt of v.parts) {
           const p = pt.p, o = pt.P.off || [0, 0];
-          p.scale = pt.s0 * f; p.x = u.x + Math.sin(v.yaw) * o[1] * f; p.z = u.z + Math.cos(v.yaw) * o[1] * f; p.y = gy + v.ly + o[0] * f + up; p.yaw = v.yaw;
+          p.scale = pt.s0 * f; p.x = u.x + Math.sin(v.yaw) * o[1] * f; p.z = u.z + Math.cos(v.yaw) * o[1] * f; p.y = gy + v.ly + o[0] * f + up; p.yaw = v.yaw + (pt.P.yawOff || 0);
         }
         if (t > v.removeAt) { for (const pt of v.parts) pt.k.remove(pt.p); v.parts.length = 0; list.splice(i, 1); }
         continue;
@@ -431,7 +447,13 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
       // speed (smoothed), heading, lift
       const dx = u.x - v.lx, dz = u.z - v.lz; v.lx = u.x; v.lz = u.z;
       v.v += (Math.hypot(dx, dz) / dt - v.v) * Math.min(1, dt * 7);
-      v.yaw += clamp(wrap(u.face - v.yaw), -v.T.turn * dt, v.T.turn * dt);
+      // BT1_R2 (front / back): every LOD is a real mesh, so what the camera sees is decided by where the figure LOOKS.  The sim's `face` is the direction of the goal; the soldier's real displacement (separation from its
+      // friends, a slide along a wall) can differ from it, and then it walks sideways.  While it really moves (> FACE_MOVE m/s, not mid-swing) it looks where it goes (a velocity smoothed over ~0.12 s, so a push does
+      // not make it twitch); standing, swinging or shooting it looks at its target (u.face).  The turn rate stays the unit's own.
+      { const k = Math.min(1, dt * 8); v.hx += (dx / dt - v.hx) * k; v.hz += (dz / dt - v.hz) * k; }
+      let want = u.face;
+      if (!v.T.air && !v.T.catapult && t >= v.atkUntil && Math.hypot(v.hx, v.hz) > FACE_MOVE && Math.abs(wrap(Math.atan2(v.hx, v.hz) - u.face)) > 0.35) want = Math.atan2(v.hx, v.hz);
+      { const tr = v.T.turn * (want === u.face ? 1 : 1.7) * dt; v.yaw += clamp(wrap(want - v.yaw), -tr, tr); }       // (turning to the way it WALKS is quicker than turning to a goal: the feet are already going there)
       if (v.T.air) { const want = u.active || u.side === 'D' ? v.T.lift : 0; v.ly += clamp(want - v.ly, -dt * 7, dt * 7); }
       if (v.cat) { v.cat.x = u.x; v.cat.z = u.z; v.cat.y = height(u.x, u.z); v.cat.yaw = v.yaw; v.cat.rec = Math.max(0, v.cat.rec - dt * 2.2); continue; }
       const desired = t < v.atkUntil ? 'atk' : t < v.hitUntil ? 'hit' : !u.active && u.side === 'A' ? 'idle' : v.v > 0.55 ? 'run' : v.T.air && (u.active || u.side === 'D') ? 'hover' : 'idle';
@@ -464,9 +486,11 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
       const gy = height(u.x, u.z);
       let dvx = 0, dvz = 0, dvy = 0, dvp = 0;
       if (v.dive) { const dk = diveK(v, t); if (dk > 0) { const D = v.dive, ex = D.tx - u.x, ez = D.tz - u.z, el = Math.hypot(ex, ez) || 1, run = Math.min(el, 14) * dk; dvx = ex / el * run; dvz = ez / el * run; dvy = -Math.max(0, v.ly - 2) * 0.85 * dk; dvp = 0.75 * dk; } }
-      for (const pt of v.parts) { const p = pt.p, o = pt.P.off || [0, 0]; p.x = u.x + Math.sin(v.yaw) * o[1] + dvx; p.z = u.z + Math.cos(v.yaw) * o[1] + dvz; p.y = gy + v.ly + o[0] + dvy; p.yaw = v.yaw; if (v.dive) p.pitch = dvp; }
+      for (const pt of v.parts) { const p = pt.p, o = pt.P.off || [0, 0]; p.x = u.x + Math.sin(v.yaw) * o[1] + dvx; p.z = u.z + Math.cos(v.yaw) * o[1] + dvz; p.y = gy + v.ly + o[0] + dvy; p.yaw = v.yaw + (pt.P.yawOff || 0); if (v.dive) p.pitch = dvp; }
     }
-    for (const k of Object.values(K)) k.update(t, camera, { lodDist: 110, lod2Dist: LOD2 });
+    // BT1_R2: LOD by screen size (see LOD2_PX): the distance of each kind's switch is where ITS figure is LOD2_PX / LOD1_PX device pixels tall
+    const vh = Math.max(200, (typeof window !== 'undefined' ? window.innerHeight : 390) * Math.min(2, (typeof window !== 'undefined' && window.devicePixelRatio) || 1)), tf = 2 * Math.tan(((camera.fov || 52) * Math.PI) / 360);
+    for (const [kn, k] of Object.entries(K)) { const h = KH[kn] || 4.6; k.update(t, camera, { lodDist: pxDist(h, LOD1_PX, vh, tf), lod2Dist: pxDist(h, LOD2_PX, vh, tf) }); }
     // siege engines
     for (const sk of Object.values(S)) {
       const n = Math.min(sk.cap, sk.list.length);
@@ -484,8 +508,8 @@ export async function createUnitViews({ M, scene, sim, forgeLevel = 1, enemyLeve
   }
 
   return {
-    views, event, update, kinds: K, group: G, statics: S,
+    views, event, update, kinds: K, group: G, statics: S, slots: () => SLOTS,
     stats: () => { let d = 0; for (const k of Object.values(K)) d += k.drawn.reduce((a, b) => a + b, 0); return { views: list.length, drawn: d }; },
-    dispose() { scene.remove(G); freeGL(G); },
+    dispose() { restoreTypes(); scene.remove(G); freeGL(G); },
   };
 }

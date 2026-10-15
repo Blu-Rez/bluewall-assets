@@ -1,0 +1,382 @@
+{
+ "_doc": [
+  "BT1_R2: the soldier -> model table.  ONE row per unit key (every key of unitdefs.json `order` + the foe's e_* kinds).  Nothing here is code: to give a unit a real model, edit its row, nothing else.",
+  "model   asset key of web/assets/<model>.glb (null = keep today's body).  The owner's number from a sheet decides which model; no row is filled without it.",
+  "anims   asset key whose clips drive the model (null = the model's own clips; e.g. 'anims' / 'anims_army' for a model on the Quaternius UAL rig: bone names must match).",
+  "h       the model's standing height in metres (the loader measures the file and scales it to this; null = the recipe's own scale).  yaw = facing offset in DEGREES (0 = the model looks to +z, 180 = to -z).",
+  "clips   {idle, run, walk, atk, hit} clip names (string or list for a random pick); null = the recipe's own clip names.  ref = ground speed (m/s) at which the run clip's feet do not slide at scale 1 (null = recipe).",
+  "lod2    {cloth, legs, skin, h} hex colours of the far-away figure (null = the generic one).  Fallback for any failure (missing file, bad clip, no rig) = today's body, with a console warning."
+ ],
+ "units": {
+  "spear": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: Quaternius ranger body + spear + heater shield (crowd, baked clips)"
+  },
+  "sword": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: ranger body + claymore"
+  },
+  "guard": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: ranger body + sword + round shield"
+  },
+  "archer": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: ranger body + bow"
+  },
+  "cavalry": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: Mesh2Motion grey horse + K3 knight (two crowd kinds, the rider follows the saddle)"
+  },
+  "axerider": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: bay horse + K3 axe knight"
+  },
+  "pegasus": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: Opus pegasus (own wing rig)"
+  },
+  "baby": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: prowler baby dragon (live skinned mesh)"
+  },
+  "dragon": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: prowler dragon (live skinned mesh)"
+  },
+  "catapult": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: static catapult model"
+  },
+  "giant": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: cave troll rig + own stride + mace + navy armour"
+  },
+  "imp": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: MI_Imp (frost recolour)"
+  },
+  "mage": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: skeleton mage + staff"
+  },
+  "ram": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: static ram model"
+  },
+  "cannon": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: static cannon model"
+  },
+  "werewolf": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: werewolf model"
+  },
+  "trebuchet": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: static trebuchet model"
+  },
+  "hill": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: hill giant + double hammer"
+  },
+  "shieldmaiden": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: shieldmaiden + axe + round shield"
+  },
+  "lord": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: black horse + big knight"
+  },
+  "dragonling": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: Quaternius dragonling"
+  },
+  "legionary": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: U1 real Roman legionary"
+  },
+  "captain": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: U1 banner captain (hero)"
+  },
+  "ogre": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: U2 ogre"
+  },
+  "gryphon": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: bunits_fly gryphon"
+  },
+  "lich": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: U3 lich"
+  },
+  "treant": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: U2 treant"
+  },
+  "gryphonknight": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: bunits_fly gryphon knight"
+  },
+  "darkrider": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: bunits_fly dark rider"
+  },
+  "baby3": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: three-headed baby dragon"
+  },
+  "dragon3": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: three-headed dragon"
+  },
+  "e_guard": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: the foe guard: crimson ranger body + sword + round shield"
+  },
+  "e_archer": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: crimson ranger + bow"
+  },
+  "e_hill": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: crimson hill giant"
+  },
+  "e_baby": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: charcoal baby dragon"
+  },
+  "e_dragon": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: charcoal dragon"
+  },
+  "e_giant": {
+   "model": null,
+   "anims": null,
+   "h": null,
+   "yaw": 0,
+   "clips": null,
+   "ref": null,
+   "lod2": null,
+   "note": "today: red troll"
+  }
+ }
+}

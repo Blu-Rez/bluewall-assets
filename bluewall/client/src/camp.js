@@ -4,6 +4,10 @@
 // behind the last row with clear ground between), on a fixed spot for a given army (the same in the home map and in a battle: world.js setCamp / battle.js), and goes away with the battle.
 //   const camp = await createCamp({ scene, height, dp, emblem, army });  camp.update(t);  camp.dispose();   (army = { type: head-count })
 //   dp = { x, z, nx, nz } the deploy point in front of the first gate (n = away from the enemy base)
+// BT1_R2: the camp is a list of SLOT RECORDS { kind, x, z, ry } (camp_slots.js: command / barracks / supply / siege / healer tents, the banner, the palisade) and camp_slots.json names the MODEL of every kind
+// (null = today's piece: the pavilion / the standard with the attacker's crest / no palisade).  A model enters by editing that table, nothing here changes; a model that fails to load keeps the fallback.
+// The pavilions have two levels of detail (camptents.js lod 0 / 1) picked per tent by its size on the screen: update(t, camera).
+//   createCamp({ ..., table, load })   table = the slot table (default camp_slots.json), load = (assetKey) => Promise<gltf> (default assets.js loadGLB) - the tests pass their own
 import * as THREE from 'three';
 import { drawCrest } from './emblems.js';
 import { pavilionGeo } from './camptents.js';
@@ -14,6 +18,8 @@ import { planCamp } from './campplan.js';
 import * as L from './layout.js';
 import { hamlets } from './hamlets.js';
 import { TUNE } from './battlesim.js';
+import { CAMP_TABLE, TENT_KINDS, PAVILION_R, checkCampTable, squadKinds, tentSlots, bannerSlot, palisadeSlots } from './camp_slots.js';
+import { loadGLB } from './assets.js';
 
 const SQUAD_ORDER = Object.keys(SQUAD_COLOR);
 
@@ -48,7 +54,21 @@ function canvasTex() {
   const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t;
 }
 
-export async function createCamp({ scene, height, dp, emblem, army, targets }) {
+const TENT_LO_PX = 110;                             // BT1_R2: a tent whose picture is smaller than this (px tall, at the real screen size) is drawn with the far pavilion
+// BT1_R2: the model of one slot kind from the table: { parts: [{ geo, mat, m }] }, the file scaled to row.h, turned by row.yaw, centred on its footprint and standing on y = 0.
+async function slotModel(row, load) {
+  const g = await load(row.model); if (!g || !g.scene) throw new Error('model file ' + row.model + ' did not load');
+  g.scene.updateMatrixWorld(true);
+  const box = new THREE.Box3().setFromObject(g.scene), size = box.getSize(new THREE.Vector3()); if (!(size.y > 0)) throw new Error('model has no size');
+  const sc = row.h / size.y;
+  const base = new THREE.Matrix4().makeRotationY(((row.yaw || 0) * Math.PI) / 180).multiply(new THREE.Matrix4().makeScale(sc, sc, sc)).multiply(new THREE.Matrix4().makeTranslation(-(box.min.x + box.max.x) / 2, -box.min.y, -(box.min.z + box.max.z) / 2));
+  const parts = []; let tris = 0;
+  g.scene.traverse((o) => { if (o.isMesh && o.geometry) { parts.push({ geo: o.geometry, mat: o.material, m: base.clone().multiply(o.matrixWorld) }); tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; } });
+  if (!parts.length) throw new Error('model has no meshes');
+  return { parts, tris: Math.round(tris), calls: parts.length };
+}
+
+export async function createCamp({ scene, height, dp, emblem, army, targets, table = CAMP_TABLE, load = loadGLB }) {
   const nx = dp.nx, nz = dp.nz, tx0 = -nz, tz0 = nx, yaw = Math.atan2(nx, nz);
   const at = (l, b) => [dp.x + tx0 * l + nx * b, dp.z + tz0 * l + nz * b];
   // where the army stands (armyplan.js: the same plan the battle lines the soldiers up by): the tents begin FRONT m behind its last row, the standard in the middle of the army's width
@@ -70,7 +90,17 @@ export async function createCamp({ scene, height, dp, emblem, army, targets }) {
   let squads = Object.entries(army || {}).filter(([, n]) => n > 0).sort((a, b) => rank(a[0]) - rank(b[0])).map(([t, n]) => ({ t, n, col: SQUAD_COLOR[t] || '#9fe6ff' }));
   if (!squads.length) squads = [0, 1, 2].map((i) => ({ t: 'x' + i, n: 6, col: '#5f86c9' }));
   const nMax = Math.max(1, ...squads.map((q) => q.n));
-  for (const q of squads) q.k = 1.1 + 0.45 * Math.sqrt(q.n / nMax);              // the first tents' size (k = 1) and a little bigger for a bigger squad: 1.1 .. 1.55
+
+  // ---- BT1_R2: which model stands in which kind of slot (camp_slots.json).  A kind with a model that loads gets it; every other kind (and every failure) keeps today's piece.
+  const kindOf = squadKinds(squads, table), KR = table.kinds || {}, tableBad = checkCampTable(table), kstate = {}, MODELS = {};
+  for (const kd of [...new Set([...kindOf, 'banner', 'palisade'])]) {
+    const row = KR[kd]; kstate[kd] = { state: 'fallback', model: row ? row.model : null, why: '' };
+    if (!row || !row.model) continue;
+    const bad = tableBad.filter((b) => b.startsWith(kd + ':'));
+    try { if (bad.length) throw new Error(bad.join('; ')); MODELS[kd] = await slotModel(row, load); kstate[kd].state = 'model'; kstate[kd].tris = MODELS[kd].tris; kstate[kd].calls = MODELS[kd].calls; }
+    catch (e) { kstate[kd].state = 'failed'; kstate[kd].why = String(e.message || e).slice(0, 160); console.warn('camp slot ->', kd, 'keeps its fallback:', e); }
+  }
+  squads.forEach((q, i) => { const kd = kindOf[i]; q.kind = kd; q.k = MODELS[kd] ? KR[kd].r / PAVILION_R : 1.1 + 0.45 * Math.sqrt(q.n / nMax); });   // the first tents' size (k = 1) and a little bigger for a bigger squad: 1.1 .. 1.55 (a model tent: the room its footprint needs)
   // placement (owner 6 Oct 14:16: «the tents BEHIND the army, a horizontal band, on the mountain side, real and pretty»): campplan.js — a band as wide as the army right behind its last rank, every
   // tent exactly GAP from its neighbours, pitched on the mountain slope where the ground behind the plain climbs.  Nothing solid in the way: the farms with their fences, the farmhouse, the hamlets,
   // the mill and the buildings of the base.
@@ -91,26 +121,67 @@ export async function createCamp({ scene, height, dp, emblem, army, targets }) {
   const POLE = cp.pole, Bs = cp.Bs, latC = cp.latC, poleFound = cp.poleFound, fallback = cp.fallback;
   const lc = POLE.l, B0 = POLE.b;
   const items = cp.items.map((t) => ({ ...t, q: squads[t.i] }));
-  const list = items.map((t) => [t.l, t.b, t.yaw, t.k, t.q.col, t.r]);
-  {
-    const geo = pavilionGeo({ A: 0xff00ff, B: 0xf1ead6, wall: 0xe9e1cb, hem: 0x857a60 }), im = new THREE.InstancedMesh(geo, mat, list.length); im.castShadow = true; im.receiveShadow = false; im.frustumCulled = false;
-    const UP = new THREE.Vector3(0, 1, 0);
-    list.forEach(([l, b, ry, k, hex, rr], i) => {                      // (pitched on the slope: the tent leans with 60 % of the ground's slope, and sits so that its lower side touches the ground and the upper side is dug in)
-      const [x, z] = at(l, b), hc = height(x, z), e = Math.max(2, rr * 0.8), gx = (height(x + e, z) - height(x - e, z)) / (2 * e), gz = (height(x, z + e) - height(x, z - e)) / (2 * e), sl = Math.hypot(gx, gz);
-      const nm = UP.clone().lerp(new THREE.Vector3(-gx, 1, -gz).normalize(), 0.6).normalize(), q = new THREE.Quaternion().setFromUnitVectors(UP, nm).multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(0, yaw + ry, 0)));
-      im.setMatrixAt(i, new THREE.Matrix4().compose(new THREE.Vector3(x, hc - 0.4 * Math.min(sl, 1) * rr - 0.1, z), q, new THREE.Vector3(k, k, k)));
-      im.setColorAt(i, new THREE.Color(hex).multiplyScalar(0.95));
-    });
-    group.add(im); disposables.push(geo);
-  }
+  let rl0 = POLE.l - 8, rl1 = POLE.l + 8, rb0 = POLE.b - 8, rb1 = POLE.b + 8; for (const t of items) { rl0 = Math.min(rl0, t.l - t.r - 8); rl1 = Math.max(rl1, t.l + t.r + 8); rb0 = Math.min(rb0, t.b - t.r - 8); rb1 = Math.max(rb1, t.b + t.r + 8); }
+  const rect = { l0: rl0, l1: rl1, b0: rb0, b1: rb1 };          // (what a battle's ground clearing should also cover)
 
-  // ---- the standard: a tall pole with the ATTACKER'S crest, waving
+  // ---- the SLOT RECORDS { kind, x, z, ry }: tents (one per squad), the banner, the palisade (only when its model is set: no fence is drawn today)
+  const tents = tentSlots({ items, at, frameYaw: yaw, kinds: kindOf, squads }).map((sl, i) => ({ ...sl, col: new THREE.Color(items[i].q.col).multiplyScalar(0.95) }));
+  const banner = bannerSlot({ pole: POLE, at, frameYaw: yaw });
+  const fence = MODELS.palisade ? palisadeSlots({ rect, at, frameYaw: yaw, len: KR.palisade.len, blocked }) : [];
+  const slots = [...tents, banner, ...fence];
+
+  // pitched on the slope: the piece leans with 60 % of the ground's slope, and sits so that its lower side touches the ground and the upper side is dug in
+  const UP = new THREE.Vector3(0, 1, 0), ONE = new THREE.Vector3(1, 1, 1);
+  const pitch = (sl, rr, sc) => {
+    const hc = height(sl.x, sl.z), e = Math.max(2, rr * 0.8), gx = (height(sl.x + e, sl.z) - height(sl.x - e, sl.z)) / (2 * e), gz = (height(sl.x, sl.z + e) - height(sl.x, sl.z - e)) / (2 * e), sln = Math.hypot(gx, gz);
+    const nm = UP.clone().lerp(new THREE.Vector3(-gx, 1, -gz).normalize(), 0.6).normalize(), q = new THREE.Quaternion().setFromUnitVectors(UP, nm).multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(0, sl.ry, 0)));
+    return new THREE.Matrix4().compose(new THREE.Vector3(sl.x, hc - 0.4 * Math.min(sln, 1) * rr - 0.1, sl.z), q, sc);
+  };
+  // a model in its slots: one instanced mesh per mesh of the file
+  const modelAt = (kd, list, rrOf) => {
+    const M = MODELS[kd]; if (!M || !list.length) return;
+    for (const part of M.parts) {
+      const im = new THREE.InstancedMesh(part.geo, part.mat, list.length); im.castShadow = true; im.receiveShadow = true; im.frustumCulled = false;
+      list.forEach((sl, i) => im.setMatrixAt(i, pitch(sl, rrOf(sl), ONE).multiply(part.m)));
+      group.add(im);
+    }
+  };
+
+  // the pavilions (the fallback of every tent kind without a model): near = the full p30b tent, far = the same tent in ~1/9 of the triangles; each tent is on the side its size on the screen says (update)
+  const pav = tents.filter((sl) => !MODELS[sl.kind]).map((sl) => ({ sl, mx: pitch(sl, sl.r, new THREE.Vector3(sl.k, sl.k, sl.k)), lo: false, D: 2 * sl.r }));
+  let setLod = null, info_lod = null;
+  if (pav.length) {
+    const A = { A: 0xff00ff, B: 0xf1ead6, wall: 0xe9e1cb, hem: 0x857a60 }, geoHi = pavilionGeo(A), geoLo = pavilionGeo({ ...A, lod: 1 });
+    const mk = (geo) => { const im = new THREE.InstancedMesh(geo, mat, pav.length); im.castShadow = true; im.receiveShadow = false; im.frustumCulled = false; im.setColorAt(0, pav[0].sl.col); group.add(im); return im; };   // (setColorAt first: both meshes compile the SAME shader variant)
+    const hi = mk(geoHi), lo = mk(geoLo);
+    const assign = () => {
+      let h = 0, l = 0;
+      for (const p of pav) { const im = p.lo ? lo : hi, j = p.lo ? l++ : h++; im.setMatrixAt(j, p.mx); im.setColorAt(j, p.sl.col); }
+      hi.count = h; lo.count = l; hi.visible = h > 0; lo.visible = l > 0;
+      for (const im of [hi, lo]) { im.instanceMatrix.needsUpdate = true; if (im.instanceColor) im.instanceColor.needsUpdate = true; }
+    };
+    assign(); let sig = '';
+    setLod = (camera) => {                                      // (a tent whose picture is under TENT_LO_PX high takes the far version; 20 % of hysteresis so none flickers)
+      const vh = (typeof window !== 'undefined' ? window.innerHeight : 390) * Math.min(2, (typeof window !== 'undefined' && window.devicePixelRatio) || 1), tf = 2 * Math.tan((camera.fov * Math.PI) / 360), s2 = camera.position.x + ',' + camera.position.y + ',' + camera.position.z + ',' + camera.fov + ',' + vh;
+      if (s2 === sig) return; sig = s2; let ch = false;
+      for (const p of pav) { const d = Math.max(1, Math.hypot(camera.position.x - p.sl.x, camera.position.y - p.mx.elements[13], camera.position.z - p.sl.z)), px = (p.D / (d * tf)) * vh, lo2 = p.lo ? px < TENT_LO_PX * 1.2 : px < TENT_LO_PX; if (lo2 !== p.lo) { p.lo = lo2; ch = true; } }
+      if (ch) assign();
+    };
+    info_lod = () => ({ hi: hi.count, lo: lo.count });
+  }
+  for (const kd of TENT_KINDS) modelAt(kd, tents.filter((sl) => sl.kind === kd), (sl) => sl.r);
+  modelAt('palisade', fence, () => KR.palisade.len * 0.5);
+
+  // ---- the standard: a tall pole with the ATTACKER'S crest, waving.  (BT1_R2: banner.model = the pole, the cloth stays the attacker's own)
   const uni = { value: 0 };
   {
-    const [x, z] = at(lc, B0), y = height(x, z), h = 17;
-    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.22, h, 8), new THREE.MeshStandardMaterial({ color: 0x4a3a2a, roughness: 0.8 })); pole.position.set(x, y + h / 2 - 0.2, z); pole.castShadow = true; group.add(pole);
-    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.34, 10, 8), new THREE.MeshStandardMaterial({ color: 0xcdb36a, roughness: 0.4, metalness: 0.6 })); ball.position.set(x, y + h - 0.1, z); group.add(ball);
-    disposables.push(pole.geometry, pole.material, ball.geometry, ball.material);
+    const x = banner.x, z = banner.z, y = height(x, z), h = MODELS.banner ? KR.banner.h : 17;
+    if (MODELS.banner) modelAt('banner', [banner], () => 2);
+    else {
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.22, h, 8), new THREE.MeshStandardMaterial({ color: 0x4a3a2a, roughness: 0.8 })); pole.position.set(x, y + h / 2 - 0.2, z); pole.castShadow = true; group.add(pole);
+      const ball = new THREE.Mesh(new THREE.SphereGeometry(0.34, 10, 8), new THREE.MeshStandardMaterial({ color: 0xcdb36a, roughness: 0.4, metalness: 0.6 })); ball.position.set(x, y + h - 0.1, z); group.add(ball);
+      disposables.push(pole.geometry, pole.material, ball.geometry, ball.material);
+    }
     const w = 7.2, hh = 4.5, fg = new THREE.PlaneGeometry(w, hh, 16, 3); fg.translate(w / 2, -hh / 2, 0);
     const m = new THREE.MeshStandardMaterial({ map: flagTex(emblem || 'swords'), roughness: 0.78, side: THREE.DoubleSide });
     m.onBeforeCompile = (sh) => {
@@ -122,11 +193,11 @@ export async function createCamp({ scene, height, dp, emblem, army, targets }) {
     };
     const f = new THREE.Mesh(fg, m); f.position.set(x, y + h - 0.6, z); f.rotation.y = yaw - Math.PI / 2; f.castShadow = true; f.frustumCulled = false; group.add(f); disposables.push(fg, m, m.map);
   }
-  let rl0 = POLE.l - 8, rl1 = POLE.l + 8, rb0 = POLE.b - 8, rb1 = POLE.b + 8; for (const t of items) { rl0 = Math.min(rl0, t.l - t.r - 8); rl1 = Math.max(rl1, t.l + t.r + 8); rb0 = Math.min(rb0, t.b - t.r - 8); rb1 = Math.max(rb1, t.b + t.r + 8); }
-  const rect = { l0: rl0, l1: rl1, b0: rb0, b1: rb1 };          // (what a battle's ground clearing should also cover)
+  const slotInfo = slots.map((sl) => ({ kind: sl.kind, x: +sl.x.toFixed(2), z: +sl.z.toFixed(2), ry: +sl.ry.toFixed(3), squad: sl.squad || null, state: kstate[sl.kind] ? kstate[sl.kind].state : 'fallback' }));
   return {
-    group, rect, info: { Bs, back1: plan.back1, latC, poleFound, fallback, H0: +H0.toFixed(1), pole: [POLE.l, POLE.b], tents: items.map((t) => [t.q.t, +t.l.toFixed(1), +t.b.toFixed(1), +t.r.toFixed(1), +height(...at(t.l, t.b)).toFixed(1)]) },
-    update(t) { uni.value = t; },
+    group, rect, slots: slotInfo,
+    info: { Bs, back1: plan.back1, latC, poleFound, fallback, H0: +H0.toFixed(1), pole: [POLE.l, POLE.b], kinds: kstate, lod: () => (info_lod ? info_lod() : null), tents: items.map((t) => [t.q.t, +t.l.toFixed(1), +t.b.toFixed(1), +t.r.toFixed(1), +height(...at(t.l, t.b)).toFixed(1)]) },
+    update(t, camera) { uni.value = t; if (setLod && camera) setLod(camera); },
     dispose() { scene.remove(group); group.traverse((o) => { if (o.geometry && o.geometry.dispose) o.geometry.dispose(); }); disposables.forEach((d) => { try { d.dispose && d.dispose(); } catch (e) { /* ignore */ } }); },
   };
 }

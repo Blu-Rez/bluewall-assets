@@ -78,8 +78,10 @@ const withUV = (g, o, tile = 2.2) => {
   }
   g.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); return g;
 };
+// o.lod = 1: the FAR version (BT1_R2: ~1 000 triangles instead of ~8 900): fewer panel cells, no piping / tassels / door frame / flaps, one sagging guy rope per rib — the same silhouette, colours and UV mapping,
+// chosen per tent by its size on the screen (camp.js).  The default (o.lod = 0) is the version of p30b.
 export function pavilionGeo(o = {}) {
-  const { A = 0x23406f, B = 0xf1ead6, wall = 0xe9e1cb, hem = 0x9a8f72, trim = 0xd8c98f, r0 = 3.6, wallH = 2.1, roofH = 4.3, stripes = 12 } = o;
+  const { A = 0x23406f, B = 0xf1ead6, wall = 0xe9e1cb, hem = 0x9a8f72, trim = 0xd8c98f, r0 = 3.6, wallH = 2.1, roofH = 4.3, stripes = 12, lod = 0 } = o, LO = lod === 1;
   const Re = r0 + 0.6, eaveY = wallH, WA = TAU / stripes, parts = [];
   const sinP = (s) => Math.sin(Math.PI * s);
   // ---- roof panels: concave cone, each panel billows between its ribs and droops at the eave
@@ -88,14 +90,14 @@ export function pavilionGeo(o = {}) {
     const b = 0.10 * sinP(s) * Math.sin(Math.PI * Math.min(1, t * 0.9 + 0.04)), droop = 0.2 * Math.pow(sinP(s), 0.8) * Math.pow(1 - t, 3);
     const r = rr + b * 0.45; return [Math.sin(th) * r, y0 + b * 0.85 - droop, Math.cos(th) * r];
   };
-  for (let w = 0; w < stripes; w++) parts.push(panel(roofP(w), 10, 12, (w & 1) ? B : A));
+  for (let w = 0; w < stripes; w++) parts.push(panel(roofP(w), LO ? 4 : 10, LO ? 5 : 12, (w & 1) ? B : A));
   // ---- wall panels (a muddy hem band, then canvas), sagging a little between the poles
   for (let w = 0; w < stripes; w++) {
     const wallPt = (y0, y1) => (s, t) => { const th = (w + s + 0.5) * WA, r = r0 + 0.07 * sinP(s) + 0.03 * Math.sin(Math.PI * (y0 + (y1 - y0) * t) / wallH); const y = y0 + (y1 - y0) * t; return [Math.sin(th) * r, y, Math.cos(th) * r]; };
-    parts.push(panel(wallPt(0, 0.42), 4, 1, hem)); parts.push(panel(wallPt(0.42, wallH + 0.03), 4, 3, wall));
+    parts.push(panel(wallPt(0, 0.42), LO ? 2 : 4, 1, hem)); parts.push(panel(wallPt(0.42, wallH + 0.03), LO ? 2 : 4, LO ? 1 : 3, wall));
   }
   // ---- piping along every rib (pale gold) + a tassel at the foot of each rib
-  for (let k = 0; k < stripes; k++) {
+  for (let k = 0; k < stripes && !LO; k++) {
     const th = (k + 0.5) * WA, N = 8;
     for (let j = 0; j < N; j++) {
       const t0 = j / N, t1 = (j + 1) / N, pa = roofP(k)(0, t0), pb = roofP(k)(0, t1);
@@ -112,7 +114,7 @@ export function pavilionGeo(o = {}) {
     parts.push(panel((s, t) => {
       const th = (w + s + 0.5) * WA, top = eaveY - 0.2 * Math.pow(sinP(s), 0.8) - 0.02, bot = top - 0.3 - 0.5 * Math.pow(sinP(s), 0.7), y = top + (bot - top) * t, r = Re - 0.02 + 0.1 * t + 0.03 * sinP(s);
       return [Math.sin(th) * r, y, Math.cos(th) * r];
-    }, 10, 2, col));
+    }, LO ? 4 : 10, LO ? 1 : 2, col));
   }
   // ---- door at -z: arched dark opening, timber frame, two tied-back flaps
   {
@@ -120,8 +122,8 @@ export function pavilionGeo(o = {}) {
     const pts = [[-hw, 0]]; for (let k = 0; k <= 8; k++) { const a = Math.PI - (k / 8) * Math.PI; pts.push([Math.cos(a) * hw, spring + Math.sin(a) * (topY - spring)]); } pts.push([hw, 0]);
     const cx = 0, cy = 0.9, P3 = (q) => [q[0], q[1], zAt(q[0])];
     for (let k = 0; k < pts.length; k++) parts.push(tri([P3([cx, cy]), P3(pts[k]), P3(pts[(k + 1) % pts.length])], DOOR));
-    for (let k = 0; k < pts.length - 1; k++) { const a = P3(pts[k]), b = P3(pts[k + 1]); parts.push(rod(a[0], a[1], a[2] - 0.03, b[0], b[1], b[2] - 0.03, 0.055, WOODC)); }
-    for (const e of [-1, 1]) {
+    for (let k = 0; k < pts.length - 1 && !LO; k++) { const a = P3(pts[k]), b = P3(pts[k + 1]); parts.push(rod(a[0], a[1], a[2] - 0.03, b[0], b[1], b[2] - 0.03, 0.055, WOODC)); }
+    for (const e of LO ? [] : [-1, 1]) {
       parts.push(panel((s, t) => {
         const xL = e * (0.9 + 0.8 * t), xR = e * (1.38 + 0.7 * t), x = xL + (xR - xL) * s, y = 2.0 - 1.9 * t;
         return [x, y, zAt(x) - 0.1 - 0.12 * sinP(s) * (1 - t * 0.5)];
@@ -132,14 +134,14 @@ export function pavilionGeo(o = {}) {
   }
   // ---- apex: gold cap, timber pole, gold balls, swallow-tail pennant
   const tipY = eaveY + roofH;
-  parts.push(at(flat(new THREE.ConeGeometry(0.34, 0.42, 12), trim), 0, tipY - 0.06, 0)); parts.push(cyl(0.05, 0.1, 1.9, WOODC, 0, tipY + 0.75, 0)); parts.push(ball(0.2, trim, 0, tipY + 0.2, 0)); parts.push(ball(0.13, trim, 0, tipY + 1.75, 0));
+  parts.push(at(flat(new THREE.ConeGeometry(0.34, 0.42, LO ? 6 : 12), trim), 0, tipY - 0.06, 0)); parts.push(cyl(0.05, 0.1, 1.9, WOODC, 0, tipY + 0.75, 0, LO ? 4 : 7)); if (!LO) { parts.push(ball(0.2, trim, 0, tipY + 0.2, 0)); parts.push(ball(0.13, trim, 0, tipY + 1.75, 0)); }
   parts.push(pennant(0.05, tipY + 1.62, 0, 1.7, 0.7, A, B, 0.4));
   // ---- guy ropes: one per rib, sagging a little, to a peg in the ground
   for (let k = 0; k < stripes; k++) {
-    const th = (k + 0.5) * WA, Rp = Re + 2.6, sx = Math.sin(th), cz = Math.cos(th), N = 5;
+    const th = (k + 0.5) * WA, Rp = Re + 2.6, sx = Math.sin(th), cz = Math.cos(th), N = LO ? 2 : 5;
     const pt = (u) => [sx * (Re + (Rp - Re) * u), (eaveY - 0.3) * (1 - u) + 0.14 * u - 0.12 * Math.sin(Math.PI * u), cz * (Re + (Rp - Re) * u)];
     for (let j = 0; j < N; j++) { const a = pt(j / N), b = pt((j + 1) / N); parts.push(rod(a[0], a[1], a[2], b[0], b[1], b[2], 0.03, ROPE)); }
-    parts.push(rod(sx * Rp, 0.0, cz * Rp, sx * (Rp + 0.14), 0.42, cz * (Rp + 0.14), 0.06, WOODC));
+    if (!LO) parts.push(rod(sx * Rp, 0.0, cz * Rp, sx * (Rp + 0.14), 0.42, cz * (Rp + 0.14), 0.06, WOODC));
   }
   return withUV(mergeGeometries(parts, false), { Re, roofH, tipY, seam: 0.5 * WA });
 }

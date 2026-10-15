@@ -534,7 +534,7 @@ export function createBattleMode({ renderer, scene, camera, root, world, audio, 
     if (s.ctl) s.ctl.update();
     if (s.rings) { s.rings.update(sim, s.rc.lit, dt, s.t, ringGhosts(s), s.camera.position); ringView(s); }
     if (s.scout && s.started) scoutOff(s);                                       // (the first squad on its way: the defence overlay goes away)
-    if (s.camp) s.camp.update(s.t);
+    if (s.camp) s.camp.update(s.t, camera);               // BT1_R2: the camera picks each pavilion's level of detail
     if (s.wake) s.wake.update(sim.units, dt);
     s.fx.update(dt, camera); s.spfx.update(dt); s.cracks && s.cracks.update(dt);
     // war drums follow the fight: a heartbeat before the army moves, a march when it engages, fills when everything is burning
