@@ -51,16 +51,17 @@ export function createSFX(audio, camera) {
 
   const R = {
     // blade on blade: the strike's edge, the knock of the weight, then a ring of inharmonic partials (ratios of a struck bar) that dies away
+    // AU1: the ring's fundamental stays at 400-650 Hz so the 2.76x partial stays under 1.8 kHz; the two upper partials (the "mosquito" ping) are quiet (< -28 dBFS) - the metallic edge is the noise burst
     sword(c, d, t) {
-      const f = 520 + Math.random() * 760;
+      const f = 400 + Math.random() * 248;
       noiseBurst(c, d, t, 0.05, 'highpass', 3200, 7500, 0.7, 0.6); noiseBurst(c, d, t, 0.045, 'bandpass', 1300, 900, 1.0, 0.5); tone(c, d, t, 'sine', 210, 105, 0.07, 0.4);
-      for (const [r, a, dur] of [[1, 0.5, 0.5], [2.76, 0.32, 0.36], [5.4, 0.2, 0.26], [8.93, 0.12, 0.18]]) tone(c, d, t, 'sine', f * r, f * r * 0.995, dur, a * 0.55, 0.002);
+      for (const [r, a, dur] of [[1, 0.5, 0.5], [2.76, 0.32, 0.36], [5.4, 0.07, 0.2], [8.93, 0.04, 0.12]]) tone(c, d, t, 'sine', f * r, f * r * 0.995, dur, a * 0.55, 0.002);
     },
     // a heavier clash (swords against shields and armour): lower, longer, with a slightly detuned twin so the ring beats
     clang(c, d, t) {
-      const f = 330 + Math.random() * 380;
+      const f = 300 + Math.random() * 340;                                  // AU1: 2.76x partial < 1.8 kHz, the upper two are quiet (see sword)
       noiseBurst(c, d, t, 0.06, 'highpass', 2600, 6000, 0.8, 0.65); noiseBurst(c, d, t, 0.07, 'bandpass', 900, 500, 0.9, 0.6); tone(c, d, t, 'sine', 170, 80, 0.1, 0.5);
-      for (const [r, a, dur] of [[1, 0.55, 0.95], [2.76, 0.36, 0.6], [5.4, 0.24, 0.4], [8.93, 0.14, 0.25]]) { tone(c, d, t, 'sine', f * r, f * r * 0.996, dur, a * 0.55, 0.002); if (r === 1) tone(c, d, t, 'sine', f * 1.007, f * 1.007 * 0.996, dur * 0.9, a * 0.4, 0.002); }
+      for (const [r, a, dur] of [[1, 0.55, 0.95], [2.76, 0.36, 0.6], [5.4, 0.07, 0.3], [8.93, 0.04, 0.15]]) { tone(c, d, t, 'sine', f * r, f * r * 0.996, dur, a * 0.55, 0.002); if (r === 1) tone(c, d, t, 'sine', f * 1.007, f * 1.007 * 0.996, dur * 0.9, a * 0.4, 0.002); }
     },
     arrow(c, d, t) { noiseBurst(c, d, t, 0.16, 'bandpass', 1200, 3200, 0.9, 0.25); },
     bolt(c, d, t) { tone(c, d, t, 'sawtooth', 210, 60, 0.45, 0.28); noiseBurst(c, d, t, 0.3, 'bandpass', 2200, 700, 0.8, 0.35); },
@@ -92,8 +93,9 @@ export function createSFX(audio, camera) {
     // a vault bursting: a glassy shatter (bright inharmonic pings on a noise crack) over a deep boom, then glitter falling
     chime(c, d, t) {
       noiseBurst(c, d, t, 0.18, 'highpass', 2600, 7000, 1, 0.6); tone(c, d, t, 'sine', 90, 34, 0.9, 0.7, 0.01);
-      [1320, 1760, 2217, 2960, 3520].forEach((f, i) => tone(c, d, t + 0.02 + i * 0.045, 'sine', f * (1 + Math.random() * 0.02), f * 0.97, 1.1 - i * 0.1, 0.2, 0.004));
-      for (let i = 0; i < 8; i++) tone(c, d, t + 0.25 + i * 0.09 + Math.random() * 0.05, 'sine', 2400 + Math.random() * 2600, 2200, 0.25, 0.08, 0.003);
+      // AU1: the pings sit at 740-1750 Hz (glassy but warm) and the falling glitter is filtered noise, not 2.4-5 kHz sine pings
+      [740, 988, 1245, 1480, 1745].forEach((f, i) => tone(c, d, t + 0.02 + i * 0.045, 'sine', f * (1 + Math.random() * 0.02), f * 0.97, 1.1 - i * 0.1, 0.14, 0.006));
+      for (let i = 0; i < 8; i++) noiseBurst(c, d, t + 0.25 + i * 0.09 + Math.random() * 0.05, 0.05, 'bandpass', 3800 + Math.random() * 1800, 3000, 2.5, 0.05);
     },
     breath(c, d, t) { noiseBurst(c, d, t, 0.9, 'bandpass', 700, 1500, 0.6, 0.5); noiseBurst(c, d, t, 0.9, 'lowpass', 400, 200, 0.5, 0.35); },
     pop(c, d, t) { tone(c, d, t, 'sine', 400, 120, 0.1, 0.25); },
@@ -101,9 +103,20 @@ export function createSFX(audio, camera) {
     thunder(c, d, t) { noiseBurst(c, d, t, 0.12, 'highpass', 2500, 900, 0.7, 1.0); noiseBurst(c, d, t + 0.03, 1.4, 'lowpass', 700, 70, 0.7, 1.0); tone(c, d, t + 0.02, 'sine', 70, 30, 1.1, 0.8); },
     heal(c, d, t) { [523.3, 659.3, 784, 1046.5].forEach((f, i) => tone(c, d, t + i * 0.11, 'sine', f, f, 0.7, 0.22, 0.02)); },
     rage(c, d, t) { tone(c, d, t, 'sawtooth', 90, 62, 0.9, 0.4, 0.05); noiseBurst(c, d, t, 0.9, 'lowpass', 420, 160, 0.6, 0.55); tone(c, d, t + 0.35, 'square', 140, 100, 0.5, 0.18, 0.02); },
-    freeze(c, d, t) { [2400, 3100, 1900, 3600].forEach((f, i) => tone(c, d, t + i * 0.05, 'sine', f, f * 0.55, 0.5, 0.14, 0.004)); noiseBurst(c, d, t, 0.5, 'highpass', 3500, 6000, 0.9, 0.3); },
+    freeze(c, d, t) { [1500, 1250, 1700, 1000].forEach((f, i) => tone(c, d, t + i * 0.05, 'sine', f, f * 0.6, 0.5, 0.1, 0.006)); noiseBurst(c, d, t, 0.5, 'highpass', 3500, 6000, 0.9, 0.24); },
     quake(c, d, t) { noiseBurst(c, d, t, 1.9, 'lowpass', 160, 45, 0.7, 1.0); tone(c, d, t, 'sine', 48, 24, 1.8, 1.0, 0.05); for (let i = 0; i < 5; i++) noiseBurst(c, d, t + 0.2 + i * 0.28, 0.25, 'lowpass', 500, 160, 0.9, 0.5); },
   };
+  const hornTo = (c, d, t, low) => {
+    const f = low ? 82 : 98;
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 520; const g = c.createGain(); lp.connect(g); g.connect(d);
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.24, t + 0.35); g.gain.setValueAtTime(0.24, t + 1.2); g.gain.exponentialRampToValueAtTime(0.0001, t + 2.2);
+    for (const m of [1, 1.5, 2.005]) { const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(f * m, t); o.frequency.linearRampToValueAtTime(f * m * 1.04, t + 0.4); o.connect(lp); o.start(t); o.stop(t + 2.4); }
+  };
+  const fanfareTo = (c, d, t, win) => {
+    const notes = win ? [523.3, 659.3, 784, 1046.5, 784, 1046.5, 1318.5] : [392, 349.2, 311.1, 261.6, 196];
+    notes.forEach((f, i) => { const at = t + i * (win ? 0.16 : 0.34), dur = win ? 0.4 : 0.7; tone(c, d, at, 'triangle', f, f, dur, 0.3, 0.015); tone(c, d, at, 'sine', f * 2, f * 2, dur * 0.8, 0.04, 0.015); if (win) tone(c, d, at, 'sawtooth', f / 2, f / 2, dur, 0.05, 0.02); });
+  };
+  const cheerTo = (c, d, t) => { for (const f of [500, 900, 1600]) noiseBurst(c, d, t, 2.0, 'bandpass', f, f * 1.15, 1.8, 0.3); };
   // the roar of the armies: three bands of crowd noise (voices, steel, shuffling feet) that swell with the intensity of the fight (0..1)
   let bedN = null;
   const bedEnsure = (c) => {
@@ -123,20 +136,19 @@ export function createSFX(audio, camera) {
       const d = node(c, x, y, z, vol, name); if (d) R[name](c, d, c.currentTime + 0.005);
     },
     // the war horn: two stacked saws through a low-pass, swelling up and fading
-    horn(low = false) {
-      const c = ctx(); if (!c) return; const d = out(c), t = c.currentTime + 0.02, f = low ? 82 : 98;
-      const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 520; const g = c.createGain(); lp.connect(g); g.connect(d);
-      g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.24, t + 0.35); g.gain.setValueAtTime(0.24, t + 1.2); g.gain.exponentialRampToValueAtTime(0.0001, t + 2.2);
-      for (const m of [1, 1.5, 2.005]) { const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(f * m, t); o.frequency.linearRampToValueAtTime(f * m * 1.04, t + 0.4); o.connect(lp); o.start(t); o.stop(t + 2.4); }
-    },
+    horn(low = false) { const c = ctx(); if (!c) return; hornTo(c, out(c), c.currentTime + 0.02, low); },
     // a short rising (victory) or falling (defeat) phrase
-    fanfare(win) {
-      const c = ctx(); if (!c) return; const d = out(c), t = c.currentTime + 0.05;
-      const notes = win ? [523.3, 659.3, 784, 1046.5, 784, 1046.5, 1318.5] : [392, 349.2, 311.1, 261.6, 196];
-      notes.forEach((f, i) => { const at = t + i * (win ? 0.16 : 0.34), dur = win ? 0.4 : 0.7; tone(c, d, at, 'triangle', f, f, dur, 0.3, 0.015); tone(c, d, at, 'sine', f * 2, f * 2, dur * 0.8, 0.08, 0.015); if (win) tone(c, d, at, 'sawtooth', f / 2, f / 2, dur, 0.05, 0.02); });
-    },
+    fanfare(win) { const c = ctx(); if (!c) return; fanfareTo(c, out(c), c.currentTime + 0.05, win); },
     // crowd roar (cheer): formant-filtered noise swell
-    cheer() { const c = ctx(); if (!c) return; const d = out(c), t = c.currentTime + 0.02; for (const f of [500, 900, 1600]) noiseBurst(c, d, t, 2.0, 'bandpass', f, f * 1.15, 1.8, 0.3); },
+    cheer() { const c = ctx(); if (!c) return; cheerTo(c, out(c), c.currentTime + 0.02); },
+    // AU1 (test hook, no game caller): render ONE sound straight into `dest` at time `t`, dry and at full level, for the offline spectrum test.
+    render(name, c, dest, t = 0) {
+      if (R[name]) return R[name](c, dest, t);
+      if (name === 'horn') return hornTo(c, dest, t, false); if (name === 'horn_low') return hornTo(c, dest, t, true);
+      if (name === 'fanfare_win') return fanfareTo(c, dest, t, true); if (name === 'fanfare_lose') return fanfareTo(c, dest, t, false);
+      if (name === 'cheer') return cheerTo(c, dest, t);
+    },
+    names: () => Object.keys(R).concat(['horn', 'horn_low', 'fanfare_win', 'fanfare_lose', 'cheer']),
     roar(x, z, big) { if (audio && audio.roar) { const c = ctx(); if (!c) return; const now = c.currentTime; if (now - (last.roar || 0) < 1.2) return; last.roar = now; const g = gainPan(c, x, 8, z, 1).v; audio.roar(Math.max(0.15, g * (big ? 1 : 0.7))); } },
     bed(level) { const c = ctx(); if (!c) return; const b = bedEnsure(c); b.g.gain.setTargetAtTime(Math.max(0, Math.min(1, level)) * 0.2, c.currentTime, 0.8); },
     dispose() { const c = ctx(); if (!c || !bedN) return; const b = bedN; bedN = null; b.g.gain.setTargetAtTime(0, c.currentTime, 0.3); setTimeout(() => { for (const s of b.srcs) { try { s.stop(); } catch (e) { /* ignore */ } } try { b.g.disconnect(); } catch (e) { /* ignore */ } }, 1500); },
