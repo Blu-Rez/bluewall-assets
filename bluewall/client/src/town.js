@@ -178,12 +178,14 @@ export function buildTown(ctx, A, Q, scene, plan = null) {
   const pickRoof = (h, arr) => { if (THEME.blueCut > 0 && hash01(h.x, h.z, 1.7) < THEME.blueCut) { const f = arr.filter((c) => !bluish(c)); if (f.length) return pick(f); } return pick(arr); };
   const rusticAt = (h) => THEME.rustic > 0 && ((Math.sin(h.x * 12.9898 + h.z * 78.233) * 43758.5453) % 1 + 1) % 1 < THEME.rustic;
   const FLOWER = ['#d83a4a', '#f0d24a', '#f2f2f2', '#e87aa8', '#8fb8ff'];
-  const put = (geo, mat, m, o) => B.add(geo, mat, m, o);
+  let ghost = false;                                                  // TR2-S4a-R2: while ghost, townHouse() runs (same random draws, same tap box) but draws nothing: the Tripo house of town_build.js stands on the lot instead
+  const put = (geo, mat, m, o) => { if (!ghost) B.add(geo, mat, m, o); };
+  const T2 = !!ctx.tr2town, gen = [];                                 // TR2-S4a-R2: ctx.tr2town = the Tripo house models are loaded (world.js); gen = the lots they are baked on (createPlannedTown)
   let smokeN = 0;
   // every ~26 m block of houses is one destructible battle target (the whole block crumbles together, see destruct.js); the church stands alone
   { const cell = 26, map = new Map();
     for (const h of lots) { const k = h.kind === 'church' ? 'church' : Math.floor(h.x / cell) + ',' + Math.floor(h.z / cell); if (!map.has(k)) map.set(k, []); map.get(k).push(h); }
-    for (const arr of map.values()) { blockTarget(arr); for (const h of arr) { if (h.kind === 'church') church(h); else townHouse(h); } }
+    for (const arr of map.values()) { const tid = blockTarget(arr); for (const h of arr) { if (h.kind === 'church') church(h); else { h.tid = tid; ghost = T2; townHouse(h); ghost = false; if (T2) gen.push(h); } } }
     B.bid(0); }
   function blockTarget(arr, type) {
     let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9, hy = 0;
@@ -217,7 +219,7 @@ export function buildTown(ctx, A, Q, scene, plan = null) {
       put(gableRoof(along, span, rh, 0.55), Mt.roof, mat4(px, top, pz, rot), { tint: roofTint });
       put(gableWall(along, span, rh), floors > 1 || style === 'plaster' || style === 'timber' ? Mt.plaster : lowMat, mat4(px, top, pz, rot), { worldUV: 0.33, tint: floors > 1 ? wall : lowTint }); }
     // chimney
-    if (r() < 0.8) { const lx = (r() - 0.5) * (w - 2.5), lz = (r() < 0.5 ? -1 : 1) * (d / 2 - 1.2); B0(lx, top + rh * 0.55, lz, 0.8, rh + 1.6, 0.8, Mt.stone, { worldUV: 0.5, tint: '#b0aaa0' }); if (r() < 0.22 && smokeN++ < 26) { const [cx, cz] = P(lx, lz); ctx.smokeAt(cx, top + rh + 1.5, cz); } }
+    if (r() < 0.8) { const lx = (r() - 0.5) * (w - 2.5), lz = (r() < 0.5 ? -1 : 1) * (d / 2 - 1.2); B0(lx, top + rh * 0.55, lz, 0.8, rh + 1.6, 0.8, Mt.stone, { worldUV: 0.5, tint: '#b0aaa0' }); if (r() < 0.22 && smokeN++ < 26 && !ghost) { const [cx, cz] = P(lx, lz); ctx.smokeAt(cx, top + rh + 1.5, cz); } }
     // timber framing on the upper floors
     if (style === 'timber' && floors > 1) {
       const y1 = y0 + 0.25 + fh, tint = trimC;
@@ -323,14 +325,14 @@ export function buildTown(ctx, A, Q, scene, plan = null) {
     ctx.innerTrees.push([x, z]); placed.push({ x, z, hd: 2.4, C: corners(x, z, 0, 4.4, 4.4) });
   }
   // ------------------------------------------------ hamlets in the open country (hamlets.js): same houses as the town, one static batch
-  for (const H of planHamlets(ROADS)) {
-    blockTarget(H.houses);                                           // one battle target per hamlet
-    for (const h of H.houses) townHouse(h);
+  planHamlets(ROADS).forEach((H, hi) => {
+    const tid = blockTarget(H.houses);                               // one battle target per hamlet
+    for (const h of H.houses) { h.tid = tid; h.cell = hi; ghost = T2; townHouse(h); ghost = false; if (T2) gen.push(h); }       // (TR2-S4a-R2: a hamlet is one LOD cell of the Tripo houses)
     for (const q of H.props) {
       if (q.k === 'well') ctx.hex('building_well_blue', q.x, height(q.x, q.z) + 0.08, q.z, 0.3, 4.4);
       else ctx.inst(q.k, q.x, q.z, q.ry, q.s);
     }
-  }
+  });
   B.bid(0);
-  return { houses: lots, church: lots.find((h) => h.kind === 'church'), mats: Mt };
+  return { houses: lots, church: lots.find((h) => h.kind === 'church'), mats: Mt, gen };
 }

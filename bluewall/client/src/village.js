@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { patchDestruct, plainDepthMaterial } from './destruct.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { rng } from './noise.js';
+import { isVillageHome } from './b2_homes.js';                              // TR2-S4a-R2
 
 const STORY = 3.0;          // floor-to-floor height of the kit walls
 const ROOFS = { '2x2': 'Roof_RoundTiles_4x4', '2x3': 'Roof_RoundTiles_4x6', '2x4': 'Roof_RoundTiles_4x8', '3x3': 'Roof_RoundTiles_6x6',
@@ -155,10 +156,11 @@ export function bakeTr2(scene, atlas, list, { shadows = true, tag = 'tr2' } = {}
   return { meshes, missing: [...missing] };
 }
 
-export function bakeVillage(scene, gltf, houses, { shadows = true } = {}) {
+export function bakeVillage(scene, gltf, houses, { shadows = true, tr2 = false } = {}) {          // TR2-S4a-R2: tr2 = the Tripo town is on: the plain homes (isVillageHome) are drawn by town_build.js
   const H = new THREE.Matrix4(), Lm = new THREE.Matrix4(), q = new THREE.Quaternion(), up = new THREE.Vector3(0, 1, 0);
   const list = [], chimneys = [];
   for (const h of houses) {
+    if (tr2 && isVillageHome(h)) continue;
     const sc = h.scale || 1;
     H.compose(new THREE.Vector3(h.x, h.y, h.z), q.setFromAxisAngle(up, h.rot || 0), new THREE.Vector3(sc, sc, sc));
     for (const p of houseRecipe(h)) {

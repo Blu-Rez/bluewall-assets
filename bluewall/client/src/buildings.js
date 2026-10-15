@@ -22,7 +22,7 @@ export function buildBuildings(ctx) {
     // stone plinth so slopes never show a gap under the walls
     box(M.stoneDark, x, y0 - 0.55, z, ry, W + 0.5, 1.5, D + 0.5, { worldUV: 0.12, tint: 0x9a9da5 });
     ctx.houses.push({ x, y: y0 + 0.18, z, rot: ry, nx, nz, floors, scale: KS, seed: opts.seed ?? ((x * 31 + z * 17) | 0),
-      lower: opts.lower, upper: opts.upper ?? 'grid', chimney: opts.chimney, vine: opts.vine ?? r() < 0.4 });
+      lower: opts.lower, upper: opts.upper ?? 'grid', chimney: opts.chimney, vine: opts.vine ?? r() < 0.4, id: opts.id });      // TR2-S4a-R2: `id` (barracks / treasury / house) tells village.js which houses become Tripo
     ctx.pick({ x, z, y0: 0, y1: y0 + floors * 3 * KS + 5, r: Math.max(W, D) / 2 + 0.5 }, opts.id || 'house');
     return { P, W, D, top: y0 + floors * 3 * KS };
   }

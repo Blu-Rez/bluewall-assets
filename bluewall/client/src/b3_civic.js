@@ -11,6 +11,7 @@
 //   civicNames()                    every piece name this module can ask for (the test checks them against the kit)
 import { rng } from './noise.js';
 import { LEGACY_TIER_AT, LEVEL_CAP } from './tiers.js';
+import { FLAG_S } from './b2_homes.js';                                              // TR2-S4a-R2: the pennants at 60 %
 
 // unlock levels are placeholders (ph): the economy design (package E1) / the server owner decides
 export const CIVIC_KINDS = {
@@ -158,7 +159,7 @@ let TR2_ON = false;
 export const setCivicTr2 = (on) => { TR2_ON = !!on; };
 export const tr2On = () => TR2_ON || !!globalThis.__BW_CIVIC_TR2;
 const STALLS = ['stall_spice', 'stall_pottery', 'stall_cloth', 'stall_produce'];
-const Q = (n, x, z, ry = 0) => ({ n, x: r3(x), z: r3(z), ry: r3(ry), s: 1 });
+const Q = (n, x, z, ry = 0) => ({ n, x: r3(x), z: r3(z), ry: r3(ry), s: /\/flag$/.test(n) ? FLAG_S : 1 });      // TR2-S4a-R2: pennant 60 % (same anchor: the pivot is the foot)
 // nav circles [dx, dz, r] in the piece's own frame (before its ry): from the model sizes at the target scale (hall 13.5 x 20, shrine 10.8 x 12, tavern 12 x 9.8, market hall 18 x 7.3, wells 4.2 / 5, stall 3.2)
 const SOL = { civic_hall_0: [[0, -6, 5], [0, 0, 5], [0, 6, 5]], shrine_0: [[0, 0, 6]], tavern_0: [[-3.2, 0, 4.8], [3.2, 0, 4.8]], market_hall: [[-4.8, 0, 4], [4.8, 0, 4]], well_stone: [[0, 0, 2.2]], well_qanat: [[0, 0, 2.2]], well_abanbar: [[0, 0, 2.6]],
   stall_spice: [[0, 0, 1.8]], stall_pottery: [[0, 0, 1.8]], stall_cloth: [[0, 0, 1.8]], stall_produce: [[0, 0, 1.8]] };

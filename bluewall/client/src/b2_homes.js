@@ -138,7 +138,53 @@ export function homeTr2(kind, lv, seed = 0) {
   const [key, , , depth] = k.v[vi], d = HOME_KINDS[kind].d, zc = -d / 2 + 0.5 + depth / 2, r3 = (v) => Math.round(v * 1000) / 1000;
   const P = [{ n: key + '|w' + k.w, x: 0, z: r3(zc), ry: 0, s: 1 }];
   let shown = 0;                                                                                          // budget (measured, TR2_progress): a barrel / crate / sack / cart costs 1.9-3 k tris = a whole cottage; only the flag (1.25 k) and the lantern (1.56 k) are drawn, at most DRESS_CAP per lot
-  dress.forEach(([t, n, dx, dz, ry, side], i) => { if (t > tier || !DRESS_OK.test(n) || shown >= DRESS_CAP) return; shown++; const q = jit[i]; P.push({ n, x: r3(dx * (side ? mir : 1) + q[0]), z: r3(dz + q[1]), ry: r3((ry + q[2]) * DEG), s: 1 }); });
-  return { pieces: P, variant: key, smoke: [] };
+  dress.forEach(([t, n, dx, dz, ry, side], i) => { if (t > tier || !DRESS_OK.test(n) || shown >= DRESS_CAP) return; shown++; const q = jit[i]; P.push({ n, x: r3(dx * (side ? mir : 1) + q[0]), z: r3(dz + q[1]), ry: r3((ry + q[2]) * DEG), s: /\/flag$/.test(n) ? FLAG_S : 1 }); });
+  return { pieces: P, variant: key, smoke: smokeOf(key, 1, r3(zc)) };
 }
 export const homeTr2Files = () => { const s = new Set(); for (const k of Object.keys(HOME_TR2)) for (const v of HOME_TR2[k].v) s.add(v[0]); for (const d of Object.values(TR2_DRESS)) for (const e of d) if (DRESS_OK.test(e[1])) s.add(e[1]); return [...s].sort(); };
+
+// ================================================================================================================================================================================================
+// TR2-S4a-R2 — lo copies of the bodies, the generic / hamlet houses, chimney smoke, the pennant scale and the town's LOD numbers.  Pure data (no THREE): runs in node (dev/tr2_s4a_test.sh).
+export const FLAG_S = 0.6;                       // the pennants (props_street/flag, 2.8 m tall) read huge next to a 5-9 m house: 60 %; the model's pivot is its foot, so the anchor does not move
+// lo copy of a body piece: 'house_cottage_0|w6.6' -> 'house_cottage_0_lo|w6.6' (the same placement, ~ 40 % of the triangles, the full model's atlas tile — tr2atlas.js).  Yard props have no lo copy: the lo cells draw bodies only.
+export const loPiece = (n) => n.replace(/^([a-z0-9_]+)\|/, '$1_lo|');
+export const homeTr2LoFiles = () => { const s = new Set(); for (const k of Object.keys(HOME_TR2)) for (const v of HOME_TR2[k].v) s.add(v[0] + '_lo'); for (const g of Object.values(GENERIC)) s.add(g[0] + '_lo'); return [...s].sort(); };
+
+// chimney smoke from the MODEL (found on the shipped GLBs by looking at 4 views + a top view with markers, report_TR2_S4a_R2): the top of the chimney as [x, y, z] in metres, in the body's own frame (pivot = base centre, front = +z) at the piece's target scale
+// (the HOME_TR2 width; generic: w7.5, scaled by the lot's fit).  A lot's smoke is this point moved to the lot (homeTr2 / genericTr2 return it lot-local).
+// only the models that HAVE a chimney get smoke (craftsman 0-2, merchant 0 and 2, generic_a); cottages, merchant_1, the nobles and generic b / c / d have none on the model — no smoke is invented for them.
+export const HOUSE_SMOKE = {
+  house_craftsman_0: [-2.25, 8.75, -0.5], house_craftsman_1: [2.45, 7.1, -0.6], house_craftsman_2: [1.1, 7.55, -1.0],
+  house_merchant_0: [1.85, 8.85, -0.2], house_merchant_2: [-0.95, 6.65, 2.05], house_generic_a: [2.4, 5.65, -0.4],
+};
+const r3m = (v) => Math.round(v * 1000) / 1000;
+const smokeOf = (key, s, zc) => { const c = HOUSE_SMOKE[key]; return c ? [{ x: r3m(c[0] * s), y: r3m(c[1] * s), z: r3m(zc + c[2] * s) }] : []; };
+
+// the generic fill houses of town.js and the hamlet houses: house_generic_a..d ([key, x, y, z] = size in m at w7.5 after the yaw).  One of them per lot: 1-storey lots take a (or the small hut d), 2+ storeys b / c;
+// the pick is a hash of the lot position (a lot keeps its house).  The model is scaled to fit the lot (0.62..1.35 of w7.5) and stands at the street side of it.
+export const GENERIC = { a: ['house_generic_a', 7.5, 5.78, 5.36], b: ['house_generic_b', 6.7, 7.08, 7.5], c: ['house_generic_c', 7.5, 6.02, 7.07], d: ['house_generic_d', 7.5, 3.78, 4.14] };
+export const GEN_W = 7.5;
+const hash01 = (x, z, k = 1) => ((Math.sin(x * 12.9898 * k + z * 78.233) * 43758.5453) % 1 + 1) % 1;
+export function genericTr2(lot) {
+  const u = hash01(lot.x, lot.z, 1.3), fl = lot.floors || 1, pool = fl >= 2 ? ['b', 'c'] : ['a', 'a', 'd'];
+  const [key, fx, , fz] = GENERIC[pool[Math.min(pool.length - 1, Math.floor(u * pool.length))]];
+  const s = Math.max(0.62, Math.min(1.35, Math.min((lot.w - 0.5) / fx, (lot.d - 0.5) / fz)));
+  const zc = Math.max(-0.5, (lot.d - fz * s) / 2 - 0.3);                              // front of the house 0.3 m inside the street edge of the lot
+  return { pieces: [{ n: key + '|w' + GEN_W, x: 0, z: r3m(zc), ry: 0, s: r3m(s) }], variant: key, smoke: smokeOf(key, s, zc), fit: r3m(s) };
+}
+// the houses of buildings.js (ctx.houses): the 7 plaza homes, the farm house at the fields and the lake house are generic Tripo houses too (barracks + treasury are special buildings: they stay kit).  Same lot convention
+// as house(): x, z = the middle, ry = rot, w / d = the footprint, `y` = the plinth top the old house stood on, `tid` = the block's battle target (world.js tags it before the bake).
+export const isVillageHome = (h) => !h.id || h.id === 'house';
+export const villageHomeLot = (h) => { const k = h.scale || 1.4; return { x: h.x, z: h.z, ry: h.rot || 0, w: h.nx * 2 * k, d: h.nz * 2 * k, floors: h.floors || 1, tid: h.tid || 0, y: h.y }; };
+export const genericTr2Files = () => Object.values(GENERIC).map((g) => g[0]);
+
+// the town's level of detail (town_build.js): a cell shows its full bodies within NEAR m of the camera and the lo bodies beyond FAR m (hysteresis between); CELL = grid of the cells (m), a hamlet is a cell of its own (lot.cell)
+export const TOWN_LOD = { NEAR: 80, FAR: 100, CELL: 100, R0: 10 };
+export const townCellKey = (lot) => (lot.cell != null ? 'h' + lot.cell : Math.floor(lot.x / TOWN_LOD.CELL) + ',' + Math.floor(lot.z / TOWN_LOD.CELL));
+// metres from the camera to the nearest house of a cell (pts = x, z, x, z ...; a house is ~ 8 m wide and ~ 8 m high)
+export function townCellDist(pts, cam) {
+  let m = 1e18; const cy = Math.max(0, cam.y - 8) ** 2;
+  for (let i = 0; i < pts.length; i += 2) { const dx = pts[i] - cam.x, dz = pts[i + 1] - cam.z, d = dx * dx + dz * dz; if (d < m) m = d; }
+  return Math.max(0, Math.sqrt(m + cy) - TOWN_LOD.R0);
+}
+export const townLodPick = (d, cur) => (cur === 'lo' ? (d < TOWN_LOD.NEAR ? 'hi' : 'lo') : (d > TOWN_LOD.FAR ? 'lo' : 'hi'));

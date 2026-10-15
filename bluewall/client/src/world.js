@@ -230,6 +230,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     progress(0.7, 'Building the town…'); await tick();
   } else {
     // TR2-S3: walls, towers, gatehouses and the keep from the Tripo library.  Any failure (models missing / not loadable, or the dev switch window.__tr2Off) => ctx.tr2c stays null => the procedural castle, unchanged.
+    const warmTr2Town = L.TOWN ? warmTown().then(() => true, () => false) : Promise.resolve(false);          // TR2-S4a-R2: the town's Tripo models start loading now (they overlap with the castle's); buildTown waits for them below
     ctx.tr2c = null;
     if (!(typeof window !== 'undefined' && window.__tr2Off)) try {
       const lvN = Math.max(1, Math.min(LEVEL_CAP, Math.round(Q.level0 || 20))), T3 = createCastleTr2();
@@ -246,9 +247,9 @@ export async function buildWorld(renderer, scene, Q, progress) {
       while (!done) { const t0 = performance.now(); while (!done && performance.now() - t0 < 12) done = st.step(); if (!done) await tick(); }
       tplan = { lots: planLots(), homes: homeLots(lv0).length };
     } catch (e) { console.warn('townplan', e); tplan = null; }
+    ctx.tr2town = !!tplan && await Promise.race([warmTr2Town, new Promise((r) => setTimeout(() => r(false), 8000))]);          // TR2-S4a-R2: models there => buildTown leaves the generic + hamlet houses to the Tripo ones (town_build.js), else it draws its own
     ctx.town = buildTown(ctx, A, Q, scene, tplan);
     if (tplan) try { ctx.townTids = registerTownTargets(ctx, lv0); } catch (e) { console.warn('town targets', e); ctx.townTids = new Map(); }
-    if (tplan) warmTown().catch(() => {});                          // TR2-S4a: the Tripo houses / civic models + atlases load while the rest of the world is built
     ctx.mines = buildMines(ctx, A, Q, scene, anim);
     ctx.military = buildMilitary(ctx, { scene, A, Q });
   }
@@ -280,7 +281,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
   // real kit houses + farm pieces, each kit baked into one mesh per material
   let glass = null;
   if (A.models.kit_village) {
-    const v = bakeVillage(scene, A.models.kit_village, ctx.houses, { shadows: !!Q.shadows });
+    const v = bakeVillage(scene, A.models.kit_village, ctx.houses, { shadows: !!Q.shadows, tr2: !!ctx.tr2town });      // TR2-S4a-R2: the plain homes are Tripo (town_build.js)
     glass = v.glass;
     if (glass) { glass.emissive = new THREE.Color(0xffa24a); glass.emissiveIntensity = 0; glass.transparent = false; glass.opacity = 1; glass.color.set(0x2a3340); glass.roughness = 0.2; glass.metalness = 0.1; }
     for (const c of v.chimneys) if (Math.random() < 0.7) ctx.smokeAt(c.x, c.y, c.z);
@@ -382,6 +383,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     weather.update(t, dt, camera); pe('weather');
     if (camera && t - mlodT > 0.3) { mlodT = t; meadowLod(camera); }
     if (camera && ctx.tr2c && t - c3T > 0.25) { c3T = t; ctx.tr2c.lod(camera); }        // TR2-S3: the castle's cells show their full or their lo model by the camera distance
+    if (camera && planned) planned.lod(camera, t);                                    // TR2-S4a-R2: the town's cells show their full or their lo houses by the camera distance (4 Hz inside)
     sky.update(t, dt, renderer.getPixelRatio(), camera); pe('sky');
     water.update(t); pe('water');
     flames.update(t); pools.update(t); flags.update(t); ffly.update(t); fairies.update(t, dt); pe('flames+fairies');
@@ -498,7 +500,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
       if (!ctx.townTids) return;
       const b = bucketFor('townplan'); const defers = []; curDefers = defers;
       try {
-        planned = createPlannedTown({ scene: b, kitHomes: A.models.kit_homes, kitCivic: A.models.kit_civic, height: terrain.fastHeight, shadows: !!Q.shadows, ctx, tids: ctx.townTids, level: () => castleLevel(levelOf('keep')), civicCap: Q.level === 'low' ? 15 : 30 });
+        planned = createPlannedTown({ scene: b, kitHomes: A.models.kit_homes, kitCivic: A.models.kit_civic, height: terrain.fastHeight, shadows: !!Q.shadows, ctx, tids: ctx.townTids, gen: (ctx.town && ctx.town.gen) || [], level: () => castleLevel(levelOf('keep')), civicCap: Q.level === 'low' ? 15 : 30 });
         planned.rebuild(); ctx.levelHooks.push(() => { if (planned) planned.rebuild(); }); anim.push(() => { if (planned && !planned.idle) planned.tick(); });
       } catch (e) { console.warn('planned town', e); planned = null; }
       curDefers = null; revealQ.push({ b, defers });
