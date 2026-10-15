@@ -63,7 +63,8 @@ export function createDoors(H, S, G) {
       const o = old.get(id); if (o && o.cx === cx && o.cz === cz && o.hx === hx && o.hz === hz && o.ry === ry) { out.push(o); return; }                   // (unchanged since the last pass: nothing to recompute)
       let dx = kx - cx, dz = kz - cz, l = Math.hypot(dx, dz); if (l < 1) { dx = 0; dz = 1; l = 1; } dx /= l; dz /= l;
       const c = Math.cos(ry), sn = Math.sin(ry), lu = dx * c - dz * sn, lv = dx * sn + dz * c, t = Math.min(hx / (Math.abs(lu) || 1e-6), hz / (Math.abs(lv) || 1e-6)), pu = lu * t, pv = lv * t;
-      const fx = cx + pu * c + pv * sn, fz = cz - pu * sn + pv * c;                                                     // the face point
+      let fx = cx + pu * c + pv * sn, fz = cz - pu * sn + pv * c;                                                       // the face point (of the lot's rectangle)
+      if (G.facade) { const t = G.facade(fx + dx * 5, fz + dz * 5, -dx, -dz, 14); if (t > 0.5 && t < 11) { fx += dx * (5 - t); fz += dz * (5 - t); } }   // RP1C-R3: the REAL facade: where the visible walls start (the collision grid), not the plot's edge
       const it = old.get(id) || { id, st: 2, icon: false, d2: 1e9, ph: Math.random() * 6.28, kind: kindOf(id), sp: -1 };
       it.x = fx + dx * 0.7; it.z = fz + dz * 0.7; it.y = G.ground(it.x, it.z) + UP;
       let gx = fx + dx * 1.5, gz = fz + dz * 1.5;

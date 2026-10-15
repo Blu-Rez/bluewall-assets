@@ -718,6 +718,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     get baseMeta() { return baseMetaNow(); },
     tesla: teslaApi, setArmyTiers, setDragonlings, setCamp, get armyLv() { return armyLv; },
     get moatStats() { return moat.stats || null; },
+    waterFx: (x, z, kind, size, alpha) => { const f = moat.life && moat.life.fxAt; if (f) f(x, z, kind, size, alpha); },   // RP1C-R3: ring / splash on the water (water_life.js) for the hero's entry / exit
   };
 }
 

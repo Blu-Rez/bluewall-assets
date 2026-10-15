@@ -418,6 +418,7 @@ export function buildWaterLife(api) {
   }
   return {
     lamps, stats: { fish: fish ? fish.geometry.instanceCount : 0, birds: birds.length },
+    fxAt(x, z, kind, size, alpha) { ringAt(x, z, uTime.value, size, kind, alpha); },   // RP1C-R3: the hero's entry / exit / swim ring + splash use this quad (kind 0 ring, 1 splash)
     // (dev) a leap right now at x, z
     leapAt(x, z) { const a = R() * TAU; jump = { x, z, x1: x + Math.sin(a) * 2, z1: z + Math.cos(a) * 2, a, t0: uTime.value, dur: 0.85, h: 1.0, s: 1.2, landed: false }; ringAt(x, z, uTime.value, 2.2, 0, 0.9); ringAt(x, z, uTime.value, 0.66, 1, 0.9); },
     update(t, dt, camera, P) {

@@ -8,15 +8,17 @@ const SIS = [   // the element is shown by the emblem from the owner's character
 ];
 const GATE_HALF = { outer: 7.5, inner: 4.5, town: 5.2 };
 const EDGE_SOFT = 16, EDGE_R = 420;                                        // RP1B: the soft edge of the walkable map (was a hard 335 m circle that shut out the outer mills, mines and hamlets)
-const HS = 1.12, HC = 1.06;                                                                                 // RP1C-R2 Job 9: the owner's «a bit bigger»: everything that depends on her size follows ONE factor (the model, the body radius, the camera pivot, the speeds + strides = the same cadence; the camera's DISTANCE follows with HC = 1.06 only: with the full 1.12 the picture on the screen would be exactly the old one — she would only be bigger next to the houses)
+const HS = 1.12 * 1.12, HC = 1.06 * 1.06;   // RP1C-R3 (ROUND4 A1/8): +12 % over R2's 1.12 (the owner: «a bit small»; AN1_R3's SCALE.md / lineup decides the final pick: THIS line is the one constant);                                                                                 // RP1C-R2 Job 9: the owner's «a bit bigger»: everything that depends on her size follows ONE factor (the model, the body radius, the camera pivot, the speeds + strides = the same cadence; the camera's DISTANCE follows with HC = 1.06 only: with the full 1.12 the picture on the screen would be exactly the old one — she would only be bigger next to the houses)
 const HERO_H = 1.75 * HS, MODEL_H = 0.98, SC = HERO_H / MODEL_H, CAM_D = 3.6 * HC;
 const R_BODY = 0.45 * HS, WALK = 1.18 * HS, RUN = 4.39 * HS, SPRINT_K = 1.28, STRIDE_W = 2.75 * HS, STRIDE_R = 5.49 * HS;      // (STRIDE_R = the run clip's stride before RP1C-R2 Job 5; GAIT.sr below is the measured one)
-const GAIT = { sw: STRIDE_W, sr: 5.1 * HS, off: -0.12, acc: 16, dec: 16 };                                    // RP1C-R2 Job 5: the cycle's stride per clip (m of ground per cycle), the run clip's phase offset against the walk clip (cycles), (dev: window.__rp.gait({...}) while measuring)
-const GRAV = 22, JUMP_V = 5, JUMP_T = 0.40;                                   // RP1C-R2 Job 7: a hop of 0.57 m that is 0.45 s in the air (was JUMP_V 7 = 1.11 m, 0.64 s); the jump clip is stretched over JUMP_T = the rise + the start of the fall, then fall (a few frames), then land
+const GAIT = { sw: STRIDE_W, sr: 5.36 * HS, off: -0.12, acc: 12, dec: 15 };   // RP1C-R3: ramps 12 / 15 m/s² (were 16 / 16: run reached in 0.23 s, walk in 0.07 s = instant; now ~0.45 s / ~0.1 s, stop ~0.37 s)
+// RP1C-R2 Job 5: the cycle's stride per clip (m of ground per cycle), the run clip's phase offset against the walk clip (cycles), (dev: window.__rp.gait({...}) while measuring)
+const GRAV = 9.4, JUMP_V = 3.29, JUMP_T = 0.70, LAND_K = 2.8, LAND_DOWN = 0.10, LAND_STAND = 0.40;   // RP1C-R3 (ROUND4 A1/4): apex JUMP_V²/2g = 0.575 m, air 2·JUMP_V/g = 0.70 s (a body-sized g of 9.4 — the R2 numbers g = 22 / v = 5 gave the same 0.57 m in only 0.45 s: a toy hop; the clip stretch JUMP_T is now the WHOLE flight); landing: the crouch's bottom at 100 ms (LAND_DOWN), standing again at 400 ms
+//                                    // RP1C-R2 Job 7: a hop of 0.57 m that is 0.45 s in the air (was JUMP_V 7 = 1.11 m, 0.64 s); the jump clip is stretched over JUMP_T = the rise + the start of the fall, then fall (a few frames), then land
 // HOTFIX47: Telegram's fullscreen header sits ABOVE env(safe-area-inset-top): the game's own UI adds --tg-content-safe-area-inset-top, the hero HUD did not -> the exit button was under the header.
 const TOP = 'max(env(safe-area-inset-top,0px),calc(var(--tg-safe-area-inset-top,0px) + var(--tg-content-safe-area-inset-top,0px)))', BOT = 'max(env(safe-area-inset-bottom,0px),calc(var(--tg-safe-area-inset-bottom,0px) + var(--tg-content-safe-area-inset-bottom,0px)))';
 let CLIMB_ON = false;                                                                // HOTFIX47: wall climbing is OFF until the castle has real stairs / a climb clip (owner: the stand-in pose looks terrible); dev.setClimb(true) turns it on for the tests
-const WSURF = -0.75, SWIM_DEEP = 0.95, SWIM_V = 1.9, CLIMB_V = 1.5;           // RP1B: the water surface of the moat / rivers / lake (nav.js: «the surface sits at -0.75»), the depth at which she swims, swim and climb speeds
+const WSURF = -0.75, SWIM_DEEP = 0.95, SWIM_V = 1.3, CLIMB_V = 1.5;           // RP1B: the water surface of the moat / rivers / lake (nav.js: «the surface sits at -0.75»), the depth at which she swims, swim and climb speeds
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
 const kExp = (rate, dt) => 1 - Math.exp(-rate * dt);                                                            // RP1C-R2: a smoothing step that does not depend on the frame rate (the old `min(1, dt * rate)` follows 30 % tighter at 20 fps than at 60)
 const wrapPi = (a) => { a = (a + Math.PI) % (Math.PI * 2); if (a < 0) a += Math.PI * 2; return a - Math.PI; };
@@ -94,7 +96,7 @@ export function create(H) {
     inp: { x: 0, y: 0 }, keys: new Set(), pivot: new T.Vector3(), camD: CAM_D, burst: { x: 0, z: 0 },
     saved: null, models: {}, hero: null, door: null, under: null, nav: null, boxes: [], discs: [], solids: [], hdiscs: [], cache: 0, unT: 0.5, stuck: 0, layer: 0, top: null, climb: null, sw: 0, near: null, nearT: 0, sheetOn: false, rib: -1, cHold: 0, dHold: 0, lean: 0, climbV: 0, auto: null, act: null, joyOn: false, nearK: '', bk: 0, bkS: false,   // RP1C-R2: bk = she is moving backwards (the reversed clip), bkS = the stick points towards the camera
   };
-  let hudEl = null, pickEl = null, perfEl = null, styleEl = null, joyEl = null, knobEl = null, btns = {}, diet = null, cull = null, doors = null, foot = null;
+  let hudEl = null, pickEl = null, perfEl = null, styleEl = null, joyEl = null, knobEl = null, btns = {}, diet = null, cull = null, doors = null, foot = null, marker = null, ramps = null, grid = null, goup = null;   // RP1C-R3: marker, ramps, grid (the body band of the real meshes)
   const stats = { f: [], t: 0, n: 0, fps: 0, p95: 0, calls: 0, tris: 0, progs: 0, pr: 0, txt: '', open: false, prev: false };
 
   // ------------------------------------------------------------------ collision data (home map)
@@ -110,9 +112,11 @@ export function create(H) {
       if (t.ringId && vis[t.ringId] === false) continue;
       if (t.type === 'house') continue;                                              // RP1B: a 'house' target is a ~26 m BLOCK of houses (one battle target, up to 50 x 50 m): the houses themselves come from the picks below
       if (t.type === 'gate') { out.push(...gateBoxes(t)); continue; }
-      out.push({ x: t.x, z: t.z, hw: t.w / 2, hd: t.d / 2, rot: t.rot || 0, h: t.h || 6, type: t.type, id: t.id });
+      out.push({ x: t.x, z: t.z, hw: t.w / 2, hd: t.d / 2, rot: t.rot || 0, h: t.h || 6, type: t.type, id: t.id, ringId: t.ringId });   // RP1C-R3: ringId (the ramp planner groups the wall runs by ring)
     }
+    if (ramps) for (const b of ramps.boxes()) out.push(b);   // RP1C-R3: the ramps' parapets (type 'ramp') are hero walls like the others
     for (const b of out) { b.ux = Math.cos(b.rot); b.uz = -Math.sin(b.rot); b.vx = Math.sin(b.rot); b.vz = Math.cos(b.rot); b.R2 = (b.hw + b.hd + 2.5) ** 2; }
+    if (useGrid()) { const keepB = []; for (const b of out) { if (!GRID_DROP.has(b.type)) { keepB.push(b); continue; } if (!gcov(b.id, () => grid.coverBox(b))) keepB.push(b); } out.length = 0; out.push(...keepB); for (const b of out) if (b.type === 'wall') b.soft = gcov('c' + (b.id || '') + b.x.toFixed(1) + b.z.toFixed(1), () => Math.max(edgeCov(b, 1), edgeCov(b, 0.72)) - 0.5); }   // RP1C-R3: (a castle WALL run whose stone the raster draws along ≥ 90 % of its outline stays for the wall-walk / climb logic but no longer pushes: its box is 0.5 m wider than the stone and met the real surface in a needle gap; towers / ballistae / gates are drawn by < 85 % — they keep pushing) a building's target box (church, mine, keep …) the grid already draws from the real mesh is not a collider any more (it was an invisible wall)
     S.boxes = out; S.cache = performance.now();
     // every house / cottage has its own tap box (world.picks id 'house': centre + half-size r): a disc of about its footprint.  Read from the game's own list each time, never cached constants.
     const hd = [];
@@ -120,16 +124,24 @@ export function create(H) {
       if (p.id !== 'house') continue; const b = p.box, r = (b.max.x - b.min.x) / 2; if (!(r > 0.8)) continue;
       hd.push([(b.min.x + b.max.x) / 2, (b.min.z + b.max.z) / 2, r < 7 ? r * 1.12 : r * 0.85]);
     }
+    if (useGrid()) {                                                                                       // RP1C-R3: discs of building size are dropped where the grid has the real footprint (its perimeter's worth of solid cells inside); trees / posts (r < 2.5) and anything the grid does not see stay
+      const keepD = (a, tag) => a.filter((d) => d[2] < 2.5 || !gcov(tag + d[0].toFixed(1) + ',' + d[1].toFixed(1), () => grid.coverDisc(d[0], d[1], d[2])));
+      S.discs = keepD(S.solids || [], 's').concat(keepD(hd, 'h')); S.hdiscs = hd; return;
+    }
     S.discs = (S.solids || []).concat(hd); S.hdiscs = hd;
   }
+  const useGrid = () => !!(grid && grid.st.ready && CONTACT.grid);
+  const edgeCov = (b, kd) => { let n = 0, h = 0; const hw = b.hw, hd = b.hd * kd; const test = (lx, lz) => { const x = b.x + lx * b.ux + lz * b.vx, z = b.z + lx * b.uz + lz * b.vz; n++; for (let a = -0.3; a <= 0.31; a += 0.15) for (let c = -0.3; c <= 0.31; c += 0.15) if (grid.solid(x + a, z + c)) { h++; return; } }; for (let t = -hw; t <= hw; t += 0.5) { test(t, -hd); test(t, hd); } for (let t = -hd; t <= hd; t += 0.5) { test(-hw, t); test(hw, t); } return n ? h / n : 0; };   // RP1C-R3: the share of a box's outline with a solid cell within 30 cm
+  const GRID_DROP = new Set(['keep', 'church', 'mine', 'forge', 'stable', 'workshop', 'lair', 'vault', 'house']);
+  const gcovM = new Map(); const gcov = (k, f) => { let v = gcovM.get(k); if (v === undefined) { v = f() > 0.4; gcovM.set(k, v); } return v; };
   function ensureHome() {
     if (!S.nav) { S.nav = H.buildNav({ height: world.fastHeight, bridges: H.bridgesFromLayout(L), solids: H.staticSolids() }); S.solids = H.staticSolids(); S.discs = S.solids; }
     refreshColliders();
   }
   // RP1C-R2 (Job 4): her ground is the terrain / bridge height (nav) and, on the cobbled streets + the market disc, the height of the VISIBLE ribbon mesh (rpg_foot.js: the triangles of the real `streets` object)
-  const CONTACT = { rigid: true, rib: true };                                                   // (dev switches: the old behaviour for before / after numbers)
+  const CONTACT = { rigid: true, rib: true, grid: true };                                                   // (dev switches: the old behaviour for before / after numbers)
   const baseGround = (x, z) => S.nav.groundY(x, z, world.fastHeight(x, z));
-  const homeGround = (x, z) => { const g = baseGround(x, z); if (foot && CONTACT.rib) { const y = foot.surf.height(x, z); if (y > g && y - g < 0.5) return y; } return g; };
+  const homeGround = (x, z) => { const g = baseGround(x, z); if (ramps) { const ry = ramps.height(x, z); if (ry > g) return ry; } if (foot && CONTACT.rib) { const y = foot.surf.height(x, z); if (y > g && y - g < 0.5) return y; } return g; };   // RP1C-R3: the ramp surface is her ground
   // Water (RP1B).  She is never stopped by water: shallow (< 0.95 m) she wades, deeper she swims.  `wetHero` = DEEP water, for the reach tools only (a bridge deck spans it, parapet to parapet);
   // the game's own nav.isWet is made for soldiers (1.1 m off every shore, a bridge corridor 2.2 m narrower than the deck) and is not used for her.
   function wetHero(x, z) {
@@ -153,10 +165,11 @@ export function create(H) {
 
   // push a circle (radius r) out of the boxes and discs; returns true when it moved
   function pushOut(p, r, wd) {
-    let moved = false;
+    let moved = false; const gOn = grid && wd === homeWorld && S.layer === 0 && CONTACT.grid && grid.st.ready;   // RP1C-R3
     for (let it = 0; it < 3; it++) {
       let any = false;
       for (const b of wd.boxes()) {
+        if (b.soft && gOn) continue;   // RP1C-R3: the raster draws it
         const dx = p.x - b.x, dz = p.z - b.z; if (dx * dx + dz * dz > b.R2) continue;
         const lx = dx * b.ux + dz * b.uz, lz = dx * b.vx + dz * b.vz, cx = clamp(lx, -b.hw, b.hw), cz = clamp(lz, -b.hd, b.hd), ox = lx - cx, oz = lz - cz, d2 = ox * ox + oz * oz;
         if (d2 >= r * r) continue;
@@ -169,6 +182,7 @@ export function create(H) {
         const dx = p.x - sx, dz = p.z - sz, rr = sr + r, d2 = dx * dx + dz * dz; if (d2 >= rr * rr) continue;
         const d = Math.sqrt(d2) || 1e-4; p.x += (dx / d) * (rr - d); p.z += (dz / d) * (rr - d); any = true;
       }
+      if (gOn && grid.push(p, r)) any = true;   // RP1C-R3: the body band of the real meshes (a distance field: smooth slide, no tunnelling)
       if (!any) break; moved = true;
     }
     return moved;
@@ -176,9 +190,17 @@ export function create(H) {
   // can a body stand here? (used by the reachability check and by moves)
   function free(x, z, wd = W(), swim = false) { const p = { x, z }; if (!swim && wd.wet && wd.wet(x, z)) return false; if (!wd.inside(x, z)) return false; return !pushOut(p, R_BODY - 0.02, wd); }
 
+  const _pt = { x: 0, z: 0 };
+  // RP1C-R3: still inside a surface after the push-out (a concave corner: two planes, 3 iterations)?  (the old behaviour flip-flopped ±15 cm between the walls every frame)
+  const penetrates = (p, wd) => { _pt.x = p.x; _pt.z = p.z; return pushOut(_pt, R_BODY - 0.03, wd) && Math.hypot(_pt.x - p.x, _pt.z - p.z) > 0.012; };
   function tryMove(dx, dz) {
     const wd = W(); const p = { x: S.x + dx, z: S.z + dz };
     pushOut(p, R_BODY, wd);
+    if (S.layer === 0 && S.where === 'home' && penetrates(p, wd)) {                                // RP1C-R3: a corner — take the axis move that is clean, else stand
+      const a = { x: S.x + dx, z: S.z }, b = { x: S.x, z: S.z + dz }; pushOut(a, R_BODY, wd); pushOut(b, R_BODY, wd);
+      const ga = !penetrates(a, wd), gb = !penetrates(b, wd), la = Math.hypot(a.x - S.x, a.z - S.z), lb = Math.hypot(b.x - S.x, b.z - S.z);
+      if (ga && (!gb || la >= lb)) { p.x = a.x; p.z = a.z; } else if (gb) { p.x = b.x; p.z = b.z; } else { p.x = S.x; p.z = S.z; }
+    }
     const [cx, cz] = wd.clampXZ ? wd.clampXZ(p.x, p.z) : [p.x, p.z]; p.x = cx; p.z = cz;
     if (S.where === 'home') { const rr = Math.hypot(p.x, p.z); if (rr > EDGE_R - 0.05) { const k = (EDGE_R - 0.05) / rr; p.x *= k; p.z *= k; } }       // the edge of the map: she slides along it
     if (!wd.inside(p.x, p.z)) return;
@@ -190,10 +212,20 @@ export function create(H) {
   }
 
   // stuck-proof: a body inside a collider for a second (a building moved by the layout editor, a bad spawn) is put on the nearest free spot; nothing free within 60 m -> the gate
+  const wfx = (x, z, k, size, a) => { try { if (world.waterFx) world.waterFx(x, z, k, size, a); } catch (e) { /* no water (a world without a moat) */ } };
+  function waterFx(dt) {                                                           // RP1C-R3
+    if (S.swP === undefined || S.where !== 'home') S.swP = S.sw;
+    if (S.sw !== S.swP) {
+      const a = S.swP, b = S.sw, fx = S.x + Math.sin(S.body) * 0.3, fz = S.z + Math.cos(S.body) * 0.3; S.swP = b; S.swEv = (S.swEv || 0) + 1;
+      if (b === 2 && a < 2) { wfx(S.x, S.z, 0, 2.4, 0.9); wfx(fx, fz, 1, 1.5, 0.9); } else if (a === 2 && b < 2) { wfx(S.x, S.z, 0, 2.0, 0.8); wfx(fx, fz, 1, 1.1, 0.8); } else if (b === 1 && a === 0) wfx(S.x, S.z, 0, 1.1, 0.6); else if (b === 0 && a === 1) wfx(S.x, S.z, 0, 0.9, 0.5);
+    }
+    if (S.sw && (S.swT = (S.swT || 0) - dt) <= 0 && Math.hypot(S.vx, S.vz) > 0.25) { S.swT = S.sw === 2 ? 0.55 : 0.4; wfx(S.x, S.z, 0, S.sw === 2 ? 1.2 : 0.75, S.sw === 2 ? 0.55 : 0.4); }
+  }
   function unstick() {
     if (S.where !== 'home' || !S.grounded || S.st === 'dodge' || S.layer !== 0) { S.stuck = 0; return false; }
+    { const q = { x: S.x, z: S.z }; if (W().inside(S.x, S.z) && !pushOut(q, R_BODY - 0.07, W())) { S.stuck = 0; return false; } }   // RP1C-R3: a body 6 cm into a needle gap (two surfaces 1.00–1.07 m apart) is not «stuck» — only a deeper one is rescued (no 0.5 m hop)
     if (free(S.x, S.z, W(), true)) { S.stuck = 0; return false; }
-    if (++S.stuck < 2) return false; S.stuck = 0;
+    if (++S.stuck < 2) return false; S.stuck = 0; S.unFix = (S.unFix || 0) + 1;   // RP1C-R3: (counted by the collision test)
     for (let r = 0.5; r <= 60; r += 0.5) for (let a = 0; a < 6.2832; a += 0.3) { const x = S.x + Math.cos(a) * r, z = S.z + Math.sin(a) * r; if (free(x, z, W(), true)) { S.x = x; S.z = z; S.y = homeGround(x, z); S.vx = S.vz = 0; S.snap = true; return true; } }
     toGate(); return true;
   }
@@ -201,7 +233,7 @@ export function create(H) {
     const G = L.GATE, k = (world.targets || []).find((t) => t.type === 'keep') || { x: 0, z: 0 };
     const p = { x: G.x - G.nx * 9, z: G.z - G.nz * 9 }; pushOut(p, R_BODY + 0.1, homeWorld);
     S.where = 'home'; S.layer = 0; S.top = S.climb = null; S.sw = 0; S.x = p.x; S.z = p.z; S.y = homeGround(S.x, S.z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; S.stT = 0;
-    S.camYaw = Math.atan2(k.x - S.x, k.z - S.z); S.body = S.camYaw; S.pitch = 0.2; S.snap = true; S.camD = CAM_D; S.cool = Math.max(S.cool, 0.5);
+    S.camYaw = Math.atan2(k.x - S.x, k.z - S.z); S.body = S.camYaw; S.pitch = camP().pit; S.snap = true; S.camD = camP().D; S.cool = Math.max(S.cool, 0.5);
   }
 
   // ------------------------------------------------------------------ the door at the foot of the keep
@@ -246,13 +278,23 @@ export function create(H) {
       }
     });
     const blob = new T.Mesh(blobGeo(), blobMat()); blob.renderOrder = 3; blob.frustumCulled = false; blob.castShadow = blob.receiveShadow = false; blob.userData.rpHero = true; grp.add(blob);       // Job 9: a crisp contact shadow under the feet (the sun's map is 4 cm texels + PCF = soft)
+    const sh = new T.Mesh(shGeo(), shMat()), fr = [0, 1].map(() => new T.Mesh(frGeo(), frMat()));   // RP1C-R3: look B / C — a short directional shadow and the planted-foot rings (children of the blob: they share its ground tilt; the SAME program as the blob: +0 programs, no shadow map)
+    for (const m of [sh, ...fr]) { m.renderOrder = 3; m.frustumCulled = false; m.castShadow = m.receiveShadow = false; m.userData.rpHero = true; m.visible = false; blob.add(m); }
     const mixer = new T.AnimationMixer(model), acts = {};
     for (const n of ['idle', 'walk', 'run', 'jump', 'fall', 'land', 'dodge', 'swim', 'climb', 'interact']) {
       const clip = gltf.animations.find((a) => a.name === n); if (!clip) { if (n !== 'swim' && n !== 'climb' && n !== 'interact') console.warn('rpg: no clip', n); continue; }       // (swim / climb: used when the model has them, a stand-in pose otherwise)
       const a = mixer.clipAction(clip); a.timeScale = 0; a.setEffectiveWeight(0); a.play(); acts[n] = { a, d: clip.duration, w: 0 };
     }
     const head = model.getObjectByName('Head') || model.getObjectByName('head');
-    return (S.models[key] = { grp, model, mixer, acts, head, blob, clips: gltf.animations }); // RP4: + clips (slash_a/b/c, heavy, block, hit, knockdown, death, cast)
+    // RP1C-R3 (ROUND4 A1/4): the `jump` clip carries a baked vertical translation of the whole body (hips +0.6 m over 0.32 s, legs stretched, no knee tuck of its own) ON TOP of the physics hop — the visible hop was ~1.15 m, not 0.57.
+    // The rise of the LOWEST SOLE in the clip is sampled once per model (1/60 s steps) and cancelled in animate(): the soles then follow the physics exactly (apex, take-off, touch-down on the ground) and the collision / camera see the same body; the `land` clip's crouch is a real crouch (feet planted) and stays.
+    const toes = []; model.traverse((o) => { if (o.isBone && /toe/i.test(o.name)) toes.push(o); }); let rise = null;
+    if (toes.length && acts.jump) {
+      const a = acts.jump, v = new T.Vector3(); rise = []; a.a.setEffectiveWeight(1); grp.updateMatrixWorld(true); let y0 = null;
+      for (let t = 0; t < a.d + 1e-4; t += 1 / 60) { a.a.time = Math.min(t, a.d - 1e-3); mixer.update(0); model.updateMatrixWorld(true); let m = 1e9; for (const o of toes) { o.getWorldPosition(v); m = Math.min(m, v.y); } if (y0 === null) y0 = m; rise.push(m - y0); }
+      a.a.setEffectiveWeight(0); a.a.time = 0; mixer.update(0);
+    }
+    return (S.models[key] = { grp, model, mixer, acts, head, blob, sh, fr, rise, toes, clips: gltf.animations }); // RP4: + clips (slash_a/b/c, heavy, block, hit, knockdown, death, cast)
   }
   // ---- RP1C-R2 Job 9: sharper — (a) a negative mip bias on the diffuse sampler of HER materials only (the world's materials are never touched; her programs are the same count, one per material as before),
   //      (b) a crisp contact shadow: one dark radial disc under the feet, tilted to the slope, shrinking while she is in the air.  The material is a plain MeshBasicMaterial (no light, no new program: counted in the proof).
@@ -273,13 +315,50 @@ export function create(H) {
     _bm = new T.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: T.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });          // (the parameters of the door's glow plane: the SAME program, +0 programs; polygonOffset is GL state, not part of a program)
     return _bm;
   };
+  // RP1C-R3 (ROUND4 A1/2): the ground shadow — 3 looks (S.shLook: 1 = A soft blob, 2 = B blob + a short shadow along the sun / moon, 3 = C = B + a faint dark ring under each PLANTED foot); default B
+  let _sg = null, _sm = null, _fg = null, _fm = null;
+  const shGeo = () => _sg || (_sg = new T.PlaneGeometry(1, 1).rotateX(-Math.PI / 2));
+  // (the shadow's texture has no hard edge at its near end: it fades in over the first 20 %, holds to 30 %, then fades out)
+  const shMat = () => {
+    if (_sm) return _sm;
+    const c = document.createElement('canvas'); c.width = 128; c.height = 64; const x = c.getContext('2d'), im = x.createImageData(128, 64), d = im.data;
+    for (let j = 0; j < 64; j++) for (let i = 0; i < 128; i++) { const u = i / 127, v = Math.abs((j - 31.5) / 32), sm = (e0, e1, x) => { const t = Math.max(0, Math.min(1, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); }, w = Math.pow(Math.max(0, 1 - v * v), 1.1) * sm(0, 0.2, u) * (1 - 0.9 * sm(0.5, 1, u)), a = Math.max(0, Math.min(1, w)) * 255; const k = (j * 128 + i) * 4; d[k] = d[k + 1] = d[k + 2] = 0; d[k + 3] = a; }
+    x.putImageData(im, 0, 0); const tex = new T.CanvasTexture(c); tex.colorSpace = T.SRGBColorSpace || tex.colorSpace;
+    _sm = new T.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: T.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2, opacity: 0.32 });          // (the blob's parameters: the same program)
+    return _sm;
+  };
+  const frGeo = () => _fg || (_fg = new T.PlaneGeometry(0.36 * HS, 0.36 * HS).rotateX(-Math.PI / 2));
+  const frMat = () => {
+    if (!_fm) {
+      const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+      g.addColorStop(0, 'rgba(0,0,0,0.30)'); g.addColorStop(0.55, 'rgba(0,0,0,0.22)'); g.addColorStop(0.78, 'rgba(0,0,0,0.62)'); g.addColorStop(0.9, 'rgba(0,0,0,0.18)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64);
+      const tex = new T.CanvasTexture(c); tex.colorSpace = T.SRGBColorSpace || tex.colorSpace; _fm = { tex };
+    }
+    return new T.MeshBasicMaterial({ map: _fm.tex, transparent: true, depthWrite: false, side: T.DoubleSide, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3, opacity: 0 });
+  };
+  let _keyL = null; const _fv = new T.Vector3(), _fl = new T.Vector3();
+  const keyLight = () => { if (_keyL && _keyL.parent) return _keyL; _keyL = null; for (const o of H.scene.children) if (o.isDirectionalLight && o.intensity > 0 && o.position.lengthSq() > 1e4) { _keyL = o; break; } return _keyL; };
   const _bq = new T.Quaternion(), _bu = new T.Vector3(0, 1, 0), _bn = new T.Vector3();
+  function shadowLook(h, b, look, air) {                                                                   // RP1C-R3: B's directional shadow (the key light is the sun by day, the moon by night: tod.js drives it) and C's planted-foot rings
+    const sh = h.sh, fr = h.fr; if (!sh) return; const k = look >= 2 && b.visible && S.layer === 0 && S.sw !== 2 ? keyLight() : null;
+    if (!k) { sh.visible = false; fr[0].visible = fr[1].visible = false; return; }
+    _fl.copy(k.position); if (k.target) _fl.sub(k.target.position); const hh = Math.hypot(_fl.x, _fl.z), ly = Math.max(0.05, _fl.y), r = hh / ly, dx = hh > 1e-4 ? -_fl.x / hh : 0, dz = hh > 1e-4 ? -_fl.z / hh : 1;
+    const len = Math.min(2.1, Math.max(1.0, 0.9 + 1.0 * r)) * HS / 1.12, wid = 0.85 * HS, off = len * 0.5 - 0.10;
+    sh.visible = true; sh.position.set(dx * off, 0.004, dz * off); sh.rotation.y = Math.atan2(-dz, dx); sh.scale.set(len / (b.scale.x || 1), 1, wid / (b.scale.x || 1));   // (the blob's own scale divided out: the shadow keeps its size when she is in the air, only it fades)
+    sh.material.opacity = Math.min(0.72, Math.max(0.26, 0.20 + 0.14 * k.intensity)) * Math.max(0, 1 - air * 1.2);
+    const K = h.ik, show = look === 3 && K && K.ok && S.grounded && S.st !== 'dodge';
+    for (let i = 0; i < 2; i++) {
+      const m = fr[i]; if (!show) { m.visible = false; continue; }
+      const l = K.legs[i]; l.ft.getWorldPosition(_fv); b.worldToLocal(_fv); m.position.set(_fv.x, 0.006, _fv.z); const pw = Math.max(0, Math.min(1, l.pw || 0)); m.material.opacity = 0.55 * pw * Math.min(1, 0.5 + 0.2 * k.intensity); m.visible = pw > 0.05;
+    }
+  }
   function placeBlob(h) {                                                                                    // (called every frame after the model is placed)
     const b = h.blob; if (!b) return; const e = 0.45, wd = W(), g = (x, z) => wd.ground(x, z);
     const gx = (g(S.x + e, S.z) - g(S.x - e, S.z)) / (2 * e), gz = (g(S.x, S.z + e) - g(S.x, S.z - e)) / (2 * e);
     _bn.set(-gx, 1, -gz).normalize(); _bq.setFromUnitVectors(_bu, _bn); const y = h.grp.rotation.y; b.quaternion.copy(_bq); b.rotateOnWorldAxis(_bu, -y);      // world tilt, undone for the group's own yaw
-    const gy = g(S.x, S.z), air = Math.max(0, S.y - gy); b.position.y = gy - S.y + 0.03; b.scale.setScalar(Math.max(0.45, 1 - air * 0.7)); b.visible = S.layer === 0 && S.sw !== 2;
+    const gy = g(S.x, S.z), air = Math.max(0, S.y - gy); b.position.y = gy - S.y + 0.03; const look = S.shLook || 2; b.scale.setScalar(Math.max(0.45, 1 - air * 0.7) * (look === 1 ? 1 : 0.72)); b.visible = S.layer === 0 && S.sw !== 2; shadowLook(h, b, look, air);
   }
+  const _tv = new T.Vector3();
   const setW = (name, w) => { const o = S.hero.acts[name]; if (o) o.tw = w; };
   function animate(dt) {
     const h = S.hero, A = h.acts; if (!A.idle) return;
@@ -297,28 +376,36 @@ export function create(H) {
       if (sc) { sc.tw = 1; sc.a.time = (sc.a.time + dt * (0.4 + mv)) % sc.d; }
       else { if (A.walk) { A.walk.tw = mv; S.phase = (S.phase + ((0.6 + sv * 1.2) / STRIDE_W) * dt) % 1; A.walk.a.time = S.phase * A.walk.d; } A.idle.tw = 1 - mv; A.idle.a.time = (A.idle.a.time + dt) % A.idle.d; }
     } else if (S.st === 'loco') {
-      const wr = clamp((v - WALK) / (RUN - WALK), 0, 1), ww = v < WALK ? clamp(v / WALK, 0, 1) : 1 - wr, wi = v < WALK ? 1 - ww : 0;
+      const wr = clamp((v - WALK) / (RUN - WALK), 0, 1), ww = v < WALK ? clamp((v - 0.12) / 0.33, 0, 1) : 1 - wr, wi = v < WALK ? 1 - ww : 0;   // RP1C-R3: idle -> walk between 0.12 and 0.45 m/s (it was 0 -> 1.48: half-blended poses at 0.4-1.2 m/s slid 37-45 cm/s; the walk clip is at full weight from 0.45, its phase runs at v / stride)
       A.idle.tw = wi; if (A.walk) A.walk.tw = ww * (1 - wr); if (A.run) A.run.tw = wr;
       const rate = (A.walk ? (A.walk.tw * v / GAIT.sw) : 0) + (A.run ? (A.run.tw * v / GAIT.sr) : 0), tw = (A.walk ? A.walk.tw : 0) + (A.run ? A.run.tw : 0);
       if (tw > 0.01) S.phase = (S.phase + (S.bk ? -1 : 1) * (rate / tw) * dt + 1) % 1;                                 // (RP1C-R2: backwards = the cycle played in reverse)
       if (A.walk) A.walk.a.time = S.phase * A.walk.d; if (A.run) A.run.a.time = (((S.phase + GAIT.off) % 1) + 1) % 1 * A.run.d;                  // (RP1C-R2: the two clips share ONE phase; the run clip is shifted so that its left heel-strike falls on the walk clip's)
       A.idle.a.time = (A.idle.a.time + dt) % A.idle.d;
-    } else if (S.st === 'jump') { if (A.jump) { A.jump.tw = 1; A.jump.a.time = Math.min(A.jump.d - 0.001, S.stT * (A.jump.d / JUMP_T)); } }
+    } else if (S.st === 'jump') { if (A.jump) { A.jump.tw = 1; A.jump.a.time = Math.min(A.jump.d - 0.001, S.stT * (A.jump.d / JUMP_T)); } }       // (the clip is stretched over the whole flight: its peak at 48 % = the physics apex at 50 %)
     else if (S.st === 'fall') { if (A.fall) { A.fall.tw = 1; A.fall.a.time = (S.stT % A.fall.d); } }
-    else if (S.st === 'land') { if (A.land) { A.land.tw = 1; A.land.a.time = Math.min(A.land.d - 0.001, S.stT * 2.2); } }
+    else if (S.st === 'land') { if (A.land) { A.land.tw = S.landW || 0.6; A.land.a.time = Math.min(A.land.d - 0.001, S.stT * LAND_K); A.idle.tw = 1 - A.land.tw; A.idle.a.time = (A.idle.a.time + dt) % A.idle.d; } }       // (RP1C-R3: the crouch bottom (clip 0.28 s) at 100 ms; the depth follows the impact speed: S.landW)
     else if (S.st === 'dodge') { if (A.dodge) { A.dodge.tw = 1; const ct = Math.min(A.dodge.d - 0.001, S.stT * 1.9); A.dodge.a.time = S.bk ? Math.max(0, Math.min(A.dodge.d - 0.001, 1.7) - ct) : ct; } }
-    let sum = 0; const k = kExp(9.09, dt);
+    let sum = 0; const k = kExp(S.st === 'land' && S.stT < 0.25 ? 24 : 9.09, dt);   // (RP1C-R3: at touch-down the poses blend in 40 ms, so the crouch is at its bottom after ~100 ms and no jump pose is left under the landing)
     for (const n in A) { const o = A[n]; o.w += (o.tw - o.w) * k; sum += o.w; }
     for (const n in A) { const o = A[n]; o.a.setEffectiveWeight(sum > 1e-4 ? o.w / sum : (n === 'idle' ? 1 : 0)); }
-    const leanT = S.sw === 2 ? (Math.hypot(S.vx, S.vz) > 0.3 ? 1.3 : 0.18) : 0; S.lean += (leanT - S.lean) * kExp(6, dt); h.model.rotation.x = S.lean;   // (swimming stand-in: the body leans into the water)
+    const leanT = S.sw === 2 && !A.swim ? (Math.hypot(S.vx, S.vz) > 0.3 ? 1.3 : 0.18) : 0;   // RP1C-R3: (the real `swim` clip lies in the water itself — leaning it on top turned her head-down, legs out of the water)
+     S.lean += (leanT - S.lean) * kExp(6, dt); h.model.rotation.x = S.lean;
+    { const om = dt > 0 && S.bodyP != null ? wrapPi(S.body - S.bodyP) / dt : 0; S.bodyP = S.body; const rt = S.st === 'loco' && S.grounded && !S.sw && S.layer === 0 && !S.bk ? clamp(-om * Math.min(S.speed, RUN * 1.1) * 0.011, -0.14, 0.14) : 0; S.roll = (S.roll || 0) + (rt - (S.roll || 0)) * kExp(7, dt); h.model.rotation.z = S.roll; }   // RP1C-R3: lean INTO the turn (the body's yaw rate x speed; <= 8 degrees, smoothed 0.14 s)   // (swimming stand-in: the body leans into the water)
+    if (h.rise && A.jump) { const jw = A.jump.w / (sum > 1e-4 ? sum : 1), tt = A.jump.a.time * 60, i0 = Math.min(h.rise.length - 1, Math.floor(tt)), i1 = Math.min(h.rise.length - 1, i0 + 1), r = h.rise[i0] + (h.rise[i1] - h.rise[i0]) * (tt - i0); h.model.position.y = -r * jw; }   // RP1C-R3: cancel the clip's baked body rise (weighted by how much of the clip is showing)
     h.mixer.update(0);
+    if (h.toes && h.toes.length && A.land && (A.land.w > 0.02 || S.st === 'land')) {                   // RP1C-R3: a half-blended crouch (idle + land) bends the knees less than its hips are lowered: the soles went 10-12 cm into the ground; raise the model so the lowest sole is on the ground (only while the land pose shows)
+      h.model.updateMatrixWorld(true); const gy0 = h.grp.matrixWorld.elements[13]; let lo = 1e9; for (const o of h.toes) { o.getWorldPosition(_tv); lo = Math.min(lo, _tv.y - gy0); }
+      if (lo < 0.04) h.model.position.y += 0.04 - lo; }
     if (S.mode === 'first' && h.head) { h.head.scale.setScalar(0.001); } else if (h.head) h.head.scale.setScalar(1);
   }
 
   // ------------------------------------------------------------------ walls (RP1B): climb a face, walk the wall-walk between the merlons, climb down
   // Geometry from the game's own wall targets (castle.js wallRun): body H high, walkway slab on top, merlons 0.7 m thick on both edges.  Towers, gatehouses and the keep are not climbed (roofs).
   const wallOf = (b) => b.type === 'wall' && b.h >= 2.4;
-  const topY = (b) => b.h + 0.145;
+  const topY = (b) => b.h + 0.145;   // RP1C-R3: the merlons of the castle wall stand 1.7 m above the wall's `h` (castle.js: box centre H + 0.85, height 1.7); camCheck used HERO_H (1.75 before the scale change) as that height: it must not grow with her
+  const MERLON_H = 1.75;
+  let wallsSrc = null, wallsHi = null;   // RP1C-R3: the wall boxes, filtered once per collider rebuild (camera parapet floor)
   const latMax = (b) => Math.max(0.35, b.hd - 0.7 - 0.3);
   const loc = (b, x, z) => { const dx = x - b.x, dz = z - b.z; return [dx * b.ux + dz * b.uz, dx * b.vx + dz * b.vz]; };
   const wrd = (b, u, v) => [b.x + u * b.ux + v * b.vx, b.z + u * b.uz + v * b.vz];
@@ -343,6 +430,7 @@ export function create(H) {
       c.mt = clamp(c.mt + (c.dir * dt) / 0.6, 0, 1); S.y = top; c.vy = 0;
       const off = lm + (hug(b, top, 0) - lm) * ease(c.mt), [px, pz] = wrd(b, c.u, s * off); S.x = px; S.z = pz;
       if (c.dir < 0 && c.mt <= 0) { S.layer = 'top'; S.top = b; S.climb = null; S.grounded = true; S.dHold = 0; }
+      else if (c.dir > 0 && c.mt >= 1 && c.land) { S.layer = 0; S.climb = null; S.y = c.land.y; S.grounded = true; S.st = 'loco'; S.stT = 0; S.vy = 0; S.rib = -1; }   // RP1C-R3: onto a ramp's top landing: walking again
       else if (c.dir > 0 && c.mt >= 1) { c.dir = 0; c.auto = true; }
       return;
     }
@@ -371,7 +459,10 @@ export function create(H) {
     }
     if (edge && m > 0.3) {                                                                           // pushing into the parapet for a moment = climb down that side
       const [, v] = loc(b, S.x, S.z); if (dx * b.vx * edge + dz * b.vz * edge > 0.55 && Math.abs(v) > latMax(b) - 0.06) {
-        if ((S.dHold += dt) > 0.4) { S.layer = 'climb'; S.climb = { b, s: edge, u: loc(b, S.x, S.z)[0], auto: false, vy: 0, mt: 0, dir: 1 }; S.dHold = 0; S.top = null; S.vx = S.vz = 0; }
+        if ((S.dHold += dt) > 0.4) {
+          const uu = loc(b, S.x, S.z)[0], ld = ramps && ramps.landingAt(b, uu, edge);   // RP1C-R3: down only onto a ramp's top landing, unless the dev climb switch is on
+          if (ld || CLIMB_ON) { S.layer = 'climb'; S.climb = { b, s: edge, u: uu, auto: false, vy: 0, mt: 0, dir: 1, land: ld || null }; S.dHold = 0; S.top = null; S.vx = S.vz = 0; }
+        }
       } else S.dHold = 0;
     } else S.dHold = 0;
   }
@@ -401,6 +492,21 @@ export function create(H) {
     S.vx = S.vz = 0; S.inp.x = S.inp.y = 0; S.auto = null; S.body = S.camYaw = Math.atan2(x - S.x, z - S.z);
     if (!H.sheets.open(id, H.SM)) return false;
     S.sheetOn = true; S.act = S.hero && S.hero.acts.interact ? { t: 0 } : null; sheetCls(true); return true;
+  }
+  // RP1C-R3 (A1/1): a door opens when she walks AT it.  The doors are the buildings' entrances (doors.js: the orb / the sheet); the building has no interior to walk into, so «open» = the same thing a tap does:
+  // she turns to the door, plays `interact`, the sheet opens.  Within 1.9 m of the door's face point, pushing towards it (the stick is within ~57° of the door) for 0.2 s, once per 3 s.  A building without a sheet
+  // has no door in the list: it stays a wall.  (dev: S.doorHook(it) replaces the sheet in the collision test)
+  function doorBump(dt, wx, wz, m) {
+    S.dCool = Math.max(0, (S.dCool || 0) - dt);
+    if (!doors || S.where !== 'home' || S.layer !== 0 || S.sw || S.sheetOn || S.auto || m < 0.3 || S.st !== 'loco' || !S.grounded || S.dCool > 0) { S.dHold = 0; return; }
+    const items = doors.items(); let best = null, bd = 1.9 * 1.9;
+    for (let i = 0; i < items.length; i++) { const it = items[i], dx = it.fx - S.x, dz = it.fz - S.z, d2 = dx * dx + dz * dz; if (d2 < bd) { bd = d2; best = it; } }
+    if (!best) { S.dHold = 0; return; }
+    const dx = best.fx - S.x, dz = best.fz - S.z, l = Math.hypot(dx, dz) || 1;
+    if ((wx * dx + wz * dz) / l < 0.55) { S.dHold = 0; return; }
+    if ((S.dHold = (S.dHold || 0) + dt) < 0.2) return;
+    S.dHold = 0; S.dCool = 3;
+    if (S.doorHook) S.doorHook(best); else openDoor(best.id, best.fx, best.fz);
   }
   function useNear() { const n = S.near; if (!n) return false; return openDoor(n.id, n.x, n.z); }      // the round button
   // RP1C: tap a door orb / icon in the 3D view -> she walks there by herself (a local BFS over the free cells, 1 m, the proof walkTo's rules; steered through S.inp), the sheet opens on arrival.
@@ -485,11 +591,13 @@ export function create(H) {
     const cb = S.cmb && S.cmb.pre(dt, S, wantX, wantZ, S.bkS ? 0 : m); // RP4: combat tick (RP1C-R2: a push towards the camera is passed as «no push»: attack / block would turn her to face it, a dodge becomes the sim's own back-step); true = it owns the hero (attack / roll / hurt / skill): no host locomotion
     let dep = 0;                                                                     // RP1B: wade (< 0.95 m: slower) / swim (deeper: a slow crawl, no jump / dodge)
     if (S.where === 'home' && S.layer === 0) { dep = waterDepth(S.x, S.z); const w0 = S.sw; S.sw = (S.grounded || S.y <= WSURF + 0.5) && dep > (w0 === 2 ? SWIM_DEEP - 0.2 : SWIM_DEEP) ? 2 : dep > 0.12 ? 1 : 0; } else S.sw = 0;
-    if (S.sw === 1) target *= 1 - 0.45 * clamp(dep / SWIM_DEEP, 0, 1);
-    else if (S.sw === 2) { target = m > 0 ? SWIM_V * (0.45 + 0.55 * m) : 0; if (S.st === 'dodge') { S.st = 'loco'; S.stT = 0; } }
+    waterFx(dt);   // RP1C-R3: ring + splash on entry / exit, ripples while she moves in the water (the water_life.js quad)
+    if (S.sw === 1) { const q = clamp(dep / 0.38, 0, 1); target = Math.min(target, RUN + (WALK * 0.9 - RUN) * q) * (1 - 0.3 * clamp((dep - 0.5) / 0.45, 0, 1)); }   // RP1C-R3: wading — at the knee (0.5 m) the walk clip slowed, no running through water, thigh-deep 0.63 of the walk
+    else if (S.sw === 2) { target = m > 0 ? SWIM_V * (0.45 + 0.55 * m) : 0; if (S.st === 'dodge') { S.st = 'loco'; S.stT = 0; } const sp0 = Math.hypot(S.vx, S.vz); if (sp0 > SWIM_V * 1.25) { const f = Math.exp(-9 * dt); S.vx *= f; S.vz *= f; } }   // RP1C-R3: the water takes the run's momentum away in ~0.3 s (it carried 4.3 m/s into the deep)
     if (S.st === 'dodge') {
-      const t = S.stT, sb = 1.5 + 5.0 * Math.pow(Math.max(0, 1 - t / 0.6), 2);
-      S.vx = S.burst.x * sb; S.vz = S.burst.z * sb;
+      const f0 = clamp((S.stT - dt) / (1.7 / 1.9), 0, 1), f1 = clamp(S.stT / (1.7 / 1.9), 0, 1), vv = 2.9 * ((1 - (1 - f1) * (1 - f1)) - (1 - (1 - f0) * (1 - f0))) / Math.max(dt, 1e-4);   // RP4: the roll is THROWN: 2.9 m along the stick (her facing with no stick) in the clip's 0.895 s, 6.5 m/s fading to 0, exact at any frame rate; tryMove (below) stops it at the same solids
+      S.vx = S.burst.x * vv; S.vz = S.burst.z * vv;                                                                  // RP4: (was 1.5 + 5 * (1 - t / 0.6)^2 = 2.3 m, ending at 1.5 m/s)
+      if (S.where === 'home' && waterDepth(S.x + S.vx * dt, S.z + S.vz * dt) > 0.6) S.vx = S.vz = 0;                  // RP4: never into water deeper than a wade: the roll ends at the bank
       if (S.stT >= 1.7 / 1.9) { S.st = 'loco'; S.stT = 0; }
     } else if (!cb) { // RP4:
       const ml = Math.hypot(wantX, wantZ) || 1, tvx = (wantX / ml) * target, tvz = (wantZ / ml) * target, acc = (air ? 5 : target > S.speed + 0.05 ? GAIT.acc : GAIT.dec) * dt;
@@ -511,6 +619,11 @@ export function create(H) {
       if (CLIMB_ON && S.where === 'home' && S.grounded && S.sw === 0 && S.st === 'loco' && m > 0.3) {           // pushing into a wall face for a moment = she starts to climb it
         const f = wallFace(wantX / wl, wantZ / wl); if (f) { if ((S.cHold += dt) > 0.18) startClimb(f); } else S.cHold = 0;
       } else S.cHold = 0;
+      if (ramps && S.where === 'home' && S.grounded && S.sw === 0 && S.st === 'loco' && m > 0.3) {            // RP1C-R3: on a ramp's top landing, pushing into the wall for a moment = onto the wall-walk (the same 0.6 s over-the-parapet blend as the climb)
+        const e = ramps.topExit(S.x, S.z, S.y, wantX / wl, wantZ / wl, R_BODY);
+        if (e) { if ((S.rHold = (S.rHold || 0) + dt) > 0.15) { S.rHold = 0; S.layer = 'climb'; S.climb = { b: e.b, s: e.s, u: e.u, auto: false, vy: 0, mt: 1, dir: -1 }; S.vx = S.vz = 0; S.st = 'loco'; S.vy = 0; S.y = topY(e.b); } } else S.rHold = 0;
+      } else S.rHold = 0;
+      doorBump(dt, wantX / wl, wantZ / wl, m);   // RP1C-R3: walking at a door opens it
     if (S.where === 'home') {                                                       // soft stop at the map edge: the outward speed fades over the last EDGE_SOFT metres
       const rr = Math.hypot(S.x, S.z);
       if (rr > EDGE_R - EDGE_SOFT) { const ox = S.x / rr, oz = S.z / rr, vo = S.vx * ox + S.vz * oz; if (vo > 0) { const f = clamp((EDGE_R - rr) / EDGE_SOFT, 0, 1); S.vx -= ox * vo * (1 - f); S.vz -= oz * vo * (1 - f); } }
@@ -520,26 +633,28 @@ export function create(H) {
     const sx = S.vx * dt, sz = S.vz * dt, n = Math.max(1, Math.ceil(Math.hypot(sx, sz) / 0.2));
     for (let i = 0; i < n; i++) tryMove(sx / n, sz / n);
     // vertical
-    if (S.sw === 2 && S.grounded) { const wy = WSURF - (Math.hypot(S.vx, S.vz) > 0.3 ? 0.22 : 1.1); S.y += (wy - S.y) * kExp(6, dt); S.vy = 0; S.st = 'loco'; }
+    if (S.sw === 2 && S.grounded) { const wy = WSURF - 0.25; S.y += (wy - S.y) * kExp(6, dt); S.vy = 0; S.st = 'loco'; }   // RP1C-R3: the real swim clip lies in the water: back and head out, at every speed (it used to sink to -1.1 m when standing still = out of sight)
     else {
     const gy = (S.where === 'home' && !S.grounded && waterDepth(S.x, S.z) > SWIM_DEEP) ? WSURF - 0.15 : wd.ground(S.x, S.z);
     if (!S.grounded) {
       S.y += S.vy * dt - 0.5 * GRAV * dt * dt; S.vy -= GRAV * dt;                                       // RP1C-R2 Job 7: exact for a constant g (the old Euler step made the hop 0.53 / 0.49 / 0.45 m at 60 / 30 / 20 fps; now 0.57 m at every frame rate)
-      if (S.y <= gy && S.vy <= 0) { S.y = gy; S.vy = 0; S.grounded = true; if (S.st === 'jump' || S.st === 'fall') { S.st = 'land'; S.stT = 0; } }
-      else if (S.st === 'jump' && S.stT > JUMP_T || (S.st === 'loco' && S.y > gy + 0.6)) { if (S.st !== 'fall') { S.st = 'fall'; S.stT = 0; } }
+      if (S.y <= gy && S.vy <= 0) { S.landW = clamp(-S.vy / 5.5, 0.45, 1); S.y = gy; S.vy = 0; S.grounded = true; if (S.st === 'jump' || S.st === 'fall') { S.st = 'land'; S.stT = 0; } }
+      else if (S.st === 'jump' && S.stT > JUMP_T + 0.08 || (S.st === 'loco' && S.y > gy + 0.6)) { if (S.st !== 'fall') { S.st = 'fall'; S.stT = 0; } }
     } else {
       if (S.y - gy > 0.35) { S.grounded = false; S.vy = 0; if (S.st === 'loco') { S.st = 'fall'; S.stT = 0; } }   // walked off an edge
       else if (!CONTACT.rigid) S.y += (gy - S.y) * kExp(18, dt);
       else {                                                                                          // RP1C-R2: rigid contact — the sole IS the surface (the old low-pass lagged v_y / 18 below it on a hill); only curbs / steps (>= 12 cm) are smoothed
-        let gs = gy; if (S.where === 'home' && foot && CONTACT.rib) { const gb = baseGround(S.x, S.z), rb = gy - gb; if (S.rib < 0 || dt === 0) S.rib = rb; else S.rib += (rb - S.rib) * kExp(35, dt); if (Math.abs(rb - S.rib) < 0.004) S.rib = rb; gs = gb + S.rib; }   // (the ribbon's own 7 cm edge is eased in 30 ms; the slope under it is exact)
+        let gs = gy; if (ramps && ramps.height(S.x, S.z) > baseGround(S.x, S.z)) { S.rib = -1; gs = gy; } else if (S.where === 'home' && foot && CONTACT.rib) {   // RP1C-R3: on a ramp the surface is exact (a straight plane: no easing)
+         const gb = baseGround(S.x, S.z), rb = gy - gb; if (S.rib < 0 || dt === 0) S.rib = rb; else S.rib += (rb - S.rib) * kExp(35, dt); if (Math.abs(rb - S.rib) < 0.004) S.rib = rb; gs = gb + S.rib; }   // (the ribbon's own 7 cm edge is eased in 30 ms; the slope under it is exact)
         const d = gs - S.y; S.y = Math.abs(d) < 0.12 ? gs : S.y + d * kExp(18, dt);
       }
     }
     }
     }
-    if (S.st === 'land' && (S.stT > 0.52 || (m > 0.3 && S.stT > 0.18))) { S.st = 'loco'; S.stT = 0; }
+    if (S.st === 'land' && (S.stT > LAND_STAND || (m > 0.3 && S.stT > LAND_DOWN))) { S.st = 'loco'; S.stT = 0; }
     S.speed = Math.hypot(S.vx, S.vz) * (S.st === 'loco' ? 1 : 0.0) + (S.st === 'loco' ? 0 : 0);
     if (S.st === 'loco') S.speed = Math.hypot(S.vx, S.vz); else S.speed = Math.hypot(S.vx, S.vz) * 0.0;
+    if (S.phys) return;   // RP1C-R3: dev (the collision tests): physics only — no model, no clips, no triggers
     // body yaw: the face rule (RP1C-R2)
     faceStep(dt);
     // triggers
@@ -572,8 +687,18 @@ export function create(H) {
       const dx = bx - ax, dz = bz - az, fx = ax - sx, fz = az - sz, a = dx * dx + dz * dz, b2 = 2 * (fx * dx + fz * dz), c = fx * fx + fz * fz - (sr + mgD) ** 2, disc = b2 * b2 - 4 * a * c;
       if (a < 1e-8 || disc < 0 || c < 0) continue; const t = (-b2 - Math.sqrt(disc)) / (2 * a); if (t > 0 && t < best) best = t;
     }
-    for (let i = 1; i <= 10; i++) { const t = i / 10; if (t >= best) break; if (ay + (by - ay) * t < wd.ground(ax + (bx - ax) * t, az + (bz - az) * t) + 0.35) { best = Math.max(0, t - 0.1); break; } }
+    if (grid && wd === homeWorld && S.layer === 0 && CONTACT.grid && grid.st.ready) {   // RP1C-R3: the camera meets the same solids as the body (the real meshes: a house wall, a fence, a tent) — not through them
+      const dx = bx - ax, dz = bz - az, L = Math.hypot(dx, dz);
+      if (L > 0.05) { const t = grid.ray(ax, az, dx, dz, L); if (t >= 0) { const f = Math.max(0, (t - 0.12) / L); if (f < best && ay + (by - ay) * f < wd.ground(ax + dx * f, az + dz * f) + 2.0) best = f; } }
+    }
+    if (!(S.layer === 0 && (S.sw > 0 || wd.ground(bx, bz) > S.y + 0.5))) for (let i = 1; i <= 10; i++) { const t = i / 10; if (t >= best) break; if (ay + (by - ay) * t < wd.ground(ax + (bx - ax) * t, az + (bz - az) * t) + 0.35) { best = Math.max(0, t - 0.1); break; } }       // RP1C-R3: in the water, or standing below a bank that rises behind her (the camera end is > 0.5 m above her feet), the bank no longer pulls the camera onto her back (frame 'swim_b_wade': 0.55 m behind a cloak): the floor clamp in placeCamera0 lifts it over the bank instead
     return best;
+  }
+  // RP1C-R3 (ROUND4 A1/3): the camera framing, 3 looks (S.camLook: 1 = A today, 2 = B lower + closer over-shoulder: she stands at ~0.35 of the screen width, the horizon at ~40 % from the top, the ground ahead in view, 3 = C higher + wider); default B.  The pitch is only the DEFAULT of a look (she can still drag it: the clamp is unchanged)
+  const CAMS = [null, { D: 3.6, sh: 0.55, py: 1.45, pit: 0.2 }, { D: 3.4, ndc: 0.30, py: 0.95, pit: -1 }, { D: 4.8, ndc: 0.12, py: 1.62, pit: 0.4 }];
+  function camP() {
+    const c = CAMS[S.camLook || 2], fov = camera.fov * Math.PI / 180, asp = camera.aspect || 1.7, D = c.D * HC;
+    return { D, sh: c.ndc ? clamp(c.ndc * D * asp * Math.tan(fov / 2), 0.3 * HS, 1.4 * HS) : c.sh * HS, py: c.py * HS, pit: c.pit < 0 ? Math.atan(0.2 * Math.tan(fov / 2)) : c.pit };   // (B: the lateral offset that puts her at ndc -0.30 whatever the aspect; the horizon at 0.40 of the height = a pitch of atan(0.2 tan(fov/2)))
   }
   const tmpV = new T.Vector3();
   function placeCamera(dt) { placeCamera0(dt); if (S.tap) S.tap(); }                                                    // (RP1C-R2: S.tap = a dev probe called after every camera placement, whoever drove the frame)
@@ -585,19 +710,24 @@ export function create(H) {
       camera.position.set(ex, ey, ez); camera.lookAt(ex + vx, ey + vy, ez + vz);
       S.pivot.set(S.x, S.y + 1.45 * HS, S.z); return;
     }
-    const k = kExp(16, dt); S.pivot.x += (S.x - S.pivot.x) * k; S.pivot.z += (S.z - S.pivot.z) * k; S.pivot.y += (S.y + 1.45 * HS - S.pivot.y) * kExp(10, dt);
-    if (dt === 0 || S.snap) { S.pivot.set(S.x, S.y + 1.45 * HS, S.z); S.snap = false; }
-    const D = CAM_D, sh = S.layer === 'top' ? 0 : 0.55 * HS, px = S.pivot.x, py = S.pivot.y, pz = S.pivot.z;      // (on the wall-walk the camera is straight behind her: the walkway is 1.8 m wide)
+    const cpr = camP(), kc = S.kc = Math.min(S.st === 'dodge' ? 6.5 : 16, (S.kc || 16) + (16 - (S.kc || 16)) * kExp(9, dt)), k = kExp(kc, dt); /* RP4: while she rolls the camera follows more softly (6.5 /s, eased in and out: no jerk) so the throw is SEEN on the screen */ S.pivot.x += (S.x - S.pivot.x) * k; S.pivot.z += (S.z - S.pivot.z) * k; S.pivot.y += (S.y + cpr.py - S.pivot.y) * kExp(10, dt);
+    if (dt === 0 || S.snap) { S.pivot.set(S.x, S.y + cpr.py, S.z); S.snap = false; }
+    const D = cpr.D, sh = S.layer === 'top' ? 0 : cpr.sh, px = S.pivot.x, py = S.pivot.y, pz = S.pivot.z;      // (on the wall-walk the camera is straight behind her: the walkway is 1.8 m wide)
     const tx = px - vx * D + rx * sh, ty = py - vy * D + 0.1, tz = pz - vz * D + rz * sh;           // wanted camera spot (behind, a little to the right)
     const t = segHit(px, py, pz, tx, tz, ty, wd), want = Math.max(0.55, t * D - 0.25);
     if (want < S.camD) S.camD = want; else S.camD += (want - S.camD) * kExp(3.5, dt); if (dt === 0) S.camD = want;      // (closer at once when something is in the way — a smoothed approach left the camera 1 m inside a tower for a frame; away from it slowly)
     const dd = Math.min(S.camD, D), kk = dd / D;
     const cx = px + (tx - px) * kk, cyy = py + (ty - py) * kk, cz = pz + (tz - pz) * kk;
-    let fl = wd.ground(cx, cz);
+    let fl = wd.ground(cx, cz), mgFl = 0;
     const tb = S.layer === 'top' ? S.top : (S.layer === 'climb' && S.climb ? S.climb.b : null);
     if (tb) { const [cu, cv] = loc(tb, cx, cz); if (Math.abs(cu) <= tb.hw && Math.abs(cv) <= tb.hd) fl = Math.max(fl, Math.abs(cv) > tb.hd - 0.7 ? tb.h + 1.7 : topY(tb)); }        // never below the wall-walk while over it, and above the parapet when over its edge
+    else if (cyy > 6 && S.where === 'home') {                                                                                         // RP1C-R3: up on / beside a wall, but not on its walk (just stepped off, or looking back over it): the camera still stays above any parapet it is over (it grazed the merlons for 4 frames on the way down a ramp; no allocation: inline loc)
+      if (wallsSrc !== S.boxes) { wallsSrc = S.boxes; wallsHi = S.boxes.filter(wallOf); }
+      for (let i = 0; i < wallsHi.length; i++) { const b = wallsHi[i], dx = cx - b.x, dz = cz - b.z, u = dx * b.ux + dz * b.uz, v = dx * b.vx + dz * b.vz; if (Math.abs(u) <= b.hw && Math.abs(v) <= b.hd) mgFl = Math.max(mgFl, Math.abs(v) > b.hd - 0.7 ? b.h + 1.7 + 0.08 : topY(b) + 0.08); }
+    }
     if (S.where === 'home' && world.fastHeight(cx, cz) < WSURF) fl = Math.max(fl, WSURF);                                               // never under the water
-    camera.position.set(cx, Math.max(cyy, fl + 0.3), cz); camera.lookAt(camera.position.x + vx, camera.position.y + vy, camera.position.z + vz);
+    const camY = Math.max(cyy, fl + 0.3, mgFl), lift = camY - cyy, pe = lift > 0.05 ? Math.min(0.55, Math.atan(lift / Math.max(1.2, dd))) : 0, p2 = S.pitch + pe, cp2 = Math.cos(p2), sp2 = Math.sin(p2);       // RP1C-R3: when the floor lifts the camera (a bank, a parapet) it also tips down by that much, so she stays in the frame (it left her at its bottom edge)
+    camera.position.set(cx, camY, cz); camera.lookAt(cx + sy * cp2, camY - sp2, cz + cy * cp2);
   }
 
   // ------------------------------------------------------------------ DOM: HUD, pick screen, perf overlay
@@ -702,6 +832,22 @@ export function create(H) {
   }
   function closePick() { if (pickEl) { pickEl.remove(); pickEl = null; api.pickEl = null; } }
 
+  // ------------------------------------------------------------------ RP1C-R3 (PF1 F9): warm-up behind the loading card, not at the first hero frame
+  // (a) hero mode on a phone switches the bloom composer off (R.nobloom), so at NIGHT the world is suddenly drawn on the plain (screen) path; when the game booted at night that path is built only at idle: main.js `warm`
+  //     builds it now, sliced (it yields between units).  (b) the hero's own materials (skinned x tone mapping) on BOTH paths: the screen, and a 4 x 4 target (= the composer's: no tone mapping, linear output).
+  //     renderer.compileAsync(group, camera, scene): the live scene gives the lights / fog, so the program keys are the ones the first frame would ask for.  Returns what was compiled (the test prints it).
+  async function warmHero(m, lv) {
+    const t0 = performance.now(), cnt = () => (renderer.info.programs ? renderer.info.programs.length : 0), n0 = cnt(), out = { world: 0, hero: 0, ms: 0 };
+    try {
+      if (H.warm) out.world = await H.warm((f) => lv.progress(0.86 + 0.1 * f, 'Warming up…'));
+      const n1 = cnt(), grp = m && m.grp; if (grp && renderer.compileAsync) {
+        const rt = new T.WebGLRenderTarget(4, 4);
+        try { renderer.setRenderTarget(null); await renderer.compileAsync(grp, camera, scene); if (!(diet && diet.PHONE)) { renderer.setRenderTarget(rt); const p = renderer.compileAsync(grp, camera, scene); renderer.setRenderTarget(null); await p; } } finally { renderer.setRenderTarget(null); rt.dispose(); }   // (a phone never uses the composer in hero mode: its 4 x 4 variant is not built)
+      }
+      out.hero = cnt() - n1; out.added = cnt() - n0;
+    } catch (e) { console.warn('hero warm', e); }
+    out.ms = Math.round(performance.now() - t0); api.warmed = out; return out;
+  }
   // ------------------------------------------------------------------ enter / exit / scene switching
   let busy = false;
   async function start(key) {
@@ -712,9 +858,15 @@ export function create(H) {
       ensureHome(); lv.progress(0.05);
       if (!diet) { const dm = await import(/* @vite-ignore */ new URL('rpg_diet.js' + (new URL(import.meta.url).search || V), import.meta.url).href); diet = dm.createDiet(H, S); api.diet = diet; }   // RP1B: the frame-time diet + governor
       if (!cull && diet) { const cm = await import(/* @vite-ignore */ new URL('cull.js' + (new URL(import.meta.url).search || V), import.meta.url).href); cull = cm.createCull(H, S, diet); api.cull = cull; }   // RP1C: spatial culling of repeated geometry
-      if (!doors) { const dm = await import(/* @vite-ignore */ new URL('doors.js' + (new URL(import.meta.url).search || V), import.meta.url).href); doors = dm.createDoors(H, S, { ground: (x, z) => homeWorld.ground(x, z), free: (x, z) => free(x, z, homeWorld, false) && waterDepth(x, z) < 0.3 }); api.doors = doors; }   // RP1C: the door orbs
+      if (!doors) { const dm = await import(/* @vite-ignore */ new URL('doors.js' + (new URL(import.meta.url).search || V), import.meta.url).href); doors = dm.createDoors(H, S, { ground: (x, z) => homeWorld.ground(x, z), free: (x, z) => free(x, z, homeWorld, false) && waterDepth(x, z) < 0.3, facade: (x, z, dx, dz, max) => (useGrid() ? grid.ray(x, z, dx, dz, max) : -1) }); api.doors = doors; }   // RP1C: the door orbs
       if (!foot) { const fm = await import(/* @vite-ignore */ new URL('rpg_foot.js' + (new URL(import.meta.url).search || V), import.meta.url).href); foot = fm.createFoot(H, S, { ground: (x, z) => W().ground(x, z) }); api.foot = foot; }   // RP1C-R2: ground contact (road surface + leg IK)
+      if (!marker) { const mm = await import(/* @vite-ignore */ new URL('rp_marker.js' + (new URL(import.meta.url).search || V), import.meta.url).href); marker = mm.createMarker(H, S, { colour: (k) => (SIS.find((x) => x.k === k) || SIS[0]).c, head: HERO_H, look: +(new URLSearchParams(location.search).get('crown')) || 1 }); api.marker = marker; }   // RP1C-R3: the small sign + halo above her, the ground ring with a faint crown under her
+      if (!ramps) { const rm = await import(/* @vite-ignore */ new URL('ramps.js' + (new URL(import.meta.url).search || V), import.meta.url).href); ramps = rm.createRamps(H, S, { world, terrain: baseGround, wsurf: WSURF, topY, max: { outer: 6, town: 4 } }); api.ramps = ramps; }   // RP1C-R3: the ramps up to the wall-walk
+      if (!goup) { const um = await import(/* @vite-ignore */ new URL('rp_goup.js' + (new URL(import.meta.url).search || V), import.meta.url).href); goup = um.createGoUp(H, S, { ramps: () => ramps, ground: (x, z) => baseGround(x, z), hud: () => hudEl, top: TOP, btm: BOT }); api.goup = goup; }   // RP1C-R3: the «Go up» markers + HUD arrow + prompt
+      if (!grid) { const gm = await import(/* @vite-ignore */ new URL('rp_grid.js' + (new URL(import.meta.url).search || V), import.meta.url).href); grid = gm.createGrid(H, S, { deck: (x, z) => S.nav.groundY(x, z, world.fastHeight(x, z)), carve: () => (world.targets || []).filter((t) => t.type === 'gate' && !t.dead && !t.down && !t.destroyed).map((t) => { const gh = GATE_HALF[t.ringId] || 5.2; return { x: t.x, z: t.z, ux: Math.cos(t.rot), uz: -Math.sin(t.rot), vx: Math.sin(t.rot), vz: Math.cos(t.rot), hu: gh - 0.15, hv: t.d / 2 + 0.6, hv2: t.d / 2 + 4 }; }) }); api.grid = grid; }   // RP1C-R3: the body band of the real meshes (deck = a bridge deck is the ground on a bridge; carve = the gate arches stay walkable as they always were)
       const m = await loadHero(key, lv);
+      lv.progress(0.85, 'Warming up…'); if (!window.__rpNoWarm) await warmHero(m, lv);   // RP1C-R3: PF1 F9 (window.__rpNoWarm = dev-only switch for the before / after measurement)
+      lv.progress(0.9, 'Collision…'); try { await grid.build({ progress: (f) => lv.progress(0.9 + 0.08 * f) }); gcovM.clear(); refreshColliders(); } catch (e) { console.warn('hero grid', e); }   // RP1C-R3: ~0.2 s on a desktop, in slices
       closePick(); enter(m, key); lv.progress(1); setTimeout(() => lv.hide(), 250);
     } catch (e) { console.warn('hero start', e); lv.setTitle('Error'); lv.progress(1, String(e && e.message || e)); setTimeout(() => lv.hide(), 1800); }
     busy = false;
@@ -734,9 +886,16 @@ export function create(H) {
     if (diet) diet.enter();
     if (cull) cull.enter();
     if (doors) doors.enter();
+    if (marker) marker.enter();   // RP1C-R3:
+    if (ramps) { ramps.enter(); refreshColliders(); }   // RP1C-R3: built once per session (needs S.boxes / S.discs), then their parapets join S.boxes
+    if (goup) goup.enter();   // RP1C-R3:
   }
   function exit() {
     if (!api.active) return;
+    if (marker) marker.exit();   // RP1C-R3:
+    if (goup) goup.exit();   // RP1C-R3:
+    if (ramps) ramps.exit();   // RP1C-R3:
+    if (grid) grid.dispose();   // RP1C-R3: 1.5 MB + the tiles
     if (doors) doors.exit(); S.auto = null; S.act = null; S.joyOn = false; S.nearK = '';
     if (cull) cull.exit();
     if (diet) diet.exit();
@@ -763,7 +922,7 @@ export function create(H) {
       };
       try { S.cmb = await (await import(/* @vite-ignore */ new URL('combat.js' + (new URL(import.meta.url).search || V), import.meta.url).href)).attach(u, S.hero, { THREE: T, camera, root, base: BASE + 'rpg/', v: V, parseGLB: H.parseGLB, btns, dev, sister: S.key, pixelRatio: renderer.getPixelRatio(), hgt: u.hgt, spawn: 3, hostMove: (dx, dz) => { const n = Math.max(1, Math.ceil(Math.hypot(dx, dz) / 0.2)); for (let i = 0; i < n; i++) tryMove(dx / n, dz / n); } }); } catch (e) { console.warn('rp4', e); } // RP4: combat core (lazy module) + 3 placeholder enemies, owner test only
       if (diet) diet.syncQ();                                                                          // RP1C-R2: the governor's current level -> S.under / S.cmb .setQuality
-      S.where = 'under'; S.layer = 0; S.sw = 0; S.x = u.spawn.x; S.z = u.spawn.z; S.y = u.hgt(S.x, S.z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; S.camYaw = u.spawn.yaw; S.body = u.spawn.yaw; S.snap = true; S.camD = CAM_D;
+      S.where = 'under'; S.layer = 0; S.sw = 0; S.x = u.spawn.x; S.z = u.spawn.z; S.y = u.hgt(S.x, S.z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; S.camYaw = u.spawn.yaw; S.body = u.spawn.yaw; S.snap = true; S.camD = camP().D;
       S.hero.grp.position.set(S.x, S.y, S.z); S.hero.grp.rotation.y = S.body; u.update(0, 0, camera.position); placeCamera(0);      // (RP1C-R2: her model already faces where the camera looks on the very first frame)
       try { if (renderer.compileAsync) await renderer.compileAsync(u.scene, camera); else renderer.compile(u.scene, camera); } catch (e) { /* first draw compiles instead */ }
       lv.progress(1); S.cool = 1.2; setTimeout(() => lv.hide(), 200);
@@ -777,7 +936,7 @@ export function create(H) {
     if (S.cmb) { S.cmb.dispose(); S.cmb = null; } // RP4:
     scene.add(S.hero.grp); S.where = 'home'; underWorld = null;
     const d = S.door; if (d) { S.x = d.x + d.nx * 2.6; S.z = d.z + d.nz * 2.6; S.camYaw = Math.atan2(d.nx, d.nz); S.body = S.camYaw; } else { S.x = L.GATE.x - L.GATE.nx * 9; S.z = L.GATE.z - L.GATE.nz * 9; }
-    S.y = homeGround(S.x, S.z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; S.snap = true; S.camD = CAM_D; S.hero.grp.position.set(S.x, S.y, S.z); S.hero.grp.rotation.y = S.body;
+    S.y = homeGround(S.x, S.z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; S.snap = true; S.camD = camP().D; S.hero.grp.position.set(S.x, S.y, S.z); S.hero.grp.rotation.y = S.body;
     if (S.under) { S.under.dispose(); S.under = null; }
     lv.progress(1); S.cool = 1.5; setTimeout(() => lv.hide(), 200); S.busy2 = false;
   }
@@ -798,6 +957,8 @@ export function create(H) {
     if (cull && S.where === 'home') cull.tick(now); he('cull');
     if (foot && S.where === 'home') foot.tick(now); he('foot');
     if (doors) doors.tick(now, dt0); he('doors');
+    if (marker) marker.tick(now); he('marker');   // RP1C-R3:
+    if (goup) goup.tick(now); he('goup');   // RP1C-R3: the «Go up» markers
     if (S.where === 'under' && S.under) { S.under.fill.position.set(S.x, S.y + 2.8, S.z); S.under.update(now / 1000, dt0, camera.position); renderer.toneMappingExposure = 1.25; }
     he('under'); if (S.where === 'home') sheetTick(dt0); else if (btns.act) btns.act.style.display = 'none'; he('sheet');
     if (btns.dodge) { btns.dodge.style.opacity = S.dodgeCool > 0 ? 0.45 : 1; btns.jump.style.opacity = S.grounded ? 1 : 0.55; }
@@ -811,7 +972,9 @@ export function create(H) {
     S, setInput: (x, y) => { S.inp.x = x; S.inp.y = y; }, look: (dyaw, dp) => { S.camYaw += dyaw; S.pitch = clamp(S.pitch + dp, -0.75, 1.25); },
     setLook: (yaw, pitch) => { S.camYaw = yaw; if (pitch != null) S.pitch = pitch; },
     jump: () => { S.reqJump = true; }, dodge: () => { S.reqDodge = true; }, sprint: (b) => { S.sprint = !!b; }, cam: (m) => setMode(m),
-    setPos: (x, z, yaw) => { S.layer = 0; S.top = S.climb = null; S.sw = 0; S.x = x; S.z = z; S.y = W().ground(x, z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; if (yaw != null) { S.camYaw = yaw; S.body = yaw; } S.snap = true; S.camD = CAM_D; },
+    camLook: (n) => { if (n) { S.camLook = n; S.pitch = camP().pit; S.snap = true; S.camD = camP().D; } return { look: S.camLook || 2, ...camP() }; },   // RP1C-R3
+    shadowLook: (n) => { if (n) S.shLook = n; return S.shLook || 2; },   // RP1C-R3
+    setPos: (x, z, yaw) => { S.layer = 0; S.top = S.climb = null; S.sw = 0; S.x = x; S.z = z; S.y = W().ground(x, z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; if (yaw != null) { S.camYaw = yaw; S.body = yaw; } S.snap = true; S.camD = camP().D; },
     gait: (o) => (o ? Object.assign(GAIT, o) : { ...GAIT }),
     jumpInfo: () => ({ JUMP_V, GRAV, JUMP_T, apex: +(JUMP_V * JUMP_V / (2 * GRAV)).toFixed(3), air: +(2 * JUMP_V / GRAV).toFixed(3) }),
     knobs: () => H.reach, frame: (n, d) => frame(n, d), setPerf: (b) => setPerf(b), perfLine: () => (perfEl ? perfEl.textContent : ''), fakeClock: (b) => { S.fakeNow = b ? 0 : null; },
@@ -820,15 +983,43 @@ export function create(H) {
     // RP1C-R2: the angle between HER facing (the model's +Z in the world) and the CAMERA's forward direction (horizontal), measured on the real objects — the face rule keeps it <= 70° in every frame
     faceInfo: () => { const f = new T.Vector3(), c = new T.Vector3(); S.hero.grp.getWorldDirection(f); camera.getWorldDirection(c); const ang = Math.abs(wrapPi(Math.atan2(f.x, f.z) - Math.atan2(c.x, c.z))); return { ang, deg: +(ang * 57.29578).toFixed(2), body: S.body, cam: S.camYaw, bk: S.bk, st: S.st, bkS: S.bkS }; },
     proj: (x, y, z) => { camera.updateMatrixWorld(); const v = new T.Vector3(x, y, z).project(camera); return [(v.x + 1) * 0.5 * innerWidth, (1 - v.y) * 0.5 * innerHeight, v.z]; },       // world point -> CSS px on screen (dev / tests)
+    useGrid: (b) => { CONTACT.grid = !!b; gcovM.clear(); refreshColliders(); if (doors) { doors.st.items = []; doors.build(); } return { grid: CONTACT.grid, boxes: S.boxes.length, discs: S.discs.length }; }, grid: () => grid, rbody: R_BODY, phys: (sec, step = 1 / 30) => { S.phys = true; const n = Math.round(sec / step); for (let i = 0; i < n; i++) update(step); S.phys = false; },   // RP1C-R3: physics only (no model / camera)
     sim: (sec, step = 1 / 60) => { const n = Math.round(sec / step); for (let i = 0; i < n; i++) { update(step); placeCamera(step); } },
     // is the camera inside any solid right now?  (walls: body + merlons, towers / keep / gates up to their height, cottage discs; the water surface counts as a floor)
-    camCheck: () => {
+    camCheck: (detail) => {
       const c = camera.position; let bad = [];
       for (const b of S.boxes) { const [u, v] = loc(b, c.x, c.z); if (Math.abs(u) > b.hw || Math.abs(v) > b.hd) continue;
-        if (wallOf(b)) { if (c.y < topY(b) - 0.01 || (c.y < b.h + HERO_H && Math.abs(v) > b.hd - 0.7)) bad.push(b.type); } else if (c.y < world.fastHeight(c.x, c.z) + b.h) bad.push(b.type); }
+        if (wallOf(b)) { if (c.y < topY(b) - 0.01 || (c.y < b.h + MERLON_H && Math.abs(v) > b.hd - 0.7)) bad.push(detail ? b.type + ':h' + b.h + ',u' + u.toFixed(1) + ',v' + v.toFixed(2) + ',hw' + b.hw.toFixed(1) + ',hd' + b.hd.toFixed(2) + (S.top === b || (S.climb && S.climb.b === b) ? ',MINE' : ',other') + ',L' + S.layer : b.type); } else if (c.y < world.fastHeight(c.x, c.z) + b.h) bad.push(b.type); }
       for (const [x, z, r] of S.discs) if (Math.hypot(c.x - x, c.z - z) < r && c.y < world.fastHeight(c.x, c.z) + 3) bad.push('disc');
       if (c.y < world.fastHeight(c.x, c.z) + 0.05) bad.push('ground'); if (world.fastHeight(c.x, c.z) < WSURF && c.y < WSURF + 0.05) bad.push('water');
       return bad;
+    },
+    // RP1C-R3 proof: walk ramp `i` from the ground to the wall-walk and back (steered along ramps.route(i) with the real update() and the real camera), return what happened
+    rampTest: (i = 0, o = {}) => {
+      const R = ramps; if (!R) return { ok: false, why: 'no ramps' }; const rt = R.route(i); if (!rt) return { ok: false, why: 'no ramp ' + i };
+      const rp = R.st.ramps[i], b = rp.wall, v = o.v != null ? o.v : 1, dt = 1 / 30, out = { i, id: rp.id, design: rp.design, ring: rp.ring, wall: rp.wallId, grade: rp.grade, v, up: { t: 0 }, down: { t: 0 }, camBad: 0, camAt: [], fall: 0, maxGrade: 0, nSteps: 0 };
+      const step = () => { const x0 = S.x, z0 = S.z, y0 = S.y; update(dt); placeCamera(dt); out.nSteps++; const run = Math.hypot(S.x - x0, S.z - z0); if (S.layer === 0 && run > 0.005) { const g = Math.abs(S.y - y0) / run; if (g > out.maxGrade && run > 0.02) out.maxGrade = g; } if (!S.grounded) out.fall++; { const cb = api.dev.camCheck(out.camAt.length < 3); if (cb.length) { out.camBad++; if (out.camAt.length < 8) out.camAt.push(out.nSteps + ':' + cb.join(',') + '@' + camera.position.x.toFixed(1) + ',' + camera.position.y.toFixed(1) + ',' + camera.position.z.toFixed(1)); } } };
+      const follow = (pts, tmax, until) => { let k = 1, t = 0; while (t < tmax) { const [tx, tz] = pts[Math.min(k, pts.length - 1)], dx = tx - S.x, dz = tz - S.z, d = Math.hypot(dx, dz); if (d < 0.8 && k < pts.length - 1) { k++; continue; } S.camYaw = Math.atan2(dx, dz); S.inp.x = 0; S.inp.y = v; step(); t += dt; if (until()) break; } S.inp.x = S.inp.y = 0; return t; };
+      const yaw0 = Math.atan2(rt[1][0] - rt[0][0], rt[1][1] - rt[0][1]); api.dev.setPos(rt[0][0], rt[0][1], yaw0); S.camYaw = yaw0; for (let k = 0; k < 10; k++) step();
+      out.up.y0 = +S.y.toFixed(2); out.up.t = +follow(rt, 150, () => S.layer === 'top' || S.layer === 'climb').toFixed(1);
+      out.up.layer1 = S.layer; for (let k = 0; k < 40 && S.layer === 'climb'; k++) step(); out.up.layer = S.layer; out.up.y = +S.y.toFixed(2); out.up.topY = +topY(b).toFixed(2); out.up.ok = S.layer === 'top' && Math.abs(S.y - topY(b)) < 0.02;
+      out.up.maxGrade = +out.maxGrade.toFixed(3);
+      if (S.layer === 'top') {
+        const [uu] = loc(b, S.x, S.z); out.down.u = +uu.toFixed(1);
+        S.inp.y = 0; for (let k = 0; k < 10; k++) step();                                              // a moment on the wall-walk
+        // (1) no climb-down away from the landing: walk 8 m along the wall and push into the inner parapet for 3 s
+        const sgn = rp.sg, tl = rp.topSeg, far = (tl.a0 + tl.a1) / 2 + (Math.abs((tl.a0 + tl.a1) / 2 - b.hw) > Math.abs((tl.a0 + tl.a1) / 2 + b.hw) ? 8 : -8);
+        const [fx, fz] = wrd(b, clamp(far, -b.hw + 2, b.hw - 2), 0); api.dev.setPos(fx, fz, 0); S.layer = 'top'; S.top = b; S.y = topY(b); S.grounded = true;
+        S.camYaw = S.body = Math.atan2(sgn * b.vx, sgn * b.vz); S.inp.y = 1; let tt = 0; while (tt < 3) { step(); tt += dt; } S.inp.y = 0; out.down.noExitAway = S.layer === 'top';
+        // (2) back at the landing: push into the inner parapet beside it = down onto the landing
+        const [lx, lz] = wrd(b, (tl.a0 + tl.a1) / 2, 0); S.x = lx; S.z = lz; S.layer = 'top'; S.top = b; S.y = topY(b); for (let k = 0; k < 6; k++) step();
+        S.camYaw = S.body = Math.atan2(sgn * b.vx, sgn * b.vz); S.inp.y = 1; tt = 0; while (tt < 8 && S.layer !== 0) { step(); tt += dt; } S.inp.y = 0; out.down.t = +tt.toFixed(1); out.down.layer = S.layer; out.down.onLanding = S.layer === 0 && Math.abs(S.y - topY(b)) < 0.05;
+        for (let k = 0; k < 6; k++) step();
+        // (3) walk the way back down
+        if (S.layer === 0) { const back = rt.slice().reverse(); back[back.length - 1] = [rt[0][0], rt[0][1]]; const t2 = follow(back.slice(1), 150, () => Math.hypot(S.x - rt[0][0], S.z - rt[0][1]) < 1.2); out.down.tWalk = +t2.toFixed(1); out.down.yEnd = +S.y.toFixed(2); out.down.ground = +homeGround(S.x, S.z).toFixed(2); out.down.ok = Math.hypot(S.x - rt[0][0], S.z - rt[0][1]) < 1.5 && S.layer === 0 && Math.abs(S.y - baseGround(S.x, S.z)) < 0.4; }
+      }
+      out.camBad = out.camBad; out.fallSteps = out.fall; out.ok = !!(out.up.ok && out.down.noExitAway && out.down.onLanding && out.down.ok) && out.fall < 5;
+      return out;
     },
     // proof: climb a wall piece (index among the wall boxes), walk its wall-walk to both ends, climb down the other side; returns what happened + camera violations
     setClimb: (v) => { CLIMB_ON = !!v; },                                              // HOTFIX47
@@ -975,12 +1166,14 @@ export function create(H) {
         for (const b of S.boxes) { if (Math.abs(b.x - cx) > size && Math.abs(b.z - cz) > size) continue; c2.strokeStyle = b.type === 'wall' || b.type === 'gate' || b.type === 'tower' ? '#ff9a2a' : '#ff2a2a'; c2.beginPath(); const cs = Math.cos(b.rot), sn = Math.sin(b.rot); const pts = [[-b.hw, -b.hd], [b.hw, -b.hd], [b.hw, b.hd], [-b.hw, b.hd]].map(([u, v]) => [b.x + u * b.ux + v * b.vx, b.z + u * b.uz + v * b.vz]); void cs; void sn; pts.forEach((q, i) => (i ? c2.lineTo(X(q[0]), Z(q[1])) : c2.moveTo(X(q[0]), Z(q[1])))); c2.closePath(); c2.stroke(); }
         c2.strokeStyle = '#38a0ff'; for (const d of S.discs) { if (Math.abs(d[0] - cx) > size / 2 + 20 || Math.abs(d[1] - cz) > size / 2 + 20) continue; c2.beginPath(); c2.arc(X(d[0]), Z(d[1]), (d[2] / size) * px, 0, 7); c2.stroke(); }
       }
+      if (opt.grid && grid && grid.st.ready) { const step = size / px; c2.fillStyle = 'rgba(255,40,200,0.55)'; for (let zz = 0; zz < px; zz += 2) for (let xx = 0; xx < px; xx += 2) { if (grid.solid(cx - size / 2 + (xx + 1) * step, cz - size / 2 + (zz + 1) * step)) c2.fillRect(xx, zz, 2, 2); } }   // RP1C-R3: the body band
       for (const q of (opt.shapes || [])) { c2.strokeStyle = q.col || '#0ff'; c2.lineWidth = 2; c2.beginPath(); if (q.t === 'c') c2.arc(X(q.x), Z(q.z), (q.r / size) * px, 0, 7); else { const c = Math.cos(q.ry || 0), sn = Math.sin(q.ry || 0); [[-q.w / 2, -q.d / 2], [q.w / 2, -q.d / 2], [q.w / 2, q.d / 2], [-q.w / 2, q.d / 2]].forEach(([u, v], i) => { const wx = q.x + u * c + v * sn, wz = q.z - u * sn + v * c; i ? c2.lineTo(X(wx), Z(wz)) : c2.moveTo(X(wx), Z(wz)); }); c2.closePath(); } c2.stroke(); }
       for (const m of (opt.marks || [])) { c2.fillStyle = '#ffe14a'; c2.fillRect(X(m[1]) - 3, Z(m[2]) - 3, 7, 7); c2.fillStyle = '#fff'; c2.font = '14px sans-serif'; c2.fillText(m[0], X(m[1]) + 6, Z(m[2]) + 4); }
       return cv.toDataURL('image/png');
     },
     start, exit, gates: () => S.boxes.filter((b) => b.type === 'gate').map((b) => [+b.x.toFixed(1), +b.z.toFixed(1), +b.hw.toFixed(1), +b.hd.toFixed(1)]),
     peek: (id) => H.sheets && H.sheets.peek ? H.sheets.peek(id, H.SM) : 'no-peek',
+    marker: () => marker, goup: () => goup, ramps: () => ramps, warmed: () => api.warmed,   // RP1C-R3:
     doors: () => doors, tapDoor, planLocal, openDoor, autoState: () => S.auto && { id: S.auto.id, t: +S.auto.t.toFixed(1), wi: S.auto.wi, n: S.auto.pts.length }, act: () => S.act && { ...S.act },
     diet: () => diet, cull: () => cull, perf: () => ({ ...stats, f: undefined }), stats: () => (S.under ? S.under.stats() : null),
   };
