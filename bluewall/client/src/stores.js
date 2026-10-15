@@ -10,6 +10,7 @@ import { roadDist } from './roads.js';
 import { marketSpot } from './terrain.js';
 import { planVaults } from './vault.js';
 import { mat4, gableRoof } from './util.js';
+import { planQuarter, buildStoreYards } from './storeyards.js';        // ST1: the Treasury Quarter plan (null = the planner below)
 
 const BOX = new THREE.BoxGeometry(1, 1, 1);
 const CYL = (rt, rb, h, s = 12) => new THREE.CylinderGeometry(rt, rb, h, s);
@@ -30,6 +31,7 @@ export function planStores() {
   if (PLAN) return PLAN;
   PLAN = [];
   if (!L.TOWN) return PLAN;
+  { const Q = planQuarter(); if (Q) { PLAN = Q.stores; return PLAN; } }      // ST1
   const MK = marketSpot(), V = planVaults(), gates = [...L.TGATES, { x: L.GATE.x + L.GATE.nx * 20, z: L.GATE.z + L.GATE.nz * 20 }];
   const free = (x, z) => L.sdPoly(L.OUTER, x, z) >= L.MOAT.off + L.MOAT.half + 9 && L.sdTown(x, z) <= -45 && roadDist(x, z) >= 10.5
     && L.distPolyline(L.RIVER, x, z) >= 16 && (!MK || Math.hypot(x - MK.x, z - MK.z) >= MK.r + 16) && gates.every((g) => Math.hypot(x - g.x, z - g.z) >= 30)
@@ -54,6 +56,7 @@ export function planStores() {
 }
 
 export function buildStores(ctx, api) {
+  { const Y = buildStoreYards(ctx, api); if (Y) return Y; }                                     // ST1: the Treasury Quarter (storeyards.js); null = the old storehouses below
   const { M, height } = api, B = ctx.B, plan = planStores(), list = [];
   if (!plan.length) return { list, setFill() {} };
   const stoneUV = { worldUV: 0.1 }, fill = {};

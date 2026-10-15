@@ -55,6 +55,7 @@ import { buildUnits } from './units.js';
 import { bakeVillage, bakePieces, livePiece } from './village.js';
 import { buildWheat } from './crops.js';
 import { buildTrees, TREE_TIME } from './trees.js';
+import * as ST1 from './storeyards.js';                              // ST1: the Treasury Quarter (the nine storage yards)
 import { S4C } from './tr2_s4c.js';                                   // TR2-S4c: Tripo trees / rocks / bushes / lamps / props / meadow (falls back to the old models; `?s4c=0` = old look)
 import { rockKit, rockGroup, ROCKS } from './sc_rocks.js';
 import { bushKit, BUSH } from './sc_bush.js';
@@ -180,9 +181,10 @@ export async function buildWorld(renderer, scene, Q, progress) {
     },
     crystal(x, y, z) {
       const g = new THREE.OctahedronGeometry(1.6, 0); g.scale(1, 1.9, 1);
-      const cr = new THREE.Mesh(g, M.crystal); cr.position.set(x, y, z); cr.castShadow = false; scene.add(cr);
+      const C1 = ST1.buildCrystal(ctx, M, x, y, z);                                                       // ST1: the monument round the crystal (static dais + library pieces) and the new live crystal (null = the old octahedron)
+      const cr = C1 ? C1.mesh : new THREE.Mesh(g, M.crystal); cr.position.set(x, y, z); cr.castShadow = false; scene.add(cr);        // ST1
       const inner = new THREE.Mesh(new THREE.OctahedronGeometry(0.8, 0).scale(1, 1.9, 1), new THREE.MeshBasicMaterial({ color: new THREE.Color(1.2, 2.6, 4.2), toneMapped: false }));
-      cr.add(inner);
+      if (!C1) cr.add(inner);                                                                              // ST1
       const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: M.glowBlue, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.9 }));
       glow.position.set(x, y, z); glow.scale.setScalar(14); scene.add(glow);
       // light beam into the sky
@@ -225,6 +227,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     plaque(x, y, z, face, w, h) { M.plaqueMat = flags.plaque(x, y, z, face, w, h, B.tagB); },    // the realm's name over the gate (her_flags.setGateName)
   };
 
+  const warmSt1 = ST1.warmYards();                                     // ST1: the quarter's Tripo pieces start loading now (resolves false = the old stores)
   if (DAY) {
     buildFortDay(ctx);
     progress(0.7, 'Building the town…'); await tick();
@@ -238,6 +241,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     } catch (e) { console.warn('castle_tr2: the old castle stays', e); ctx.tr2c = null; }
     buildCastle(ctx);
     progress(0.7, 'Building the town…'); await tick();
+    await warmSt1;                                                      // ST1: (the central crystal of buildBuildings and the vaults / stores below need the quarter's Tripo atlas)
     buildBuildings(ctx);
     // p41: the town shows what B1 plans.  The plan is made in slices on the loading screen (a few ms per slice), the battle targets of its blocks are registered now (before initDestruct), the meshes are
     // baked later, when kit_homes / kit_civic have loaded (a late job, below).  Any failure => the old town, unchanged.
@@ -262,7 +266,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
   // ctx.levelHooks (filled by mines / vaults): (n) => … callbacks run when a level changes
   buildDefenses(ctx);
   const vaults = buildVaults(ctx, { scene, M, Q, A, height }) || { setFill() {}, update() {}, list: [] };
-  const stores = buildStores(ctx, { M, height }) || { list: [], setFill() {} };            // p38: wood / stone / iron / gold / oil / food storehouses
+  const stores = buildStores(ctx, { M, height, scene }) || { list: [], setFill() {} };    // ST1: + scene (the quarter's Tripo meshes)            // p38: wood / stone / iron / gold / oil / food storehouses
   const moat = buildMoat(ctx, { scene, M, Q, A, height, fastHeight: terrain.fastHeight, water }) || { update() {} };
   const falls = buildFalls({ scene, fh: terrain.fastHeight || height }) || { update() {} };
   const fallsA2 = (L.STREAMS || []).map((S) => L.withRiver(S.pts, () => buildFalls({ scene, fh: terrain.fastHeight || height }))).filter(Boolean);      // (A2: one fall at the head of every mountain stream)
