@@ -35,6 +35,7 @@ PY
 ( bash /home/claude/dev/st1r2_test.sh 2>&1 | tail -1 | grep -q "ST1R2 OK" ) && ok "st1r2_test (vault gem: no crown, halo caps, target-id order)" || bad "st1r2_test (vault gem)"
 ( bash /home/claude/dev/gr1_test.sh 2>&1 | tail -1 | grep -q "GR1 OK" ) && ok "gr1_test (roads: dead ends / water / tiers; near-ground map + shader budget)" || bad "gr1_test (roads + near ground)"
 ( bash /home/claude/dev/gr1r2_test.sh 2>&1 | tail -1 | grep -q "GR1_R2 TEST OK" ) && ok "gr1r2_test (horizon colour table, 24 h continuity, night ceiling)" || bad "gr1r2_test (horizon / mountains)"
+( bash /home/claude/dev/gr1r3_test.sh 2>&1 | tail -1 | grep -q "GR1R3 BRIDGES OK" ) && ok "gr1r3_test (bridge-head ramps <= 0.5 m/m, 26 of 26 crossings)" || bad "gr1r3_test (bridge heads)"
 ( bash /home/claude/dev/ui1_menus_test.sh static 2>&1 | tail -1 | grep -q "UI1 MENUS OK" ) && ok "ui1_menus_test static (landscape menu CSS rules; the real-game run is separate: quick ~12 min)" || bad "ui1_menus_test static"
 ( bash /home/claude/dev/t1_test.sh 2>&1 | tail -1 | grep -q "T1 OK" ) && ok "t1_test (building sheets)" || bad "t1_test (building sheets)"
 ( bash /home/claude/dev/ld1_test.sh 2>&1 | tail -1 | grep -q "LD1 OK" ) && ok "ld1_test (loader sword)" || bad "ld1_test (loader sword)"

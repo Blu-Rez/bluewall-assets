@@ -64,6 +64,8 @@ export function buildTerrain(scene, M, quality, T = null, renderer = null, opts 
       for (let k = 0; k < n * n; k++) if (wS[k] > 0) { hs[k] = hb[k] + (hs[k] - hb[k]) * (1 - 0.7 * wS[k]); pos[k * 3 + 1] = hs[k]; }
     }
   }
+  carveBridgeEnds(xs, n, hs);                                                // QA1-001..005: a gentle ramp at the head of every river bridge (before the water / bank / colour passes read hs)
+  for (let k = 0; k < n * n; k++) pos[k * 3 + 1] = hs[k];
   const N = L.NOISE, c = new THREE.Color();
   // how far (m) every vertex is from open water: a two-pass chamfer over the real grid spacing. It drives the lush bank meadow in the ground bake
   const LVW = L.MOAT.level, wdist = new Float32Array(n * n).fill(1e4);
@@ -170,7 +172,7 @@ export function buildTerrain(scene, M, quality, T = null, renderer = null, opts 
             float m = max(abs(vWP.x), abs(vWP.z));
             float wn = (1.0 - smoothstep(uNear - 40.0, uNear - 6.0, m)) * (1.0 - smoothstep(0.34, 0.5, 1.0 - vNy));
             gStp = smoothstep(0.22, 0.5, 1.0 - vNy);
-            vec3 c = mix(texture2D(uBakeF, vTUv, gStp * 3.2).rgb, texture2D(uBakeN, nuv).rgb, wn);
+            vec3 c = mix(texture2D(uBakeF, vTUv, gStp * 3.2).rgb, texture2D(uBakeN, nuv, gStp * 2.6).rgb, wn);       // GR1_R3 (QA1-140): the top-down bake smears on a wall, so steep ground reads it blurred (the rock detail below is projected from the sides)
             c = pow(c, vec3(2.2));
             if (gStp > 0.002) {
               // cliffs: the bake looks straight down, so a wall only gets a few texels (long streaks). Real rock detail is projected from three sides instead.
@@ -182,6 +184,13 @@ export function buildTerrain(scene, M, quality, T = null, renderer = null, opts 
               rc = mix(vec3(dot(rc, vec3(0.3333))), rc, 0.3) * vec3(0.96, 0.98, 1.04);             // the photo is lichen-green: bare grey-blue stone for the mountains
               vec3 dm = clamp(rc / uCliffL, 0.3, 2.2) * (0.7 + 0.6 * mac);
               c *= mix(vec3(1.0), dm, gStp * (1.0 - smoothstep(500.0, 900.0, distance(vWP, cameraPosition)) * 0.5));
+              float nd2 = 1.0 - smoothstep(4.0, 28.0, cd);
+              if (nd2 > 0.001) {   // GR1_R3 (QA1-139): from eye height the 20 m tile is magnified 8x into soft squares: a second projection with a 3 m tile within 28 m (3 reads, steep ground near the camera only)
+                float lod2 = max(0.0, log2(cd * 0.34) + 0.4);
+                vec3 r2 = texture2DLodEXT(uCliff, vWP.zy * 0.31, lod2).rgb * gW.x + texture2DLodEXT(uCliff, vWP.xz * 0.31, lod2).rgb * gW.y + texture2DLodEXT(uCliff, vWP.xy * 0.31, lod2).rgb * gW.z;
+                r2 = mix(vec3(dot(r2, vec3(0.3333))), r2, 0.3);
+                c *= mix(vec3(1.0), clamp(r2 / uCliffL, 0.45, 1.9), gStp * nd2 * 0.75);
+              }
             }
             float nk = 1.0 - smoothstep(25.0, 110.0, distance(vWP, cameraPosition));
             if (nk > 0.001) {
@@ -251,7 +260,7 @@ export function buildTerrain(scene, M, quality, T = null, renderer = null, opts 
   };
   if (G) { G.attach(fastHeight); if (G.detail() > 0) G.build(); }       // GR1 (the map's water test reads the grid, not the noise; 'low' builds nothing until setDetail(>0))
   mesh.userData.mtHaze = MTH;
-  return { mesh, height: L.height, fastHeight, bake, ground: G };
+  return { mesh, height: carvedHeight, fastHeight, bake, ground: G };       // QA1: height = the analytic height with the bridge ramps applied (L.height outside them)
 }
 
 // ------------------------------------------------------------------ ground bake
@@ -392,6 +401,7 @@ export function forestDensity(x, z) {
   d *= smooth(15, 36, L.streamD(x, z));                      // A2: a meadow strip along the mountain streams (the trees stand back, so the water is seen from the game camera)
   d *= smooth(6, 22, Math.hypot(x - L.LAKE.x, z - L.LAKE.z) - L.LAKE.r);
   d *= smooth(8, 20, roadEdge(x, z));
+  d *= 1 - rampMask(x, z);                                   // QA1: the ramps at the bridge heads stay clear (a tree on a cut would float)
   for (const Z of [L.PASTURE, L.CAMP, L.MUSTER, L.LAIR]) d *= smooth((Z.fr ?? Z.r) + 4, (Z.fr ?? Z.r) + 22, Math.hypot(x - Z.x, z - Z.z));
   { const Y = L.stableYard(); if (Y) d *= smooth(Y.r, Y.r + 16, Math.hypot(x - Y.x, z - Y.z)); }   // the stable yard stays open
   d *= smooth(26, 44, hamletD(x, z));                      // the hamlets keep their greens
@@ -399,6 +409,76 @@ export function forestDensity(x, z) {
   d *= smooth(3, 22, wsD(x, z));                           // p38: ... and the worksites their yards (the lumber camps stand at the edge of the forest, so it thins out toward them)
   for (const M of L.MINES) d *= smooth(44, 70, Math.hypot(x - M.x + Math.cos(M.a * Math.PI / 180) * 8, z - M.z + Math.sin(M.a * Math.PI / 180) * 8));
   return d;
+}
+
+// ------------------------------------------------ QA1: the heads of the river bridges (QA1-001..005: bridges 6 / 7 / 8 / 12 / 13)
+// The deck is flat at nav.js DECK (0.72 m), but the river valley of layout.js height() is a V: a 3.6 m wide wall rises 3 - 6 m within ~5 m of the middle of the deck (more in the hills), and on the 2.4 - 8 m
+// render grid that wall reads 1.1 - 2.7 m/m, so the hero reached the end of the walkable deck and stood in front of a wall (her limit is 0.85 m/m).  carveBridgeEnds() cuts, at each end of every river
+// bridge, a ramp along the bridge axis: it starts at the deck level where the bank first rises above the deck and climbs RAMP.slope m/m until it meets the natural bank (daylight); it is flat across the
+// strip (4 m of walking width plus one grid diagonal each side: the render grid is up to 8 m wide here, so a narrower strip would not exist on it) and blends into the bank over RAMP.wing m.  It only ever LOWERS the ground, and only
+// where the bank is higher than the ramp (it raises the river bed at the foot of the bank up to the deck level, and fills a hollow of at most RAMP.maxFill m in the strip of the ramp itself).  An end with no daylight within RAMP.maxLen m, or one that would need a cut deeper than RAMP.maxCut m (a mountain face), is left alone: the hero uses the other end.
+const DECK_Y = 0.72;
+export const RAMP = { slope: 0.5, wing: 5, maxLen: 60, maxCut: 9, maxFill: 8 };
+export let RAMPS = [];       // what carveBridgeEnds() did, one record per bridge end: { bridge, end, ds, dd, cut, hw, d0, d1 } (or { skip: why })
+export function rampMask(x, z) {           // 0..1: how far inside a ramp corridor (+ wings) this spot is; the forest keeps out of it (a tree on a cut would float)
+  let m = 0;
+  for (const R of RAMPS) {
+    if (R.skip) continue;
+    const dx = x - R.x, dz = z - R.z, d = dx * R.nx + dz * R.nz, v = Math.abs(dx * R.tx + dz * R.tz);
+    if (d < R.d0 - 4 || d > R.d1 + 4) continue;
+    m = Math.max(m, 1 - smooth(R.hw + R.wing, R.hw + R.wing + 4, v));
+  }
+  return m;
+}
+// the ground height after one ramp: h = the natural height at (d along the axis from the middle of the deck, v across it).  Before the bank (d <= ds) the ramp line runs on below the deck level down to the river bed:
+// it fills the bed up to that line (never above the deck) and brings a high side down to just under the deck; on the bank it cuts down to the ramp, and where a hollow lies in the strip of the ramp (the river bends
+// across it) it fills up to the ramp, at most maxFill m.  w = 1 across the flat strip, 0 outside the wing.
+function rampH(R, d, v, h) {
+  const w = 1 - smooth(R.hw, R.hw + R.wing, Math.abs(v)); if (w <= 0) return h;
+  const Rl = DECK_Y + R.slope * (d - R.ds);
+  if (d <= R.ds) { if (h < Rl) return h + (Rl - h) * w; const T = Math.max(Rl, DECK_Y - 0.3); return h > T ? h + (T - h) * w : h; }
+  if (h > Rl) return h + (Rl - h) * w;
+  return d <= R.dd && Rl - h <= R.maxFill ? h + (Rl - h) * w : h;
+}
+// the analytic height with the ramps applied (terrain.height: what the props and the trees stand on; the render grid is this sampled every 2.4 - 8 m)
+export function carvedHeight(x, z) {
+  let h = L.height(x, z);
+  for (const R of RAMPS) {
+    if (R.skip) continue;
+    const dx = x - R.x, dz = z - R.z, d = dx * R.nx + dz * R.nz; if (d < R.d0 || d > R.d1) continue;
+    const v = dx * R.tx + dz * R.tz; if (Math.abs(v) > R.hw + R.wing) continue;
+    h = rampH(R, d, v, h);
+  }
+  return h;
+}
+export function carveBridgeEnds(xs, n, hs, opt = {}) {
+  const P = { ...RAMP, ...opt }, SEG = n - 1, BED = -2.2;
+  const lineOf = (v) => { let lo = 0, hi = SEG; if (v <= xs[0]) return 0; if (v >= xs[SEG]) return SEG - 1; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (xs[m] <= v) lo = m; else hi = m; } return lo; };
+  const gap = (v) => { const i = lineOf(v); return xs[i + 1] - xs[i]; };
+  RAMPS = [];
+  (L.RBRIDGES || []).forEach((b, bi) => {
+    const tx = -b.nz, tz = b.nx, hl = b.len / 2, cell = Math.max(gap(b.x), gap(b.z));
+    for (const s of [1, -1]) {
+      const nx = b.nx * s, nz = b.nz * s, at = (d) => L.height(b.x + nx * d, b.z + nz * d);
+      const rec = { bridge: bi + 1, end: s > 0 ? '+n' : '-n', x: b.x, z: b.z, nx, nz, tx, tz };
+      let ds = -1;                                                           // 1) where the bank first rises above the deck (centre line, from the middle outwards)
+      for (let d = 0; d <= hl + 20; d += 0.5) if (at(d) > DECK_Y + 0.05) { ds = d; break; }
+      if (ds < 0) { RAMPS.push({ ...rec, skip: 'the ground stays under the deck' }); continue; }
+      let dd = -1, cut = 0;                                                  // 2) daylight: the first d where the natural bank is no higher than the ramp R = deck + slope * (d - ds)
+      for (let d = ds; d <= ds + P.maxLen; d += 0.5) { const h = at(d), R = DECK_Y + P.slope * (d - ds); if (h <= R + 0.02) { dd = d; break; } cut = Math.max(cut, h - R); }
+      if (dd < 0 || cut > P.maxCut) { RAMPS.push({ ...rec, ds, cut, skip: dd < 0 ? 'no daylight within ' + P.maxLen + ' m' : 'cut ' + cut.toFixed(1) + ' m > ' + P.maxCut + ' m' }); continue; }
+      const hw = Math.min(13, Math.max(b.wid / 2 + 1, 2 + 1.42 * cell)), wing = Math.min(10, Math.max(P.wing, 1.2 * cut));       // 3) flat half width (every triangle that touches the 4 m wide strip has to lie on the ramp: 2 m + one grid diagonal); the cut walls fade over the wing (deeper cut = wider wing)
+      const d0 = Math.max(0, ds - cell - (DECK_Y - BED) / P.slope), d1 = dd + cell;                                            // the ramp line runs on below the deck level down to the river bed: the foot of the bank gets the same gentle slope instead of the V wall
+      Object.assign(rec, { ds, dd, cut, hw, wing, d0, d1, cell, slope: P.slope, maxFill: P.maxFill }); RAMPS.push(rec);
+      const ext = d1 + wing + hw, i0 = lineOf(b.x - ext), i1 = lineOf(b.x + ext) + 1, j0 = lineOf(b.z - ext), j1 = lineOf(b.z + ext) + 1;
+      for (let j = Math.max(0, j0); j <= Math.min(SEG, j1); j++) for (let i = Math.max(0, i0); i <= Math.min(SEG, i1); i++) {
+        const dx = xs[i] - b.x, dz = xs[j] - b.z, d = dx * nx + dz * nz, v = Math.abs(dx * tx + dz * tz);
+        if (d < d0 || d > d1) continue;
+        const k = j * n + i; hs[k] = rampH(rec, d, v, hs[k]);
+      }
+    }
+  });
+  return RAMPS;
 }
 
 // ------------------------------------------------ ground painting (splat)
@@ -508,14 +588,18 @@ function paintFar() {
   L.FARMS.forEach((F, fi) => {
     g.save(); g.translate(W(F.x), W(F.z)); g.rotate(-F.rot);
     const fw = F.w * PX, fd = F.d * PX, cols = 3, rows = 2;
+    // GR1_R3 (QA1-115): the 3 m gaps between the plots were bare meadow, so the plots met in a hard straight seam; they are now beaten-earth headlands (a lane to drive a cart down), and every plot
+    // has a soft double edge and furrows that read at 2-3 px (the old 0.4-alpha 1.3 px lines vanished)
+    g.fillStyle = 'rgba(118,98,64,0.62)'; g.fillRect(-fw / 2 - 0.8 * PX, -fd / 2 - 0.8 * PX, fw + 1.6 * PX, fd + 1.6 * PX);
     for (let k = 0; k < cols * rows; k++) {
       const cx = k % cols, cy = Math.floor(k / cols);
       const x0 = -fw / 2 + cx * fw / cols + 1.5 * PX, y0 = -fd / 2 + cy * fd / rows + 1.5 * PX, w = fw / cols - 3 * PX, h = fd / rows - 3 * PX;
       const col = crops[(k + fi * 2) % crops.length];
+      g.fillStyle = `rgba(${col.join(',')},0.45)`; g.fillRect(x0 - 0.7 * PX, y0 - 0.7 * PX, w + 1.4 * PX, h + 1.4 * PX);        // soft shoulder
       g.fillStyle = `rgba(${col.join(',')},0.96)`; g.fillRect(x0, y0, w, h);
-      g.fillStyle = 'rgba(40,32,20,0.4)';
+      g.fillStyle = 'rgba(40,32,20,0.5)';
       const vertical = (k + fi) % 2 === 0;
-      for (let q = 1.2 * PX; q < (vertical ? w : h); q += 2.4 * PX) vertical ? g.fillRect(x0 + q, y0, Math.max(1, 0.7 * PX), h) : g.fillRect(x0, y0 + q, w, Math.max(1, 0.7 * PX));
+      for (let q = 1.2 * PX; q < (vertical ? w : h); q += 2.4 * PX) vertical ? g.fillRect(x0 + q, y0, Math.max(1.6, 1.0 * PX), h) : g.fillRect(x0, y0 + q, w, Math.max(1.6, 1.0 * PX));
     }
     g.restore();
   });
@@ -727,7 +811,8 @@ export function buildWater(scene, hf = L.height) {
         float fres = 0.02 + 0.98*pow(1.0 - ndv, 5.0);
         vec3 R = reflect(-V, N);
         vec3 sky = mix(uSkyH * 0.8, uSkyZ * 0.9, clamp(R.y*1.3, 0.0, 1.0));
-        sky = mix(sky, mix(sky, vec3(0.16, 0.42, 0.86) * (0.25 + 0.75*uAmb), 0.5) * vec3(0.8, 0.92, 1.12), 0.75 - 0.25*nat);   // the sky in the water is bluer than the sky
+        float dusk = smoothstep(0.06, 0.34, uNight) * (1.0 - smoothstep(0.6, 0.92, uNight));                      // GR1_R3 (QA1-032): at dusk / dawn the water reflects the real sky (orange / violet), not the daytime blue
+        sky = mix(sky, mix(sky, vec3(0.16, 0.42, 0.86) * (0.25 + 0.75*uAmb), 0.5) * vec3(0.8, 0.92, 1.12), (0.75 - 0.25*nat) * (1.0 - 0.9*dusk));   // the sky in the water is bluer than the sky
         sky *= 1.0 - 0.35*uNight;
         // the mirror without a mirror: march the reflected ray over the baked heights — the town wall (stone + the glowing rune band at night),
         // the banks and the treeline (a dark ragged band along the far shore). 7 steps of growing length: 1.4 .. 28 m
@@ -754,6 +839,7 @@ export function buildWater(scene, hf = L.height) {
         vec3 body = mix(mix(uShallow, uShallowN, nat), mix(uMid, uMidN, nat), smoothstep(0.0, 0.6, dk));
         body = mix(body, mix(uDeep, uDeepN, nat), smoothstep(0.45, 1.0, dk));
         body *= (0.1 + 0.9*uAmb) * (0.9 + 0.2 * (n1.x*0.5 + 0.5));
+        { vec3 lcn = uLCol / max(max(uLCol.r, uLCol.g), max(uLCol.b, 0.05)); body *= mix(vec3(1.0), mix(vec3(1.0), lcn, 0.7) * 0.75, dusk); }     // GR1_R3 (QA1-032): at dusk the body of the water is lit by the orange sun (blue x orange = a deep teal), not by a neutral light: the saturated electric blue is gone
         // caustics: a bright web dancing on the bed of the shallows (daylight only)
         float cw = 1.0 - smoothstep(0.0, 0.22, abs(n2.x*0.6 + n3.y*0.8));
         body += vec3(0.42, 0.62, 0.55) * cw * (1.0 - smoothstep(0.15, 1.2, depth)) * uDay * 0.16 * lod * calm;
@@ -779,7 +865,7 @@ export function buildWater(scene, hf = L.height) {
         vec3 Ls = normalize(uL);
         float sp = max(dot(R, Ls), 0.0);
         vec3 lc = mix(uLCol, vec3(0.74, 0.84, 1.0) * (0.5 + 0.35*length(uLCol)), uNight * 0.8);
-        col += uLCol * (pow(sp, 520.0) * 2.4 + pow(sp, 36.0) * 0.12) * calm * (1.0 - uNight);
+        col += uLCol * min(pow(sp, 520.0) * 2.4 + pow(sp, 36.0) * 0.12, 0.85 - 0.45*dusk) * calm * (1.0 - uNight);       // GR1_R3 (QA1-119): capped, so the low sun does not bloom into a white bar on the water
         if (uNight > 0.02) {
           vec3 Lm = normalize(vec3(cf.x, max(0.2, -cf.y * 0.8), cf.z));
           float az = 1.0 - dot(normalize(R.xz + 1e-5), normalize(Lm.xz + 1e-5)), el = R.y - Lm.y;

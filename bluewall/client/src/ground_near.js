@@ -93,6 +93,20 @@ function buildMap(res, extraPaved, H = L.height) {
   if (L.CAMP) patch(L.CAMP.x, L.CAMP.z, L.CAMP.r, 0.75, false);
   if (L.MUSTER && L.MUSTER.r > 0) patch(L.MUSTER.x, L.MUSTER.z, L.MUSTER.r + 2, 0.7, false);
   if (L.PASTURE) { patch(L.PASTURE.x, L.PASTURE.z, L.PASTURE.r * 0.7, 0.35, false); patch(L.PASTURE.x, L.PASTURE.z, 6, 0.6, true); }
+  // GR1_R3 (QA1-090 / 123 / 127): the foot of the citadel wall and of its towers gets a ragged band of trodden earth on the outside: the wall no longer meets the grass in a razor-straight line
+  if (L.OUTER && L.WALL && L.WALL.outer) {
+    const T2 = L.WALL.outer.T / 2, BAND = 3.2, P = L.OUTER, hsh = (i, j) => { const q = Math.sin(i * 127.1 + j * 311.7) * 43758.5453; return q - Math.floor(q); };   // v2: wider, stronger, ragged edge (per-texel hash)
+    for (let e = 0; e < P.length; e++) {
+      const [ax, az] = P[e], [bx, bz] = P[(e + 1) % P.length], dx = bx - ax, dz = bz - az, l2 = dx * dx + dz * dz || 1;
+      const [i0, j0, i1, j1] = bb(Math.min(ax, bx), Math.min(az, bz), Math.max(ax, bx), Math.max(az, bz), T2 + BAND * 1.4 + 1);
+      for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
+        const x = -HALF + (i + 0.5) * px, z = -HALF + (j + 0.5) * px, t = Math.max(0, Math.min(1, ((x - ax) * dx + (z - az) * dz) / l2)), d = Math.hypot(x - ax - dx * t, z - az - dz * t) - T2;
+        if (d < -0.3 || d > BAND * 1.4 || L.sdPoly(P, x, z) <= 0) continue;           // outside the wall only
+        const u = Math.min(1, d / (BAND * (0.6 + 0.8 * hsh(i, j)))), a = 0.85 * (1 - u * u * (3 - 2 * u)), k = j * N + i; if (a > wear[k]) wear[k] = a;
+      }
+    }
+    for (const [vx, vz] of P) patch(vx, vz, L.WALL.outer.R + 0.8, 0.7, false);
+  }
   // pack.  A road that lies under water is not painted (bridges are real geometry).
   for (let k = 0; k < N * N; k++) {
     const j = (k / N) | 0, i = k - j * N;
