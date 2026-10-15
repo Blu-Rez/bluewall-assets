@@ -4,6 +4,8 @@
 //   * every production building has a live queue: the soldiers come out ONE BY ONE, tap a queued soldier to take it out again (full refund),
 //     Rush finishes the whole queue for turquoise
 //   * the banner emblem (the emoji the enemy sees on your walls and flags) is picked from the round button in the header
+// AR1: every soldier tile is its design CARD (unitcards.js: web/assets/units/c_<look>.webp, lazy), the little i opens the INFO PAGE (the big design sheet, zoom, stats, levels);
+//   tap / hold on the card still trains exactly as before.
 // Rules live on the server (military.py); taps are batched (450 ms) into one train / brew request.
 //   createArmyUI(mount, { econ, ui, audio, onAttack }) -> { open(), close(), update(), readiness(), attack() }
 import { findOpponent } from './search.js';
@@ -15,6 +17,8 @@ import { SPELLS, SPELL_ORDER, spellIcon } from './spells.js';
 import { crestImg, normEmblem } from './emblems.js';
 import { RARITY, rarityStyle } from './rarity.js';
 import { TIER_AT, TIER_COL, TIER_NAME, PERK } from './unitlook.js';
+import { ico } from './ui_theme.js';
+import { createUnitPage, ensureCss, cardImg, facePic, lookAt, levelFor, rangesOf, hasLook, statGrid, section, MAX_LEVEL } from './unitcards.js';
 
 export const NAME = { spear: 'Spearman', sword: 'Swordsman', guard: 'Shield Guard', archer: 'Archer', cavalry: 'Knight Cavalry', axerider: 'Axe Rider', pegasus: 'Winged Horse', baby: 'Baby Dragon', dragon: 'Dragon', catapult: 'Catapult', giant: 'Troll Giant', imp: 'Frost Imp', mage: 'Bone Mage', ram: 'Battering Ram', cannon: 'Cannon', werewolf: 'Werewolf', trebuchet: 'Trebuchet', hill: 'Hill Giant', shieldmaiden: 'Shieldmaiden', lord: 'Mounted Lord', dragonling: 'Dragonling', legionary: 'Legionary', captain: 'Captain', ogre: 'Ogre', gryphon: 'Gryphon', lich: 'Lich', treant: 'Treant', gryphonknight: 'Gryphon Knight', darkrider: 'Dark Rider', baby3: 'Triple Whelp', dragon3: 'Triple Dragon' };
 const DESC = {
@@ -78,8 +82,11 @@ export const ICON = {
   ready: 'M5 19L17 7M14 6h4v4M4 20l2-2M19 19L7 7M10 6H6v4M20 20l-2-2',
 };
 export const icon = (k, sz = 26) => `<svg viewBox="0 0 24 24" width="${sz}" height="${sz}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${ICON[k] || ICON.ready}"/></svg>`;
-// the round portrait of a soldier (3D render) or the line icon when there is none
-export const unitPic = (k, sz = 40) => PORTRAIT[k] ? `<img src="${PORTRAIT[k]}" width="${sz}" height="${sz}" alt="" draggable="false" style="border-radius:50%;object-fit:cover;display:block">` : icon(k, Math.round(sz * 0.7));
+// the round portrait of a soldier: the face of its design card (AR1) - else the old 3D render, else the line icon.  `lvl` picks the look; unknown -> the level last seen in the army state
+const LVL = {};
+export const unitPic = (k, sz = 40, lvl) => (hasLook(k) && facePic(k, levelFor(k, lvl == null ? LVL[k] : lvl), sz))
+  || (PORTRAIT[k] ? `<img src="${PORTRAIT[k]}" width="${sz}" height="${sz}" alt="" draggable="false" style="border-radius:50%;object-fit:cover;display:block">` : icon(k, Math.round(sz * 0.7)));
+const compact = (n) => { n = +n || 0; return n >= 10000 ? Math.round(n / 1000) + 'k' : n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k' : String(n >= 10 ? Math.round(n) : Math.round(n * 10) / 10); };
 const WHY = { gems: 'Not enough gems', locked: 'Upgrade the building first', family_full: 'This building is full', army_full: 'Army housing is full (upgrade the Training Ground)', not_built: 'Build it first',
   no_training: 'Build the Training Ground', slow: 'Too fast, try again', bad: 'Not possible', offline: 'Offline preview', closed: 'Attacks are not open yet', no_army: 'Train some soldiers first', queue_full: 'The queue is full', too_long: 'The queue is too long',
   spell_full: 'The Forge cannot hold more spells', hero_cap: 'No free hero slot (at most 3 of each hero)' };
@@ -102,27 +109,28 @@ const CSS = `
 @keyframes bwaGleam{0%,55%{left:-60%;opacity:0}60%{opacity:.9}100%{left:130%;opacity:0}}
 .bwa-btn .lb{position:absolute;left:0;right:0;bottom:0;text-align:center;font-size:11px;letter-spacing:2.4px;color:#ffe6e8;text-shadow:0 1px 0 #01060f,1px 0 0 #01060f,-1px 0 0 #01060f,0 0 6px rgba(0,0,0,.85);padding-left:2px}
 .bwa-btn.off{filter:grayscale(.6) brightness(.8)}
-.bwa-chip{pointer-events:auto;position:absolute;left:calc(14px + var(--sl));bottom:calc(var(--sb) + 118px);height:30px;padding:0 12px 0 8px;display:flex;align-items:center;gap:5px;border-radius:15px;font-size:11.5px;letter-spacing:.8px;color:#cfe8ff;
+.bwa-chip{pointer-events:auto;position:absolute;left:calc(14px + var(--sl));bottom:calc(var(--sb) + 118px);height:44px;padding:0 15px 0 11px;display:flex;align-items:center;gap:6px;border-radius:22px;font-size:11.5px;letter-spacing:.8px;color:#cfe8ff;
   background:linear-gradient(180deg,rgba(24,52,104,.92),rgba(5,14,36,.94));border:1px solid rgba(140,200,255,.45);box-shadow:0 3px 10px rgba(0,0,0,.5);cursor:pointer;transition:opacity .6s}
 .bwa-chip svg{width:17px;height:17px}.bwa-chip i{font-style:normal;color:#7dffb5;margin-left:2px}
 .bwa{position:absolute;inset:0;pointer-events:auto;z-index:12;background:rgba(0,3,10,.66);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;font-family:'Libre Baskerville','Noto Sans Tai Viet',Georgia,serif;color:#eaf6ff;-webkit-tap-highlight-color:transparent}
 .bwa.on{opacity:1;visibility:visible}
 .bwa *{box-sizing:border-box}
-.bwa-pan{position:absolute;left:max(22px,calc(var(--sl) + 16px));right:max(22px,calc(var(--sr) + 16px));top:calc(var(--st) + max(64px,12vh));bottom:calc(var(--sb) + max(64px,12vh));max-width:440px;margin:0 auto;display:flex;flex-direction:column;border-radius:22px;overflow:hidden;
+.bwa-pan{position:absolute;left:max(14px,calc(var(--sl) + 10px));right:max(14px,calc(var(--sr) + 10px));top:calc(var(--st) + max(12px,2.5vh));bottom:calc(var(--sb) + max(12px,2.5vh));max-width:440px;margin:0 auto;display:flex;flex-direction:column;border-radius:22px;overflow:hidden;
   background:linear-gradient(180deg,#0d2a5c,#050f26 38%,#020712);border:1.5px solid rgba(150,200,255,.4);box-shadow:0 20px 60px rgba(0,0,0,.7),inset 0 1px 0 rgba(200,230,255,.25);transform:translateY(18px) scale(.98);transition:transform .3s}
 .bwa.on .bwa-pan{transform:none}
 .bwa-h{display:flex;align-items:center;gap:11px;padding:12px 12px 6px 12px}
 .bwa-em{flex:0 0 auto;position:relative;width:48px;height:52px;display:grid;place-items:center;cursor:pointer;color:#fff;background:none;border:0;padding:0;font-family:inherit;filter:drop-shadow(0 3px 5px rgba(0,0,0,.55))}
 .bwa-em:after{content:"✎";position:absolute;right:-4px;bottom:-4px;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;font-size:11px;background:#1b4fb8;border:1.5px solid #cfe6ff;color:#fff}
 .bwa-h .t{flex:1;min-width:0}.bwa-h .t b{display:block;font-size:19px;color:#e6f6ff;letter-spacing:.5px}.bwa-h .t span{font-size:11.5px;color:#8fb4e0;letter-spacing:.6px}.bwa-h .t span b{display:inline;font-size:inherit;color:#bfe6ff}
-.bwa-x{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(150,200,255,.25);font-size:14px;cursor:pointer}
+.bwa .bwnav{width:44px;height:44px}   /* (the hub's back chevron, put into this panel by assist.js, is 34 px there: 44 px here) */
+.bwa-x{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(150,200,255,.25);font-size:15px;cursor:pointer}
 .bwa-hs{margin:4px 14px 2px}
 .bwa-hs .r{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:#a9c4e6}.bwa-hs .r b{color:#eaf6ff;font-size:14px}.bwa-hs .r em{font-style:normal;color:#7dffb5}
 .bwa-bar{position:relative;margin-top:5px;height:11px;border-radius:6px;background:#020814;border:1px solid rgba(120,190,255,.35);overflow:hidden}
 .bwa-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:linear-gradient(90deg,#2b86ff,#7ef0ff);box-shadow:0 0 8px rgba(110,232,255,.7);transition:width .4s}
 .bwa-bar i.q{background:repeating-linear-gradient(45deg,#2f9f6a,#2f9f6a 5px,#1f7a4f 5px,#1f7a4f 10px);box-shadow:none;opacity:.9}
 .bwa-tabs{display:flex;gap:6px;margin:10px 12px 0;padding:4px;border-radius:14px;background:rgba(2,8,20,.7);border:1px solid rgba(120,190,255,.2)}
-.bwa-tabs button{flex:1;padding:9px 6px;border-radius:11px;border:0;background:transparent;color:#8fb4e0;font-weight:700;font-size:13px;line-height:1;font-family:inherit;letter-spacing:1.2px;cursor:pointer;text-transform:uppercase}
+.bwa-tabs button{flex:1;min-height:44px;padding:9px 6px;border-radius:11px;border:0;background:transparent;color:#8fb4e0;font-weight:700;font-size:13px;line-height:1;font-family:inherit;letter-spacing:1.2px;cursor:pointer;text-transform:uppercase}
 .bwa-tabs button.on{color:#fff;background:linear-gradient(180deg,#3d8cff,#1b4fb8);box-shadow:0 2px 8px rgba(40,110,230,.5)}
 .bwa-body{flex:1;overflow-y:auto;padding:6px 10px 14px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .bwa-ft{padding:8px 12px 12px;background:linear-gradient(0deg,#020712 60%,rgba(2,7,18,0))}
@@ -131,7 +139,7 @@ const CSS = `
 .bwa-sec{margin:10px 2px 4px;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:#7fa6d8;display:flex;justify-content:space-between}
 .bwa-lane{margin:7px 0;padding:9px 10px;border-radius:14px;background:linear-gradient(180deg,rgba(40,90,170,.2),rgba(10,30,70,.25));border:1px solid rgba(120,190,255,.28)}
 .bwa-lane .hd{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#cfe6ff}.bwa-lane .hd b{flex:1;font-size:13px;color:#eaf6ff}.bwa-lane .hd .tm{color:#7ef0ff;font-variant-numeric:tabular-nums}
-.bwa-lane .rush{padding:5px 9px;border-radius:10px;border:1px solid #bff6ff;background:linear-gradient(180deg,#6ff0ff,#1b86c8);color:#021;font-weight:700;font-size:12px;line-height:1;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:3px}
+.bwa-lane .rush{min-height:44px;padding:5px 12px;border-radius:10px;border:1px solid #bff6ff;background:linear-gradient(180deg,#6ff0ff,#1b86c8);color:#021;font-weight:700;font-size:12px;line-height:1;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:3px}
 .bwa-lane .rush:disabled{opacity:.45;filter:grayscale(.6)}.bwa-lane .rush .gem3{width:15px;height:15px}
 .bwa-lane .it{display:flex;gap:7px;margin-top:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.bwa-lane .it::-webkit-scrollbar{display:none}
 .bwa-lane .mi{flex:0 0 auto;position:relative;width:46px;height:46px;border-radius:50%;cursor:pointer;touch-action:pan-x;background:#0a1c3e;border:2px solid #6fa8e8;padding:0}
@@ -140,8 +148,8 @@ const CSS = `
 .bwa-lane .mi .rm{position:absolute;left:-5px;top:-5px;width:17px;height:17px;border-radius:50%;display:grid;place-items:center;font-size:12px;line-height:1;background:#b81f34;border:1.5px solid #ffc4c9;color:#fff}
 .bwa-lane .mi svg{position:absolute;inset:0;margin:auto;color:#cfe9ff}
 .bwa-lane .hint{margin-top:5px;font-size:10.5px;color:#7f9cc4}
-.bwa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
-.bwa-c{position:relative;display:flex;flex-direction:column;align-items:center;padding:6px 4px 7px;border-radius:15px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:pan-y;transition:transform .12s,box-shadow .12s;
+.bwa-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}   /* (the rarity tags stick out 8 px above the cards: keep them clear of the heading) */
+.bwa-c{position:relative;min-width:0;display:flex;flex-direction:column;align-items:center;padding:6px 4px 7px;border-radius:15px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:pan-y;transition:transform .12s,box-shadow .12s;
   background:linear-gradient(180deg,#1b3f80,#08162f);border:1.5px solid var(--rc,#7fa6d8);box-shadow:0 3px 9px rgba(0,0,0,.5),0 0 10px var(--rg,transparent),inset 0 1px 0 rgba(200,230,255,.3)}
 .bwa-c .rt{position:absolute;left:50%;top:-8px;transform:translateX(-50%);padding:0 7px;height:15px;line-height:15px;border-radius:8px;font-size:8.5px;font-style:normal;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;white-space:nowrap;color:#06122e;background:var(--rc);box-shadow:0 1px 4px rgba(0,0,0,.6);z-index:2}
 .bwa-c:active:not(.lk){transform:scale(.95)}
@@ -149,14 +157,14 @@ const CSS = `
 .bwa-c .pic{width:100%;aspect-ratio:1/0.92;border-radius:11px;overflow:hidden;display:grid;place-items:center;background:radial-gradient(circle at 50% 30%,#17356d,#050d20);color:#bfe6ff}
 .bwa-c .pic img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
 .bwa-c .pic svg{width:46%;height:46%}
-.bwa-c.sp .pic{background:radial-gradient(circle at 50% 35%,#162f60,#050d20)}.bwa-c.sp .pic svg{width:74%;height:74%}
+.bwa-c.sp .pic{background:radial-gradient(circle at 50% 35%,#162f60,#050d20)}.bwa-c .inf:before{content:"i";position:absolute;right:5px;bottom:5px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:italic 700 13px/1 Georgia,serif;color:#fff3c8;background:rgba(10,6,2,.78);border:1px solid rgba(240,200,120,.75);box-shadow:0 1px 4px rgba(0,0,0,.6)}.bwa-c.sp .pic svg{width:74%;height:74%}
 .bwa-c b.nm{margin-top:5px;font-size:11.5px;color:#eaf6ff;text-align:center;line-height:1.15;min-height:2.3em;display:flex;align-items:center}
 .bwa-c .cs{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;font-size:11.5px;color:#e6f2ff;margin-top:2px;min-height:17px}.bwa-c .cs span{display:inline-flex;align-items:center;gap:2px}.bwa-c .cs span.no{color:#ff9aa8}.bwa-c .cs .gem3{width:15px;height:15px}
 .bwa-c .pic{position:relative}.bwa-c .lvb{position:absolute;left:4px;bottom:4px;padding:1px 6px;border-radius:8px;font-size:10px;font-style:normal;font-weight:800;color:#06122e;background:var(--tc);box-shadow:0 1px 3px rgba(0,0,0,.6);z-index:2}
 .bwa-c .own{position:absolute;left:4px;top:4px;padding:1px 7px;border-radius:9px;font-size:12px;font-style:normal;font-weight:700;color:#fff;background:rgba(2,8,20,.82);border:1px solid rgba(150,200,255,.5);text-shadow:0 1px 0 #000}
 .bwa-c .qd{position:absolute;right:4px;top:4px;padding:1px 7px;border-radius:9px;font-size:12px;font-style:normal;font-weight:700;color:#fff;background:linear-gradient(180deg,#38c47a,#1c7a4a);border:1px solid #b6ffd6;display:none}
 .bwa-c.has .qd{display:block}
-.bwa-c .inf{position:absolute;right:4px;bottom:4px;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;font:italic 700 11px/1 Georgia,serif;color:#cfe6ff;background:rgba(2,8,20,.75);border:1px solid rgba(150,200,255,.5)}
+.bwa-c .inf{position:absolute;right:0;bottom:0;width:44px;height:44px;font-size:0;cursor:pointer}
 .bwa-c.lk{cursor:default}.bwa-c.lk .pic{filter:grayscale(.85) brightness(.5)}.bwa-c.lk .lock{display:flex}.bwa-c .lock{display:none;position:absolute;left:0;right:0;top:10%;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;color:#fff;text-align:center;padding:0 6px;text-shadow:0 1px 0 #000,0 0 6px #000;pointer-events:none}
 .bwa-c .lock i{font-style:normal;font-size:22px}
 .bwa-c.full:not(.lk) .pic{filter:saturate(.6) brightness(.8)}
@@ -169,19 +177,19 @@ const CSS = `
 .bwa-gd{margin:2px 0 10px;padding:8px 12px;border-radius:14px;background:linear-gradient(180deg,rgba(40,90,190,.35),rgba(6,20,50,.6));border:1px solid rgba(150,200,255,.45);text-align:center;color:#dfeeff}
 .bwa-gd>b{display:block;font-size:13px;margin-bottom:6px;color:#eaf6ff}.bwa-gd.off{opacity:.65}.bwa-gd.off span{font-size:12px;color:#b9d2f0}
 .bwa-gd .gc{display:flex;align-items:center;justify-content:center;gap:14px}.bwa-gd .gc em{font-style:normal;font-size:20px;font-weight:800;min-width:60px}.bwa-gd .gc em i{font-style:normal;font-size:13px;opacity:.7;font-weight:600}
-.bwa-gd button{width:40px;height:40px;border-radius:50%;border:1.5px solid #bcd9ff;background:linear-gradient(180deg,#2d63c7,#0e2a66);color:#fff;font-size:22px;font-weight:700;line-height:1}.bwa-gd button:disabled{opacity:.35}
+.bwa-gd button{width:44px;height:44px;border-radius:50%;border:1.5px solid #bcd9ff;background:linear-gradient(180deg,#2d63c7,#0e2a66);color:#fff;font-size:22px;font-weight:700;line-height:1}.bwa-gd button:disabled{opacity:.35}
 .bwa-gd small{display:block;margin-top:7px;font-size:11.5px;line-height:1.5;color:#b9d2f0}
 .bwa-sheet .st{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.bwa-sheet .st span{padding:4px 10px;border-radius:10px;font-size:12px;color:#dfeeff;background:rgba(2,8,20,.5);border:1px solid rgba(150,200,255,.3)}
 .bwa-sheet .st span .gem3{width:15px;height:15px;vertical-align:-3px}
 .bwa-emg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
 .bwa-emg button{aspect-ratio:1;border-radius:16px;border:2px solid rgba(160,205,255,.22);background:radial-gradient(circle at 50% 30%,rgba(40,80,150,.45),rgba(5,12,28,.85));display:grid;place-items:center;cursor:pointer;padding:4px;color:#fff;font-family:inherit}
 .bwa-emg button.on{border-color:#8fd8ff;box-shadow:0 0 0 2px rgba(120,200,255,.4),0 0 16px rgba(80,170,255,.7)}
-@media (orientation:landscape) and (max-height:560px){.bwa-pan{max-width:560px;left:calc(14px + var(--sl));right:calc(14px + var(--sr));top:calc(var(--st) + 22px);bottom:calc(var(--sb) + 22px)}.bwa-btn{transform:scale(.8)}.bwa-grid{grid-template-columns:repeat(5,1fr)}}
+@media (orientation:landscape) and (max-height:560px){.bwa-pan{max-width:560px;left:calc(14px + var(--sl));right:calc(14px + var(--sr));top:calc(var(--st) + 22px);bottom:calc(var(--sb) + 22px)}.bwa-btn{transform:scale(.8)}.bwa-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
 `;
 
 export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) {
   const host = (ui && ui.root) || mount;
-  const stEl = document.createElement('style'); stEl.textContent = CSS; document.head.appendChild(stEl);
+  const stEl = document.createElement('style'); stEl.textContent = CSS; document.head.appendChild(stEl); ensureCss();
   const btn = document.createElement('div'); btn.className = 'bwa-btn';
   btn.innerHTML = `<div class="ring"></div><div class="core">${icon('ready', 34)}<b></b></div><div class="lb">ATTACK</div>`;
   const chip = document.createElement('div'); chip.className = 'bwa-chip'; chip.innerHTML = `${icon('guard', 17)}<span>ARMY</span><i></i>`;
@@ -193,6 +201,7 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
     <div class="bwa-ft"><button data-a="attack">⚔  FIND A TARGET</button></div>
     <div class="bwa-ov"></div></div>`;
   host.appendChild(btn); host.appendChild(chip); host.appendChild(pan);
+  const page = createUnitPage(host);                                                                      // AR1: the full-screen info page of a soldier (unitcards.js)
   const $ = (s) => pan.querySelector(s);
   const HS = $('.bwa-hs'), BODY = $('.bwa-body'), OV = $('.bwa-ov'), EM = $('.bwa-em'), SUB = $('.bwa-h .t span');
   const S = { open: false, tab: 'troops', pend: {}, tm: {}, chain: Promise.resolve(), busy: false, lastGet: 0, hold: null };
@@ -242,10 +251,11 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
     return { items, done, left: Math.max(0, q[q.length - 1].fin - t), headU: h.u, nextIn: Math.max(0, h.fin - (remain - 1) * h.t - t) };
   }
 
+  const syncLv = (a) => { for (const u in a.units) LVL[u] = a.units[u].ulv; };                   // (AR1: the level each soldier's picture is chosen by; read by unitPic for the building sheet)
   // ------------------------------------------------------------------ top button / chip
   function updateBtn() {
     const a = A(); if (!a || !a.fam || !a.spell) { btn.style.display = chip.style.display = 'none'; return; }
-    btn.style.display = chip.style.display = '';
+    syncLv(a); btn.style.display = chip.style.display = '';
     btn.style.setProperty('--p', a.ready); btn.querySelector('b').textContent = a.ready + '%';
     btn.classList.toggle('hot', a.ready >= 40 && a.attack); btn.classList.toggle('off', !a.attack || a.space <= 0);
     const q = Object.values(a.fam).filter((f) => f.q.length).length + (a.spell.q.length ? 1 : 0); chip.querySelector('i').textContent = q ? '· ' + q : '';
@@ -257,11 +267,13 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
     const d = DEFS.units[u], row = a.units[u], f = a.fam[d.fam]; if (!row || !f) return '';       // (an older server without this unit)
     const lk = !row.open, p = S.pend[pk('u', u)] || 0;
     const ln = laneNow(f.q), queued = ln.items.filter((b) => b.u === u).reduce((s, b) => s + b.n, 0) + p, owned = row.n + (ln.headU === u ? ln.done : 0);
-    const lock = lk ? `<div class="lock"><i>🔒</i>${f.lv ? FAM[d.fam] + ' Lv ' + d.lv : 'Build the ' + FAM[d.fam]}</div>` : '';
+    const lock = lk ? `<div class="lock"><i>${ico('lock', 24)}</i>${f.lv ? FAM[d.fam] + ' Lv ' + d.lv : 'Build the ' + FAM[d.fam]}</div>` : '';
     const tier = row.tier | 0, lvb = !lk && row.ulv ? `<i class="lvb" style="--tc:${TIER_COL[tier]}">Lv ${row.ulv}</i>` : '';
     const hero = row.hero || null, noSlot = !!hero && hero.held + (S.pend[pk('u', u)] || 0) >= hero.cap, full = !lk && (r.fam[d.fam] < d.space || r.all < d.space || noSlot);
-    return `<div class="bwa-c${lk ? ' lk' : ''}${queued ? ' has' : ''}${full ? ' full' : ''}" data-k="u" data-id="${u}" data-r="${RARITY[u].k}" style="${rarityStyle(u)}"><div class="pic">${PORTRAIT[u] ? `<img src="${PORTRAIT[u]}" alt="" draggable="false">` : icon(u, 40)}${lvb}</div>${lock}
-      <i class="rt">${RARITY[u].name}</i><i class="own" data-own="${u}">×${fmtN(owned)}${hero ? `/${hero.max}` : ''}</i>${(a.guard && a.guard[u]) ? `<i class="gdb" title="Castle guardians">🛡${a.guard[u]}</i>` : ''}<i class="qd" data-qd="${u}">+${queued}</i><b class="nm">${NAME[u]}</b><div class="cs">${costHtml(d.cost, r)}</div><span class="inf" data-a="info" data-k="u" data-id="${u}">i</span></div>`;
+    const art = (hasLook(u) && cardImg(u, levelFor(u, row.ulv))) || (PORTRAIT[u] ? `<img data-uk="${u}" src="${PORTRAIT[u]}" alt="" draggable="false">` : icon(u, 40));     // (AR1: the design card; the old 3D render only when a kind has no card)
+    return `<div class="bwa-c u${lk ? ' lk' : ''}${queued ? ' has' : ''}${full ? ' full' : ''}" data-k="u" data-id="${u}" data-r="${RARITY[u].k}" style="${rarityStyle(u)}"><div class="pic">${art}${lvb}${lock}
+      <i class="own" data-own="${u}">×${fmtN(owned)}${hero ? `/${hero.max}` : ''}</i>${(a.guard && a.guard[u]) ? `<i class="gdb" title="Castle guardians">${ico('shield', 11)} ${a.guard[u]}</i>` : ''}<i class="qd" data-qd="${u}">+${queued}</i><span class="inf" data-a="info" data-k="u" data-id="${u}" role="button" aria-label="Details of ${NAME[u]}">i</span></div>
+      <i class="rt">${RARITY[u].name}</i><b class="nm">${NAME[u]}</b><div class="sr"><span>${ico('heart', 11)}${compact(row.hp || d.hp)}</span><span>${ico('sword', 11)}${compact(row.dps || d.dps)}</span><span>${ico('people', 11)}${d.space}</span></div><div class="cs">${costHtml(d.cost, r)}<span class="tm">${ico('clock', 11)}${fmtT(unitT(u, a))}</span></div></div>`;
   }
   function spellCard(k, a, r) {
     const d = DEFS.spells[k], row = a.spell.spells[k], lk = !row.open, p = S.pend[pk('s', k)] || 0;
@@ -282,7 +294,7 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
 
   function render() {
     const a = A(); if (!a || !a.fam || !a.spell) return;
-    const r = room(a), pct = a.cap ? Math.min(100, (a.space / a.cap) * 100) : 0, pq = a.cap ? Math.min(100 - pct, ((a.queued + (a.cap - a.space - a.queued - r.all)) / a.cap) * 100) : 0;
+    syncLv(a); const r = room(a), pct = a.cap ? Math.min(100, (a.space / a.cap) * 100) : 0, pq = a.cap ? Math.min(100 - pct, ((a.queued + (a.cap - a.space - a.queued - r.all)) / a.cap) * 100) : 0;
     EM.innerHTML = crestImg(econ.st.emblem, 44);
     SUB.innerHTML = `${esc(econ.st.name || '')}${econ.st.name ? ' · ' : ''}Power <b>${fmtN(a.power)}</b>${a.shield > now() ? ' · Shield ' + fmtT(a.shield - now()) : ''}`;
     const ab = econ.boosts ? econ.boosts().army : null, abl = ab ? `<div class="r" style="margin-top:4px;color:#8fe0ff"><span>⚡ Army boost +${ab.p}% — training ${ab.p}% faster</span><span>${fmtT(ab.end - now())}</span></div>` : '';
@@ -317,7 +329,7 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
     const q = srv.items.filter((b) => b.u === id).reduce((s, b) => s + b.n, 0) + p;
     card.querySelector('.qd').textContent = '+' + q; card.classList.toggle('has', q > 0);
     card.classList.remove('pop'); void card.offsetWidth; card.classList.add('pop');
-    const r = room(a); card.querySelectorAll('.cs span').forEach((sp, i) => { const g = Object.keys((kind === 'u' ? DEFS.units[id] : DEFS.spells[id]).cost)[i]; sp.classList.toggle('no', r.gems[g] < (kind === 'u' ? DEFS.units[id] : DEFS.spells[id]).cost[g]); });
+    const r = room(a); card.querySelectorAll('.cs span:not(.tm)').forEach((sp, i) => { const g = Object.keys((kind === 'u' ? DEFS.units[id] : DEFS.spells[id]).cost)[i]; sp.classList.toggle('no', r.gems[g] < (kind === 'u' ? DEFS.units[id] : DEFS.spells[id]).cost[g]); });
     HSrefresh();
   }
   const HSrefresh = () => { clearTimeout(S.hsT); S.hsT = setTimeout(() => { if (S.open) { const y = BODY.scrollTop; render(); BODY.scrollTop = y; } }, 600); };
@@ -368,12 +380,13 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
     const perks = [2, 3, 4, 5].map((k) => `<span style="${t >= k ? `color:${TIER_COL[k]};border-color:${TIER_COL[k]}` : 'opacity:.45'}">${t >= k ? '★' : '☆'} ${PERK[k][0]} <em style="font-style:normal;opacity:.75">${PERK[k][1]}</em>${t >= k ? '' : ` · Lv ${TIER_AT[k]}`}</span>`).join('');
     return `<div class="st" style="margin:-2px 0 8px"><span style="color:${TIER_COL[t]};border-color:${TIER_COL[t]}">Level ${L} · ${TIER_NAME[t]}</span><span>${FAM[d.fam]} sets its level</span></div><div class="st" style="margin:0 0 8px">${perks}</div>`;
   }
+  const perkLine = (id, a) => { const t = (a.units[id] && a.units[id].tier) | 0; return `<div class="st">${[2, 3, 4, 5].map((k) => `<span style="${t >= k ? `color:${TIER_COL[k]};border-color:${TIER_COL[k]}` : 'opacity:.55'}">${t >= k ? '★' : '☆'} ${PERK[k][0]} <em>${PERK[k][1]}</em>${t >= k ? '' : ` · Lv ${TIER_AT[k]}`}</span>`).join('')}</div>`; };      // (AR1: the perks only; the level / tier chip is in the page's hero row)
   // ------------------------------------------------------------------ guardians (p32): a giant / hill giant / baby dragon / dragon can stand in the castle instead of going to war
   function guardRow(id, a) {
     const gd = DEFS.guardians && DEFS.guardians[id]; if (!gd) return '';
     const slots = (a.gslots && a.gslots[id]) || 0, n = (a.guard && a.guard[id]) || 0, own = (a.units[id] && a.units[id].n) || 0;
-    if (slots <= 0) return `<div class="bwa-gd off"><b>🛡 Castle guardian</b><span>Opens at Castle Lv ${gd.unlock}</span></div>`;
-    return `<div class="bwa-gd"><b>🛡 Castle guardian</b><div class="gc"><button data-g="-1" ${n <= 0 ? 'disabled' : ''}>−</button><em>${n} <i>/ ${slots}</i></em><button data-g="1" ${n >= Math.min(slots, own) ? 'disabled' : ''}>+</button></div>
+    if (slots <= 0) return `<div class="bwa-gd off"><span>Opens at Castle Lv ${gd.unlock}</span></div>`;
+    return `<div class="bwa-gd"><div class="gc"><button data-g="-1" ${n <= 0 ? 'disabled' : ''}>−</button><em>${n} <i>/ ${slots}</i></em><button data-g="1" ${n >= Math.min(slots, own) ? 'disabled' : ''}>+</button></div>
       <small>${n ? 'Stays home and fights for your castle — it cannot join an attack.' : 'Stand it in your castle: it defends there and stays out of your attacks.'}${own < 1 ? ' (You have none yet.)' : ''}</small></div>`;
   }
   async function guardTap(id, d) {
@@ -382,15 +395,32 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
     if (j && j.ok && S.open) showInfo('u', id);
   }
   // ------------------------------------------------------------------ details / emblem sheets
+  // AR1: the info page of a soldier (unitcards.js): hero card + story line, the numbers, the design sheet (zoom) with the looks by level, what trains it, the perks, hero slots, castle guardian
+  const ROLE = { infantry: 'Infantry', tank: 'Heavy infantry', ranged: 'Ranged', cavalry: 'Cavalry', air: 'Flyer', siege: 'Siege engine', giant: 'Giant' };
+  const SPEED = (v) => (v <= 0.5 ? 'Very slow' : v <= 0.9 ? 'Slow' : v <= 1.2 ? 'Normal' : v <= 2.0 ? 'Fast' : 'Very fast');
+  function unitModel(id, a) {
+    const d = DEFS.units[id], row = a.units[id] || {}, f = a.fam[d.fam] || { lv: 0 }, t = unitT(id, a), L = levelFor(id, row.ulv), now = lookAt(id, L), rc = RARITY[id], tier = row.tier | 0, r = room(a);
+    const rs = rangesOf(id), multi = rs.length > 1;
+    const looks = rs.map((x, i) => ({ look: x.look, label: multi ? `Look ${i + 1}` : 'One look at every level', range: multi ? (x.to >= MAX_LEVEL ? `Level ${x.from} and up` : `Levels ${x.from}–${x.to}`) : `Levels ${x.from}–${x.to}`,
+      tag: x.look === now ? (multi ? 'Yours now' : '') : L < x.from ? `From Lv ${x.from}` : 'Earlier look', tagDim: x.look !== now }));
+    const gemChips = Object.keys(d.cost).map((g) => `<span class="${r.gems[g] < d.cost[g] ? 'no' : ''}">${GEMS[g]}${fmtN(d.cost[g])}</span>`).join('');
+    const hero = heroLine(id, a), gd = guardRow(id, a);
+    return {
+      id, kind: id, title: NAME[id], sub: `${FAM[d.fam]} · ${ROLE[d.role] || 'Soldier'}`, chip: { text: rc.name, c: rc.c, g: rc.g }, looks, cur: Math.max(0, looks.findIndex((x) => x.look === now)),
+      cardOld: PORTRAIT[id] ? `<img data-uk="${id}" src="${PORTRAIT[id]}" alt="">` : icon(id, 60),
+      heroHtml: `<p class="ucp-desc">${DESC[id]}</p><div class="st"><span style="color:${rc.c};border-color:${rc.c}">${rc.name}</span><span style="color:${TIER_COL[tier]};border-color:${TIER_COL[tier]}">Level ${row.ulv || 1} · ${TIER_NAME[tier]}</span><span>You have ×${fmtN(row.n || 0)}</span>${d.air ? '<span>Flying</span>' : ''}</div>`,
+      topHtml: statGrid([['heart', 'HP', fmtN(row.hp || d.hp)], ['sword', 'Damage / s', String(row.dps || d.dps)], ['arrow', 'Range', d.rng ? d.rng + ' m' : 'Melee'], ['people', 'Space', String(d.space)], ['clock', 'Train time', fmtT(t)], ['bolt', 'Speed', SPEED(d.spd)]])
+        + `<div class="ucp-cost" aria-label="Cost">${gemChips}</div>`,
+      restHtml: (gd ? section('Castle guardian', gd) : '') + (hero ? section('Hero', hero) : '')
+        + section('Trained in', `<div class="ucp-trn"><div>${FAM[d.fam]} · needs <b>Lv ${d.lv}</b>${f.lv ? ` · yours is <b>Lv ${f.lv}</b>` : ' · <b>not built yet</b>'}</div><div>A soldier is as strong as the building that trains it: its level is the level of the ${FAM[d.fam]}.</div></div>`)
+        + section('Level perks', perkLine(id, a)) + '<div class="ucp-note">Looks change with the soldier’s level; the numbers above already include your level and the Forge.</div>',
+      onAction: (e) => { const g = e.target.closest('[data-g]'); if (g && !g.disabled) guardTap(id, +g.dataset.g); },
+    };
+  }
   function showInfo(kind, id) {
-    const a = A(); let h;
-    if (kind === 'u') {
-      const d = DEFS.units[id], f = a.fam[d.fam], t = unitT(id, a);
-      h = `<div class="bwa-sheet"><div class="big">${PORTRAIT[id] ? `<img src="${PORTRAIT[id]}" alt="">` : icon(id, 60)}</div><h3>${NAME[id]}</h3><div class="st" style="margin:-4px 0 8px"><span style="color:${RARITY[id].c};border-color:${RARITY[id].c}">${RARITY[id].name}</span></div><p>${DESC[id]}</p>
-        ${guardRow(id, a)}${lvLine(id, a)}${heroLine(id, a)}<div class="st"><span>HP ${fmtN((a.units[id] && a.units[id].hp) || d.hp)}</span><span>Damage ${(a.units[id] && a.units[id].dps) || d.dps}/s</span><span>${d.rng ? 'Range ' + d.rng + ' m' : 'Melee'}</span><span>Space ${d.space}</span>${d.air ? '<span>Flying</span>' : ''}<span>⏱ ${fmtT(t)} each</span><span>Needs ${FAM[d.fam]} Lv ${d.lv}</span></div>
-        <div class="st" style="margin-top:8px">${Object.keys(d.cost).map((g) => `<span>${GEMS[g]} ${d.cost[g]}</span>`).join('')}</div></div>`;
-      void f;
-    } else {
+    const a = A(); let h; if (!a) return;
+    if (kind === 'u') { const m = unitModel(id, a); if (page.isOpen()) page.refresh(m); else page.open(m); return; }
+    {
       const d = DEFS.spells[id], s = SPELLS[id];
       h = `<div class="bwa-sheet"><div class="big">${spellIcon(id, 120)}</div><h3>${s.name}</h3><p>${s.desc}</p>
         <div class="st"><span>Space ${d.space}</span><span>⏱ ${fmtT(spellT(id, a))} each</span><span>Needs Forge Lv ${d.lv}</span></div>
@@ -449,7 +479,7 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
   chip.addEventListener('click', () => { click(); open(); });
 
   function open() { S.open = true; pan.classList.add('on'); render(); }
-  function close() { for (const k of Object.keys(S.tm)) { clearTimeout(S.tm[k]); const [kind, id] = [k[0], k.slice(2)]; flush(kind, id); } S.open = false; pan.classList.remove('on'); OV.classList.remove('on'); }
+  function close() { for (const k of Object.keys(S.tm)) { clearTimeout(S.tm[k]); const [kind, id] = [k[0], k.slice(2)]; flush(kind, id); } S.open = false; pan.classList.remove('on'); OV.classList.remove('on'); page.close(); }
 
   // soldiers come out one by one: tick every second, refresh from the server when one is due
   setInterval(() => {
@@ -472,5 +502,5 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
   const emblem = () => { open(); showEmblems(); };
   // T1 (context sheet): train one soldier through the SAME path a card tap takes (rules check + batching + request), and the reason it would be refused
   const whyU = (u) => { const a = A(); if (!a || !a.fam) return 'Not available'; const w = whyNot('u', u, a); return w ? (WHY[w] || 'Not possible') : null; };
-  return { open, close, trainOne: (u) => addOne('u', u), why: whyU, readiness: () => (A() ? A().ready : 0), update() { if (S.open && !Object.keys(S.pend).length && !S.hold) render(); else updateBtn(); }, attack, emblem };
+  return { open, close, info: (u) => { open(); showInfo('u', u); }, infoOpen: () => page.isOpen(), trainOne: (u) => addOne('u', u), why: whyU, readiness: () => (A() ? A().ready : 0), update() { if (S.open && !Object.keys(S.pend).length && !S.hold) render(); else updateBtn(); }, attack, emblem };
 }

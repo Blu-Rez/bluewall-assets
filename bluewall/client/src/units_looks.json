@@ -1,0 +1,170 @@
+{
+ "_about": "AR1: which design card / sheet (web/assets/units/c_<look>.webp, s_<look>.webp) each of the 31 unit kinds shows. 'low' is shown below the unit's level 'at', 'high' from 'at' on; when low == high the kind has one look at every level. The level is the unit's own level (= the level of the building that trains it, the 'Lv' on the card). 'at' defaults to 16; for kinds that only open at building level 10 or later it is unlock level + 6 so that look 1 is seen for at least six levels (a plain 'below 16' would never show look 1 of a dragon that opens at Lv 27). Change a number here and nothing else.",
+ "max_level": 50,
+ "kinds": {
+  "spear": {
+   "low": "spearman_1",
+   "high": "spearman_2",
+   "at": 16
+  },
+  "sword": {
+   "low": "greatsword_1",
+   "high": "greatsword_2",
+   "at": 16
+  },
+  "guard": {
+   "low": "shieldbearer",
+   "high": "shieldbearer"
+  },
+  "archer": {
+   "low": "archer_1",
+   "high": "archer_2",
+   "at": 16
+  },
+  "cavalry": {
+   "low": "cavalry_1",
+   "high": "cavalry_2",
+   "at": 16
+  },
+  "axerider": {
+   "low": "axerider_1",
+   "high": "axerider_2",
+   "at": 22
+  },
+  "pegasus": {
+   "low": "pegasus_1",
+   "high": "pegasus_2",
+   "at": 18
+  },
+  "baby": {
+   "low": "babydragon_1",
+   "high": "babydragon_2",
+   "at": 19
+  },
+  "dragon": {
+   "low": "dragon_1",
+   "high": "dragon_2",
+   "at": 33
+  },
+  "catapult": {
+   "low": "catapult_1",
+   "high": "catapult_2",
+   "at": 16
+  },
+  "giant": {
+   "low": "troll_1",
+   "high": "troll_2",
+   "at": 25
+  },
+  "imp": {
+   "low": "frostjinn_1",
+   "high": "frostjinn_2",
+   "at": 16
+  },
+  "mage": {
+   "low": "bonemage",
+   "high": "bonemage"
+  },
+  "ram": {
+   "low": "ram_1",
+   "high": "ram_2",
+   "at": 19
+  },
+  "cannon": {
+   "low": "cannon_1",
+   "high": "cannon_2",
+   "at": 21
+  },
+  "werewolf": {
+   "low": "werewolf_1",
+   "high": "werewolf_2",
+   "at": 22
+  },
+  "trebuchet": {
+   "low": "trebuchet_1",
+   "high": "trebuchet_2",
+   "at": 24
+  },
+  "hill": {
+   "low": "giant_1",
+   "high": "giant_2",
+   "at": 30
+  },
+  "shieldmaiden": {
+   "low": "shieldmaiden",
+   "high": "shieldmaiden"
+  },
+  "lord": {
+   "low": "lord_1",
+   "high": "lord_2",
+   "at": 26
+  },
+  "dragonling": {
+   "low": "drakeling_1",
+   "high": "drakeling_2",
+   "at": 24
+  },
+  "legionary": {
+   "low": "legionary_1",
+   "high": "legionary_2",
+   "at": 16
+  },
+  "captain": {
+   "low": "captain",
+   "high": "captain"
+  },
+  "ogre": {
+   "low": "biggiant_1",
+   "high": "biggiant_2",
+   "at": 28
+  },
+  "gryphon": {
+   "low": "griffin_1",
+   "high": "griffin_2",
+   "at": 29
+  },
+  "lich": {
+   "low": "lich",
+   "high": "lich"
+  },
+  "treant": {
+   "low": "treant_1",
+   "high": "treant_2",
+   "at": 32
+  },
+  "gryphonknight": {
+   "low": "griffinknight_1",
+   "high": "griffinknight_2",
+   "at": 31
+  },
+  "darkrider": {
+   "low": "darkrider_1",
+   "high": "darkrider_2",
+   "at": 34
+  },
+  "baby3": {
+   "low": "babyhydra_1",
+   "high": "babyhydra_2",
+   "at": 35
+  },
+  "dragon3": {
+   "low": "hydra_1",
+   "high": "hydra_2",
+   "at": 36
+  }
+ },
+ "weak": {
+  "imp": "Frost Imp -> frostjinn: only the frost theme matches (a human-sized frost spirit, the in-game imp is small); change by number if wrong"
+ },
+ "unmapped_looks": [
+  "crossbowman",
+  "babygiant_1",
+  "babygiant_2",
+  "icegiant_1",
+  "icegiant_2",
+  "firegiant_1",
+  "firegiant_2",
+  "guardian_1",
+  "guardian_2"
+ ]
+}

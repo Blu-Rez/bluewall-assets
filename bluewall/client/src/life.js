@@ -102,6 +102,7 @@ export function buildLife(sceneRoot, height, Q, hooks) {
       const a = 3.49, d = 292; place(c.root, Math.cos(a) * d, Math.sin(a) * d, a + Math.PI); loop(c, /.*/, 0.7); pick(c.root, 'giant', 8, 8);
     },
     treant(g) {
+      if (!/[?&]treant=1(&|$)/.test((typeof location !== 'undefined' && location.search) || '')) return;   // mother 15 Oct: the raw Treant glb (no bark grade / canopy) stood at the lake as a bare PINK hollow stump (owner: 'extra things on my map'); off by default, ?treant=1 brings it back
       const c = makeCreature(g, { height: 12 }); if (!c) return;
       const x = -52, z = 298; place(c.root, x, z, 1.9); loop(c, 'Armature|Idle01', 0.6); pick(c.root, 'giant', 6, 6);
     },

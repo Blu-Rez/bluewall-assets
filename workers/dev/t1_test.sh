@@ -23,6 +23,6 @@ chk "old sheet: no bounce (cubic-bezier .2,.9,.25,1.1 gone)" "! grep -q '1.1)}' 
 chk "old sheet hides the corner buttons (sheet-on)" "grep -q \"root.classList.add('sheet-on')\" $S/ui.js && grep -q 'sheet-on>.bwa-btn' $F"
 chk "main.js: only the T1 lines (import + sheet line + onTap) and the RP1 hero hook + the 3 RP1B hooks changed (<= 60 lines; T1 alone was <= 8)" "[ \$(diff <(cd /home/claude/base_snapshot/client/src && cat main.js) $S/main.js | grep -c '^[<>]') -le 60 ]"
 chk "onTap asks the sheet first, the old behaviour stays after it" "grep -q 'sheets.tap(best, SM)' $S/main.js && grep -q 'ui.show(best)' $S/main.js"
-chk "armyui / upgradeui only gained the small API (diff <= 30 lines)" "[ \$(diff /home/claude/base_snapshot/client/src/armyui.js $S/armyui.js | grep -c '^[<>]') -le 6 ] && [ \$(diff /home/claude/base_snapshot/client/src/upgradeui.js $S/upgradeui.js | grep -c '^[<>]') -le 40 ]"
+chk "armyui (AR1 cards, owned by AR1: <= 260 changed lines) / upgradeui only gained the small API" "[ \$(diff /home/claude/base_snapshot/client/src/armyui.js $S/armyui.js | grep -c '^[<>]') -le 260 ] && [ \$(diff /home/claude/base_snapshot/client/src/upgradeui.js $S/upgradeui.js | grep -c '^[<>]') -le 40 ]"
 # (rule "worksites.js / town_*.js untouched" retired in p45: P1 owns those files now; T1 never touched them)
 echo "T1 OK"
