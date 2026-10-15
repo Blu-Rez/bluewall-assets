@@ -34,6 +34,7 @@ PY
 ( bash /home/claude/dev/st1_test.sh 2>&1 | tail -1 | grep -q "ST1 OK" ) && ok "st1_test (Treasury Quarter: nine storages, doors, fit, skin ids, family files)" || bad "st1_test (Treasury Quarter)"
 ( bash /home/claude/dev/st1r2_test.sh 2>&1 | tail -1 | grep -q "ST1R2 OK" ) && ok "st1r2_test (vault gem: no crown, halo caps, target-id order)" || bad "st1r2_test (vault gem)"
 ( bash /home/claude/dev/gr1_test.sh 2>&1 | tail -1 | grep -q "GR1 OK" ) && ok "gr1_test (roads: dead ends / water / tiers; near-ground map + shader budget)" || bad "gr1_test (roads + near ground)"
+( bash /home/claude/dev/gr1r2_test.sh 2>&1 | tail -1 | grep -q "GR1_R2 TEST OK" ) && ok "gr1r2_test (horizon colour table, 24 h continuity, night ceiling)" || bad "gr1r2_test (horizon / mountains)"
 ( bash /home/claude/dev/t1_test.sh 2>&1 | tail -1 | grep -q "T1 OK" ) && ok "t1_test (building sheets)" || bad "t1_test (building sheets)"
 ( bash /home/claude/dev/ld1_test.sh 2>&1 | tail -1 | grep -q "LD1 OK" ) && ok "ld1_test (loader sword)" || bad "ld1_test (loader sword)"
 ( bash /home/claude/dev/p1_test.sh 2>&1 | tail -1 | grep -q "P1 OK" ) && ok "p1_test (production lots + mills)" || bad "p1_test (production lots + mills)"

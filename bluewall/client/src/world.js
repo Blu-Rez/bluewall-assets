@@ -449,6 +449,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     const fl = (P.fog.r + P.fog.g + P.fog.b) / 3;
     scene.fog.color.copy(P.fog).lerp(GREY.setRGB(fl * 1.05, fl * 1.08, fl * 1.15), W.grey);
     scene.fog.density = P.fogD * W.fog / (+settings.viewDist || 1); scene.background.copy(scene.fog.color);
+    backdrop.update(P, W, scene.fog.color);       // GR1: far ranges: lit + aerial perspective toward the fog / sky-horizon colour (recomputed only when hour / weather / fog change)
     sky.setTime(P, W); water.setTime(P, W); weather.setLight(P); if (W.fog > 1.01) { water.mesh.material.uniforms.uFogCol.value.copy(scene.fog.color); water.mesh.material.uniforms.uFogD.value = scene.fog.density; }
     const n = P.night;
     M.window.emissiveIntensity = 0.15 + 2.1 * n;
@@ -701,7 +702,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
   // the green Dragonlings at the Lair (dragonling_home.js): an egg until the shop's egg is bought, then two of them
   const setDragonlings = (owned) => { if (!dlings) { try { dlings = createHomeDragonlings({ scene, height: terrain.fastHeight || height }); ctx.levelHooks.push(() => dlings.refresh()); } catch (e) { console.warn('dragonlings', e); return; } } dlings.set(owned); };
   return {
-    ground: terrain.ground, // GR1: near ground (setLook / setDetail / groundH)
+    ground: terrain.ground, backdrop, // GR1: near ground (setLook / setDetail / groundH); GR1_R2: the far ranges (setLook / stats)
     rings: ctx.rings, tr2c: ctx.tr2c, update, setTime, picks, water, get keptClear() { return world_keepClear; }, get lod() { return forest.ez ? forest.ez.lod : null; }, fastHeight: terrain.fastHeight, setBattle, targetDown, clearZones, key, stage, get ballistas() { return extras.ballistas || null; }, get dragon() { return dragon; }, giants: units.giants, shake: shakeReq, creatures, setOption, startLate, revealLate, lateProgress, setLateBudget, patrols, events, get late() { return extras; },
     setWeather: (m, snap) => weather.setMode(m, snap), weatherIcon: (base) => weather.icon() || base, weather,
     // p37 (old N6): a phone's GPU that lost its context comes back with every target EMPTY (the picture went half as bright, the ground black): paint again what was drawn into targets
