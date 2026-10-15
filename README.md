@@ -1,0 +1,2 @@
+Install package p53 of Blue Wall (built by the mother chat, 15 Oct 2026 ~09:50 Tehran). Needs p52 installed (delta on top of it). Contains: look C «Parchment & metal» on the HUD, Assist hub, army, shop, rank / clan / friends / log, settings and toasts (UI1-R2), and TR2-S4a-R2 (house LOD bodies so the town costs no more triangles, every house Tripo, pennants 60 %, chimney smoke). No server change. Rollback: bash /root/p53/rollback.sh
+On the server:  cd /root && tar xzf p53.tar.gz && bash p53/install.sh
