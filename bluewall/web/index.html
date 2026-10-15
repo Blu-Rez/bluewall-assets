@@ -142,13 +142,17 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
 #ld-bot .ld-tip{top:auto;bottom:0}
 @media (prefers-reduced-motion:reduce){#bw-load *{animation-duration:1ms!important;animation-iteration-count:1!important}#bw-load .ld-tg{animation:ldFl 3.5s ease-in-out infinite alternate!important}#bw-load .ld-strip{animation:none!important}#ld-drake{display:none!important}}
 /* mother 15 Oct (owner: "the game must be landscape only"): a phone held upright gets a calm full-screen "rotate" card instead of a cramped portrait game */
-#bw-rot{display:none;position:fixed;inset:0;z-index:2147483000;background:#050912;color:#f4e8cc;font:600 18px/1.35 Georgia,serif;text-align:center;align-items:center;justify-content:center;flex-direction:column;gap:18px;padding:24px;letter-spacing:.3px}
-#bw-rot svg{width:84px;height:84px}
+#bw-rot{display:none;position:fixed;inset:0;z-index:2147483000;background:radial-gradient(120% 80% at 50% 40%,#16408f 0%,#0b2257 46%,#050d26 100%);color:#e2efff;font:600 19px/1.35 Georgia,serif;text-align:center;align-items:center;justify-content:center;flex-direction:column;gap:22px;padding:24px;letter-spacing:.3px}
+#bw-rot svg{width:168px;height:168px;filter:drop-shadow(0 0 14px rgba(110,180,255,.45))}
+#bw-rot .ph{transform-origin:80px 80px;animation:bwRot 3s cubic-bezier(.5,0,.3,1) infinite}
+@keyframes bwRot{0%,14%{transform:rotate(0)}46%,80%{transform:rotate(90deg)}100%{transform:rotate(0)}}
+@media (prefers-reduced-motion:reduce){#bw-rot .ph{animation:none;transform:rotate(90deg)}}
+#bw-rot b{display:block;font-weight:600;color:#8fbcf5;font-size:14px;margin-top:6px;letter-spacing:.6px}
 @media (orientation:portrait) and (pointer:coarse){#bw-rot{display:flex}}
 </style>
 </head>
 <body>
-<div id="bw-rot" aria-live="polite"><svg viewBox="0 0 64 64" fill="none" stroke="#e0b255" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="20" y="6" width="24" height="42" rx="4"/><path d="M30 42h4"/><path d="M12 54c8 6 24 6 36-2"/><path d="M46 48l4 5-6 2"/></svg><div>Rotate your phone to play</div></div>
+<div id="bw-rot" aria-live="polite"><svg viewBox="0 0 160 160" fill="none" stroke-linecap="round" stroke-linejoin="round"><defs><linearGradient id="bwrg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4d8dff"/><stop offset="1" stop-color="#1c3f9e"/></linearGradient><linearGradient id="bwrs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4ebff"/><stop offset="1" stop-color="#7fb6f2"/></linearGradient></defs><rect x="58" y="36" width="44" height="88" rx="10" stroke="#3f74dc" stroke-width="3" stroke-dasharray="5 6" opacity=".55"/><path d="M116 30a62 62 0 0 1 22 40" stroke="#a9d2ff" stroke-width="6"/><path d="M143 56l-5 17-15-9" stroke="#a9d2ff" stroke-width="6"/><g class="ph"><rect x="58" y="36" width="44" height="88" rx="10" fill="url(#bwrg)" stroke="#bcdcff" stroke-width="3"/><rect x="64" y="46" width="32" height="68" rx="4" fill="url(#bwrs)"/><rect x="73" y="39.5" width="14" height="3" rx="1.5" fill="#0b2257" stroke="none"/></g></svg><div>Rotate your phone to play<b>Blue Wall is played sideways</b></div></div></div>
 <div id="game"></div>
 <div id="bw-load"></div>
 <div id="msg"></div>

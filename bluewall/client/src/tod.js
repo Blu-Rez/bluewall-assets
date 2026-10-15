@@ -6,9 +6,15 @@ import { tintP } from './theme.js';
 
 export const CYCLE_MIN = 60;
 
+// mother 15 Oct (owner: «why is it always night?»): one real hour is still one game day, the same for every player, but the day is NOT linear any
+// more: the old 1 h = 24 game hours left ~42 % of every hour dark. Now ≈ 76 % is bright (dawn 6 %, day 64 %, dusk 10 %) and the full night is ≈ 14 %
+// (≈ 8 real minutes per hour).  Breakpoints: [fraction of the real hour, game hour]; the last one wraps to the first (28.6 % 24 = 4.6).
+const DAY_MAP = [[0, 4.6], [0.06, 6.5], [0.38, 12], [0.70, 17], [0.80, 19.1], [0.86, 20.3], [1, 28.6]];
 export function gameHour(now = Date.now()) {
-  const m = (now / 60000) % CYCLE_MIN;
-  return (m / CYCLE_MIN) * 24;
+  const f = ((now / 60000) % CYCLE_MIN) / CYCLE_MIN;
+  let i = 0; while (i < DAY_MAP.length - 2 && DAY_MAP[i + 1][0] <= f) i++;
+  const a = DAY_MAP[i], b = DAY_MAP[i + 1];
+  return (a[1] + (b[1] - a[1]) * ((f - a[0]) / (b[0] - a[0]))) % 24;
 }
 
 // ------------------------------------------------------------------ keyframes
