@@ -27,10 +27,17 @@ export const ANIMAL_FILES = ['animal_cow', 'animal_calf', 'animal_horse_white', 
 export const PEOPLE = { villager_man: 3.0, villager_woman: 2.8, villager_youngman: 3.0, villager_oldman: 2.9, villager_oldwoman: 2.65, villager_boy: 2.3, villager_girl: 2.2, villager_littlegirl: 1.7 };
 export const PEOPLE_FILES = ['villager_man', 'villager_woman', 'villager_youngman', 'villager_oldman'];
 
-export const state = { ok: false, animals: false, people: false, has: {}, vill: {}, err: [] };
+// AN1 (15 Oct 2026, owner's decision): the Tripo animals are static meshes (no rig → they glide, legs never move), so by DEFAULT the game keeps the OLD animated animals (Mesh2Motion horses,
+// cow, sheep, pig, wolf, the old birds, procedural hens).  Every caller already has that code path next to the Tripo one and takes it when has(key) / fauna() / gltfLike() / dyn() say no.
+// The Tripo animal files are then not even downloaded.  Turn them back on with  window.__TR2_ANIMALS = true  (before the game starts) or  ?tr2animals=1  (tests; later: rigged files).
+// The villagers are NOT affected.
+const animalsWanted = () => { try { return typeof window !== 'undefined' && (window.__TR2_ANIMALS === true || /[?&]tr2animals=1(&|$)/.test(window.location.search || '')); } catch (e) { return false; } };
+const animalSpec = (spec) => /^(animal_|birds($|\/)|poultry_fish_pack($|\/))/.test(spec);
+
+export const state = { ok: false, animals: false, people: false, useAnimals: false, has: {}, vill: {}, err: [] };
 let loader = null;
 const getLoader = () => loader || (loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder));
-export const has = (k) => !!state.has[k];
+export const has = (k) => !!state.has[k] && (!animalSpec(k) || state.useAnimals);
 export const ready = () => state.ok;
 
 // Load what this module needs (call once, before the world builds its life; safe to call twice).  Never throws: a failed file only leaves its `has` false.
@@ -38,7 +45,8 @@ export async function preload({ animals = ANIMAL_FILES, people = PEOPLE_FILES } 
   if (state.loading) return state.loading;
   state.loading = (async () => {
     try { await tr2.init(); } catch (e) { state.err.push('init ' + e); return state; }
-    try { const out = await tr2.load(animals); for (const n of animals) state.has[n] = !!out[n]; state.animals = animals.every((n) => state.has[n]); } catch (e) { state.err.push('animals ' + e); }
+    state.useAnimals = animalsWanted();                                                        // AN1: off by default (see the top of the file)
+    if (state.useAnimals) { try { const out = await tr2.load(animals); for (const n of animals) state.has[n] = !!out[n]; state.animals = animals.every((n) => state.has[n]); } catch (e) { state.err.push('animals ' + e); } }
     await Promise.all(people.map(async (k) => {
       try { const g = await getLoader().loadAsync(tr2.base + k + '.glb' + V); const walk = (g.animations || []).find((a) => /walk/i.test(a.name)) || g.animations[0]; if (!walk) throw new Error('no walk clip'); state.vill[k] = { scene: g.scene, walk }; state.has[k] = true; }
       catch (e) { state.err.push(k + ' ' + e); state.has[k] = false; }
@@ -73,7 +81,7 @@ const _fr = new THREE.Frustum(), _pm = new THREE.Matrix4(), _sph = new THREE.Sph
 
 // spec = 'animal_cow' (a model file) or 'pack/node'; opts.len = the length (longest horizontal side) in metres of a scale-1 animal; capacity = most instances alive at once
 export function fauna(spec, { len = 2, capacity = 32, shadows = true, name = '' } = {}) {
-  if (!state.ok) return null;
+  if (!state.ok || !state.useAnimals) return null;
   let ps; try { ps = partsOf(spec, { w: len }); } catch (e) { console.warn('tr2_life fauna', spec, e); return null; }
   const group = new THREE.Group(); group.name = 'tr2fauna:' + (name || spec);
   const meshes = ps.map((pt) => { const im = new THREE.InstancedMesh(pt.geometry, pt.material, capacity); im.instanceMatrix.setUsage(THREE.DynamicDrawUsage); im.frustumCulled = false; im.castShadow = !!shadows; im.receiveShadow = true; im.count = 0; im.visible = false; im.name = 'tr2:' + spec; group.add(im); return im; });
@@ -123,7 +131,7 @@ export function fauna(spec, { len = 2, capacity = 32, shadows = true, name = '' 
 // the three horse coats as ONE object with the crowd-kind API (coat = 0 bay / 1 black / 2 grey: spec.coat), three draws
 const COAT_FILE = ['animal_horse_brown', 'animal_horse_black', 'animal_horse_white'];
 export function horses({ len = 5.6, capacity = 28, shadows = true } = {}) {
-  if (!COAT_FILE.every((f) => state.has[f])) return null;
+  if (!state.useAnimals || !COAT_FILE.every((f) => state.has[f])) return null;
   const ks = COAT_FILE.map((f) => fauna(f, { len, capacity, shadows })); if (ks.some((k) => !k)) return null;
   const group = new THREE.Group(); group.name = 'tr2horses'; ks.forEach((k) => group.add(k.group));
   const o = { group, kinds: ks, fit: { k: 1, y: 0 }, len, static: true, people: false, stats: {}, info: {}, has: ks[0].has };
@@ -136,7 +144,7 @@ export function horses({ len = 5.6, capacity = 28, shadows = true } = {}) {
 
 // ---------------------------------------------------------------- static model as a creature.js "gltf" (makeCreature / herd: dogs, wolves, eagles, crows)
 export function gltfLike(spec, o = {}) {
-  if (!state.ok) return null;
+  if (!state.ok || (animalSpec(spec) && !state.useAnimals)) return null;
   let ps; try { ps = partsOf(spec, o); } catch (e) { return null; }
   const scene = new THREE.Group(); scene.name = 'tr2:' + spec;
   for (const p of ps) scene.add(new THREE.Mesh(p.geometry, p.material));
@@ -145,7 +153,7 @@ export function gltfLike(spec, o = {}) {
 
 // n dynamic instances (the caller sets matrices every frame): { meshes, set(i, matrix), flush(n) } — hens, rooster, chicks
 export function dyn(spec, capacity, { w, h, k, ry, shadows = true, parent = null } = {}) {
-  if (!state.ok) return null;
+  if (!state.ok || (animalSpec(spec) && !state.useAnimals)) return null;
   let ps; try { ps = partsOf(spec, { w, h, k, ry }); } catch (e) { return null; }
   const meshes = ps.map((pt) => { const im = new THREE.InstancedMesh(pt.geometry, pt.material, capacity); im.instanceMatrix.setUsage(THREE.DynamicDrawUsage); im.frustumCulled = false; im.castShadow = !!shadows; im.receiveShadow = true; im.count = 0; im.name = 'tr2dyn:' + spec; parent && parent.add(im); return im; });
   return { meshes, set(i, m) { for (const im of meshes) im.setMatrixAt(i, m); }, flush(n) { for (const im of meshes) { im.count = n; im.visible = n > 0; im.instanceMatrix.needsUpdate = true; } } };

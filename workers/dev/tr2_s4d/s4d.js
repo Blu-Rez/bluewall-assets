@@ -9,6 +9,7 @@ import { tr2 } from '../../bot/bluebot_v2/bluewall/client/src/tr2lib.js';
   scene.add(new THREE.HemisphereLight(0xcfe0ff, 0x556644, 1.5)); const sun = new THREE.DirectionalLight(0xfff2dd, 2.6); sun.position.set(40, 80, 30); scene.add(sun);
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshStandardMaterial({ color: 0x6d8a55, roughness: 1 })); ground.rotation.x = -Math.PI / 2; scene.add(ground);
   const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.1, 3000);
+  window.__TR2_ANIMALS = true;                                  // AN1: the Tripo animals are OFF by default in the game; this harness measures them
   await tr2.init({ base: 'assets/tr2/' });
   await preload();
   const res = { ok: state.ok, has: state.has, err: state.err };
