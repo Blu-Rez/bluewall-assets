@@ -6,11 +6,12 @@
 //                                     New meshes are made next to the old ones (hidden) and swapped in when the last chunk is done, so the town never shows half a rebuild.
 import * as THREE from 'three';
 import { bakePieces, bakeTr2 } from './village.js';
-import { isVillageHome, villageHomeLot, HOME_KINDS, homePieces, homeSmoke, homeTier, homeTr2, homeTr2Files, homeTr2LoFiles, genericTr2, genericTr2Files, loPiece, townCellKey, townCellDist, townLodPick } from './b2_homes.js';
+import { isVillageHome, villageHomeLot, HOME_KINDS, homePieces, homeSmoke, homeTier, homeTr2, homeTr2Files, homeTr2LoFiles, genericTr2, genericTr2Files, lotTint, footOf, groundOf as groundFoot, loPiece, townCellKey, townCellDist, townLodPick } from './b2_homes.js';
 import { setCivicTr2, civicTr2Files } from './b3_civic.js';
 import { tr2 } from './tr2lib.js';
 import { buildAtlas, specOf, fileOfSpec } from './tr2atlas.js';
 import { homeLots, civicLots, civicBuild, toWorld, townTargetSpecs, prodLots } from './town_plan.js';
+import { townGround } from './town_ground.js';
 import { genKeep, centreOf, STORE_FP } from './layout_rules.js';           // TR2-S5
 import { planStores } from './stores.js';                               // TR2-S5: a moved storehouse also clears the generic fill houses under it
 import * as LS from './layout_store.js';                                // TR2-S5: the player's moved lots
@@ -42,7 +43,12 @@ export function warmTown() {                                      // fetch + par
 }
 
 const CHUNK = 40, UP = new THREE.Vector3(0, 1, 0);
-const Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3(), M4 = () => new THREE.Matrix4();
+// TR2_H step 1 (the "broken generic house"): in the hero mode rpg/cull.js (townCollect / townTick) cuts every big mesh under `planned-town` into `…#cell` proxies and shows each by DISTANCE only; the town LOD
+// (far / lo / hi, below) hides its meshes by `visible`, which the proxies ignore => the far (lo) bodies stayed drawn over the hi bodies (z-fighting = shards).  `userData.rpProxy` is cull.js's own "already a proxy, leave it"
+// mark (townCollect skips such a mesh), so the LOD meshes keep a single owner.  ?tr2cull=0 = the old behaviour (before frames).  (cull.js itself is not ours: the report suggests the 2-line fix there.)
+const CULL_MARK = !(typeof location !== 'undefined' && /[?&]tr2cull=0\b/.test(location.search));
+const H_OFF = typeof location !== 'undefined' && /[?&]tr2h=0\b/.test(location.search);                     // TR2_H dev: ?tr2h=0 = the town without H1 (tint), H2/H3 (ground line), H6 (smoke range) — before / after frames
+const FWD = new THREE.Vector3(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3(), M4 = () => new THREE.Matrix4();
 const place = (x, y, z, ry, s = 1) => M4().compose(P.set(x, y, z), Q.setFromAxisAngle(UP, ry), S.set(s, s, s));
 
 export function registerTownTargets(ctx, level) {
@@ -96,13 +102,14 @@ export function createPlannedTown({ scene, kitHomes, kitCivic, height, shadows, 
   function pieceList(lot, lo, lv) {
     const y = gy(lot), bid = lot.tid != null ? lot.tid : (tids.get(lot.id) || 0), out = [];
     const pcs = lot.kind === 'generic' ? genericTr2(lot).pieces : homeTr2(lot.kind, lv, lot.seed).pieces;
-    for (let i = 0; i < (lo ? 1 : pcs.length); i++) { const w = toWorld(lot, pcs[i]); out.push({ n: lo ? loPiece(w.n) : w.n, matrix: place(w.x, y, w.z, w.ry, w.s), bid }); }
+    const tint = H_OFF ? null : lotTint(lot);                                           // TR2_H H1: the body only (the yard props keep their own colours)
+    for (let i = 0; i < (lo ? 1 : pcs.length); i++) { const w = toWorld(lot, pcs[i]); out.push({ n: lo ? loPiece(w.n) : w.n, matrix: place(w.x, y, w.z, w.ry, w.s), bid, ...(i === 0 ? { tint } : null) }); }
     return out;
   }
   const bakeCell = (cell, which) => {                                    // one mesh (per material) of a cell, hidden until lod() shows it
     const list = []; for (const lot of cell.lots) for (const e of pieceList(lot, which === 'lo', cell.lv)) list.push(e);
     const r = bakeTr2(cell.group, st.atlas.homes, list, { shadows, tag: which === 'hi' ? 'homes-tr2' : 'homes-lo' });
-    for (const m of r.meshes) { m.visible = false; m.userData.tr2lod = which; m.userData.tr2cell = cell.key; }
+    for (const m of r.meshes) { m.visible = false; m.userData.tr2lod = which; m.userData.tr2cell = cell.key; if (CULL_MARK) m.userData.rpProxy = 1; }     // TR2_H: see CULL_MARK
     cell[which] = r.meshes; st.stats.cellBakes++;
   };
   const queued = (cell, which) => st.lazy.some((j) => j.cell === cell && j.which === which);
@@ -111,9 +118,24 @@ export function createPlannedTown({ scene, kitHomes, kitCivic, height, shadows, 
     const gen = st.gen; st.lazy.push({ cell, which, run: () => { if (gen === st.gen && !cell[which] && cell.group === st.group) bakeCell(cell, which); } });
   }
   const setVis = (ms, v) => { if (ms) for (const m of ms) if (m.visible !== v) m.visible = v; };
+  // TR2_H H6: a chimney smokes only while it is within SMOKE_R of the camera (or of the ground point it looks at: the strategic view looks from far, at a street), at most SMOKE_MAX plumes at a time (the nearest).
+  // The old rule was a global cap of 18 + 20 plumes spread over the whole town — most of them far from any eye.  `off` is the plume flag world.js reads (no emission, no cost).
+  const SMOKE_R = 60, SMOKE_MAX = 16;
+  function smokeRange() {
+    const c = st.cam, sm = st.smoke; if (H_OFF || !c || !sm || !sm.length) return;
+    const on = [];
+    for (const s of sm) {
+      const d = Math.min(Math.hypot(s.x - c.x, s.z - c.z, (s.y - c.y) * 0.35), c.fx == null ? 1e9 : Math.hypot(s.x - c.fx, s.z - c.fz));
+      if (d < SMOKE_R) on.push([d, s]); else if (!s.off) s.off = true;
+    }
+    on.sort((a, b) => a[0] - b[0]);
+    on.forEach(([, s], i) => { const off = i >= SMOKE_MAX; if (s.off !== off) s.off = off; });
+  }
   // camera = THREE camera (or null: reuse the last), t = clock seconds (the call is throttled to 4 Hz), force = apply now
   function lod(camera, t, force) {
-    if (camera) { if (t != null && !force && t - st.lodT < 0.25) return 0; if (t != null) st.lodT = t; const p = camera.position; st.cam = { x: p.x, y: p.y, z: p.z }; }
+    if (camera) { if (t != null && !force && t - st.lodT < 0.25) return 0; if (t != null) st.lodT = t; const p = camera.position; st.cam = { x: p.x, y: p.y, z: p.z };
+      const fy = camera.getWorldDirection ? camera.getWorldDirection(FWD).y : 0; if (fy < -0.05) { const k = Math.min(500, p.y / -fy); st.cam.fx = p.x + FWD.x * k; st.cam.fz = p.z + FWD.z * k; } }
+    smokeRange();
     const cells = st.cells; if (!st.far || !cells.length) return 0;
     const dev = typeof window !== 'undefined' ? window.__tr2TownLod : null;        // dev switch: 'hi' | 'lo' forces every cell
     let sw = 0, allLo = true;
@@ -163,7 +185,7 @@ export function createPlannedTown({ scene, kitHomes, kitCivic, height, shadows, 
         st.queue.push(() => {                                          // the far mesh: the lo bodies of every house, ONE call
           const list = []; for (const lot of lots) for (const e of pieceList(lot, true, lv)) list.push(e);
           const r = bakeTr2(group, st.atlas.homes, list, { shadows, tag: 'homes-far' });
-          for (const m of r.meshes) { m.userData.tr2lod = 'far'; m.visible = true; }
+          for (const m of r.meshes) { m.userData.tr2lod = 'far'; m.visible = true; if (CULL_MARK) m.userData.rpProxy = 1; }     // TR2_H: see CULL_MARK
           far = r.meshes; st.stats.farBakes++;
         });
       } else {                                                         // no lo copies: every cell at full detail, baked now (the S4a way: chunks of <= 40 houses)
@@ -172,13 +194,18 @@ export function createPlannedTown({ scene, kitHomes, kitCivic, height, shadows, 
         }
         cells = [];
       }
-      // chimney smoke from the model data (b2_homes.js HOUSE_SMOKE): at most 18 plumes on the planned homes (as before), 20 on the generic / hamlet houses
+      st.queue.push(() => {                                            // TR2_H H2 + H3: contact shadow + stone footing under every house (town_ground.js: +2 draw calls)
+        if (H_OFF) return;
+        const feet = lots.map((lot) => { const v = lot.kind === 'generic' ? genericTr2(lot) : homeTr2(lot.kind, lv, lot.seed), p = v.pieces[0], w = toWorld(lot, p), [fw, fd] = footOf(v.variant, p.s), [gw, gd, ox, oz] = groundFoot(v.variant, p.s), cr = Math.cos(w.ry), sr = Math.sin(w.ry); return { x: w.x, z: w.z, ry: w.ry, w: fw, d: fd, y: gy(lot), gw, gd, gx: w.x + ox * cr + oz * sr, gz: w.z - ox * sr + oz * cr }; });
+        townGround(group, feet, { height, M: ctx.M });
+      });
+      // chimney smoke from the model data (b2_homes.js HOUSE_SMOKE): every chimney of the planned homes and of the generic / hamlet houses gets a plume object (switched on only near the camera: smokeRange(), TR2_H H6)
       st.queue.push(() => {
         // every house whose MODEL has a chimney can smoke; when more than the cap qualify, an even stride over the list (not the first N) keeps the plumes spread over the town
         const spread = (list, cap) => (list.length <= cap ? list : list.filter((_, i) => Math.floor(i * cap / list.length) !== Math.floor((i - 1) * cap / list.length)).slice(0, cap));
-        const plume = (lot, c) => { const w = toWorld(lot, { n: '', x: c.x, z: c.z, ry: 0, s: 1 }); smoke.push(ctx.smokeAt(w.x, gy(lot) + c.y, w.z)); };
-        spread(homes.map((lot) => [lot, homeTr2(lot.kind, lv, lot.seed).smoke[0]]).filter((e) => e[1]), 18).forEach(([lot, c]) => plume(lot, c));
-        spread(G.map((g) => { const lot = { ...g, kind: 'generic' }; return [lot, genericTr2(lot).smoke[0]]; }).filter((e) => e[1]), 20).forEach(([lot, c]) => plume(lot, c));
+        const plume = (lot, c) => { const w = toWorld(lot, { n: '', x: c.x, z: c.z, ry: 0, s: 1 }), s = ctx.smokeAt(w.x, gy(lot) + c.y, w.z); s.off = !H_OFF; smoke.push(s); };     // (switched on by smokeRange() when the camera is near)
+        spread(homes.map((lot) => [lot, homeTr2(lot.kind, lv, lot.seed).smoke[0]]).filter((e) => e[1]), H_OFF ? 18 : 90).forEach(([lot, c]) => plume(lot, c));
+        spread(G.map((g) => { const lot = { ...g, kind: 'generic' }; return [lot, genericTr2(lot).smoke[0]]; }).filter((e) => e[1]), H_OFF ? 20 : 90).forEach(([lot, c]) => plume(lot, c));
       });
     }
     if (!T2 && kitCivic && civic.length) st.queue.push(() => {

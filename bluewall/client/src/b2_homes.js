@@ -117,10 +117,10 @@ export const homeSmoke = (kind, lv, seed = 0) => plan(kind, lv, seed).smoke;
 // HOME_TR2[kind].v[i] = [key, width, height, depth] in metres AFTER the target scale (measured with tr2.info; the test compares them with the lot); the body stands `0.5 m` inside the back edge of the lot so the
 // front yard (z > 0) keeps room for the props.
 export const HOME_TR2 = {
-  cottage:   { w: 6.6,  v: [['house_cottage_0', 6.6, 4.9, 5.5], ['house_cottage_1', 4.8, 6.0, 6.6], ['house_cottage_2', 6.6, 5.4, 6.2]] },
+  cottage:   { w: 6.6,  v: [['house_cottage_0', 6.6, 4.9, 5.5], ['house_cottage_1', 4.8, 6.0, 6.6], ['house_cottage_2', 6.6, 5.5, 6.2]] },
   craftsman: { w: 7.8,  v: [['house_craftsman_0', 7.8, 8.9, 7.0], ['house_craftsman_1', 7.4, 7.3, 7.8], ['house_craftsman_2', 7.8, 7.8, 7.7]] },
   merchant:  { w: 7.4,  v: [['house_merchant_0', 5.8, 9.0, 7.4], ['house_merchant_1', 7.4, 7.8, 5.7], ['house_merchant_2', 7.1, 6.8, 7.4]] },
-  noble:     { w: 10.5, v: [['house_noble_0', 10.5, 7.7, 4.4], ['house_noble_1', 10.5, 6.0, 5.2], ['house_noble_2', 10.5, 8.6, 8.6]] },
+  noble:     { w: 10.5, v: [['house_noble_0', 10.5, 7.7, 4.4], ['house_noble_1', 10.5, 6.0, 5.2], ['house_noble_2', 10.5, 8.8, 8.6]] },
 };
 // yard dressing: [tier, pack node, x, z, ryDeg, side]  (side 1: x flips with the seed's mirror; 0 fixed).  A few cheap pieces only (each prop node is 1.2-3 k tris: the town budget decides, not taste).
 const TR2_DRESS = {
@@ -138,13 +138,14 @@ export function homeTr2(kind, lv, seed = 0) {
   const [key, , , depth] = k.v[vi], d = HOME_KINDS[kind].d, zc = -d / 2 + 0.5 + depth / 2, r3 = (v) => Math.round(v * 1000) / 1000;
   const P = [{ n: key + '|w' + k.w, x: 0, z: r3(zc), ry: 0, s: 1 }];
   let shown = 0;                                                                                          // budget (measured, TR2_progress): a barrel / crate / sack / cart costs 1.9-3 k tris = a whole cottage; only the flag (1.25 k) and the lantern (1.56 k) are drawn, at most DRESS_CAP per lot
-  dress.forEach(([t, n, dx, dz, ry, side], i) => { if (t > tier || !DRESS_OK.test(n) || shown >= DRESS_CAP) return; shown++; const q = jit[i]; P.push({ n, x: r3(dx * (side ? mir : 1) + q[0]), z: r3(dz + q[1]), ry: r3((ry + q[2]) * DEG), s: /\/flag$/.test(n) ? FLAG_S : 1 }); });
+  dress.forEach(([t, n, dx, dz, ry, side], i) => { if (t > tier || !DRESS_OK.test(n) || shown >= DRESS_CAP) return; shown++; const q = jit[i]; P.push({ n, x: r3(dx * (side ? mir : 1) + q[0]), z: r3(dz + q[1]), ry: r3((ry + q[2]) * DEG), s: /\/flag$/.test(n) ? FLAG_S : /\/lantern$/.test(n) ? LANTERN_S : 1 }); });
   return { pieces: P, variant: key, smoke: smokeOf(key, 1, r3(zc)) };
 }
 export const homeTr2Files = () => { const s = new Set(); for (const k of Object.keys(HOME_TR2)) for (const v of HOME_TR2[k].v) s.add(v[0]); for (const d of Object.values(TR2_DRESS)) for (const e of d) if (DRESS_OK.test(e[1])) s.add(e[1]); return [...s].sort(); };
 
 // ================================================================================================================================================================================================
 // TR2-S4a-R2 — lo copies of the bodies, the generic / hamlet houses, chimney smoke, the pennant scale and the town's LOD numbers.  Pure data (no THREE): runs in node (dev/tr2_s4a_test.sh).
+export const LANTERN_S = 0.4;                    // TR2_H H4: the noble's yard lanterns (props_street/lantern, 1.56 k tris) stood taller than twice the hero at s = 1: 40 %, the foot stays on the ground
 export const FLAG_S = 0.6;                       // the pennants (props_street/flag, 2.8 m tall) read huge next to a 5-9 m house: 60 %; the model's pivot is its foot, so the anchor does not move
 // lo copy of a body piece: 'house_cottage_0|w6.6' -> 'house_cottage_0_lo|w6.6' (the same placement, ~ 40 % of the triangles, the full model's atlas tile — tr2atlas.js).  Yard props have no lo copy: the lo cells draw bodies only.
 export const loPiece = (n) => n.replace(/^([a-z0-9_]+)\|/, '$1_lo|');
@@ -165,6 +166,27 @@ const smokeOf = (key, s, zc) => { const c = HOUSE_SMOKE[key]; return c ? [{ x: r
 export const GENERIC = { a: ['house_generic_a', 7.5, 5.78, 5.36], b: ['house_generic_b', 6.7, 7.08, 7.5], c: ['house_generic_c', 7.5, 6.02, 7.07], d: ['house_generic_d', 7.5, 3.78, 4.14] };
 export const GEN_W = 7.5;
 const hash01 = (x, z, k = 1) => ((Math.sin(x * 12.9898 * k + z * 78.233) * 43758.5453) % 1 + 1) % 1;
+
+// TR2_H H1 — per-lot colour (+0 calls, +0 programs, +0 triangles): the Tripo bodies carry a WHITE `color` attribute (tr2lib.js), bakeTr2 multiplies it per lot.  Walls: a little lighter / darker and warm / cool; roofs
+// (faces that look up, blended by the normal's y) pick one of a few families of the SAME blue-slate texture: blue stays the town's colour (about half of the roofs), the rest are deeper blue, grey slate, rust,
+// moss and plum.  Multipliers are linear (the shader multiplies in linear space) — roof entries can be > 1 on a channel that the blue texture has little of.  The pick is a hash of the lot position: a lot keeps its colours
+// when it levels up, and the far / lo / hi meshes agree.  Pure data (node test: dev/tr2_h_test.sh).
+const ROOF_T = [                                    // [weight, [r, g, b]]
+  [0.40, [1.00, 1.00, 1.00]],                       // the town blue
+  [0.14, [0.78, 0.86, 1.02]],                       // deep blue
+  [0.16, [1.42, 1.10, 0.80]],                       // grey slate
+  [0.12, [2.05, 0.88, 0.52]],                       // rust
+  [0.10, [0.88, 1.38, 0.92]],                       // moss
+  [0.08, [1.30, 0.84, 1.15]],                       // plum
+];
+const WALL_T = [[1, 1, 1], [1.05, 1.01, 0.93], [0.94, 0.98, 1.04], [1.06, 0.99, 0.88], [0.9, 0.92, 0.96], [1.03, 1.03, 1.0]];
+export function lotTint(lot) {
+  const a = hash01(lot.x, lot.z, 2.1), b = hash01(lot.x, lot.z, 3.7), c = hash01(lot.x, lot.z, 5.3);
+  const pool = lot.kind === 'noble' ? ROOF_T.slice(0, 3) : ROOF_T, tot = pool.reduce((q, e) => q + e[0], 0);
+  let u = a * tot, roof = pool[0][1]; for (const e of pool) { if (u < e[0]) { roof = e[1]; break; } u -= e[0]; }
+  const base = WALL_T[Math.min(WALL_T.length - 1, Math.floor(b * WALL_T.length))], lum = 0.94 + 0.12 * c;
+  return { wall: base.map((v) => r3m(v * lum)), roof: roof.map((v) => r3m(v * (0.96 + 0.08 * c))) };
+}
 export function genericTr2(lot) {
   const u = hash01(lot.x, lot.z, 1.3), fl = lot.floors || 1, pool = fl >= 2 ? ['b', 'c'] : ['a', 'a', 'd'];
   const [key, fx, , fz] = GENERIC[pool[Math.min(pool.length - 1, Math.floor(u * pool.length))]];
@@ -176,6 +198,25 @@ export function genericTr2(lot) {
 // as house(): x, z = the middle, ry = rot, w / d = the footprint, `y` = the plinth top the old house stood on, `tid` = the block's battle target (world.js tags it before the bake).
 export const isVillageHome = (h) => !h.id || h.id === 'house';
 export const villageHomeLot = (h) => { const k = h.scale || 1.4; return { x: h.x, z: h.z, ry: h.rot || 0, w: h.nx * 2 * k, d: h.nz * 2 * k, floors: h.floors || 1, tid: h.tid || 0, y: h.y }; };
+// TR2_H H2/H3: the footprint (width x, depth z, in metres, in the body's own frame) of a house model at the scale it is placed at — the ground-contact blob and the stone footing of town_ground.js are sized from it
+export function footOf(key, s = 1) {
+  for (const k of Object.values(HOME_TR2)) for (const v of k.v) if (v[0] === key) return [r3m(v[1] * s), r3m(v[3] * s)];
+  for (const g of Object.values(GENERIC)) if (g[0] === key) return [r3m(g[1] * s), r3m(g[3] * s)];
+  return [r3m(6 * s), r3m(6 * s)];
+}
+// TR2_H H3: the GROUND-FLOOR footprint [w, d, offset x, offset z] (m, at the table scale, body frame after the model's yaw) = the extent of the model's vertices in the lowest 7 % of its height, measured on the shipped GLBs
+// (dev/tr2h_foot2.mjs).  The bbox of footOf() includes roofs, jetties and porches: a footing of that size stood 1-1.5 m out from the walls of generic_b / craftsman_0 / merchant_0 (frame TR2_S4a_R3 step 2).
+export const GROUND_FOOT = {
+  house_cottage_0: [5.95, 5.05, 0, 0.2], house_cottage_1: [4.2, 6.1, 0, 0.05], house_cottage_2: [6.45, 6.1, 0.05, 0.05],
+  house_craftsman_0: [7.2, 5.1, 0.1, -0.45], house_craftsman_1: [7.05, 7.5, 0.1, -0.15], house_craftsman_2: [7.3, 6.2, 0.25, -0.3],
+  house_merchant_0: [4.9, 6.1, -0.15, -0.35], house_merchant_1: [6.85, 4.85, 0, -0.35], house_merchant_2: [6.9, 6.65, 0.05, -0.25],
+  house_noble_0: [10.4, 4.35, 0, 0], house_noble_1: [10.45, 5.15, 0, 0], house_noble_2: [10, 8.55, 0, 0],
+  house_generic_a: [7.3, 5, 0, 0.2], house_generic_b: [5.25, 6.95, 0, 0.15], house_generic_c: [7.45, 7.05, 0, 0], house_generic_d: [7.15, 3.65, 0, 0],
+};
+export function groundOf(key, s = 1) {
+  const g = GROUND_FOOT[key]; if (!g) { const [w, d] = footOf(key, s); return [w, d, 0, 0]; }
+  return [r3m(g[0] * s), r3m(g[1] * s), r3m(g[2] * s), r3m(g[3] * s)];
+}
 export const genericTr2Files = () => Object.values(GENERIC).map((g) => g[0]);
 
 // the town's level of detail (town_build.js): a cell shows its full bodies within NEAR m of the camera and the lo bodies beyond FAR m (hysteresis between); CELL = grid of the cells (m), a hamlet is a cell of its own (lot.cell)

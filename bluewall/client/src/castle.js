@@ -7,6 +7,7 @@ import { rng } from './noise.js';
 import { ENT } from './skin.js';
 import { buildRoads } from './roads.js';
 import { createRingTracker, GATE_HALF, DIMS } from './a1_rings.js';
+import { bridgeTr2 } from './bridges_tr2.js';
 
 const BOX = new THREE.BoxGeometry(1, 1, 1);
 const CYL = (rt, rb, h, s = 14) => new THREE.CylinderGeometry(rt, rb, h, s, 1, false);
@@ -20,6 +21,7 @@ export function buildCastle(ctx) {
   const put = (geo, mat, m, o) => B.add(geo, mat, m, o);
   const box = (mat, x, y, z, ry, sx, sy, sz, o = {}) => put(BOX, mat, mat4(x, y, z, ry, sx, sy, sz), o);
   const stoneUV = { worldUV: 0.085 };
+  const BR_OLD = typeof location !== 'undefined' && /[?&]br=old\b/.test(location.search);                    // TR2_H dev: the old box bridges (before / after frames)
   // TR2-S3: the castle from the Tripo library (castle_tr2.js).  When ctx.tr2c exists the stone pieces (wall slabs, towers, gatehouses, keep) are REGISTERED there instead of drawn here; everything else
   // (targets, picks, weapon sites, torches, tapestries, banners, bridges, water gates, quay) is built exactly as before.  No ctx.tr2c => the procedural castle below, unchanged.
   const T3 = ctx.tr2c || null;
@@ -242,6 +244,7 @@ export function buildCastle(ctx) {
     B.bid(0);                                                  // the bridge stays up
     // bridge over the outer moat
     const off = L.MOAT2.off + 0.5, bl = 17, bw = 7.6, bcx = G.x + G.nx * off, bcz = G.z + G.nz * off, bry = Math.atan2(-G.nz, G.nx);
+    if (!BR_OLD) { bridgeTr2(box, M, ctx.height, { x: bcx, z: bcz, nx: G.nx, nz: G.nz, len: bl, wid: bw }); return; }          // TR2_H (bridges_tr2.js; ?br=old = the old boxes)
     box(M.stone, bcx, -0.15, bcz, bry, bl, 1.6, bw, { ...stoneUV, tint: 0xd9d6d0 });
     box(M.stoneDark, bcx, 0.68, bcz, bry, bl, 0.12, bw - 1, { ...stoneUV, tint: 0x8d8a86 });
     for (const e of [-1, 1]) {
@@ -254,6 +257,7 @@ export function buildCastle(ctx) {
   // ------------------------------------------------ stone bridges over the river (road crossings): deck, two parapets with posts, piers in the water
   function riverBridge(RB) {
     B.tag(0); B.bid(0);
+    if (!BR_OLD) { bridgeTr2(box, M, ctx.height, RB); return; }                                                                 // TR2_H (bridges_tr2.js)
     const bl = RB.len, bw = RB.wid, tx = -RB.nz, tz = RB.nx, bry = Math.atan2(-RB.nz, RB.nx), bcx = RB.x, bcz = RB.z;
     box(M.stone, bcx, -0.15, bcz, bry, bl, 1.6, bw, { ...stoneUV, tint: 0xd9d6d0 });
     box(M.stoneDark, bcx, 0.68, bcz, bry, bl, 0.12, bw - 1, { ...stoneUV, tint: 0x8d8a86 });

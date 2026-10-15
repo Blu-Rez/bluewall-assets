@@ -134,14 +134,24 @@ export function bakePieces(scene, gltf, list, { shadows = true, tag = 'kit' } = 
 
 // TR2-S4a: the same bake for Tripo pieces (tr2atlas.js).  list: [{ n: 'house_cottage_0|w6.6', matrix, bid }] -> one merged mesh per material (all atlas pieces = ONE mesh = one draw call), every vertex carries
 // its battle target id `aB` (destruct.js) exactly like bakePieces.  Returns { meshes, missing }.
+// TR2_H H1: multiply the (white) vertex colours of a baked Tripo piece: tint = { wall: [r,g,b], roof: [r,g,b] } (linear multipliers); a vertex whose normal looks up (ny 0.15..0.4) blends wall -> roof
+function tintGeo(g, tint) {
+  const col = g.attributes.color, nor = g.attributes.normal; if (!col) return;
+  const w = tint.wall, r = tint.roof, a = col.array;
+  for (let i = 0, n = col.count; i < n; i++) {
+    let t = nor ? (nor.getY(i) - 0.15) / 0.25 : 0; t = t < 0 ? 0 : t > 1 ? 1 : t * t * (3 - 2 * t);
+    a[i * 3] *= w[0] + (r[0] - w[0]) * t; a[i * 3 + 1] *= w[1] + (r[1] - w[1]) * t; a[i * 3 + 2] *= w[2] + (r[2] - w[2]) * t;
+  }
+}
 export function bakeTr2(scene, atlas, list, { shadows = true, tag = 'tr2' } = {}) {
   const byMat = new Map(), missing = new Set();
-  for (const { n, matrix, bid = 0 } of list) {
+  for (const { n, matrix, bid = 0, tint } of list) {
     let parts; try { parts = atlas.get(n); } catch (e) { missing.add(n); continue; }
     for (const { geometry, material } of parts) {
       if (!byMat.has(material)) byMat.set(material, []);
       const g = geometry.clone().applyMatrix4(matrix);
       const ab = new Float32Array(g.attributes.position.count); if (bid) ab.fill(bid); g.setAttribute('aB', new THREE.BufferAttribute(ab, 1));
+      if (tint) tintGeo(g, tint);                                    // TR2_H H1: per-lot colour (b2_homes.js lotTint), multiplied into the white `color` attribute
       byMat.get(material).push(g);
     }
   }

@@ -61,6 +61,7 @@ import { S4C } from './tr2_s4c.js';                                   // TR2-S4c
 import { rockKit, rockGroup, ROCKS } from './sc_rocks.js';
 import { bushKit, BUSH } from './sc_bush.js';
 import { groundShadows } from './sc_shadow.js';
+import { edgeTrees, edgeRocks } from './edge_strip.js';          // TR2: TR2_H the rim of the map (edge_strip.js)
 import { planGardens, buildGardens } from './sc_farm.js';
 import { grayTex } from './util.js';
 import { rebakeAtlases } from './sc_cards.js';
@@ -794,6 +795,7 @@ function buildForest(scene, height, Q, inner, DAY, A, renderer) {
   }
   // ... and a soft ground shadow under each farmhouse (out there the sun's shadow map does not reach)
   groundShadows(scene, hamlets().flatMap((H) => H.houses.map((h) => ({ x: h.x, z: h.z, w: h.w, d: h.d, ry: h.ry }))), height);
+  edgeTrees(trees, height, Q.level);          // TR2: TR2_H the rim: trees on r 395..420 join the far forest (+0 calls)
   // realistic EZ-Tree trees near, baked impostors far
   let ez = null;
   if (A && (A.models.ez_pine_a || S4C.on)) {                                   // TR2-S4c: the Tripo trees do not need the EZ models
@@ -830,6 +832,7 @@ function buildForest(scene, height, Q, inner, DAY, A, renderer) {
   // rocks (p22): natural groups of procedural boulders in the scanned moss-rock texture (sc_rocks.js) — a main rock leaning into the slope with
   // a few half-buried stones around it; slabs and crags up the hills. scatterFlora() adds the meadow rocks and builds the kit (one mesh per kind).
   const kit = rockKit(A && A.ph, Q, { snow: Math.min(1, seasonWeights(season()).snow * 1.3) });
+  edgeRocks(kit, height, Q.level);                                               // TR2: TR2_H the rim: boulders on r 395..428 join the rock kit (+0 calls)
   const inGarden = (x, z) => gardens.some((g) => Math.hypot(g.x - x, g.z - z) < Math.max(g.w, g.d) * 0.5 + 2.5);
   const rockOk = (x, z) => !inGarden(x, z) && !(L.sdTown(x, z) < 20 || roadEdge(x, z) < 2 || L.nearMine(x, z, 38) || hamletD(x, z) < 22 || nomadD(x, z) < 22 || wsD(x, z) < 8 || treeClear(x, z, 4)) && height(x, z) >= 0.2;
   const nGroups = Q.level === 'low' ? 80 : Q.level === 'medium' ? 105 : 125;
