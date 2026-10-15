@@ -1,6 +1,6 @@
 // RP4 — presentation + controller.  build(ctx) is called by combat.js attach().  It owns: the sim, the hero's combat clips + sword, ONE additive ribbon mesh (slash trail, enemy telegraph wedges,
 // flame-wave crescents, burst rings), ONE pooled additive Points mesh (sparks / flares / embers), camera shake, damage digits (Latin digits, DOM), the HUD, and the placeholder enemies.
-// Draw calls added: sword 1 + ribbon 1 + points 1 (+ the enemies' own meshes).  Programs added: MeshBasic(vertex colours, additive) + the Points shader (+ the sword's MeshStandard = the hero's own program).
+// Draw calls added: sword 1 + ribbon 1 + points 1 + WC1 carry (belt / scabbard / strap mesh 1 per mount bone, <= 2; one gem per weapon, <= 2) (+ the enemies' own meshes).  Programs added: MeshBasic(vertex colours, additive) + the Points shader (+ the sword's MeshStandard = the hero's own program).
 // Nothing here allocates per frame (scratch vectors / typed arrays are made once).  No PointLight (adding a light recompiles every lit material).
 const PI = Math.PI, TAU = PI * 2;
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
@@ -24,16 +24,13 @@ export async function build(ctx) {
   const mixer = hero.mixer, CL = {};
   const addClip = (c) => { if (!c || CL[c.name]) return; const a = mixer.clipAction(c); a.play(); a.timeScale = 0; a.setEffectiveWeight(0); CL[c.name] = { a, d: c.duration, w: 0, shared: !!(hero.acts && hero.acts[c.name] && hero.acts[c.name].a === a) }; };
   for (const n of kit.clips) { addClip((hero.clips || []).find((c) => c.name === n) || (hero.acts && hero.acts[n] && hero.acts[n].a.getClip())); if (!CL[n]) throw new Error('RP4: the hero GLB has no clip ' + n); }
-  // the weapons ride on R_Hand / L_Hand (a library weapon is cut to length 1, grip centre at the origin: scale = length / model scale)
+  // WC1: the weapons are only LOADED here; combat/carry.js mounts them (hip / back / hand by weapon class, kit field `carry`), draws them when a fight starts, sheathes them 3 s after the last blow and sets the sister's gem (a library weapon is cut to length 1, grip centre at the origin: scale = length / model scale)
   const weapons = [];
-  kit.weapons.forEach((w, i) => {
-    const hand = hero.model.getObjectByName(w.slot === 'L' ? 'L_Hand' : 'R_Hand'); if (!hand) return;
-    const grp = new T.Group(), m = weaponG[i].scene.children[0] || weaponG[i].scene; grp.add(m); m.traverse((o) => { if (o.isMesh) { o.frustumCulled = false; o.castShadow = false; } });
-    const msc = hero.model.scale.x || 1, b = new T.Vector3(...w.grip.b).normalize(), wv0 = new T.Vector3(b.y, -b.x, 0).normalize(), zz = new T.Vector3().crossVectors(wv0, b);
-    grp.quaternion.setFromRotationMatrix(new T.Matrix4().makeBasis(wv0, b, zz)); grp.position.set(...w.grip.pos); grp.scale.setScalar(w.len / msc); hand.add(grp); weapons.push({ obj: grp, w });
-  });
+  kit.weapons.forEach((w, i) => { const grp = new T.Group(), m = weaponG[i].scene.children[0] || weaponG[i].scene; grp.add(m); m.traverse((o) => { if (o.isMesh) { o.frustumCulled = false; o.castShadow = false; } }); weapons.push({ obj: grp, w }); });
   const tw0 = kit.trail ? (weapons[kit.trailWeapon] || weapons[0] || null) : null, sword = tw0 ? tw0.obj : null, WP = tw0 ? tw0.w : null;      // (the weapon that draws the trail)
-  const heroMats = []; hero.model.traverse((o) => { if ((o.isMesh || o.isSkinnedMesh) && o.material && o.material.emissive && !weapons.some((q) => q.obj.getObjectById(o.id))) { if (!heroMats.includes(o.material)) heroMats.push(o.material); } });
+  const heroMats = []; hero.model.traverse((o) => { if ((o.isMesh || o.isSkinnedMesh) && o.material && o.material.emissive) { if (!heroMats.includes(o.material)) heroMats.push(o.material); } });   // (WC1: collected BEFORE carry adds its fittings, so their materials never get the hero tint)
+  const CARRY = weapons.length ? await import(/* @vite-ignore */ base + 'combat/carry.js' + (v || '')) : null;
+  const carry = CARRY ? CARRY.create({ T, hero, items: weapons, emit, gem: CARRY.gemLook(T, el) }) : null;
   const foes = FOES.create({ T, scene, parseGLB: opts.parseGLB, base, v, hgt });
   const kinds = opts.kinds || ['soldier', 'beast', 'brute'];
   const foeInfo = await foes.load(kinds);
@@ -254,7 +251,7 @@ export async function build(ctx) {
   const mv = { x: 0, z: 0 }, inp = { mx: 0, mz: 0, camYaw: 0, block: false, attack: false, dodge: false, skill1: false, skill2: false, lock: false, lockNext: false };
   let deadT = 0, wasBusy = false, enabled = true, spawnN = opts.spawn | 0;
   const ctrl = {
-    sim, foes, hud, VERSION: ctx.VERSION, quality: 3, info: { foes: foeInfo },
+    sim, foes, hud, carry, VERSION: ctx.VERSION, quality: 3, info: { foes: foeInfo },
     /** host frame, BEFORE the host moves the hero.  S = the host's state { x, y, z, body, camYaw, st, grounded }; (wantX, wantZ) = the stick in world space, m = its length 0..1.  Returns true while the sim owns the hero (attack / roll / hurt / skill): the host must not move or turn her */
     pre(dt, S, wantX, wantZ, m) {
       const t0 = performance.now(); shakeUndo(); heroY = S.y;
@@ -275,8 +272,10 @@ export async function build(ctx) {
     /** host frame, AFTER the host's animate(): blend the combat clip over the host's, sample the trail */
     post(dt) {
       const t0 = performance.now(); poseApply(dt);
+      if (carry) { const hs = HS.state; carry.update(dt, enabled && !!(HS.hasLock || hs === 'atk' || hs === 'skill' || hs === 'hit' || hs === 'block' || hs === 'down')); }      // WC1
       if (sword && Q.trail) {
         let on = false; if (HS.state === 'atk') { const c = kit.combo[HS.n]; const tw = c.trail; if (c.type === 'shot') on = false; else if (tw) { for (let i = 0; i < tw.length; i++) if (HS.sT >= tw[i][0] && HS.sT <= tw[i][1]) on = true; } else on = HS.sT >= c.hit[0] - 0.12 && HS.sT <= c.hit[1] + 0.14; } else if (HS.state === 'skill') { const s = kit.skills[HS.skill]; on = s.effects.some((f) => f.type === 'projectile' && f.vis === 'crescent') && HS.sT >= s.at - 0.14 && HS.sT <= s.at + 0.14; }
+        if (on && carry && !carry.inHand(sword)) on = false;      // WC1: nothing to trail while the blade is being swapped
         if (on && !HS.freeze) { trailPush(trailBreak || !tr.on); trailBreak = false; } tr.on = on; if (!on) trailBreak = true;
       }
       perf.post += (performance.now() - t0 - perf.post) * 0.1;
@@ -315,10 +314,10 @@ export async function build(ctx) {
     spawnTest(n, kindsList) {                                               // n placeholder enemies in a half ring in front of the hero
       const ks = kindsList || kinds, out = []; for (let i = 0; i < n; i++) { const a = HS.yaw + (n === 1 ? 0 : (i / (n - 1) - 0.5) * 2.2), r = 7 + (i % 2) * 1.5, e = sim.spawn(ks[i % ks.length], HS.x + Math.sin(a) * r, HS.z + Math.cos(a) * r, { yaw: a + PI }); if (e) out.push(e); } return out;
     },
-    setEnabled(b) { enabled = !!b; ribbon.visible = points.visible = !!b && true; for (const q of weapons) q.obj.visible = !!b; hud.setVisible(!!b); if (!b) foes.dispose(); },
-    stats() { const f = foes.stats(); return { jsMs: +(perf.pre + perf.post + perf.frame).toFixed(3), pre: +perf.pre.toFixed(3), post: +perf.post.toFixed(3), frame: +perf.frame.toFixed(3), foeCalls: f.calls, foeTris: f.tris, ownCalls: 3, ownTris: ri.length / 3 + NP * 0 + (swordTris), swordTris, trailLive: tr.n, ribbonVerts: NV, particles: NP, partLive: (() => { let c = 0; for (let i = 0; i < NP; i++) if (pl[i] > 0) c++; return c; })(), quality: qStep, alerts: nAlert, frameK: +SH.k.toFixed(3) }; },
+    setEnabled(b) { enabled = !!b; ribbon.visible = points.visible = !!b && true; for (const q of weapons) q.obj.visible = !!b; if (carry) carry.setVisible(!!b); hud.setVisible(!!b); if (!b) foes.dispose(); },
+    stats() { const f = foes.stats(); return { jsMs: +(perf.pre + perf.post + perf.frame).toFixed(3), pre: +perf.pre.toFixed(3), post: +perf.post.toFixed(3), frame: +perf.frame.toFixed(3), foeCalls: f.calls, foeTris: f.tris, ownCalls: 3 + (carry ? carry.calls() : 0), carryCalls: carry ? carry.calls() : 0, ownTris: ri.length / 3 + NP * 0 + (swordTris), swordTris, trailLive: tr.n, ribbonVerts: NV, particles: NP, partLive: (() => { let c = 0; for (let i = 0; i < NP; i++) if (pl[i] > 0) c++; return c; })(), quality: qStep, alerts: nAlert, frameK: +SH.k.toFixed(3) }; },
     burstFx, shake, setFrame(k) { frameOn = k; },
-    dispose() { shakeUndo(); scene.remove(ribbon); scene.remove(points); rg.dispose(); pgeo.dispose(); rmat.dispose(); pmat.dispose(); for (const q of weapons) q.obj.removeFromParent(); for (const m of heroMats) m.emissive.setRGB(0, 0, 0); for (const n in CL) { CL[n].a.stop(); } foes.dispose(); hud.dispose(); },
+    dispose() { shakeUndo(); scene.remove(ribbon); scene.remove(points); rg.dispose(); pgeo.dispose(); rmat.dispose(); pmat.dispose(); if (carry) carry.dispose(); for (const q of weapons) q.obj.removeFromParent(); for (const m of heroMats) m.emissive.setRGB(0, 0, 0); for (const n in CL) { CL[n].a.stop(); } foes.dispose(); hud.dispose(); },
   };
   let swordTris = 0; for (const q of weapons) q.obj.traverse((o) => { if (o.isMesh) { const g = o.geometry; swordTris += (g.index ? g.index.count : g.attributes.position.count) / 3; } });
   return ctrl;
