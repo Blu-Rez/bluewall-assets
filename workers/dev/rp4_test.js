@@ -358,5 +358,55 @@ function script(seed) {
   const lt = createSim({ kit: FIX.STAFF, seed: 1, selfMove: true }); const el2 = lt.spawn('brute', 0, 3, { passive: true, element: 'water' }); el2.hp = 1e6; pr = false; let wm = null; run(lt, 1.0, () => { if (!pr) { pr = true; return { attack: true }; } return {}; }, (ev) => { if (ev.type === 'hit' && wm == null) wm = ev.mult; }); ok(wm === 1, 'water on water = x1 (' + wm + ')');
 }
 
+// ---------------------------------------------------------------- R3. RP4_R3: the roll is THROWN forward, a hit THROWS its victim (the owner: «the push / dodge rolls in place»)
+{
+  const D = TUNE.dodge, KB = TUNE.knock;
+  const rollTrace = (dirx, dirz, inpExtra = {}, mk = fresh, yaw0 = null) => {                     // roll with the stick (dirx, dirz) held for one tick; positions every tick
+    const sm = mk(); if (yaw0 != null) sm.syncHero(0, 0, yaw0); const tr = [[0, 0, 0]]; sm.update(DT, { dodge: true, mx: dirx, mz: dirz, ...inpExtra }); tr.push([sm.S.t, sm.hero.x, sm.hero.z]);
+    for (let i = 0; i < Math.round(0.9 / DT) - 1; i++) { sm.update(DT, { ...inpExtra }); tr.push([sm.S.t, sm.hero.x, sm.hero.z]); }
+    return { sm, tr, end: tr[tr.length - 1] };
+  };
+  // (1) eight directions: the roll goes exactly where the stick points, the same 2.6-3.2 m in every one
+  let worst = 0, lo = 1e9, hi = 0, latMax = 0;
+  for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4, dx = Math.sin(a), dz = Math.cos(a), r = rollTrace(dx, dz), d = Math.hypot(r.end[1], r.end[2]), along = r.end[1] * dx + r.end[2] * dz, lat = Math.abs(r.end[1] * dz - r.end[2] * dx); lo = Math.min(lo, d); hi = Math.max(hi, d); latMax = Math.max(latMax, lat); worst = Math.max(worst, Math.abs(along - D.dist)); }
+  ok(lo >= 2.6 && hi <= 3.2 && worst < 0.03 && latMax < 0.03, `the roll goes ${lo.toFixed(2)}-${hi.toFixed(2)} m in each of 8 stick directions (spec 2.6-3.2 m, tune ${D.dist}), sideways error ${latMax.toFixed(3)} m`);
+  // (2) the speed curve: fast start, soft end, no stop-and-go
+  { const r = rollTrace(0, 1), tr = r.tr, tot = r.end[2], at = (t) => { let b = tr[0]; for (const q of tr) { if (q[0] <= t + 1e-9) b = q; } return b[2]; };
+    const vs = []; for (let i = 1; i < tr.length; i++) vs.push((tr[i][2] - tr[i - 1][2]) / DT); const nR = Math.round(D.dur / DT), vr = vs.slice(0, nR - 1), avg = tot / D.dur;
+    let mono = true; for (let i = 1; i < vr.length; i++) if (vr[i] > vr[i - 1] + 0.05) mono = false;
+    ok(vr[0] >= 1.8 * avg && mono, `speed curve: ${vr[0].toFixed(1)} m/s at the start (${(vr[0] / avg).toFixed(1)} x the average ${avg.toFixed(1)}), never speeding up again`);
+    ok(at(0.3 * D.dur) >= 0.5 * tot && at(0.8 * D.dur) <= 0.97 * tot && vr[vr.length - 1] < 0.06 * vr[0], `fast start, slow end: ${(100 * at(0.3 * D.dur) / tot).toFixed(0)} % of the distance in the first 30 % of the time, ${(100 * (tot - at(0.8 * D.dur)) / tot).toFixed(1)} % in the last 20 %, ending at ${vr[vr.length - 1].toFixed(2)} m/s`);
+    ok(near(tr[Math.round(D.dur / DT) + 1][2], tot, 0.02) && near(tot, D.dist, 0.03), `it is over after ${D.dur} s and nothing moves her after it (${tot.toFixed(3)} m)`); }
+  // (3) no stick: FORWARD along her facing (was a back-step); the stick towards the camera: the other way, facing kept
+  { const yaw = 0.9, fwd = rollTrace(0, 0, {}, fresh, yaw), a = fwd.end[1] * Math.sin(yaw) + fwd.end[2] * Math.cos(yaw);
+    ok(near(a, D.dist, 0.05) && Math.abs(fwd.end[1] * Math.cos(yaw) - fwd.end[2] * Math.sin(yaw)) < 0.03, `no stick: thrown forward along her facing (${a.toFixed(2)} m, tune ${D.dist})`);
+    const bk = rollTrace(0, 0, { back: true }, fresh, yaw), b = -(bk.end[1] * Math.sin(yaw) + bk.end[2] * Math.cos(yaw));
+    ok(near(b, D.back, 0.05) && near(bk.sm.hero.yaw, yaw, 1e-6), `stick towards the camera: ${b.toFixed(2)} m the other way (tune ${D.back}), her facing kept`); }
+  // (4) the i-frames are as before (0.04-0.34 s), and a roll still costs 25 stamina (the older checks above) — and the perfect dodge still needs them
+  { const s2 = fresh(); let first = null, last = null; s2.update(DT, { dodge: true, mx: 0, mz: 1 }); for (let i = 0; i < 60; i++) { if (s2.invulnerable()) { if (first == null) first = s2.hero.sT; last = s2.hero.sT; } s2.update(DT, {}); } ok(first != null && near(first, D.i0, 2 * DT) && near(last, D.i1, 2 * DT), `i-frames kept: ${first.toFixed(3)}-${last.toFixed(3)} s`); }
+  // (5) the host moves her (hostMove) through a WALL at z = 1.2: the roll stops there, never through it; an angled roll slides along it
+  { const R = TUNE.hero.radius, wallZ = 1.2; const hostRoll = (dx, dz) => { const sm = createSim({ kit: KIT, seed: 1, selfMove: false, collide: null }); const H = { x: 0, z: 0 }, mv = { x: 0, z: 0 }; let maxZ = 0, stuck = 0;
+      for (let i = 0; i < Math.round(1.0 / DT); i++) { sm.syncHero(H.x, H.z, 0); sm.update(DT, i === 0 ? { dodge: true, mx: dx, mz: dz } : {}); sm.takeMove(mv); H.x += mv.x; H.z += mv.z; if (H.z > wallZ - R) H.z = wallZ - R; maxZ = Math.max(maxZ, H.z); }
+      return { H, maxZ }; };
+    const f = hostRoll(0, 1), g = hostRoll(Math.SQRT1_2, Math.SQRT1_2);
+    ok(near(f.H.z, wallZ - R, 1e-6) && f.maxZ <= wallZ - R + 1e-9 && Math.abs(f.H.x) < 1e-6, `host wall: a roll straight into a wall at 1.2 m stops at the wall (z ${f.H.z.toFixed(2)}, body radius ${R}), no sideways drift`);
+    ok(g.maxZ <= wallZ - R + 1e-9 && g.H.x > 1.5, `host wall: an angled roll slides along it (x ${g.H.x.toFixed(2)} m, never past the wall)`); }
+  // (6) a hit THROWS the enemy away from her: 0.5-1.5 m in 0.2 s, and a thrown enemy meets the solids
+  { const hitOnce = (kitSim, press, collideE) => { const sm = createSim({ kit: kitSim, seed: 1, selfMove: true, collideE }); const e = sm.spawn('brute', 0, 1.9, { passive: true, element: null }); e.hp = e.hpMax = 1e6; e.poise = 0; e.K = { ...e.K, poise: 1e9 }; let hitT = null, z0 = null, endT = null, zMax = 0, xMax = 0, pr = false;
+      for (let i = 0; i < Math.round(1.6 / DT); i++) { sm.update(DT, !pr ? (pr = true, press) : {}); for (const ev of sm.events) if (ev.type === 'hit' && hitT == null) { hitT = sm.S.t; z0 = e.z; }
+        if (hitT != null) { zMax = Math.max(zMax, e.z - z0); xMax = Math.max(xMax, Math.abs(e.x)); if (e.kD > 0) endT = sm.S.t; } }
+      return { dz: zMax, dx: xMax, thrownFor: endT == null ? 0 : endT - hitT, hitT, e }; };
+    const light = hitOnce(KIT, { attack: true }); ok(light.hitT != null && near(light.dz, KB.min, 0.03) && light.dx < 0.05 && light.thrownFor <= KB.t + 0.075 + 2 * DT, `knock-back: a light slash (kit knock ${KIT.combo[0].knock}) throws the enemy ${light.dz.toFixed(2)} m straight away (floor ${KB.min} m) within ${light.thrownFor.toFixed(2)} s (${KB.t} s + hit-stop)`);
+    const heavyKit = prepareKit({ ...ELINA, combo: ELINA.combo.map((b, i) => (i === 0 ? { ...b, knock: 1.6, dmg: 0.1 } : b)) }); const heavy = hitOnce(heavyKit, { attack: true }); ok(heavy.hitT != null && near(heavy.dz, KB.max, 0.03), `knock-back: a kit knock of 1.6 m is held to ${KB.max} m (${heavy.dz.toFixed(2)})`);
+    const none = prepareKit({ ...ELINA, combo: ELINA.combo.map((b, i) => (i === 0 ? { ...b, knock: 0 } : b)) }); const nk = hitOnce(none, { attack: true }); ok(nk.hitT != null && nk.dz < 0.02, `knock-back: knock 0 = no throw (${nk.dz.toFixed(3)} m)`);
+    const wall = hitOnce(KIT, { attack: true }, (x, z, r) => [x, Math.min(z, 1.9 + 0.2)]); ok(wall.hitT != null && wall.dz <= 0.2 + 1e-6 && wall.dz > 0.15, `knock-back: a solid 0.2 m behind the enemy stops it there (${wall.dz.toFixed(2)} m)`); }
+  // (7) a hit on HER throws her too: 0.7 m (a hit) / 1.5 m (a knock-down) away from the attacker, 0.2 s, and she is moved through hostMove-style displacement (takeMove)
+  { const hurt = (hp) => { const sm = createSim({ kit: KIT, seed: 3, selfMove: true }); const e = sm.spawn('soldier', 0, 1.3, { element: null }); e.yaw = Math.PI; let t0 = null, p0 = null, mx = 0; if (hp) sm.hero.hp = sm.hero.hpMax = hp;
+      for (let i = 0; i < Math.round(3.0 / DT); i++) { sm.update(DT, {}); for (const ev of sm.events) if (ev.type === 'hero-hit' && t0 == null) { t0 = sm.S.t; p0 = [sm.hero.x, sm.hero.z]; } if (t0 != null && sm.S.t - t0 < 0.8) mx = Math.max(mx, Math.hypot(sm.hero.x - p0[0], sm.hero.z - p0[1])); }
+      return { t0, mx, z: sm.hero.z - (p0 ? p0[1] : 0) }; };
+    const h1 = hurt(0); ok(h1.t0 != null && h1.mx > 0.55 && h1.mx < 0.85, `she is thrown ${h1.mx.toFixed(2)} m by a hit (tune ${KB.hit} m)`);
+    const h2 = hurt(180); ok(h2.t0 != null && h2.mx > 1.3 && h2.mx <= KB.max + 0.1, `she is thrown ${h2.mx.toFixed(2)} m by a knock-down hit (tune ${KB.down} m)`); }
+}
+
 console.log(fails ? `RP4 FAIL (${fails} failed, ${passes} ok)` : `RP4 OK (${passes} checks)`);
 process.exit(fails ? 1 : 0);

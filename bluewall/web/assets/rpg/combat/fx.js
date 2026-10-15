@@ -12,7 +12,7 @@ export async function build(ctx) {
   const { createSim, kit, hud: HUD, foes: FOES, under, hero, opts, ELEMENTS, TUNE, KINDS, base, v } = ctx;
   const T = opts.THREE, camera = opts.camera, scene = opts.scene || under.scene, root = opts.root, hgt = (under && under.hgt) || opts.hgt || (() => 0);
   const key = kit.id, el = ELEMENTS[kit.element], GL = el.glow, hostMove = opts.hostMove || null;
-  const sim = createSim({ kit, seed: opts.seed || 1, selfMove: false, collide: null });
+  const sim = createSim({ kit, seed: opts.seed || 1, selfMove: false, collide: null, collideE: (x, z, r) => collideE(x, z, r) });   // (RP4_R3: collideE = the solids for an enemy that is thrown)
   const perf = { pre: 0, post: 0, frame: 0 };
   let seedF = 0x9E3779B9 ^ (opts.seed || 1); const rnd = () => { seedF ^= seedF << 13; seedF ^= seedF >>> 17; seedF ^= seedF << 5; return ((seedF >>> 0) % 100000) / 100000; };   // visual-only noise (the sim has its own seeded PRNG)
   const col = (hex) => { const c = new T.Color(hex); return [c.r, c.g, c.b]; };
@@ -111,6 +111,12 @@ export async function build(ctx) {
   const FRAME = TUNE.frame || { right: 0.8, shift: 0.4, up: 0.3, back: 0.6 };
   function fightOn() { if (HS.hasLock || HS.state === 'atk' || HS.state === 'skill' || HS.state === 'hit' || HS.state === 'down' || HS.state === 'block') return 1; for (const e of sim.enemies) { if (e.state === 'dead' || e.passive) continue; if (e.state !== 'idle' && Math.hypot(e.x - HS.x, e.z - HS.z) < 14) return 1; } return 0; }
   const cols = under && under.colliders, BND = (under && under.BOUND) || 1e9; let frameOn = 1;
+  const ceOut = [0, 0];
+  function collideE(x, z, r) {                                  // RP4_R3: an enemy that is THROWN meets the same solids the hero meets (the underworld's discs + the map bound); no allocation
+    if (cols) for (let i = 0; i < cols.length; i++) { const c = cols[i], dx = x - c[0], dz = z - c[1], rr = c[2] + r, d2 = dx * dx + dz * dz; if (d2 < rr * rr) { const d = Math.sqrt(d2) || 1e-4; x = c[0] + dx / d * rr; z = c[1] + dz / d * rr; } }
+    const b = BND - r - 0.1, q = x * x + z * z; if (q > b * b) { const k = b / Math.sqrt(q); x *= k; z *= k; }
+    ceOut[0] = x; ceOut[1] = z; return ceOut;
+  }
   function camBlocked(x, z) { if (x * x + z * z > (BND - 0.4) * (BND - 0.4)) return true; if (cols) for (let i = 0; i < cols.length; i++) { const c = cols[i], dx = x - c[0], dz = z - c[1], rr = c[2] + 0.4; if (dx * dx + dz * dz < rr * rr) return true; } return false; }
   function cameraApply(dt) {
     let tgt = HS.state === 'dead' ? 0 : fightOn() * frameOn;
@@ -248,14 +254,14 @@ export async function build(ctx) {
   }
 
   // ------------------------------------------------------------------ the controller
-  const mv = { x: 0, z: 0 }, inp = { mx: 0, mz: 0, camYaw: 0, block: false, attack: false, dodge: false, skill1: false, skill2: false, lock: false, lockNext: false };
+  const mv = { x: 0, z: 0 }, inp = { mx: 0, mz: 0, camYaw: 0, back: false, block: false, attack: false, dodge: false, skill1: false, skill2: false, lock: false, lockNext: false };
   let deadT = 0, wasBusy = false, enabled = true, spawnN = opts.spawn | 0;
   const ctrl = {
     sim, foes, hud, carry, VERSION: ctx.VERSION, quality: 3, info: { foes: foeInfo },
     /** host frame, BEFORE the host moves the hero.  S = the host's state { x, y, z, body, camYaw, st, grounded }; (wantX, wantZ) = the stick in world space, m = its length 0..1.  Returns true while the sim owns the hero (attack / roll / hurt / skill): the host must not move or turn her */
     pre(dt, S, wantX, wantZ, m) {
       const t0 = performance.now(); shakeUndo(); heroY = S.y;
-      const L = Math.hypot(wantX, wantZ) || 1; inp.mx = m > 0 ? (wantX / L) * m : 0; inp.mz = m > 0 ? (wantZ / L) * m : 0; inp.camYaw = S.camYaw;
+      const L = Math.hypot(wantX, wantZ) || 1; inp.mx = m > 0 ? (wantX / L) * m : 0; inp.mz = m > 0 ? (wantZ / L) * m : 0; inp.camYaw = S.camYaw; inp.back = Math.hypot(wantX, wantZ) > 0.1 && !(m > 0);      // RP4_R3: the host passes m = 0 while the stick points at the camera: a roll then goes the other way (her facing is kept)
       if (S.reqDodge) { keyq.dodge = true; S.reqDodge = false; }                    // the host's own dodge button / keys feed the sim's roll
       const air = S.grounded === false || S.mode === 'first';                         // (no combat in the air or in first person)
       inp.attack = keyq.attack && !air; inp.dodge = keyq.dodge && !air; inp.skill1 = keyq.skill1 && !air; inp.skill2 = keyq.skill2 && !air; inp.lock = keyq.lock; inp.lockNext = keyq.lockNext; inp.block = (blockTouch || !!(S.keys && S.keys.has('KeyF'))) && !air; keyq.attack = keyq.dodge = keyq.skill1 = keyq.skill2 = keyq.lock = keyq.lockNext = false;

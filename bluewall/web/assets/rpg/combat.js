@@ -43,11 +43,12 @@ export const TUNE = {
   ATK: 100, comboSpeed: 1.0,
   hero: { hp: 600, stamina: 100, regen: 30, regenDelay: 0.6, run: 4.4, accel: 16, radius: 0.45, hitStun: 0.38, armor: 0.5, downAt: 0.25, down: 1.1, wakeInvul: 0.5, turnRate: 18 },
   buffer: { attack: 0.30, dodge: 0.30, skill: 0.30 }, grace: 0.30,
-  dodge: { dur: 0.62, i0: 0.04, i1: 0.34, dist: 4.4, back: 3.2, cost: 25, recharge: 0.8, refund: 25, clipLen: 1.7, margin: 1.2 },
+  dodge: { dur: 0.62, i0: 0.04, i1: 0.34, dist: 2.9, back: 2.6, p: 2, cost: 25, recharge: 0.8, refund: 25, clipLen: 1.7, margin: 1.2 },   // RP4_R3: the roll is THROWN: dist m along the stick (her facing with no stick; `back` m the other way when the stick points at the camera) over `dur`, speed 2 x dist / dur fading to 0 (displacement fraction 1 - (1 - f)^p); was 4.4 m with a back-step when no stick
   block: { clip: 'block', dur: 0.84, t0: 0, arc: 120, dr: 0.25, cost: 0.3, raise: 0.10, turn: 10, walk: 0, push: 1.5, stop: 0.05, breakSt: 20 },   // hold: x0.25 damage from the front 120 deg after a 0.10 s raise; every blocked hit costs 0.3 stamina per point of damage; stamina does not regenerate while the guard is up; if it runs out the guard breaks (the rest of the hit goes through + a stagger, no guard until 20 stamina are back)
   autoTurn: 3.0,
   lock: { range: 18, cone: 65 * Math.PI / 180, drop: 24, reacquire: 8 },
   hitstop: { hurt: 0.07 },
+  knock: { min: 0.5, max: 1.5, t: 0.2, hit: 0.7, down: 1.5 },   // RP4_R3: whoever is hit is THROWN away from the attacker: a kit's `knock` m clamped to min..max (knock 0 = none), hero `hit` / `down` m, all over `t` s (displacement 1 - (1 - f)^2), through the same solids as walking
   shake: 1.0,
   status: { burnTick: 0.5 },
   frame: { right: 0.8, shift: 0.4, up: 0.3, back: 0.6 },   // fight camera, nudged from the HOST's behind-the-hero camera (eased in 0.4 s / out 0.9 s; dropped where a pillar / the wall is in the way): up + back (m), and sideways only as far as needed to put her 40 % of the half-width left of the centre (max `right` m)
@@ -182,9 +183,9 @@ const NOHIT = { stop: 0, knock: 0, poise: 0, stagger: false, status: null };
 export function createSim(cfg = {}) {
   if (!cfg.kit) throw new Error('RP4 createSim: cfg.kit is required (import the sister\'s combat/kit_<id>.js and pass its default export)');
   const kit = prepareKit(cfg.kit), el = kit.element, NC = kit.combo.length, ct = cfg.tune || {};
-  const T = { ...TUNE, ...ct }; T.hero = { ...TUNE.hero, hp: kit.hero.hp, stamina: kit.hero.stamina, regen: kit.hero.regen, armor: kit.hero.armor, ...(ct.hero || {}) }; T.dodge = { ...TUNE.dodge, ...(ct.dodge || {}) }; T.enemy = { ...TUNE.enemy, ...(ct.enemy || {}) }; T.status = { ...TUNE.status, ...(ct.status || {}) };
+  const T = { ...TUNE, ...ct }; T.hero = { ...TUNE.hero, hp: kit.hero.hp, stamina: kit.hero.stamina, regen: kit.hero.regen, armor: kit.hero.armor, ...(ct.hero || {}) }; T.dodge = { ...TUNE.dodge, ...(ct.dodge || {}) }; T.knock = { ...TUNE.knock, ...(ct.knock || {}) }; T.enemy = { ...TUNE.enemy, ...(ct.enemy || {}) }; T.status = { ...TUNE.status, ...(ct.status || {}) };
   const Bk = { ...kit.block, ...(ct.block || {}) }; if (ct.block && ct.block.arc) Bk.arc = ct.block.arc * D2R;
-  const rnd = mulberry32(cfg.seed == null ? 1 : cfg.seed), selfMove = cfg.selfMove !== false, collide = cfg.collide || null, autoTurn = ct.autoTurn || kit.autoTurn;
+  const rnd = mulberry32(cfg.seed == null ? 1 : cfg.seed), selfMove = cfg.selfMove !== false, collide = cfg.collide || null, collideE = cfg.collideE || null, autoTurn = ct.autoTurn || kit.autoTurn;
   const H = {                                                          // the hero
     x: 0, z: 0, yaw: 0, vx: 0, vz: 0, hp: T.hero.hp, hpMax: T.hero.hp, st: T.hero.stamina, stMax: T.hero.stamina, stDelay: 0,
     state: 'loco', sT: 0, n: -1, kind: null, swing: 0, sw2: false, grace: 0, graceN: -1, dodgeCd: 0, invul: 0, armor: 0, freeze: 0, cd: [0, 0], cdMax: [kit.skills[0].cd, kit.skills[1].cd],
@@ -207,7 +208,7 @@ export function createSim(cfg = {}) {
   function spawn(kind, x, z, o = {}) {
     const K = KINDS[kind]; if (!K) throw new Error('kind ' + kind);
     let alive = 0; for (const e of S.enemies) if (e.state !== 'dead') alive++; if (alive >= T.enemy.max) return null;
-    const e = { id: S.nextId++, kind, K, x, z, yaw: o.yaw || 0, hp: K.hp, hpMax: K.hp, poise: 0, state: 'idle', sT: 0, freeze: 0, lastHit: -1, lastWave: -1, kx: 0, kz: 0, lockYaw: 0, struck: false, pdone: false, wait: 0.15 + rnd() * 0.35, element: o.element !== undefined ? o.element : K.element, r: K.radius || T.enemy.radius, pose: { clip: 'idle', t: 0 }, flash: 0, orbit: rnd() < 0.5 ? 1 : -1, passive: !!o.passive,
+    const e = { id: S.nextId++, kind, K, x, z, yaw: o.yaw || 0, hp: K.hp, hpMax: K.hp, poise: 0, state: 'idle', sT: 0, freeze: 0, lastHit: -1, lastWave: -1, kD: 0, kT: 0, kL: 0, kdx: 0, kdz: 0, lockYaw: 0, struck: false, pdone: false, wait: 0.15 + rnd() * 0.35, element: o.element !== undefined ? o.element : K.element, r: K.radius || T.enemy.radius, pose: { clip: 'idle', t: 0 }, flash: 0, orbit: rnd() < 0.5 ? 1 : -1, passive: !!o.passive,
       slowT: 0, slowK: 1, rootT: 0, fzT: 0, burnT: 0, burnDps: 0, burnAcc: 0, burnTk: 0 };
     S.enemies.push(e); const ev = emit('spawn'); ev.id = e.id; ev.kind = kind; ev.x = x; ev.z = z; return e;
   }
@@ -222,13 +223,17 @@ export function createSim(cfg = {}) {
     else if (st.id === 'burn') { e.burnT = Math.max(e.burnT, dur); e.burnDps = Math.max(e.burnDps, st.dps); }
     const ev = emit('status'); ev.id = e.id; ev.kind = st.id; ev.a = dur; ev.x = e.x; ev.z = e.z;
   }
+  // ---- RP4_R3: knock-back = a throw away from the attacker: `knock` m (clamped to T.knock.min..max, 0 = none) over T.knock.t s, fast start / soft end, stopped by the solids (cfg.collideE)
+  function kickEnemy(e, dx, dz, knock) { const K = T.knock; if (!(knock > 0)) return; e.kD = clamp(knock, K.min, K.max); e.kT = 0; e.kL = 0; e.kdx = dx; e.kdz = dz; }      // (a hit with knock 0 — a burn tick, a status-only effect — leaves a throw already under way alone)
+  function kickHero(dx, dz, dist) { H.kD = dist; H.kT = 0; H.kL = 0; H.kdx = dx; H.kdz = dz; }
+  function kbFrac(t) { const f = clamp(t / T.knock.t, 0, 1); return 1 - (1 - f) * (1 - f); }
   // ---- damage dealt to an enemy
   function hurtEnemy(e, base, mult0, kindName, atk, dirx, dirz, mark) {
     const mult = mult0 * elementMult(el, e.element), dmg = Math.round(base * atkMul() * mult * 10) / 10;
     e.hp -= dmg; e.flash = 0.12; if (mark) e.lastHit = H.swing;
     const ev = emit('hit'); ev.src = 'hero'; ev.id = e.id; ev.x = e.x; ev.y = 1.1; ev.z = e.z; ev.dmg = dmg; ev.mult = mult; ev.elem = el; ev.kind = kindName; ev.hp = Math.max(0, e.hp); ev.stop = atk.stop || 0; ev.a = dirx; ev.b = dirz; ev.flag = !!atk.stagger;
     H.freeze = Math.max(H.freeze, atk.stop || 0); e.freeze = Math.max(e.freeze, atk.stop || 0);
-    const k = (atk.knock || 0) * 8; e.kx = dirx * k; e.kz = dirz * k;
+    kickEnemy(e, dirx, dirz, atk.knock);
     e.poise += atk.poise || 0;
     if (e.hp <= 0) { e.state = 'dead'; e.sT = 0; e.pose.clip = 'dead'; H.kills++; const k2 = emit('kill'); k2.id = e.id; k2.x = e.x; k2.z = e.z; k2.kind = e.kind; if (H.lockId === e.id) { H.lockId = 0; H.hasLock = false; } return; }
     if (atk.status) applyStatus(e, atk.status);
@@ -236,7 +241,7 @@ export function createSim(cfg = {}) {
     if (e.poise >= e.K.poise || (atk.stagger && e.poise >= e.K.poise * 0.5)) { e.poise = 0; if (e.state !== 'stagger') { e.state = 'stagger'; e.sT = 0; const s = emit('stagger'); s.id = e.id; s.x = e.x; s.z = e.z; } else e.sT = 0; }
   }
   function softHit(e, fx, dirx, dirz) {                                   // an effect with dmg 0: knock-back + status only
-    const k = (fx.knock || 0) * 8; e.kx = dirx * k; e.kz = dirz * k; if (fx.status) applyStatus(e, fx.status);
+    kickEnemy(e, dirx, dirz, fx.knock); if (fx.status) applyStatus(e, fx.status);
   }
 
   // ---- hero actions
@@ -261,7 +266,9 @@ export function createSim(cfg = {}) {
     if (H.dodgeCd > 0 || H.st < T.dodge.cost) return false;
     H.st -= T.dodge.cost; H.stDelay = T.hero.regenDelay; H.state = 'dodge'; H.sT = 0; H.lastDodgeFrac = 0; H.dodgeCd = T.dodge.recharge; H.faceOverride = true; H.canMove = false; H.buf.dodge = 0; H.grace = 0; H.lungeDone = 0; H.pdKey = 0;
     let dx = H.mvx, dz = H.mvz, m = Math.hypot(dx, dz), dist = T.dodge.dist;
-    if (m > 0.1) { dx /= m; dz /= m; H.yaw = Math.atan2(dx, dz); } else { dx = -Math.sin(H.yaw); dz = -Math.cos(H.yaw); dist = T.dodge.back; }      // no stick: back-step, still facing the enemy
+    if (m > 0.1) { dx /= m; dz /= m; H.yaw = Math.atan2(dx, dz); }
+    else if (H.backIn) { dx = -Math.sin(H.yaw); dz = -Math.cos(H.yaw); dist = T.dodge.back; }       // the stick points at the camera (RP1C-R2 face rule): the other way, still facing the enemy
+    else { dx = Math.sin(H.yaw); dz = Math.cos(H.yaw); }                                            // RP4_R3: no stick = thrown FORWARD along her facing (was a back-step)
     H.dodgeDx = dx; H.dodgeDz = dz; H.dodgeDist = dist; H.dodgeFace = H.yaw; const ev = emit('dodge'); ev.x = H.x; ev.z = H.z; return true;
   }
   function startBlock() {
@@ -278,6 +285,7 @@ export function createSim(cfg = {}) {
     for (const e of S.enemies) { if (e.state === 'dead') continue; const dx = e.x - H.x, dz = e.z - H.z, f = dx * sy + dz * cy; if (f <= 0) continue; const lat = Math.abs(dx * cy - dz * sy); if (lat > e.r + T.hero.radius) continue; step = Math.min(step, Math.max(0, f - (e.r + T.hero.radius * 0.8 + 0.1))); }
     if (step > 0) moveHero(sy * step, cy * step);
   }
+  function heroThrow(dt) { if (H.kD > 0) { H.kT += dt; const s2 = kbFrac(H.kT), st2 = (s2 - H.kL) * H.kD; H.kL = s2; moveHero(H.kdx * st2, H.kdz * st2); if (H.kT >= T.knock.t) H.kD = 0; } }
   function heroHurt(e, dmg0, K) {
     const mult = elementMult(e.element, el);
     let dmg = Math.round(dmg0 * mult * (H.bf.dr.t > 0 ? H.bf.dr.m : 1) * 10) / 10, blocked = 0, cost = 0;
@@ -301,8 +309,8 @@ export function createSim(cfg = {}) {
     if (blocked === 1) { H.kbx = Math.sin(e.yaw) * Bk.push; H.kbz = Math.cos(e.yaw) * Bk.push; return; }           // a clean block: no stun, a small push
     if (dmg <= 0) return;                                                // the shield took all of it
     const big = dmg >= H.hpMax * T.hero.downAt, strong = H.armor > 0 && blocked !== 2;
-    if (big) { H.state = 'down'; H.sT = 0; H.canMove = false; H.faceOverride = true; emit('knockdown'); const k = 6; H.kbx = Math.sin(e.yaw) * k; H.kbz = Math.cos(e.yaw) * k; }
-    else if (!strong) { H.state = 'hit'; H.sT = 0; H.canMove = false; H.faceOverride = true; H.armor = T.hero.armor + T.hero.hitStun; H.kbx = Math.sin(e.yaw) * 3; H.kbz = Math.cos(e.yaw) * 3; }
+    if (big) { H.state = 'down'; H.sT = 0; H.canMove = false; H.faceOverride = true; emit('knockdown'); kickHero(Math.sin(e.yaw), Math.cos(e.yaw), T.knock.down); }
+    else if (!strong) { H.state = 'hit'; H.sT = 0; H.canMove = false; H.faceOverride = true; H.armor = T.hero.armor + T.hero.hitStun; kickHero(Math.sin(e.yaw), Math.cos(e.yaw), T.knock.hit); }
     H.buf.attack = 0; H.buf.dodge = 0;
   }
 
@@ -330,7 +338,7 @@ export function createSim(cfg = {}) {
     // input memory (buffers), edges come from `pend`
     for (const k in H.buf) H.buf[k] = Math.max(0, H.buf[k] - dt);
     if (pend.attack) H.buf.attack = T.buffer.attack; if (pend.dodge) H.buf.dodge = T.buffer.dodge; if (pend.s0) H.buf.s0 = T.buffer.skill; if (pend.s1) H.buf.s1 = T.buffer.skill;
-    H.mvx = inp.mx || 0; H.mvz = inp.mz || 0; const camYaw = inp.camYaw; H.blockIn = !!inp.block;
+    H.mvx = inp.mx || 0; H.mvz = inp.mz || 0; const camYaw = inp.camYaw; H.blockIn = !!inp.block; H.backIn = !!inp.back;
     if (pend.lock) { if (H.hasLock) { H.hasLock = false; H.lockId = 0; const ev = emit('lock'); ev.flag = false; } else { const c = lockCandidates(camYaw, true); if (c) { H.lockId = c.id; H.hasLock = true; const ev = emit('lock'); ev.id = c.id; ev.flag = true; } } }
     if (pend.lockNext && H.hasLock) lockNext(camYaw);
     pend.attack = pend.dodge = pend.s0 = pend.s1 = pend.lock = pend.lockNext = false;
@@ -377,7 +385,7 @@ export function createSim(cfg = {}) {
           if (!H.fired && H.sT >= s.at) { H.fired = true; fireSkill(s); }
           if (H.sT >= s.dur) { H.state = 'loco'; H.canMove = true; H.faceOverride = false; H.grace = 0; }
         } else if (st === 'dodge') {
-          const D = T.dodge, f = clamp(H.sT / D.dur, 0, 1), ease = 1 - (1 - f) * (1 - f), dd = (ease - H.lastDodgeFrac) * H.dodgeDist; H.lastDodgeFrac = ease;
+          const D = T.dodge, f = clamp(H.sT / D.dur, 0, 1), ease = 1 - Math.pow(1 - f, D.p), dd = (ease - H.lastDodgeFrac) * H.dodgeDist; H.lastDodgeFrac = ease;
           moveHero(H.dodgeDx * dd, H.dodgeDz * dd); H.yaw = H.dodgeFace;
           if (H.sT >= D.dur) { H.state = 'loco'; H.canMove = true; H.faceOverride = false; H.lastDodgeFrac = 0; }
         } else if (st === 'block') {
@@ -389,10 +397,10 @@ export function createSim(cfg = {}) {
           if (Bk.walk > 0 && sm > 0.2) { const m = Math.min(1, sm); moveHero((H.mvx / sm) * Bk.walk * m * dt, (H.mvz / sm) * Bk.walk * m * dt); }
           const k = Math.exp(-10 * dt); H.kbx *= k; H.kbz *= k; if (Math.abs(H.kbx) + Math.abs(H.kbz) > 0.02) moveHero(H.kbx * dt, H.kbz * dt);
         } else if (st === 'hit') {
-          const k = Math.exp(-10 * dt); H.kbx *= k; H.kbz *= k; moveHero(H.kbx * dt, H.kbz * dt);
+          heroThrow(dt);
           if (H.sT >= hs.hitStun) { H.state = 'loco'; H.canMove = true; H.faceOverride = false; }
         } else if (st === 'down') {
-          const k = Math.exp(-6 * dt); H.kbx *= k; H.kbz *= k; moveHero(H.kbx * dt, H.kbz * dt);
+          heroThrow(dt);
           if (H.sT >= hs.down) { H.state = 'loco'; H.canMove = true; H.faceOverride = false; H.invul = hs.wakeInvul; }
         } else if (st === 'loco') {
           if (selfMove) {
@@ -476,7 +484,7 @@ export function createSim(cfg = {}) {
     if (e.freeze > 0) { e.freeze -= dt; return; }                            // hit-stop: the victim's own clock stands still
     e.sT += dt;
     // knock-back velocity (decays)
-    if (e.kx || e.kz) { e.x += e.kx * dt; e.z += e.kz * dt; const k = Math.exp(-8 * dt); e.kx *= k; e.kz *= k; if (Math.abs(e.kx) + Math.abs(e.kz) < 0.05) e.kx = e.kz = 0; }
+    if (e.kD > 0) { e.kT += dt; const s2 = kbFrac(e.kT), st2 = (s2 - e.kL) * e.kD; e.kL = s2; let nx = e.x + e.kdx * st2, nz = e.z + e.kdz * st2; if (collideE) { const r = collideE(nx, nz, e.r); nx = r[0]; nz = r[1]; } e.x = nx; e.z = nz; if (e.kT >= T.knock.t) e.kD = 0; }      // RP4_R3: the throw (was a velocity decaying at 8 /s: 0.3 m in ~0.4 s, through walls)
     if (e.state === 'dead') return;
     // statuses
     if (e.slowT > 0) { e.slowT -= dt; if (e.slowT <= 0) e.slowK = 1; }
@@ -556,10 +564,10 @@ export function createSim(cfg = {}) {
     lockYaw() { return H.hasLock ? H.lockYaw : null; },
     lockTarget() { return H.hasLock ? enemyById(H.lockId) : null; },
     aliveEnemies() { let n = 0; for (const e of S.enemies) if (e.state !== 'dead') n++; return n; },
-    reset() { S.enemies.length = 0; S.events.length = 0; nEv = 0; for (const p of proj) p.on = false; H.hp = H.hpMax; H.st = H.stMax; H.state = 'loco'; H.sT = 0; H.canMove = true; H.faceOverride = false; H.cd[0] = H.cd[1] = 0; H.dodgeCd = 0; H.invul = 0; H.armor = 0; H.freeze = 0; H.hasLock = false; H.lockId = 0; H.n = -1; H.grace = 0; H.graceN = -1; H.kills = 0; H.guardBroken = false; H.sh = 0; H.shT = 0; H.hotT = 0; for (const k in H.bf) { H.bf[k].t = 0; H.bf[k].m = 1; } },
-    revive() { H.hp = H.hpMax; H.state = 'loco'; H.sT = 0; H.canMove = true; H.faceOverride = false; H.invul = 1.0; H.guardBroken = false; H.sh = 0; H.shT = 0; H.hotT = 0; },
+    reset() { S.enemies.length = 0; S.events.length = 0; nEv = 0; for (const p of proj) p.on = false; H.hp = H.hpMax; H.st = H.stMax; H.state = 'loco'; H.sT = 0; H.canMove = true; H.faceOverride = false; H.cd[0] = H.cd[1] = 0; H.dodgeCd = 0; H.invul = 0; H.armor = 0; H.freeze = 0; H.hasLock = false; H.lockId = 0; H.n = -1; H.grace = 0; H.graceN = -1; H.kills = 0; H.kD = 0; H.guardBroken = false; H.sh = 0; H.shT = 0; H.hotT = 0; for (const k in H.bf) { H.bf[k].t = 0; H.bf[k].m = 1; } },
+    revive() { H.hp = H.hpMax; H.kD = 0; H.state = 'loco'; H.sT = 0; H.canMove = true; H.faceOverride = false; H.invul = 1.0; H.guardBroken = false; H.sh = 0; H.shT = 0; H.hotT = 0; },
   };
-  H.kbx = 0; H.kbz = 0; H.want = 0; H.dodgeDist = 0; H.dodgeFace = 0;
+  H.kbx = 0; H.kbz = 0; H.want = 0; H.dodgeDist = 0; H.dodgeFace = 0; H.kD = 0; H.kT = 0; H.kL = 0; H.kdx = 0; H.kdz = 0; H.backIn = false;
   return sim;
 }
 

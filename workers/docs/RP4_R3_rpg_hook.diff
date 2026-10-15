@@ -1,0 +1,23 @@
+--- a/web/assets/rpg/rpg.js
++++ b/web/assets/rpg/rpg.js
+@@ -488,8 +488,9 @@
+     if (S.sw === 1) target *= 1 - 0.45 * clamp(dep / SWIM_DEEP, 0, 1);
+     else if (S.sw === 2) { target = m > 0 ? SWIM_V * (0.45 + 0.55 * m) : 0; if (S.st === 'dodge') { S.st = 'loco'; S.stT = 0; } }
+     if (S.st === 'dodge') {
+-      const t = S.stT, sb = 1.5 + 5.0 * Math.pow(Math.max(0, 1 - t / 0.6), 2);
+-      S.vx = S.burst.x * sb; S.vz = S.burst.z * sb;
++      const f0 = clamp((S.stT - dt) / (1.7 / 1.9), 0, 1), f1 = clamp(S.stT / (1.7 / 1.9), 0, 1), vv = 2.9 * ((1 - (1 - f1) * (1 - f1)) - (1 - (1 - f0) * (1 - f0))) / Math.max(dt, 1e-4);   // RP4: the roll is THROWN: 2.9 m along the stick (her facing with no stick) in the clip's 0.895 s, 6.5 m/s fading to 0, exact at any frame rate; tryMove (below) stops it at the same solids
++      S.vx = S.burst.x * vv; S.vz = S.burst.z * vv;                                                                  // RP4: (was 1.5 + 5 * (1 - t / 0.6)^2 = 2.3 m, ending at 1.5 m/s)
++      if (S.where === 'home' && waterDepth(S.x + S.vx * dt, S.z + S.vz * dt) > 0.6) S.vx = S.vz = 0;                  // RP4: never into water deeper than a wade: the roll ends at the bank
+       if (S.stT >= 1.7 / 1.9) { S.st = 'loco'; S.stT = 0; }
+     } else if (!cb) { // RP4:
+       const ml = Math.hypot(wantX, wantZ) || 1, tvx = (wantX / ml) * target, tvz = (wantZ / ml) * target, acc = (air ? 5 : target > S.speed + 0.05 ? GAIT.acc : GAIT.dec) * dt;
+@@ -585,7 +586,7 @@
+       camera.position.set(ex, ey, ez); camera.lookAt(ex + vx, ey + vy, ez + vz);
+       S.pivot.set(S.x, S.y + 1.45 * HS, S.z); return;
+     }
+-    const k = kExp(16, dt); S.pivot.x += (S.x - S.pivot.x) * k; S.pivot.z += (S.z - S.pivot.z) * k; S.pivot.y += (S.y + 1.45 * HS - S.pivot.y) * kExp(10, dt);
++    const kc = S.kc = Math.min(S.st === 'dodge' ? 6.5 : 16, (S.kc || 16) + (16 - (S.kc || 16)) * kExp(9, dt)), k = kExp(kc, dt); S.pivot.x += (S.x - S.pivot.x) * k; S.pivot.z += (S.z - S.pivot.z) * k; S.pivot.y += (S.y + 1.45 * HS - S.pivot.y) * kExp(10, dt);   // RP4: while she rolls the camera follows more softly (6.5 /s, eased in and out: no jerk) so the throw is SEEN on the screen (the stiff 16 /s glued her to the middle)
+     if (dt === 0 || S.snap) { S.pivot.set(S.x, S.y + 1.45 * HS, S.z); S.snap = false; }
+     const D = CAM_D, sh = S.layer === 'top' ? 0 : 0.55 * HS, px = S.pivot.x, py = S.pivot.y, pz = S.pivot.z;      // (on the wall-walk the camera is straight behind her: the walkway is 1.8 m wide)
+     const tx = px - vx * D + rx * sh, ty = py - vy * D + 0.1, tz = pz - vz * D + rz * sh;           // wanted camera spot (behind, a little to the right)
