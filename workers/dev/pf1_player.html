@@ -1,0 +1,17 @@
+<!doctype html><html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<style>
+@font-face{font-family:Vazirmatn;src:url(pub/Vazirmatn-Bold.woff2) format("woff2");font-weight:700}
+@font-face{font-family:Vazirmatn;src:url(pub/Vazirmatn-Black.woff2) format("woff2");font-weight:900}
+@font-face{font-family:"Libre Baskerville";src:url(pub/baskerville-700.woff2) format("woff2");font-weight:700}
+@font-face{font-family:"Libre Baskerville";src:url(pub/baskerville-400.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"Noto Sans Tai Viet";src:url(pub/taiviet.woff2) format("woff2")}
+@font-face{font-family:Exo2;src:url(pub/exo2-700.woff2) format("woff2");font-weight:700}
+html,body{margin:0;height:100%;background:#050912;overflow:hidden}#game{position:fixed;inset:0}</style></head>
+<body><div id="game"></div><script>window.BW_ASSETS="assets/";</script><script src="app/wall.js"></script>
+<script>
+const q = new URLSearchParams(location.search);
+window.__log=[]; if (q.get('s')!=null) window.__bwSeason={s:+q.get('s'), p:+(q.get('sp')||0.6)}; window.onerror=(m)=>window.__log.push(String(m));
+BlueWall.start({root:document.getElementById('game'), lateTimeout: 1e9, welcomeAuto: q.get('wa')!=null?+q.get('wa'):9, name:"Blꪊe Heart", gems:{ruby:1250,emerald:860,turq:3400}, quality:q.get('q')||'high', hour:q.get('h')!=null?+q.get('h'):undefined, weather:q.get('w')||undefined,
+  progress:(p,t)=>window.__log.push('p '+p.toFixed(0)+' '+(t||'')), ready:()=>{window.__ready=true}}).catch(e=>{window.__log.push('ERR '+e.stack)});
+</script></body></html>

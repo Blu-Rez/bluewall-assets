@@ -10,6 +10,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { createPerf, createCap, installMatrixSkip } from './perf.js';   // PF1: adaptive frame cap
 import { createShaderWarm } from './shaderwarm.js';
 import { createReflect } from './reflect.js';
+import { REFL_LAYER } from './reflect.js'; import { nightPathWanted } from './perf.js';   // PF2: late lights get the mirror layer before the first compile; the bloom (night) path is built only when dusk is near
 import { createCoach } from './coach.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
@@ -71,7 +72,7 @@ async function start(opts) {
   if (!settings.shadows) Q.shadows = false;
   // dev/test: ?h=13.5 pins the game hour
   const devH = opts.hour != null ? +opts.hour : null;
-  const pinned = () => devH;
+  let hourF = null; const pinned = () => (hourF != null ? hourF : devH);   // PF2: BW_bench forces the hour (13 / 23) through ctx.setHour(h); null = the real clock again
   const hourNow = () => { const p = pinned(); return p != null ? p : gameHour(); };
 
   const PFOFF = /[?&]pfoff=1/.test(location.search);   // PF1: ?pfoff=1 = every PF1 behaviour change off (old frame cap, pixel floor, audio timing, matrices): the A/B switch for BW_bench on a phone
@@ -113,6 +114,7 @@ async function start(opts) {
   const applyCtl = () => { ctl.rotSpeed = +settings.rotSpeed || 1; ctl.zoomSpeed = +settings.zoomSpeed || 1; ctl.invert = !!settings.invertRotate; };
   applyCtl();
   let composer = null, bloom = null;
+  const NRES = Math.max(0.5, Math.min(1, +((/[?&]nres=([0-9.]+)/.exec(location.search) || [])[1]) || 1));   // PF2: ?nres=0.7 = the night (bloom composer) path renders at 0.7 x the resolution: an A/B switch for BW_bench on a phone, 1 = unchanged (default)
   function makeComposer() {
     const size = renderer.getDrawingBufferSize(new THREE.Vector2());
     const rt = new THREE.WebGLRenderTarget(size.x, size.y, { type: THREE.HalfFloatType, samples: Q.msaa });
@@ -121,7 +123,7 @@ async function start(opts) {
     bloom = new UnrealBloomPass(new THREE.Vector2(Math.ceil(size.x / 3), Math.ceil(size.y / 3)), 0.55, 0.45, 1.05);       // (a third of the resolution: the glow is soft anyway, and the blur chain is the costly part)
     composer.addPass(bloom);
     composer.addPass(new OutputPass());
-    composer.setPixelRatio(renderer.getPixelRatio());
+    composer.setPixelRatio(renderer.getPixelRatio() * NRES);   // PF2: * NRES
   }
   function dropComposer() { if (!composer) return; try { composer.dispose(); bloom.dispose(); } catch (e) { /* ignore */ } composer = null; bloom = null; }
   if (Q.bloom && settings.bloom) makeComposer();
@@ -159,7 +161,7 @@ async function start(opts) {
     renderer.setPixelRatio(dpr());
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.fov = w / h < 0.8 ? 63 : 52; camera.updateProjectionMatrix();                // (p38: a wider angle of view: 58 -> 63 portrait, 46 -> 52 landscape)
-    if (composer) { composer.setPixelRatio(renderer.getPixelRatio()); composer.setSize(w, h); }
+    if (composer) { composer.setPixelRatio(renderer.getPixelRatio() * NRES); composer.setSize(w, h); }   // PF2: * NRES
     const dh = renderer.getDrawingBufferSize(new THREE.Vector2()).y;
     PX.scale.value = dh / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
     if (world.weather && world.weather.setPx) world.weather.setPx(PX.scale.value);
@@ -249,7 +251,7 @@ async function start(opts) {
     if (k === 'resScale') resize();
     if (k === 'coolMode') { refl.off = !!v; resize(); GOV.lvl = 0; GOV.active = 0; }
     if (k === 'perfInfo') hud.set(!!v);
-    if (k === 'bloom') { if (v && Q.bloom !== false && !composer) { makeComposer(); resize(); if (lateReady && !pathReady.rt) bgCompile(); } if (!v) dropComposer(); }
+    if (k === 'bloom') { if (v && Q.bloom !== false && !composer) { makeComposer(); resize(); if (lateReady && !pathReady.rt) warmOther(); } if (!v) dropComposer(); }   // PF2: warmOther (bloom switched on: build the night path only when dusk is near)
     if (k === 'shadows') { renderer.shadowMap.enabled = v && Q.shadows !== false; world.setShadows && world.setShadows(v); scene.traverse((o) => { if (o.material) o.material.needsUpdate = true; }); }
     if (['rotSpeed', 'zoomSpeed', 'invertRotate'].includes(k)) applyCtl();
     if (k === 'previewLevel' && world.setLevel) { world.setLevel(v || econ.st.level); setThemeLevel(v || (econ.st.prog && econ.st.prog.b && econ.st.prog.b.keep) || econ.st.level); }   // owner-only preview of the castle at any level
@@ -286,6 +288,9 @@ async function start(opts) {
   const sw = createShaderWarm({ renderer, scene, camera, onSlow: (nm, d, np) => { if (slowN++ < 10) { try { bbox.mark('u:' + nm + '×' + np, d); } catch (e) { /* ignore */ } } } });     // (units that took > 150 ms to link: the first ten are named in the black box)
   const mark = (n, t0) => { const d = performance.now() - t0; lateT[n] = d; try { bbox.mark(n, d); } catch (e) { /* ignore */ } if (opts.dev) console.info('[late] ' + n + ' ' + (d | 0) + 'ms'); };
   let lateReady = false;
+  // PF2 F1: a light that the late stage adds (the model dragon's belly glow, in the hidden `late:prowler` bucket) was NOT on the mirror's layer until reflect.js re-tagged after 240 ticks, so the mirror pass compiled
+  // 29 programs with 5 point lights right after the first draw, and the main view's 6-light programs were not the ones it used.  Every light gets the layer before the first compile now (reflect.js keeps its own re-tag).
+  const tagLights = () => scene.traverse((o) => { if (o.isLight && !o.layers.isEnabled(REFL_LAYER)) o.layers.enable(REFL_LAYER); });   // PF2
   const lateSequence = async () => {
     const B0 = 0.72, step = (f, txt) => prog(B0 + (1 - B0) * Math.min(1, f), txt);          // the world build + base precompile own the first 72 % of the bar
     const compileFor = (rt) => { try { renderer.setRenderTarget(rt); return renderer.compileAsync(scene, camera); } finally { renderer.setRenderTarget(null); } };
@@ -302,7 +307,7 @@ async function start(opts) {
       lateT.ready = performance.now() - T0; if (opts.dev) console.info('[late] built ' + (lateT.built | 0) + 'ms, compiled ' + (lateT.compiled | 0) + 'ms, ready ' + (lateT.ready | 0) + 'ms');
       mark('ready', T0);
       prog(1, 'Ready!'); if (opts.ready) opts.ready(); startWelcome();
-      if (!OLD) setTimeout(bgCompile, 400);                                                // the other render path is built later, in small slices, while nobody is looking
+      if (!OLD) setTimeout(warmOther, 400);                                                // the other render path is built later, in small slices, while nobody is looking   (PF2: warmOther)
     };
     const wd = setTimeout(() => { console.warn('late: watchdog'); try { while (world.revealLate(8) > 0); } catch (e) { /* ignore */ } finish(); }, opts.lateTimeout || 75000);   // never trap the player on the loading screen
     try {
@@ -311,6 +316,7 @@ async function start(opts) {
       let tm = performance.now();
       try { await world.startLate(); } finally { clearInterval(poll); }
       lateT.built = performance.now() - T0; step(0.45, 'Forging shaders…'); mark('late-built', tm);
+      tagLights();   // PF2: F1 (before the first compile of the late stage)
       if (OLD) {
         // compile the path that is on screen right now first (screen by day, the bloom target at night)
         try { await compileFor(night() ? composer.readBuffer : null); } catch (e) { /* the first draw will compile instead */ }
@@ -362,6 +368,8 @@ async function start(opts) {
     } catch (e) { console.warn('bgCompile', e); }
     bgRunning = false;
   }
+  // PF2 F2: the night path (bloom composer: +82..90 programs) is not built by day until dusk is near (perf.js nightPathWanted: ≈ 4 real minutes before night > 0.25); the plain path, when the session starts at night, is still built at once
+  const warmOther = () => { if (OLD || bgRunning || !composer || pathReady.rt && pathReady.screen) return; if (useComposer() || nightPathWanted(hourNow())) bgCompile(); };   // PF2
   const startWelcome = async () => {
     ui.root.classList.add('wel');                                                            // (the HUD stays hidden while the report loads)
     let raids = [];
@@ -402,7 +410,7 @@ async function start(opts) {
   if (cool()) refl.off = true;
   if (settings.perfInfo) hud.set(true);
   const PFH = { make: null };                                       // PF1: (set below: the owner's hero loader, for the benchmark's hero walk)
-  createProbe({ renderer, scene, camera, ctl, world, Q, DYN, GOV, ui, PFH, MSKIP, CAP, owner: !!(opts.owner || opts.dev || opts.rpg), token: () => econ.token, getHero: () => hero, getBattle: () => battle, getComposer: () => composer, getBloom: () => bloom });     // PF1: null for a player
+  createProbe({ renderer, scene, camera, ctl, world, Q, DYN, GOV, ui, PFH, MSKIP, CAP, owner: !!(opts.owner || opts.dev || opts.rpg), token: () => econ.token, getHero: () => hero, getBattle: () => battle, getComposer: () => composer, getBloom: () => bloom, setHour: (h) => { hourF = h; }, nightPath: () => ({ rt: pathReady.rt, scr: pathReady.screen, comp: !!composer, used: useComposer() }), warmNight: () => warmOther() });     // PF1: null for a player   // PF2: the bench's hour / night-path hooks
   // RP1 — owner-only hero mode (the code is a separate module, fetched when the button is tapped: a normal player never downloads it)
   let hero = null;
   if (opts.owner || opts.rpg) {
@@ -499,6 +507,7 @@ async function start(opts) {
     if (inBattle) { fpsm.n++; fpsm.t += dt; if (fpsm.t >= 1) { ui.setFPS(Math.round(fpsm.n / fpsm.t), Math.round(fpsm.max)); fpsm.n = 0; fpsm.t = 0; fpsm.max = 0; } return; }
     if (PFOFF ? frames === 2 : (lateReady || frames > 1800) && frames % 30 === 2 && !audio.ctx) audio.prepare(P.night > 0.55 ? 'night' : 'day');   // PF1: the ~5.8 MB of sound is fetched AFTER the models (it used to compete with the 14 MB late stage at frame 2); a tap before that still prepares it at once (audio.unlock)
     if (!audio.ctx && world.takeThunder && frames % 30 === 0) world.takeThunder();   // no stale claps on the first tap
+    if (lateReady && !pathReady.rt && frames % 120 === 7) warmOther();   // PF2: the day turns towards dusk: the night path is built now, at idle
     if (frames === 4 && world.startLate) { if (opts.nolate) { lateReady = true; prog(1, 'Ready!'); if (opts.ready) opts.ready(); startWelcome(); } else lateSequence(); }   // (nolate: dev pages only)
     fpsm.n++; fpsm.t += dt; if (fpsm.t >= 1) { ui.setFPS(Math.round(fpsm.n / fpsm.t), Math.round(fpsm.max)); fpsm.n = 0; fpsm.t = 0; fpsm.max = 0; }
     // sound tied to world events

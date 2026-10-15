@@ -6,7 +6,8 @@
 import * as THREE from 'three';
 import { PROF } from './prof.js';
 
-const NF = 8192;                                              // frames kept per recording (≈ 2 min at 60 fps)
+const NF = 8192;
+const STALL = 2000;                                           // PF2: a gap between two drawn frames above this (ms) is a STALL (tab hidden / frozen / app switch), counted and reported apart, never part of avg / p95 / fps                                              // frames kept per recording (≈ 2 min at 60 fps)
 const sortedCopy = (a, n) => Array.from(a.subarray(0, n)).sort((x, y) => x - y);
 const pc = (s, p) => (s.length ? s[Math.min(s.length - 1, Math.floor(s.length * p))] : 0);
 const r1 = (v) => Math.round(v * 10) / 10, r2 = (v) => Math.round(v * 100) / 100;
@@ -16,11 +17,11 @@ function makeRecorder(ctx) {
   const A = { js: 0, rn: 0, sh: 0, calls: 0, shc: 0, tris: 0, fsq: 0, rc: 0 };                          // the frame being built
   const F = { n: 0, on: false, t: new Float64Array(NF), js: new Float32Array(NF), rn: new Float32Array(NF), sh: new Float32Array(NF), calls: new Uint16Array(NF), shc: new Uint16Array(NF),
     tris: new Uint32Array(NF), fsq: new Uint8Array(NF), rc: new Uint8Array(NF), heap: new Float32Array(NF), pr: new Float32Array(NF), dyn: new Float32Array(NF), gov: new Uint8Array(NF) };
-  let profWas = false, tick = -1, keys = [], ps = Object.create(null), pn = 0, kAt = 0, t0 = 0, lt = [], loaf = [];
+  let profWas = false, tick = -1, vis = { n: 0, ms: 0, t: 0 }, keys = [], ps = Object.create(null), pn = 0, kAt = 0, t0 = 0, lt = [], loaf = [];
   const hasMem = !!(performance && performance.memory);
   const heroScene = () => { const h = ctx.getHero && ctx.getHero(); return h && h.scene; };
   const flush = () => {
-    if (F.on && A.rn > 0 && F.n < NF) {
+    if (F.on && A.rn > 0 && F.n < NF && tick > 0) {              // (PF2: tick > 0 — the recorder of a player without ?pf=1 is installed in the middle of the running loop: its first 'frame' carried tick = -1, i.e. the whole page age as the first interval = the owner's «worst 605660 ms · 0.6 fps · drift blank»)
       const i = F.n++;
       F.t[i] = tick; F.js[i] = A.js; F.rn[i] = A.rn; F.sh[i] = A.sh; F.calls[i] = A.calls > 65535 ? 65535 : A.calls; F.shc[i] = A.shc; F.tris[i] = A.tris; F.fsq[i] = A.fsq; F.rc[i] = A.rc;
       F.heap[i] = hasMem ? performance.memory.usedJSHeapSize / 1048576 : 0; F.pr[i] = R.getPixelRatio(); F.dyn[i] = ctx.DYN ? ctx.DYN.s : 1; F.gov[i] = ctx.GOV ? ctx.GOV.lvl : 0;
@@ -46,6 +47,7 @@ function makeRecorder(ctx) {
     const I = R.info, c0 = I.render.calls, a = performance.now();
     sh0.call(SM, l, s, c); A.sh += performance.now() - a; A.shc += I.render.calls - c0;
   };
+  document.addEventListener('visibilitychange', () => { if (!F.on) return; if (document.hidden) { vis.n++; vis.t = performance.now(); } else if (vis.t) { vis.ms += performance.now() - vis.t; vis.t = 0; } });   // PF2
   window.requestAnimationFrame = (cb) => raf0((t) => {
     if (F.on && t !== tick) { flush(); tick = t; } else if (!F.on) tick = t;
     const a = performance.now();
@@ -62,14 +64,21 @@ function makeRecorder(ctx) {
   } catch (e) { /* not available */ }
   }
 
-  function start() { install(); flush(); F.n = 0; ps = Object.create(null); pn = 0; lt = []; loaf = []; A.js = A.rn = A.sh = 0; A.calls = A.shc = A.tris = A.fsq = A.rc = 0; t0 = performance.now(); profWas = PROF.on; PROF.on = true; F.on = true; }
+  function start() { install(); flush(); tick = -1; vis.n = 0; vis.ms = 0; vis.t = document.hidden ? performance.now() : 0; F.n = 0; ps = Object.create(null); pn = 0; lt = []; loaf = []; A.js = A.rn = A.sh = 0; A.calls = A.shc = A.tris = A.fsq = A.rc = 0; t0 = performance.now(); profWas = PROF.on; PROF.on = true; F.on = true; }
   function summary(a, b) {                                                                   // (everything is over the DRAWN frames a..b; the interval is draw to draw, what the player sees)
-    a = a || 0; if (b == null) b = F.n; const n = b - a, o = { n, secs: n > 1 ? r1((F.t[b - 1] - F.t[a]) / 1000) : 0 };
+    a = a || 0; if (b == null) b = F.n; const n = b - a, o = { n, secs: 0 };
     if (n < 3) return o;
-    const dt = new Float32Array(n - 1); for (let i = 1; i < n; i++) dt[i - 1] = F.t[a + i] - F.t[a + i - 1];
-    const sd = sortedCopy(dt, n - 1), span = (F.t[b - 1] - F.t[a]) / 1000;
-    let o33 = 0, o50 = 0, s = 0; for (let i = 0; i < n - 1; i++) { if (dt[i] > 34) o33++; if (dt[i] > 50) o50++; s += dt[i]; }
-    o.fps = r1((n - 1) / span); o.avg = r1(s / (n - 1)); o.p50 = r1(pc(sd, 0.5)); o.p95 = r1(pc(sd, 0.95)); o.p99 = r1(pc(sd, 0.99)); o.max = r1(sd[sd.length - 1]); o.o33 = o33; o.o50 = o50;
+    // PF2: the interval between two drawn frames = the difference of their requestAnimationFrame timestamps (nothing else); an interval above STALL ms is a stall: counted (stalls / stallMs / stallMax), left out of avg / p50 / p95 / p99 / max / fps
+    const dtv = []; let sum = 0, o33 = 0, o50 = 0, st = 0, stMs = 0, stMax = 0;
+    for (let i = a + 1; i < b; i++) {
+      const d = F.t[i] - F.t[i - 1]; if (!(d > 0)) continue;
+      if (d > STALL) { st++; stMs += d; if (d > stMax) stMax = d; continue; }
+      dtv.push(d); sum += d; if (d > 34) o33++; if (d > 50) o50++;
+    }
+    o.stalls = st; o.stallMs = Math.round(stMs); o.stallMax = Math.round(stMax);
+    if (dtv.length < 2) return o;
+    const sd = Float32Array.from(dtv).sort(), m = dtv.length, span = sum / 1000;
+    o.secs = r1(sum / 1000); o.fps = r1(m / (sum / 1000)); o.avg = r1(sum / m); o.p50 = r1(pc(sd, 0.5)); o.p95 = r1(pc(sd, 0.95)); o.p99 = r1(pc(sd, 0.99)); o.max = r1(sd[sd.length - 1]); o.o33 = o33; o.o50 = o50;
     const mean = (x) => { let v = 0; for (let i = a; i < b; i++) v += x[i]; return v / n; };
     const sj = sortedCopy(F.js.subarray(a, b), n);
     o.js = r2(mean(F.js)); o.jsP95 = r2(pc(sj, 0.95)); o.render = r2(mean(F.rn)); o.shadow = r2(mean(F.sh)); o.calls = Math.round(mean(F.calls)); o.shCalls = Math.round(mean(F.shc)); o.tris = Math.round(mean(F.tris));
@@ -80,12 +89,20 @@ function makeRecorder(ctx) {
     if (a === 0 && b === F.n) { const pr = {}; if (pn) for (const k of Object.keys(ps)) pr[k] = r2(ps[k] / pn); o.prof = pr; o.longTasks = lt.length; o.longTaskMs = lt.reduce((x, y) => x + y, 0); o.loaf = loaf.sort((x, y) => y.ms - x.ms).slice(0, 6); }
     return o;
   }
-  function fpsAt(from, to) {                                                                  // fps over the time window [from, to) seconds since the first frame of the recording
-    let n = 0, f = -1, l = -1; const t0 = F.t[0]; for (let i = 0; i < F.n; i++) { const t = (F.t[i] - t0) / 1000; if (t >= from && t < to) { n++; if (f < 0) f = F.t[i]; l = F.t[i]; } }
-    return n > 2 ? r1((n - 1) / ((l - f) / 1000)) : 0;
+  // PF2: thermal drift of frames a..b: fps over the first 5 s and over the last 5 s of the phase (stalls left out; null when the phase has less than 6 s of valid frames)
+  function drift(a, b) {
+    const ds = []; let tot = 0;
+    for (let i = a + 1; i < b; i++) { const d = F.t[i] - F.t[i - 1]; if (d > 0 && d <= STALL) { ds.push(d); tot += d; } }
+    if (tot < 6000) return null;
+    let c = 0, n1 = 0, t1 = 0, n2 = 0, t2 = 0;
+    for (const d of ds) { if (c < 5000) { n1++; t1 += d; } if (c >= tot - 5000) { n2++; t2 += d; } c += d; }
+    return [t1 ? r1(n1 / (t1 / 1000)) : 0, t2 ? r1(n2 / (t2 / 1000)) : 0];
   }
+  // PF2: pause / resume the recording without losing it (the bench stops counting while it waits for shaders or loads the hero)
+  function hold(on) { if (on) { flush(); F.on = false; } else if (!F.on) { A.js = A.rn = A.sh = 0; A.calls = A.shc = A.tris = A.fsq = A.rc = 0; tick = -1; F.on = true; } }
+  const visInfo = () => ({ n: vis.n, ms: Math.round(vis.ms + (vis.t ? performance.now() - vis.t : 0)) });
   function stop() { flush(); F.on = false; PROF.on = profWas; return summary(); }
-  return { start, stop, summary, fpsAt, idx: () => F.n, raf: raf0, F, get on() { return F.on; } };
+  return { start, stop, summary, drift, hold, vis: visInfo, idx: () => F.n, raf: raf0, F, get on() { return F.on; } };
 }
 
 // ---------------------------------------------------------------- scene census: what one frame is made of (draw calls / triangles per group, frustum-culled by the current camera)
@@ -206,69 +223,216 @@ function deviceSnap(ctx) {
   return o;
 }
 
-// ---------------------------------------------------------------- the owner's benchmark: one continuous recording, three phases (map orbit, hero walk, idle), ONE small POST
+// ---------------------------------------------------------------- the owner's benchmark (PF2: v2) — FIVE phases of 8 s, ONE card line each, ONE small POST
+//   md = strategic map by day (hour 13) · mu = the same UNCAPPED (the adaptive frame cap off: the real headroom) · mn = strategic map by night (hour 23, the bloom composer path) · hn = hero by night · hd = hero by day.
+// Every interval comes from the requestAnimationFrame timestamps of the drawn frames and nothing else; a gap above 2000 ms is a STALL: counted and reported (stalls / stallMs / hidden), never averaged.  The hour is forced through
+// ctx.setHour (the real clock comes back at the end), the night path is built first when it is not (the bench waits for it; those seconds are not measured), the hero (owner builds) is started for the two hero phases and left again.
 function makeBench(ctx, rec) {
   let busy = false, card = null;
+  const nProg = () => { try { return (ctx.renderer.info.programs || []).length; } catch (e) { return 0; } };      // shader programs now (every program added DURING a phase is a compile hitch: the owner's phone showed 346)
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const poke = () => { try { window.dispatchEvent(new Event('pointermove')); } catch (e) { /* ignore */ } };           // (the game drops to 30 fps after 3.5 s without a touch: a playing hand keeps it at full rate)
   const show = (lines, ok) => {
-    if (!card) { card = document.createElement('div'); card.style.cssText = 'position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:99999;font:600 13px/1.45 ui-monospace,Menlo,Consolas,monospace;color:#eaf6ff;background:rgba(0,12,32,.92);border:1px solid #5fa8ff;border-radius:10px;padding:10px 14px;max-width:88vw;text-align:center;white-space:pre-line'; card.addEventListener('pointerdown', () => { if (!busy) card.style.display = 'none'; }); document.body.appendChild(card); }
+    if (!card) { card = document.createElement('div'); card.style.cssText = 'position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:99999;font:600 12px/1.5 ui-monospace,Menlo,Consolas,monospace;color:#eaf6ff;background:rgba(0,12,32,.92);border:1px solid #5fa8ff;border-radius:10px;padding:8px 12px;width:max-content;max-width:94vw;text-align:left;white-space:pre'; card.addEventListener('pointerdown', () => { if (!busy) card.style.display = 'none'; }); document.body.appendChild(card); }
     card.style.display = 'block'; card.style.borderColor = ok === false ? '#ff7a7a' : '#5fa8ff'; card.textContent = lines;
   };
-  const phase = async (name, secs, step) => { const a = rec.idx(), t0 = performance.now(); let last = t0; while (performance.now() - t0 < secs * 1000) { await sleep(16); const n = performance.now(); step && step((n - last) / 1000, (n - t0) / 1000); last = n; } const s = rec.summary(a, rec.idx()); s.name = name; s.a = a; s.b = rec.idx(); return s; };
-  const brief = (s) => s && s.fps != null ? { n: s.n, fps: s.fps, avg: s.avg, p50: s.p50, p95: s.p95, p99: s.p99, max: s.max, o33: s.o33, o50: s.o50, js: s.js, calls: s.calls, tris: Math.round(s.tris / 1000), pr: s.pr } : null;
+  const buf = () => { try { const z = ctx.renderer.getDrawingBufferSize(new THREE.Vector2()); return z.x + 'x' + z.y; } catch (e) { return ''; } };
+  // one phase = `secs` of DRAWN frames, timed by the rAF timestamps of the frames themselves; a wall-clock failsafe (3 x + 4 s) ends it when the tab does not draw at all (hidden / frozen): the stall figures then say so
+  const phase = async (name, secs, step) => {
+    rec.hold(false);
+    const a = rec.idx(), w0 = performance.now(); let last = w0;
+    for (;;) {
+      await sleep(16);
+      const n = performance.now(), b = rec.idx();
+      if (step) step((n - last) / 1000, (n - w0) / 1000); last = n;
+      if (b - a > 1 && rec.F.t[b - 1] - rec.F.t[a] >= secs * 1000) break;
+      if (n - w0 > secs * 3000 + 4000) break;
+    }
+    rec.hold(true); const b = rec.idx();
+    const s = rec.summary(a, b); s.name = name; s.a = a; s.b = b; s.prog = nProg(); s.px = buf(); s.dr = rec.drift(a, b); return s;
+  };
+  const brief = (s) => (s && s.fps != null ? { n: s.n, fps: s.fps, avg: s.avg, p95: s.p95, max: s.max, o33: s.o33, o50: s.o50, cpu: s.js, calls: s.calls, k: Math.round(s.tris / 1000), pr: s.pr, px: s.px, prog: s.prog, st: s.stalls, stMs: s.stallMs, d: s.dr }
+    : s ? { n: s.n, st: s.stalls, stMs: s.stallMs, px: s.px, prog: s.prog } : null);
+  const PH = [['md', 'MAP DAY      '], ['mn', 'MAP NIGHT    '], ['hd', 'HERO DAY     '], ['hn', 'HERO NIGHT   '], ['mu', 'MAP UNCAPPED ']];
   async function run(opt) {
     opt = opt || {}; if (busy) return null;
-    const ui = ctx.ui, bt = ctx.getBattle && ctx.getBattle(), ctl = ctx.ctl;
+    const ui = ctx.ui, bt = ctx.getBattle && ctx.getBattle(), ctl = ctx.ctl, CAP = ctx.CAP;
     if (bt && bt.active) { show('BENCH: leave the attack first', false); return null; }
     if (ui && ui.root && ui.root.classList.contains('wel')) { show('BENCH: close the welcome card first', false); return null; }
     if (document.querySelector('.bwa.on,.bws.on,.bwu.on,.bwk.on,.bwh.on,.bw-set.on')) { show('BENCH: close the open panel first', false); return null; }       // (a panel behind caps the game at ~16 fps on purpose)
-    busy = true; show('BENCH running… 30 s — keep your hand off the screen', true);
-    const keep = { azim: ctl.azim, dist: ctl.dist, polar: ctl.polar, tx: ctl.target.x, tz: ctl.target.z }, sec = opt.secs || 10, ph = {}, t00 = performance.now(), errs = [];
-    let hero = ctx.getHero && ctx.getHero(), startedHero = false, ip = 0;
+    busy = true; show('BENCH running… about a minute (the night shaders first, if they are not built) — keep your hand off the screen', true);
+    const keep = { azim: ctl.azim, dist: ctl.dist, polar: ctl.polar, tx: ctl.target.x, tz: ctl.target.z }, sec = +opt.secs || 8, ph = {}, t00 = performance.now(), errs = [];
+    let hero = ctx.getHero && ctx.getHero(), startedHero = false, ip = 0, night = null;
     const MS = ctx.MSKIP || { skip: 0, run: 0, on: false }, ms0 = [MS.skip, MS.run];
-    rec.start();
+    const prog0 = nProg(); rec.start(); rec.hold(true);
+    const settle = async (s) => { poke(); await sleep(s * 1000); };
+    const orbit = (dt) => { ctl.azim += 0.35 * dt; };
+    // the night (bloom composer) path must exist before the night phases: build it now and wait (not measured), at most 3 min
+    const nightReady = async () => {
+      const t0 = performance.now(); let np = ctx.nightPath ? ctx.nightPath() : null;
+      if (!np || !np.comp) return { comp: 0 };
+      if (!np.rt && ctx.warmNight) ctx.warmNight();
+      while (np && !np.rt && performance.now() - t0 < 180000) { show('BENCH: building the night shaders… ' + (((performance.now() - t0) / 1000) | 0) + ' s (not measured)', true); await sleep(1000); np = ctx.nightPath(); }
+      return { comp: 1, rt: np && np.rt ? 1 : 0, used: np && np.used ? 1 : 0, wait: Math.round((performance.now() - t0) / 1000) };
+    };
     try {
       if (ctl._skipIntro) ctl._skipIntro();
       ip = setInterval(poke, 700);
-      // 1) strategic map: a slow orbit round the castle
-      ph.map = await phase('map', sec, (dt) => { ctl.azim += 0.35 * dt; });
-      // 2) hero walk (owner builds: the hero module is fetched now if it is not loaded yet)
-      ph.hero = null;
+      // 1) strategic map by day, 2) the same uncapped
+      ctx.setHour(13); await settle(1.5);
+      ph.md = await phase('md', sec, orbit);
+      const cap0 = CAP ? { off: CAP.off, lvl: CAP.lvl } : null;
+      if (CAP) { CAP.off = true; CAP.lvl = 0; }
+      try { ph.mu = await phase('mu', sec, orbit); } finally { if (CAP && cap0) { CAP.off = cap0.off; CAP.lvl = cap0.lvl; } }
+      // 3) strategic map by night
+      ctx.setHour(23); night = await nightReady(); await settle(1.5);
+      ph.mn = await phase('mn', sec, orbit);
+      // 4) hero (owner builds: the hero module is fetched now if it is not loaded yet): by night, then by day
+      ph.hn = ph.hd = null;
       try {
         if (!hero && ctx.PFH && ctx.PFH.make) hero = await ctx.PFH.make();
         if (hero && !hero.active && hero.start) { let key = 'elina'; try { key = localStorage.getItem('bw_rpg_hero') || key; } catch (e) { /* storage blocked */ } await hero.start(key); startedHero = true; await sleep(1200); }
         if (hero && hero.active && hero.dev && hero.dev.setInput) {
-          let yaw = 0; ph.hero = await phase('hero', sec, (dt, t) => { yaw += 0.5 * dt; hero.dev.setLook && hero.dev.setLook(yaw, 0.25); hero.dev.setInput(0, 0.8); hero.dev.sprint && hero.dev.sprint(t > 3 && ((t | 0) % 4 === 0)); });
+          let yaw = 0; const walk = (dt, t) => { yaw += 0.5 * dt; hero.dev.setLook && hero.dev.setLook(yaw, 0.25); hero.dev.setInput(0, 0.8); hero.dev.sprint && hero.dev.sprint(t > 3 && ((t | 0) % 4 === 0)); };
+          await settle(1.5); ph.hn = await phase('hn', sec, walk);
+          ctx.setHour(13); await settle(1.5); ph.hd = await phase('hd', sec, walk);
           hero.dev.setInput(0, 0);
         }
       } catch (e) { errs.push('hero:' + String(e && e.message || e).slice(0, 60)); }
       if (hero && hero.active && startedHero) { try { hero.exit(); } catch (e) { /* ignore */ } await sleep(1000); }
-      clearInterval(ip); ip = 0;
-      // 3) idle: no touch at all (the game goes to its 30 fps eco rate after 3.5 s)
-      ph.idle = await phase('idle', sec, null);
-    } catch (e) { errs.push(String(e && e.message || e).slice(0, 80)); } finally { if (ip) clearInterval(ip); }
-    const whole = rec.summary(0, rec.idx()); rec.stop(); let mchk = null; try { const m = matrixCheck(ctx); mchk = { on: m.on, objs: m.objs, bad: m.badLocal + m.badWorld, sk: MS.skip - ms0[0], run: MS.run - ms0[1] }; } catch (e) { /* ignore */ }
+    } catch (e) { errs.push(String(e && e.message || e).slice(0, 80)); } finally { if (ip) clearInterval(ip); ctx.setHour(null); }
+    rec.hold(true); const vis = rec.vis(); rec.stop(); let mchk = null; try { const m = matrixCheck(ctx); mchk = { on: m.on, objs: m.objs, bad: m.badLocal + m.badWorld, sk: MS.skip - ms0[0], run: MS.run - ms0[1] }; } catch (e) { /* ignore */ }
     ctl.azim = keep.azim; ctl.dist = keep.dist; ctl.polar = keep.polar; ctl.target.x = keep.tx; ctl.target.z = keep.tz;
-    // thermal drift: the first 5 s against the last 5 s of the MAP phase (same mode, same load), and of the whole run (its last 5 s are the idle eco rate on purpose)
-    const t0 = rec.F.t[0], mEnd = ph.map ? (rec.F.t[ph.map.b - 1] - t0) / 1000 : 0, tEnd = (rec.F.t[Math.max(0, rec.idx() - 1)] - t0) / 1000;
-    const drift = { map5: [rec.fpsAt(0, 5), rec.fpsAt(Math.max(0, mEnd - 5), mEnd + 0.01)], run5: [rec.fpsAt(0, 5), rec.fpsAt(Math.max(0, tEnd - 5), tEnd + 0.01)] };
-    const active = [ph.map, ph.hero].filter((p) => p && p.fps != null);
-    const res = { bench: 1, v: 1, secs: r1((performance.now() - t00) / 1000), dev: deviceSnap(ctx), ph: { map: brief(ph.map), hero: brief(ph.hero), idle: brief(ph.idle) },
-      all: { fps: whole.fps, avg: whole.avg, p50: whole.p50, p95: whole.p95, p99: whole.p99, worst: whole.max, o33: whole.o33, o50: whole.o50 }, act: active.length ? { fps: r1(active.reduce((a, p) => a + p.fps * p.n, 0) / active.reduce((a, p) => a + p.n, 0)), p95: r1(Math.max(...active.map((p) => p.p95))) } : null,
-      drift, q: { preset: ctx.Q.level, dyn: ctx.DYN ? r2(ctx.DYN.s) : 1, gov: ctx.GOV ? ctx.GOV.lvl : 0, dprNow: r2(ctx.renderer.getPixelRatio()), pr: whole.pr, prCh: whole.prChanges, dynCh: whole.dynChanges, govCh: whole.govChanges, sh: ctx.renderer.shadowMap.enabled ? 1 : 0, bloom: ctx.getComposer && ctx.getComposer() ? 1 : 0 },
-      mskip: mchk, gl: { calls: whole.calls, trisK: Math.round((whole.tris || 0) / 1000), geo: ctx.renderer.info.memory.geometries, tex: ctx.renderer.info.memory.textures, prog: (ctx.renderer.info.programs || []).length }, err: errs.length ? errs : undefined };
-    if (ph.hero == null) res.hero = 'skipped';
+    const res = { bench: 1, v: 2, secs: r1((performance.now() - t00) / 1000), dev: deviceSnap(ctx), ph: {}, night, vis,
+      q: { preset: ctx.Q.level, dyn: ctx.DYN ? r2(ctx.DYN.s) : 1, gov: ctx.GOV ? ctx.GOV.lvl : 0, dprNow: r2(ctx.renderer.getPixelRatio()), sh: ctx.renderer.shadowMap.enabled ? 1 : 0, bloom: ctx.getComposer && ctx.getComposer() ? 1 : 0 },
+      mskip: mchk, gl: { geo: ctx.renderer.info.memory.geometries, tex: ctx.renderer.info.memory.textures, prog: nProg(), prog0 }, err: errs.length ? errs : undefined };
+    let stalls = 0, stallMs = 0; for (const [k] of PH) { res.ph[k] = brief(ph[k]); if (ph[k]) { stalls += ph[k].stalls || 0; stallMs += ph[k].stallMs || 0; } }
+    res.stalls = stalls; res.stallMs = stallMs;
+    if (ph.hn == null && ph.hd == null) res.hero = 'skipped';
     let posted = false, txt = JSON.stringify(res);
     if (txt.length > 3400 && res.dev) { res.dev.ua = String(res.dev.ua).slice(0, 50); txt = JSON.stringify(res); }
     try { const tk = typeof ctx.token === 'function' ? ctx.token() : ctx.token; if (tk && txt.length < 3500) { const r = await fetch('/api/perf', { method: 'POST', keepalive: true, headers: { Authorization: 'Bearer ' + tk, 'Content-Type': 'application/json' }, body: txt }); posted = r.ok; } } catch (e) { /* offline */ }
-    res.posted = posted; res.bytes = txt.length; res.text = `BENCH ${whole.fps} fps avg · p95 ${whole.p95} ms · worst ${whole.max} ms`;
+    res.posted = posted; res.bytes = txt.length;
+    const f = (k) => { const p = res.ph[k]; return p && p.fps != null ? p.fps : '-'; };
+    res.text = `BENCH day ${f('md')} · night ${f('mn')} · hero ${f('hd')} / ${f('hn')} · uncapped ${f('mu')} fps`;
     busy = false;
-    const pf = (p, none) => (p && p.fps != null ? p.fps : none);   // (a phase with too few frames has no fps: never print 'undefined' on the card)
-    show(res.text + `\nmap ${pf(ph.map, '-')} · hero ${ph.hero == null ? 'n/a' : pf(ph.hero, '-')} · idle ${pf(ph.idle, '-')} fps · q ${ctx.Q.level} · ${res.q.dprNow}x` + `\n>33ms ${whole.o33} · >50ms ${whole.o50} · drift ${drift.map5[0] || '-'}→${drift.map5[1] || '-'} · ${posted ? 'sent' : 'not sent'}`, true);
+    const line = (k, nm) => { const p = res.ph[k]; if (!p) return nm + 'n/a'; if (p.fps == null) return nm + 'no frames (' + (p.st || 0) + ' stalls)'; return `${nm}${p.fps} fps · p95 ${p.p95} · worst ${p.max} ms · ${p.calls} calls · ${p.k}K tris · ${p.px} · q ${ctx.Q.level}`; };
+    const dr = res.ph.md && res.ph.md.d;
+    show(res.text + '\n' + PH.map(([k, nm]) => line(k, nm)).join('\n') + `\nprograms ${prog0}→${nProg()} · stalls ${stalls} (${stallMs} ms) · hidden ${vis.n}\ndrift ${dr ? dr[0] + '→' + dr[1] : '-'}${night && night.comp ? ' · night path ' + (night.rt ? 'ok' : 'NOT BUILT') : ' · no bloom path'} · ${posted ? 'sent' : 'not sent'}`, true);
     window.__benchLast = res; return res;
   }
   return { run, get busy() { return busy; } };
+}
+
+// ---------------------------------------------------------------- PF2: pf_overdraw(view) — how much of the screen the blended layers cost (the gem glow, the keep crystal's halo, light cones, any alpha sprite)
+// Pixels x layers, counted on the CPU from the real scene and camera: every visible additive (AdditiveBlending) and alpha-blended (transparent) sprite / mesh is projected, its triangles are rasterised on a coarse grid
+// (about 40 000 cells), each covered cell counts one layer.  No GPU, no render, no new shader program: the same numbers on every device for the same camera, so a before / after is comparable.  NOT counted: depth occlusion
+// by walls (an upper bound for glows behind buildings) and texture alpha (a sprite quad costs its whole area on the GPU whatever its texture shows).
+//   pf_overdraw()                       the current camera, the drawing buffer size
+//   pf_overdraw({ camera, w, h })       any camera / size (a dev page that parks the camera at a vault)
+//   pf_overdraw({ within: { x, z, r } }) only objects whose centre is within r metres of (x, z) in the ground plane (ST1_R2: one vault / the keep crystal)
+//   pf_overdraw({ filter: (obj) => bool, maxTris: 400000 })
+// Result: { w, h, px, cell, add: B, alpha: B, glow: { objs, px, ratio, wpx }, top: [...] } with B = { px: pixels x layers, ratio: layers per screen pixel, covered: pixels touched, max: most layers on one pixel, wpx: pixels x layers x opacity
+// (the visible strength), objs, tris } and top = the 10 heaviest objects { k: 'add sprite' | 'alpha mesh' ..., name, at: [x, y, z], m: size in metres, op: opacity, px, pct: percent of the screen x layers }.
+const _tv = new THREE.Vector3(), _tm = new THREE.Matrix4(), _tm2 = new THREE.Matrix4(), _tf = new THREE.Frustum(), _tpv = new THREE.Matrix4(), _tsp = new THREE.Sphere();
+function overdraw(ctx, view) {
+  view = view || {};
+  const cam = view.camera || ctx.camera; cam.updateMatrixWorld(); if (cam.updateProjectionMatrix && view.camera) cam.updateProjectionMatrix();
+  const bz = ctx.renderer.getDrawingBufferSize(new THREE.Vector2()), W = Math.max(8, Math.round(view.w || bz.x)), H = Math.max(8, Math.round(view.h || bz.y));
+  const S = Math.max(1, Math.round(Math.sqrt(W * H / 40000))), gw = Math.ceil(W / S), gh = Math.ceil(H / S), cellPx = S * S;
+  const gridA = new Uint16Array(gw * gh), gridB = new Uint16Array(gw * gh), wA = new Float32Array(gw * gh), wB = new Float32Array(gw * gh);
+  const G = { add: { g: gridA, w: wA, sub: 0, wsub: 0, objs: 0, tris: 0 }, alpha: { g: gridB, w: wB, sub: 0, wsub: 0, objs: 0, tris: 0 } };
+  _tpv.multiplyMatrices(cam.projectionMatrix, cam.matrixWorldInverse); _tf.setFromProjectionMatrix(_tpv);
+  const h = ctx.getHero && ctx.getHero(), root = h && h.active && h.scene && h.scene !== ctx.scene ? h.scene : ctx.scene, maxTris = view.maxTris || 400000;
+  const pe = _tpv.elements, objs = []; let tris = 0, truncated = false;
+  // clip-space x, y, w of a world point, into out[0..2]  (column-major projection x view)
+  const proj = (x, y, z, o, i) => { const w = pe[3] * x + pe[7] * y + pe[11] * z + pe[15]; o[i] = (pe[0] * x + pe[4] * y + pe[8] * z + pe[12]) / w; o[i + 1] = (pe[1] * x + pe[5] * y + pe[9] * z + pe[13]) / w; o[i + 2] = w; };
+  // one triangle (NDC x, y of its three vertices; w > 0 for all) into grid B with weight op; cull: 0 both sides, 1 front only (CCW), -1 back only
+  const tri = (B, ax, ay, bx, by, cx, cy, op, cull) => {
+    const area = (bx - ax) * (cy - ay) - (cx - ax) * (by - ay);                                      // > 0: counter-clockwise in NDC = front
+    if (area === 0 || (cull === 1 && area < 0) || (cull === -1 && area > 0)) return;
+    const X = [(ax * 0.5 + 0.5) * W, (bx * 0.5 + 0.5) * W, (cx * 0.5 + 0.5) * W], Y = [(0.5 - ay * 0.5) * H, (0.5 - by * 0.5) * H, (0.5 - cy * 0.5) * H];
+    const minx = Math.min(X[0], X[1], X[2]), maxx = Math.max(X[0], X[1], X[2]), miny = Math.min(Y[0], Y[1], Y[2]), maxy = Math.max(Y[0], Y[1], Y[2]);
+    if (maxx < 0 || maxy < 0 || minx > W || miny > H) return;
+    const c0 = Math.max(0, Math.floor(minx / S - 0.5)), c1 = Math.min(gw - 1, Math.ceil(maxx / S)), r0 = Math.max(0, Math.floor(miny / S - 0.5)), r1_ = Math.min(gh - 1, Math.ceil(maxy / S));
+    const d = (X[1] - X[0]) * (Y[2] - Y[0]) - (X[2] - X[0]) * (Y[1] - Y[0]); let hit = 0;
+    for (let r = r0; r <= r1_; r++) {
+      const py = (r + 0.5) * S;
+      for (let c = c0; c <= c1; c++) {
+        const px = (c + 0.5) * S;
+        const e0 = ((X[1] - px) * (Y[2] - py) - (X[2] - px) * (Y[1] - py)) / d, e1 = ((X[2] - px) * (Y[0] - py) - (X[0] - px) * (Y[2] - py)) / d, e2 = 1 - e0 - e1;
+        if (e0 >= 0 && e1 >= 0 && e2 >= 0) { const i = r * gw + c; B.g[i]++; B.w[i] += op; hit++; }
+      }
+    }
+    if (!hit && minx >= 0 && miny >= 0 && maxx <= W && maxy <= H) { const a = Math.abs(d) / 2; B.sub += a; B.wsub += a * op; hit = 1; }   // (smaller than a cell: its analytic area)
+    return hit;
+  };
+  const tmpv = new Float32Array(12);
+  const matOf = (o, g) => { const m = o.material; return Array.isArray(m) ? m[(g && g.materialIndex) || 0] : m; };
+  const blendKind = (m) => (!m || m.visible === false ? null : m.blending === THREE.AdditiveBlending ? 'add' : m.transparent ? 'alpha' : null);
+  const centre = (o) => { _tv.setFromMatrixPosition(o.matrixWorld); return [r1(_tv.x), r1(_tv.y), r1(_tv.z)]; };
+  const within = view.within; const near = (o) => { if (!within) return true; _tv.setFromMatrixPosition(o.matrixWorld); return Math.hypot(_tv.x - within.x, _tv.z - within.z) <= within.r; };
+  const walk = (o) => {
+    if (!o.visible) return;
+    if (o.isSprite && o.material) {
+      const m = o.material, bk = blendKind(m);
+      if (bk && near(o) && (!view.filter || view.filter(o)) && (o.frustumCulled === false || _tf.intersectsSprite(o))) {
+        const e = o.matrixWorld.elements, ws = Math.hypot(e[0], e[1], e[2]), hs = Math.hypot(e[4], e[5], e[6]);
+        _tv.setFromMatrixPosition(o.matrixWorld).applyMatrix4(cam.matrixWorldInverse);               // the sprite's centre in view space
+        const rot = m.rotation || 0, cs = Math.cos(rot), sn = Math.sin(rot), cc = o.center || { x: 0.5, y: 0.5 };
+        const corner = (ux, uy) => { const lx = (ux - cc.x) * ws, ly = (uy - cc.y) * hs; return [_tv.x + lx * cs - ly * sn, _tv.y + lx * sn + ly * cs, _tv.z]; };
+        const q = [corner(0, 0), corner(1, 0), corner(1, 1), corner(0, 1)], pq = [], pe2 = cam.projectionMatrix.elements; let ok = true;
+        for (const v of q) { const w = -v[2]; if (w <= 0.01) { ok = false; break; } pq.push([(pe2[0] * v[0]) / w, (pe2[5] * v[1]) / w]); }
+        if (ok) {
+          const B = G[bk]; let hit = 0; const op = m.opacity == null ? 1 : m.opacity;
+          hit += tri(B, pq[0][0], pq[0][1], pq[1][0], pq[1][1], pq[2][0], pq[2][1], op, 0) || 0; hit += tri(B, pq[0][0], pq[0][1], pq[2][0], pq[2][1], pq[3][0], pq[3][1], op, 0) || 0;
+          B.objs++; B.tris += 2; tris += 2;
+          objs.push({ bk, kind: 'sprite', name: o.name || (m.map && m.map.name) || 'sprite', at: centre(o), m: r1(Math.max(ws, hs)), op: r2(op), hit });
+        }
+      }
+    } else if (o.isMesh && o.material && o.geometry && o.geometry.attributes && o.geometry.attributes.position && (!view.filter || view.filter(o)) && near(o)) {
+      const g = o.geometry, mats = Array.isArray(o.material) ? o.material : [o.material];
+      if (mats.some((m) => blendKind(m))) {
+        if (!g.boundingSphere) g.computeBoundingSphere();
+        const inst = o.isInstancedMesh, okc = o.frustumCulled === false || inst || _tf.intersectsObject(o);
+        if (okc && !(o.isSkinnedMesh)) {
+          const pos = g.attributes.position, idx = g.index, nI = inst ? Math.min(o.count, 4000) : 1, groups = g.groups && g.groups.length && Array.isArray(o.material) ? g.groups : [{ start: 0, count: idx ? idx.count : pos.count, materialIndex: 0 }];
+          let hitObj = 0, first = null;
+          for (let ii = 0; ii < nI && tris < maxTris; ii++) {
+            if (inst) { o.getMatrixAt(ii, _tm2); _tm.multiplyMatrices(o.matrixWorld, _tm2); if (g.boundingSphere) { _tsp.copy(g.boundingSphere).applyMatrix4(_tm); if (!_tf.intersectsSphere(_tsp)) continue; } } else _tm.copy(o.matrixWorld);
+            const te = _tm.elements; let tIn = 0, bk0 = null, opAll = 1;
+            for (const gr of groups) {
+              const m = mats[gr.materialIndex || 0], bk = blendKind(m); if (!bk) continue; bk0 = bk0 || bk;
+              const op = m.opacity == null ? 1 : m.opacity; opAll = op;
+              const cull = m.side === THREE.DoubleSide ? 0 : m.side === THREE.BackSide ? -1 : 1, B = G[bk], n = gr.count;
+              for (let t = 0; t + 2 < n && tris < maxTris; t += 3) {
+                let ok = true;
+                for (let k = 0; k < 3; k++) {
+                  const vi = idx ? idx.getX(gr.start + t + k) : gr.start + t + k, x = pos.getX(vi), y = pos.getY(vi), z = pos.getZ(vi);
+                  const wx = te[0] * x + te[4] * y + te[8] * z + te[12], wy = te[1] * x + te[5] * y + te[9] * z + te[13], wz = te[2] * x + te[6] * y + te[10] * z + te[14];
+                  proj(wx, wy, wz, tmpv, k * 3); if (tmpv[k * 3 + 2] <= 0.01) { ok = false; break; }
+                }
+                if (!ok) continue; tris++; tIn++;
+                hitObj += tri(B, tmpv[0], tmpv[1], tmpv[3], tmpv[4], tmpv[6], tmpv[7], op, cull) || 0;
+              }
+              if (tris >= maxTris) truncated = true;
+            }
+            if (bk0) { const B = G[bk0]; if (!first) B.objs++; B.tris += tIn; if (!first) { const sc = Math.hypot(te[0], te[1], te[2]) * (g.boundingSphere ? g.boundingSphere.radius * 2 : 1); first = { bk: bk0, kind: inst ? 'imesh' : 'mesh', name: o.name || mats[0].name || g.name || 'mesh', at: centre(o), m: r1(sc), op: r2(opAll), hit: 0 }; } }
+          }
+          if (first) { first.hit = hitObj; objs.push(first); }
+        }
+      }
+    }
+    const ch = o.children; for (let i = 0; i < ch.length && tris < maxTris; i++) walk(ch[i]);
+  };
+  walk(root);
+  const sum = (B) => { let px = 0, cov = 0, mx = 0, wpx = 0; const n = gw * gh; for (let i = 0; i < n; i++) { const c = B.g[i]; if (c) { px += c * cellPx; cov += cellPx; wpx += B.w[i] * cellPx; if (c > mx) mx = c; } } px += B.sub; wpx += B.wsub;
+    return { px: Math.round(px), ratio: r2(px / (W * H)), covered: Math.round(cov), max: mx, wpx: Math.round(wpx), objs: B.objs, tris: B.tris }; };
+  // the heaviest objects: each one's own footprint = the cells it covered (layers it adds) x cell area
+  const top = objs.map((e) => ({ k: e.bk + ' ' + e.kind, name: String(e.name).slice(0, 28), at: e.at, m: e.m, op: e.op, px: Math.round((e.hit || 0) * cellPx), pct: r1(100 * (e.hit || 0) * cellPx / (W * H)) })).sort((a, b) => b.px - a.px).slice(0, 10);
+  // glow = the big additive sprites (>= 4 m: the gem / crystal halos and the lamp glows) on their own: pixels x layers, and the share of the screen they cover (layers added up)
+  const gl = objs.filter((e) => e.bk === 'add' && e.kind === 'sprite' && e.m >= 4), gpx = gl.reduce((x, e) => x + (e.hit || 0) * cellPx, 0), gw2 = gl.reduce((x, e) => x + (e.hit || 0) * cellPx * e.op, 0);
+  return { w: W, h: H, px: W * H, cell: S, add: sum(G.add), alpha: sum(G.alpha), glow: { objs: gl.length, px: Math.round(gpx), ratio: r2(gpx / (W * H)), wpx: Math.round(gw2) }, top, truncated: truncated || undefined, hero: root !== ctx.scene };
 }
 
 export function createProbe(ctx) {
@@ -276,6 +440,7 @@ export function createProbe(ctx) {
   if (!on && !ctx.owner) return null;                                                        // (a normal player: not even a hook is installed)
   const rec = makeRecorder(ctx); if (on) rec.start(), rec.stop();                            // (?pf=1: the hooks are in from the first frame)
   const api = { cap: ctx.CAP, mskip: { check: () => matrixCheck(ctx), stats: () => ctx.MSKIP, set on(v) { if (ctx.MSKIP) ctx.MSKIP.on = !!v; }, get on() { return !!(ctx.MSKIP && ctx.MSKIP.on); } }, rec, start: rec.start, stop: rec.stop, census: () => census(ctx), scan: () => scan(ctx), mem: (n) => memReport(ctx, n), device: () => deviceSnap(ctx), info: () => { const I = ctx.renderer.info; return { calls: I.render.calls, tris: I.render.triangles, geo: I.memory.geometries, tex: I.memory.textures, prog: (I.programs || []).length }; } };
+  api.overdraw = (view) => overdraw(ctx, view); window.pf_overdraw = api.overdraw;                // PF2: pixels x blended layers on screen (see overdraw() above)
   if (ctx.owner) { const b = makeBench(ctx, rec); window.BW_bench = { run: b.run, get busy() { return b.busy; } }; }
   if (on) window.__pf = api;
   return api;

@@ -139,3 +139,8 @@ export function installMatrixSkip(THREE, on = true) {
   P._pq = undefined; P._pp = null;
   return S;
 }
+
+// PF2 (F2): is the night render path (the bloom composer: +82..90 shader programs) needed soon?  One real hour is one game day (tod.js DAY_MAP); `night > 0.25` (the switch to the bloom path) starts at game hour
+// 18.0, and game hour 16.7 is ≈ 4 real minutes before that (dev/pf2/unit.mjs measures it from tod.js).  Dawn: night < 0.25 again at ≈ 6.1.  Before this hour the path is not built (a day-only session never pays for it),
+// after it the idle compile (main.js bgCompile: ≤ 25 % busy, ≈ 60-110 s) has time to finish before the first night frame; if it has not, useComposer() stays on the plain path until it has (no hitch, just no bloom yet).
+export const nightPathWanted = (h) => h >= 16.7 || h < 6.5;
