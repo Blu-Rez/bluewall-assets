@@ -83,19 +83,20 @@ const SPH = (r, w = 12, h = 8) => new THREE.SphereGeometry(r, w, h);
 export const TIER_ENT = [17, 18, 19, 20, 21, 22], TIER_LV = [2, 5, 9, 13, 17, 20];      // six FIXED tier looks: 0 timber, 1 grey stone, 2 black iron, 3 sand + gold, 4 pale diamond, 5 blue crystal
 export const HEAP_ENT = { wood: 23, stone: 24, iron: 25, gold: 26, oil: 27, food: 28 };
 // tier look of each hall (skin.js, internal level 1..20): 1-3 brown timber-brick, 4-7 grey stone, 8-11 black iron, 12-15 sand + gold, 16-19 pale diamond, 20 dark blue crystal
-const HEAP_BASE = { wood: 1, stone: 16, iron: 8, gold: 12, oil: 8, food: 1 }, HEAP_STAGES = { wood: 3, stone: 4, iron: 4, gold: 4, oil: 4, food: 3 };
+// ST1_R3 (QA1-020/021/022/030): stone 16 -> 4 = the grey STONE tier (16 = the pale-diamond tier = "ice cubes"); oil 8 -> 4 (8 = the iron tier: metalness 0.85 mirrors the sky = pale blue-white drums)
+const HEAP_BASE = { wood: 1, stone: 4, iron: 8, gold: 12, oil: 4, food: 1 }, HEAP_STAGES = { wood: 3, stone: 4, iron: 4, gold: 4, oil: 4, food: 3 };
 // the identity of each resource: colour (banners, trim), emblem silhouette, Tripo dressing
 export const RES = {          // wm: wall material ('stone' = skinned, the tier above decides; 'plaster' = flat colour), wall / roof: tints, col: banner + sign colour, trim: cornice + ridge
-  wood:  { col: 0xc97a3a, wm: 'stone',   wall: 0xffffff, roof: 0xe0aa72, trim: 0xe3b36c, wt: 0, pt: 0, rt: 0 },      // wt / pt / rt: the tier look of the walls / plinth / roof (TIER_ENT index)
-  stone: { col: 0xe8e2d4, wm: 'stone',   wall: 0xf4efe6, roof: 0xffffff, trim: 0xc9c4b8, wt: 4, pt: 4, rt: 1 },
-  iron:  { col: 0x6f8fc4, wm: 'stone',   wall: 0x9db0d0, roof: 0xb4c0d8, trim: 0x93a0b4, wt: 4, pt: 4, rt: 2 },
+  wood:  { col: 0xc97a3a, wm: 'stone',   wall: 0xffffff, roof: 0xe0aa72, trim: 0xe3b36c, wt: 0, pt: 0, rt: 0 },      // wt / pt / rt: the tier look of the walls / plinth / roof (TIER_ENT index).  ST1_R3 (QA1-025/106/109): pt 4 (diamond = pale ice-blue) -> 1 (grey stone) for stone / iron / oil / the vaults: the forecourt edge was a pale-blue band
+  stone: { col: 0xe8e2d4, wm: 'stone',   wall: 0xf4efe6, roof: 0xffffff, trim: 0xc9c4b8, wt: 4, pt: 1, rt: 1 },
+  iron:  { col: 0x6f8fc4, wm: 'stone',   wall: 0x9db0d0, roof: 0xb4c0d8, trim: 0x93a0b4, wt: 4, pt: 1, rt: 2 },
   gold:  { col: 0xffc533, wm: 'stone',   wall: 0xffffff, roof: 0xffffff, trim: 0xffd25c, wt: 3, pt: 3, rt: 3 },
-  oil:   { col: 0xe0642c, wm: 'plaster', wall: 0xe0a070, roof: 0x8a6a58, trim: 0x2d1f18, wt: 3, pt: 3, rt: 0 },
+  oil:   { col: 0xe0642c, wm: 'plaster', wall: 0xe0a070, roof: 0x8a6a58, trim: 0x2d1f18, wt: 3, pt: 1, rt: 0 },
   food:  { col: 0x7cb04a, wm: 'plaster', wall: 0xf4ead3, roof: 0xb8d19a, trim: 0x8a6a46, wt: 0, pt: 0, rt: 0 },
   // the gem vaults: pale diamond-tier marble walls, the roof in the colour of the gem, gold trim
-  ruby:    { col: 0xe0334f, wm: 'stone', wall: 0xf6f0f2, roof: 0xd8506a, trim: 0xf2d27a, wt: 4, pt: 4, rt: 4 },
-  emerald: { col: 0x2fbf72, wm: 'stone', wall: 0xf0f6f2, roof: 0x4fc487, trim: 0xf2d27a, wt: 4, pt: 4, rt: 4 },
-  turq:    { col: 0x3aa6e8, wm: 'stone', wall: 0xf0f4f8, roof: 0x58b4ec, trim: 0xf2d27a, wt: 4, pt: 4, rt: 4 },
+  ruby:    { col: 0xe0334f, wm: 'stone', wall: 0xf6f0f2, roof: 0xd8506a, trim: 0xf2d27a, wt: 4, pt: 1, rt: 4 },
+  emerald: { col: 0x2fbf72, wm: 'stone', wall: 0xf0f6f2, roof: 0x4fc487, trim: 0xf2d27a, wt: 4, pt: 1, rt: 4 },
+  turq:    { col: 0x3aa6e8, wm: 'stone', wall: 0xf0f4f8, roof: 0x58b4ec, trim: 0xf2d27a, wt: 4, pt: 1, rt: 4 },
 };
 export function setHeapFill(id, f) {            // f 0..1 -> the heap's "level": stage k shows from level base + k
   const b = HEAP_BASE[id], S = HEAP_STAGES[id]; uLv.value[HEAP_ENT[id]] = b + Math.round(Math.max(0, Math.min(1, f)) * (S - 1));
@@ -125,9 +126,11 @@ const T_ST = { worldUV: 0.1 };
 const EMBLEM = {
   wood(Y, y) { for (let r = 0; r < 4; r++) for (let i = 0; i < 4 - r; i++) Y.cyl('woodLight', (i - (3 - r) / 2) * 0.98, y + 0.5 + r * 0.86, 0, 0.5, 0.5, 2.2, { tint: (r + i) % 2 ? 0xc99658 : 0xdcae72 }, 9, 0, Math.PI / 2, Y.S.ry * 0); },
   stone(Y, y) { Y.box('stoneLight', 0, y + 0.7, 0, 3.4, 1.4, 2.0, { ...T_ST, tint: 0xe8e6e0 }); Y.box('stoneLight', 0.3, y + 1.95, 0, 2.5, 1.1, 1.6, { ...T_ST, tint: 0xd6d4ce }); Y.box('stoneLight', -0.2, y + 3.0, 0, 1.5, 1.0, 1.2, { ...T_ST, tint: 0xf0eee8 }); },
-  iron(Y, y) { Y.box('metal', 0, y + 0.45, 0, 2.4, 0.9, 1.5, { tint: 0x6f7a8a }); Y.box('metal', 0, y + 1.25, 0, 1.2, 0.8, 1.1, { tint: 0x838fa0 }); Y.box('metal', 0, y + 2.0, 0, 3.4, 0.8, 1.6, { tint: 0x9aa6b8 }); Y.geo('metal', new THREE.ConeGeometry(0.7, 1.8, 8).rotateZ(-Math.PI / 2), 2.5, y + 2.0, 0, { tint: 0xa9b4c4 }); },
+  // ST1_R3 (QA1-033, black blocks on a mast top / black roof silhouettes): the anvil and the oil drop were 'metal' / dark plaster = pure black cut-outs against the sky (M.metal has no env to reflect).  Now steel-blue UNSKINNED stone
+  // and the resource's own orange (the same boxes / cylinders: +0 calls).
+  iron(Y, y) { Y.box('stoneLight', 0, y + 0.45, 0, 2.4, 0.9, 1.5, { ...T_ST, tint: 0x7d8aa0 }); Y.box('stoneLight', 0, y + 1.25, 0, 1.2, 0.8, 1.1, { ...T_ST, tint: 0x8c9ab0 }); Y.box('stoneLight', 0, y + 2.0, 0, 3.4, 0.8, 1.6, { ...T_ST, tint: 0xa3b1c6 }); Y.geo('stoneLight', new THREE.ConeGeometry(0.7, 1.8, 8).rotateZ(-Math.PI / 2), 2.5, y + 2.0, 0, { ...T_ST, tint: 0xb4c1d4 }); },
   gold(Y, y) { for (let r = 0; r < 3; r++) for (let i = 0; i < 3 - r; i++) Y.box('gold', (i - (2 - r) / 2) * 1.6, y + 0.4 + r * 0.78, 0, 1.5, 0.72, 1.0); Y.geo('gold', CYL(0.9, 0.9, 0.16, 16), 0, y + 2.9, 0, {}, 0, 1, 1, 1, Math.PI / 2, 0); },
-  oil(Y, y) { Y.cyl('metal', 0, y + 0.7, 0, 0.95, 1.0, 1.4, { tint: 0x3a2e28 }, 12); Y.geo('plaster', SPH(1.15, 14, 10), 0, y + 2.2, 0, { tint: 0x2b211c }, 0, 1, 1.35, 1); Y.cyl('metal', 0, y + 3.8, 0, 0.0, 0.7, 1.7, { tint: 0x2b211c }, 12); },
+  oil(Y, y) { Y.cyl('plaster', 0, y + 0.7, 0, 0.95, 1.0, 1.4, { tint: 0x8a4a2c }, 12); Y.geo('plaster', SPH(1.15, 14, 10), 0, y + 2.2, 0, { tint: 0xe0642c }, 0, 1, 1.35, 1); Y.cyl('plaster', 0, y + 3.8, 0, 0.0, 0.7, 1.7, { tint: 0xe0642c }, 12); },
   food(Y, y) { for (let i = -3; i <= 3; i++) Y.geo('woodLight', new THREE.ConeGeometry(0.2, 2.6, 6), i * 0.42, y + 1.9, 0, { tint: 0xe5c363 }, 0, 1, 1, 1, 0, i * 0.22); Y.geo('cloth', SPH(0.9, 10, 8), 0, y + 0.6, 0, { tint: 0xa5432f }, 0, 1.15, 0.85, 0.9); },
 };
 
@@ -135,15 +138,25 @@ const EMBLEM = {
 // stage k of a heap is drawn with B.tag(HEAP_ENT, min = base + k): the skin shader hides it while the heap's level is lower.  The body material is a SKINNED one so the clip works.
 const HEAP = {
   wood(Y, side, st) { const e = HEAP_ENT.wood, b = HEAP_BASE.wood; const rows = [[4, 0], [3, 1], [2, 2]][st]; if (!rows) return; Y.tag(e, b + st); const [n, r] = rows;
-    for (let i = 0; i < n; i++) Y.cyl('stone', side * (Y.heapX || 4.6) + (i - (n - 1) / 2) * 0.86, 0.5 + r * 0.74, (Y.heapZ ?? 6.6), 0.4, 0.4, 3.6, { tint: (i + r) % 2 ? 0xc99658 : 0xdcae72 }, 9, 0, Math.PI / 2); },
-  stone(Y, side, st) { const e = HEAP_ENT.stone, b = HEAP_BASE.stone; Y.tag(e, b + st); const n = [3, 2, 2, 1][st], r = st;
-    for (let i = 0; i < n; i++) Y.box('stone', side * (Y.heapX || 4.6) + (i - (n - 1) / 2) * 1.75, 0.5 + r * 0.92, (Y.heapZ ?? 6.6), 1.65, 0.88, 1.25, { ...T_ST, tint: (i + r) % 2 ? 0xd0d2d8 : 0xe6e3dc }, (i - 1) * 0.06); },
+    for (let i = 0; i < n; i++) Y.cyl('stoneDark', side * (Y.heapX || 4.6) + (i - (n - 1) / 2) * 0.86, 0.5 + r * 0.74, (Y.heapZ ?? 6.6), 0.4, 0.4, 3.6, { tint: (i + r) % 2 ? 0xeab97a : 0xf6d092 }, 9, 0, Math.PI / 2); },      // ST1_R3 (QA1-092): 'stoneDark' wood tier = bands along the grain (the 'stone' wood tier = vertical plank seams = the chevron stamp across each log)
+  stone(Y, side, st) { const e = HEAP_ENT.stone, b = HEAP_BASE.stone; Y.tag(e, b + st); const n = [3, 2, 2, 1][st], r = st, X = Y.heapX || 4.6, Z = Y.heapZ ?? 6.6;   // ST1_R3: quarried blocks in warm GREY (stone tier: its own grain + seams), each one a little different
+    const G = [1.0, 0.8, 1.2, 0.9];          // the stone tier's own texture is dark (map ~0.2 linear): a LINEAR multiplier of ~2 x these lifts it to a warm mid-grey (0.35-0.45) with its grain and seams
+    const gt = (k) => ({ ...T_ST, tint: new THREE.Color(2.1 * G[k % 4], 1.85 * G[k % 4], 1.4 * G[k % 4]), tintLinear: true });
+    for (let i = 0; i < n; i++) { const k = i + r * 2 + st; Y.box('stone', side * X + (i - (n - 1) / 2) * 1.75, 0.5 + r * 0.92, Z, 1.6 + (k % 3) * 0.08, 0.84 + (k % 2) * 0.08, 1.2 + ((k + 1) % 3) * 0.06, gt(k), (i - 1) * 0.07 + r * 0.05); }
+    if (st < 3) Y.box('stone', side * X + (st % 2 ? 1 : -1) * 1.5, 0.22, Z + 0.95 + st * 0.12, 0.5, 0.34, 0.45, gt(st + 1), 0.5 + st);        // a chip of rubble at the foot of the pile
+  },
   iron(Y, side, st) { const e = HEAP_ENT.iron, b = HEAP_BASE.iron; Y.tag(e, b + st); const n = [5, 4, 3, 2][st], r = st;
     for (let i = 0; i < n; i++) Y.box('stone', side * (Y.heapX || 4.6) + (i - (n - 1) / 2) * 1.0, 0.3 + r * 0.42, (Y.heapZ ?? 6.6), 0.94, 0.38, 0.55, { ...T_ST, tint: (i + r) % 2 ? 0x9aa6b6 : 0x7e8a9a }); },
   gold(Y, side, st) { const e = HEAP_ENT.gold, b = HEAP_BASE.gold; Y.tag(e, b + st); const n = [5, 4, 3, 2][st], r = st;
-    for (let i = 0; i < n; i++) Y.box('gold', side * (Y.heapX || 4.6) + (i - (n - 1) / 2) * 1.0, 0.3 + r * 0.42, (Y.heapZ ?? 6.6), 0.94, 0.38, 0.55); },
-  oil(Y, side, st) { const e = HEAP_ENT.oil, b = HEAP_BASE.oil; Y.tag(e, b + st); const n = [3, 2, 2, 1][st], r = st;
-    for (let i = 0; i < n; i++) Y.cyl('stone', side * (Y.heapX || 4.6) + (i - (n - 1) / 2) * 1.15, 0.6 + r * 1.05, (Y.heapZ ?? 6.6), 0.5, 0.5, 1.1, { tint: (i + r) % 2 ? 0x4a3a30 : 0x3a2d26 }, 12); },
+    for (let i = 0; i < n; i++) Y.box('gold', side * (Y.heapX || 4.6) + (i - (n - 1) / 2) * 1.0, 0.3 + r * 0.42, (Y.heapZ ?? 6.6), 0.94, 0.38, 0.55, { tint: (i + r) % 2 ? 0xffffff : 0xd8d8d8 }); },      // ST1_R3 (QA1-096/097): two bar brightnesses (neutral: M.gold is already gold, a gold tint turns it orange)
+  oil(Y, side, st) { const e = HEAP_ENT.oil, b = HEAP_BASE.oil; Y.tag(e, b + st); const n = [3, 2, 2, 1][st], r = st, X = Y.heapX || 4.6, Z = Y.heapZ ?? 6.6;   // ST1_R3 (QA1-030): drums with two hoops + a lid + a bung (all skinned stone materials: they clip with the stage)
+    const dt = (r_, g_, b_) => ({ tint: new THREE.Color(r_, g_, b_), tintLinear: true });       // linear multipliers on the (dark) stone-tier texture
+    for (let i = 0; i < n; i++) { const bx = side * X + (i - (n - 1) / 2) * 1.15, by = 0.6 + r * 1.05, c = (i + r) % 2 ? dt(1.7, 0.62, 0.26) : dt(1.35, 0.5, 0.22);
+      Y.cyl('stone', bx, by, Z, 0.5, 0.5, 1.1, c, 12);
+      for (const hy of [-0.32, 0.32]) Y.cyl('stoneDark', bx, by + hy, Z, 0.535, 0.535, 0.09, dt(0.5, 0.48, 0.46), 12);
+      Y.cyl('stoneDark', bx, by + 0.565, Z, 0.46, 0.46, 0.05, dt(0.8, 0.76, 0.72), 12);
+      Y.cyl('stoneDark', bx + 0.18, by + 0.61, Z - 0.12, 0.07, 0.07, 0.06, dt(0.25, 0.24, 0.23), 6); }
+  },
   food(Y, side, st) { const e = HEAP_ENT.food, b = HEAP_BASE.food; Y.tag(e, b + st); const n = [4, 3, 2][st], r = st;
     for (let i = 0; i < n; i++) Y.box('stone', side * (Y.heapX || 4.6) + (i - (n - 1) / 2) * 1.2, 0.45 + r * 0.8, (Y.heapZ ?? 6.6), 1.1, 0.78, 0.9, { tint: (i + r) % 2 ? 0xd8b46a : 0xe6c98a }); },
 };
@@ -154,14 +167,35 @@ const wallOpts = (K, extra = {}) => (K.wm === 'plaster' ? { tint: K.wall, ...WAL
 const TE = TIER_ENT;
 function plinth(Y, id, w = 14.6, dz = 11.0, steps = true) {
   Y.tag(TE[RES[id].pt]);            // foundation + court slab + steps: ONE stone family for all looks (tier-skinned with the hall)
-  Y.box('stoneDark', 0, -Y.drop / 2 + 0.45, -2.2, w, Y.drop + 0.9, dz, { ...T_ST, tint: 0xc2c7d2 });
-  Y.box('stoneDark', 0, -Y.drop / 2 + 0.12, 5.9, 15.6, Y.drop + 0.24, 5.4, { ...T_ST, tint: 0xaeb4c2 });
-  Y.box('stoneLight', 0, 0.3, 5.9, 15.0, 0.12, 4.8, { ...T_ST, tint: 0xd9dbe2 });                                   // paving (unskinned light stone: the court always reads bright)
-  if (steps) for (let k = 0; k < 3; k++) Y.box('stoneLight', 0, 0.2 + k * 0.24, 3.7 - k * 0.5, 5.0 - k * 0.5, 0.26, 1.0, { ...T_ST, tint: 0xdcdde4 });
+  // ST1_R3 (QA1-025/106/109): warm grey, no cool tints (0xc2c7d2 / 0xaeb4c2 / 0xd9dbe2 read lilac-blue).  pt 1 (grey stone) = the UNSKINNED light stone: the skin's stone tier is a very dark texture (x a 0.7 tint = black),
+  // and the plinth needs no stage clip; timber / gold / food keep their own tier skin (planks, sand + gold).
+  // The first r3c frames showed this stone as charcoal (shaded courts: paving 40, lip 48 of 255): the UnevenBrick map is dark and the court is often in the hall's shadow, so the warm-grey tints are LINEAR multipliers (> 1, like the heaps)
+  // on the unskinned stone: mid warm grey with the brick relief, neither the old ice-white lip nor black.
+  const LT = (r, g, b) => ({ ...T_ST, tint: new THREE.Color(r, g, b), tintLinear: true });
+  const grey = RES[id].pt === 1, PM = grey ? 'stoneLight' : 'stoneDark';
+  Y.box(PM, 0, -Y.drop / 2 + 0.45, -2.2, w, Y.drop + 0.9, dz, grey ? LT(1.05, 0.97, 0.85) : { ...T_ST, tint: 0xc9c1b3 });
+  Y.box(PM, 0, -Y.drop / 2 + 0.12, 5.9, 15.6, Y.drop + 0.24, 5.4, grey ? LT(1.0, 0.93, 0.8) : { ...T_ST, tint: 0xb3aa9b });
+  Y.box('stoneLight', 0, 0.3, 5.9, 15.0, 0.12, 4.8, LT(1.22, 1.12, 0.96));                                           // paving (unskinned light stone: warm flagstone)
+  if (steps) for (let k = 0; k < 3; k++) Y.box('stoneLight', 0, 0.2 + k * 0.24, 3.7 - k * 0.5, 5.0 - k * 0.5, 0.26, 1.0, LT(1.28, 1.2, 1.0));
 }
-function lamps(Y, env, x = 3.4, z = 3.6) { for (const e of [-1, 1]) { const [lx, lz] = Y.P(e * x, z); env.ctx.torch(lx, Y.y0 + 3.4, lz, { post: true, pool: true }); } }
-function banners(Y, K, x = 6.7, z = 2.3, y = 0.9) {       // two tall pennants in the resource colour on the front corners
-  for (const e of [-1, 1]) { Y.cyl('wood', e * x, y + 4.6, z, 0.07, 0.08, 7.6, { tint: 0x4a3524 }, 6); Y.box('cloth', e * x - e * 0.65, y + 7.0, z, 1.2, 2.6, 0.05, { tint: K.col }); Y.box('cloth', e * x - e * 0.65, y + 5.55, z, 1.2, 0.35, 0.06, { tint: K.trim }); }
+// ST1_R3 (QA1-024/101): the door lamps' posts were built from the TERRAIN height (world.js torch -> S4C.lamp(height(x, z))), but the yard stands on a raised pad (y0) with its foundations below, so the post was buried in
+// the plinth and only the lantern head showed = "lanterns hang in mid-air".  The post now stands on the court / plinth top (o.gy) and is 3.4 m tall, as before.
+const lampBase = (z) => (z <= 3.3 ? 0.9 : 0.36);               // the plinth top (main block) / the paving top of the court in front of it
+function lamps(Y, env, x = 3.4, z = 3.6) { const gy = Y.y0 + lampBase(z); for (const e of [-1, 1]) { const [lx, lz] = Y.P(e * x, z); env.ctx.torch(lx, gy + 3.05, lz, { post: true, pool: true, gy, only: 'lamps_wall_street/lamp_post' }); } }
+// ST1_R3 (QA1-019): the poles were 7.6 m of 15 cm black stick (dark wood texture x dark tint 0x4a3524) with the pennant at 7 m = "giant black poles".  Now: a 6 m BROWN pole (light timber, tapered), a stone footing +
+// a thick tapered foot with an iron band, a gold finial and a cross-arm; the pennant hangs lower (3.2 .. 5.6 m) from the arm.  Same boxes/cylinders in the same static batch: +0 programs, +0 draw calls.
+function banners(Y, K, x = 6.7, z = 2.3, y = 0.9) {       // two pennants in the resource colour on the front corners
+  for (const e of [-1, 1]) {
+    const px = e * x, ax = px - e * 0.7;                    // ax = the middle of the cross-arm / pennant (inwards of the pole)
+    Y.box('stoneLight', px, y + 0.22, z, 0.95, 0.44, 0.95, { ...T_ST, tint: new THREE.Color(1.05, 0.97, 0.85), tintLinear: true });                                   // footing: unskinned warm stone (whatever tier the hall has)
+    Y.cyl('woodLight', px, y + 1.2, z, 0.2, 0.3, 1.5, { tint: 0xb98a58 }, 8);                                               // thick tapered foot
+    Y.cyl('metal', px, y + 1.98, z, 0.23, 0.23, 0.14, { tint: 0x6b7280 }, 8);                                               // iron band where the foot meets the pole
+    Y.cyl('woodLight', px, y + 4.05, z, 0.1, 0.16, 4.1, { tint: 0xc4935f }, 8);                                             // the pole itself (to y + 6.1)
+    Y.geo('woodLight', SPH(0.17, 8, 6), px, y + 6.25, z, { tint: 0xd9a066 });                                              // finial (timber knob: 'gold' is a skinned tier material, it would change look with the hall's tier)
+    Y.box('woodLight', ax, y + 5.55, z, 1.55, 0.1, 0.1, { tint: 0xb98a58 });                                               // cross-arm
+    Y.box('cloth', ax, y + 4.35, z, 1.2, 2.4, 0.05, { tint: K.col });                                                      // the pennant (3.15 .. 5.55)
+    Y.box('cloth', ax, y + 3.05, z, 1.2, 0.3, 0.06, { tint: K.trim });                                                     // its trim band at the hem
+  }
 }
 function hoist(Y, x = 4.2) {                                // a beam, strut, rope and hook out of the front wall: the storehouse's signature
   Y.box('wood', x, 0.9 + 5.4, 3.3, 0.28, 0.28, 3.4, { tint: 0x5a3a22 }); Y.box('wood', x, 0.9 + 4.5, 3.0, 0.2, 0.2, 2.4, { tint: 0x5a3a22 });
@@ -255,8 +289,8 @@ function library3(Y, id, env) {
 const BASIN_Z = 4.9;
 function vbasin(Y, id, env) {
   const K = RES[id];
-  Y.tag(TE[K.pt]);
-  Y.cyl('stoneDark', 0, 0.5, BASIN_Z, 3.0, 3.3, 1.0, { ...T_ST, tint: 0xc2c7d2 }, 20);
+  Y.tag(TE[3]);                    // ST1_R3 (QA1-102..105): the basin + its gold rim and bollards in the GOLD tier (cream marble + real gold); they were diamond-tier = white-blue plastic
+  Y.cyl('stoneDark', 0, 0.5, BASIN_Z, 3.0, 3.3, 1.0, { ...T_ST, tint: 0xd6cdbd }, 20);
   Y.geo('gold', new THREE.TorusGeometry(3.0, 0.24, 6, 24).rotateX(Math.PI / 2), 0, 1.03, BASIN_Z);
   for (let k = 0; k < 6; k++) { const a = (k / 6) * Math.PI * 2 + 0.5; Y.cyl('gold', Math.cos(a) * 3.55, 0.8, BASIN_Z + Math.sin(a) * 3.55, 0.17, 0.17, 1.6, {}, 6); Y.geo('gold', SPH(0.26, 8, 6), Math.cos(a) * 3.55, 1.7, BASIN_Z + Math.sin(a) * 3.55); }
   const [px, pz] = Y.P(0, BASIN_Z), hc = haloRGB(id);
@@ -518,9 +552,9 @@ export function buildStoreYards(ctx, { M, height, scene, onMeshes, plan }) {
   function drawMoved(S) {
     const Bm = new Batcher(), tm = [], lamps = [];
     const ctxM = { torch(x, y, z, o = {}) {
-      const T4 = LAMP && LAMP.on && (o.post || o.sconce) ? LAMP.lamp(Bm, height(x, z), x, y, z, o, []) : null;
-      if (o.post && !T4) { const gy = height(x, z); Bm.add(new THREE.CylinderGeometry(0.1, 0.14, y - gy, 6), M.wood, mat4(x, gy + (y - gy) / 2, z), { tint: 0x5a3a22 }); Bm.add(new THREE.CylinderGeometry(0.28, 0.14, 0.35, 8), M.metal, mat4(x, y, z)); }
-      lamps.push({ f: T4 ? [T4.x, T4.y, T4.z] : [x, y + 0.35, z], p: o.pool ? { x, y: height(x, z) + 0.06, z } : null });
+      const T4 = LAMP && LAMP.on && (o.post || o.sconce) ? LAMP.lamp(Bm, o.gy != null ? o.gy : height(x, z), x, y, z, o, []) : null;      // ST1_R3: o.gy = the court top
+      if (o.post && !T4) { const gy = o.gy != null ? o.gy : height(x, z); Bm.add(new THREE.CylinderGeometry(0.1, 0.14, y - gy, 6), M.wood, mat4(x, gy + (y - gy) / 2, z), { tint: 0x5a3a22 }); Bm.add(new THREE.CylinderGeometry(0.28, 0.14, 0.35, 8), M.metal, mat4(x, y, z)); }
+      lamps.push({ f: T4 ? [T4.x, T4.y, T4.z] : [x, y + 0.35, z], p: o.pool ? { x, y: (o.gy != null ? o.gy : height(x, z)) + 0.06, z } : null });
     }, pool() {} };
     const Y = buildYard({ B: Bm, M, height, tri: tm, ctx: ctxM, bid: 0 }, look, S);
     return { key: key(S), groups: Bm.groups, tri: tm, lamps, y0: Y.y0 };

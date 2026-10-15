@@ -151,15 +151,15 @@ export async function buildWorld(renderer, scene, Q, progress) {
     },
     pick(b, id, lot = null) { picks.push({ id, lot, box: new THREE.Box3(new THREE.Vector3(b.x - b.r, b.y0, b.z - b.r), new THREE.Vector3(b.x + b.r, b.y1, b.z + b.r)) }); },      // TR2-S5: + lot (the lot id the box belongs to: layout_live.js moves it with the lot)
     torch(x, y, z, o = {}) {
-      const T4 = S4C.on && (o.post || o.sconce) ? S4C.lamp(B, height(x, z), x, y, z, o, ctx.targets) : null;      // TR2-S4c: a Tripo post lamp / wall torch (baked, falls with its wall); returns the flame anchor
+      const T4 = S4C.on && (o.post || o.sconce) ? S4C.lamp(B, o.gy != null ? o.gy : height(x, z), x, y, z, o, ctx.targets) : null;      // ST1_R3: o.gy = the post's foot when it does not stand on the terrain (the storage yards: court top)      // TR2-S4c: a Tripo post lamp / wall torch (baked, falls with its wall); returns the flame anchor
       flames.add(T4 ? T4.x : x, T4 ? T4.y : y + 0.35, T4 ? T4.z : z, o.big ? 2.6 : o.forge ? 3.0 : 1.5, o.forge ? [1, 0.42, 0.12] : [1, 0.62, 0.25], B.tagB);      // TR2-S4c: flame anchor from the Tripo lamp when there is one
       if (o.post && !T4) {      // TR2-S4c
-        const gy = height(x, z);
+        const gy = o.gy != null ? o.gy : height(x, z);      // ST1_R3: o.gy
         B.add(new THREE.CylinderGeometry(0.1, 0.14, y - gy, 6), M.wood, mat4(x, gy + (y - gy) / 2, z), { tint: 0x5a3a22 });
         B.add(new THREE.CylinderGeometry(0.28, 0.14, 0.35, 8), M.metal, mat4(x, y, z));
       }
       if (o.sconce && !T4) B.add(new THREE.BoxGeometry(0.25, 0.7, 0.25), M.metal, mat4(x, y - 0.25, z, o.ry || 0));      // TR2-S4c
-      if (o.pool) pools.add(x, height(x, z) + 0.06, z, o.big ? 7.5 : o.forge ? 8 : 5.2);
+      if (o.pool) pools.add(x, (o.gy != null ? o.gy : height(x, z)) + 0.06, z, o.big ? 7.5 : o.forge ? 8 : 5.2);      // ST1_R3: o.gy
       if (o.light && lightBudget > 0) {
         lightBudget--;
         const l = new THREE.PointLight(o.forge ? 0xff7a2a : 0xff9a45, o.big ? 120 : 80, o.big ? 30 : 22, 1.8);      // (15 Oct, owner: the lamps glare at night — was 180 / 120)

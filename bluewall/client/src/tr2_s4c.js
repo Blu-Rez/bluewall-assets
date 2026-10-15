@@ -118,7 +118,7 @@ S4C.lamp = function lamp(B, gy, x, y, z, o, targets) {
   if (o.post) {
     if (y - gy > 5) gy = y - 2.2;                                                  // a torch on a tower top / quay: the old pole ran up from the ground inside the masonry; the Tripo one stands on the platform (2.2 m below the flame)
     const hf = y + 0.35 - gy;                                                       // where the game's flame sprite sits above the ground
-    const pool = o.pool ? POSTS : POSTS.slice(1);                                   // street lamps (glass lantern) only along the lit streets; braziers elsewhere
+    const pool = o.only ? POSTS.filter((q) => q[0] === o.only) : o.pool ? POSTS : POSTS.slice(1);      // street lamps (glass lantern) only along the lit streets; braziers elsewhere.  ST1_R3: o.only = one fixed model (the storage yards: the lantern post, never the crumpled fire basket)
     const tot = pool.reduce((a, p) => a + p[1], 0); let t = hash(x, z) * tot, spec = pool[0][0];
     for (const [s, wgt] of pool) { if ((t -= wgt) < 0) { spec = s; break; } }
     const a = anchor(spec), H = hf / a.y * (spec === 'lamps_wall_street/lamp_post' ? 0.72 : 1), ry = hash(z, x) * 6.283;       // (15 Oct, owner: the street lamp towered over the hero and glared: 0.72 x, its lantern is still bigger than a real one)
