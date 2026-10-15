@@ -272,7 +272,7 @@ export class UI {
     body.appendChild(rb);
     if (this.opts.owner && this.opts.onOwner) {                        // (owner only: see the royal items without buying them; a test balance for the shop)
       const hd = document.createElement('div'); hd.textContent = 'OWNER TOOLS'; hd.style.cssText = 'margin:16px 2px 2px;font-size:11px;letter-spacing:2px;opacity:.7'; body.appendChild(hd);
-      for (const [k, label] of [['max', 'Level 30: everything full'], ['royal', 'Showcase: 4 Tesla coils + the Dragonling'], ['plain', 'Remove the showcase'], ['gems', 'Test balance: +200 sapphire, +40 onyx']]) {
+      for (const [k, label] of [['max', 'Max level (50): everything full'], ['royal', 'Showcase: 4 Tesla coils + the Dragonling'], ['plain', 'Remove the showcase'], ['gems', 'Test balance: +200 sapphire, +40 onyx']]) {
         const ob = document.createElement('button'); ob.className = 'bw-btnw'; ob.textContent = label; ob.style.marginTop = '8px';
         ob.addEventListener('click', async () => { this.haptic('light'); ob.disabled = true; let ok = false; try { ok = await this.opts.onOwner(k); } catch (e) { ok = false; } ob.disabled = false; this.toast(ok ? 'Done' : 'Not available right now'); });
         body.appendChild(ob);

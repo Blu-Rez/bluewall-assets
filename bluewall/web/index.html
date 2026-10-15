@@ -141,9 +141,14 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
 @keyframes ldSp{from{transform:scale(.8);opacity:.5}to{transform:scale(1.15);opacity:.78}}
 #ld-bot .ld-tip{top:auto;bottom:0}
 @media (prefers-reduced-motion:reduce){#bw-load *{animation-duration:1ms!important;animation-iteration-count:1!important}#bw-load .ld-tg{animation:ldFl 3.5s ease-in-out infinite alternate!important}#bw-load .ld-strip{animation:none!important}#ld-drake{display:none!important}}
+/* mother 15 Oct (owner: "the game must be landscape only"): a phone held upright gets a calm full-screen "rotate" card instead of a cramped portrait game */
+#bw-rot{display:none;position:fixed;inset:0;z-index:2147483000;background:#050912;color:#f4e8cc;font:600 18px/1.35 Georgia,serif;text-align:center;align-items:center;justify-content:center;flex-direction:column;gap:18px;padding:24px;letter-spacing:.3px}
+#bw-rot svg{width:84px;height:84px}
+@media (orientation:portrait) and (pointer:coarse){#bw-rot{display:flex}}
 </style>
 </head>
 <body>
+<div id="bw-rot" aria-live="polite"><svg viewBox="0 0 64 64" fill="none" stroke="#e0b255" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="20" y="6" width="24" height="42" rx="4"/><path d="M30 42h4"/><path d="M12 54c8 6 24 6 36-2"/><path d="M46 48l4 5-6 2"/></svg><div>Rotate your phone to play</div></div>
 <div id="game"></div>
 <div id="bw-load"></div>
 <div id="msg"></div>
@@ -330,6 +335,12 @@ document.body.dataset.ready = 1;
     if (tg.isVersionAtLeast("7.10")) tg.setBottomBarColor("#050912");
     if (tg.isVersionAtLeast("8.0") && (tg.platform === "android" || tg.platform === "ios")) tg.requestFullscreen();
   } catch (e) {}
+  // mother 15 Oct: landscape only. Hard lock where the WebView allows it; otherwise the #bw-rot card above covers the upright phone.
+  function lockLand() {
+    try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(function () {}); } catch (e) {}
+    try { if (tg && tg.isVersionAtLeast("8.0") && tg.lockOrientation && window.innerWidth > window.innerHeight && !tg.isOrientationLocked) tg.lockOrientation(); } catch (e) {}
+  }
+  lockLand(); window.addEventListener("resize", lockLand);
   var initData = (tg && tg.initData) || "";
   if (!initData) { stop("🔒 Blue Wall فقط از داخل تلگرام باز می‌شه"); return; }
   prog(6);
