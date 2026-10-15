@@ -55,13 +55,13 @@ export function buildVaults(ctx, api) {
   for (const V of plan) {
     const L0 = GEM_LOOK[V.id], c = Math.cos(V.ry), s = Math.sin(V.ry);
     const P = (lx, lz) => [V.x + lx * c + lz * s, V.z - lx * s + lz * c];
+    ctx.tgt({ type: 'vault', gem: V.id, x: V.x, z: V.z, w: 17, d: 14, h: 14, rot: V.ry });      // mother (ST1 x BT1): registered BEFORE the hall is built so its pieces carry the target id (aB) — without it a vault cannot crumble in an attack (bt1_test: 'no visible body')
     const H = buildVaultHall(ctx, api, V);                                                                    // ST1: the Treasury Quarter's hall (static) — its numbers place the live parts below
     const y0 = H ? H.y0 : Math.max(0.3, height(V.x, V.z));
     const put = (geo, mat, m, o) => B.add(geo, mat, m, o);
     const box = (mat, lx, y, lz, sx, sy, sz, o = {}) => { const [x, z] = P(lx, lz); put(BOX, mat, mat4(x, y, z, V.ry, sx, sy, sz), o); };
     const stoneUV = { worldUV: 0.1 };
     if (!H) B.tag(ENT['vault_' + V.id]);
-    ctx.tgt({ type: 'vault', gem: V.id, x: V.x, z: V.z, w: 17, d: 14, h: 14, rot: V.ry });
 
     if (!H) {
     // ---- base + steps + hall

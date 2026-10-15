@@ -330,7 +330,7 @@ function vaultHall(env, V, look) {
 export function buildVaultHall(ctx, { M, height }, V, look) {
   const W = WARM && WARM.r; if (!W || !planQuarter()) return null;
   initYardLevels();
-  return vaultHall({ B: ctx.B, M, height, tri: QTRI, ctx, bid: 0 }, V, look || W.look);
+  return vaultHall({ B: ctx.B, M, height, tri: QTRI, ctx, bid: ctx.B.tagB || 0 }, V, look || W.look);      // mother (ST1 x BT1): the target id the caller registered (vault.js) goes onto the baked Tripo pieces
 }
 export const labBuildVault = (env, look, V) => { initYardLevels(); return vaultHall(env, V, look); };
 
