@@ -1,0 +1,161 @@
+{
+ "melika.glb": {
+  "stats": {
+   "MB": 2.82,
+   "tris": 19103,
+   "verts": 12811,
+   "materials": 1,
+   "alpha": [
+    "OPAQUE"
+   ],
+   "textures": [
+    [
+     2048,
+     2048,
+     "jpg"
+    ]
+   ],
+   "skins": 1,
+   "joints": 78,
+   "clips": 33,
+   "ext": []
+  },
+  "clip_names": [
+   "idle",
+   "walk",
+   "run",
+   "jump",
+   "fall",
+   "land",
+   "dodge",
+   "hit",
+   "death",
+   "knockdown",
+   "punch_a",
+   "punch_b",
+   "kick_a",
+   "kick_b",
+   "cast",
+   "aim",
+   "talk",
+   "bow",
+   "cry",
+   "look_around",
+   "cheer",
+   "angry",
+   "sit_down",
+   "sit_idle",
+   "stand_up",
+   "slash_a",
+   "slash_b",
+   "slash_c",
+   "heavy",
+   "block",
+   "swim",
+   "climb",
+   "interact"
+  ],
+  "bones": {
+   "kind": "1:1 with the game rig (core bones present)",
+   "joints": 78,
+   "missing_vs_game": [],
+   "extra_vs_game": [],
+   "missing_core": []
+  },
+  "skin_weights": {
+   "verts": 12811,
+   "weight_sum_min": 0.9999998807907104,
+   "weight_sum_bad_pct": 0.0,
+   "max_influences_pct_4": 45.56240730622122,
+   "unweighted_pct": 0.0,
+   "shoulder_band": {
+    "verts": 2569,
+    "split_2joints_pct": 38.45854418061502,
+    "arm_weight_mean": 0.6545752882957458
+   },
+   "hip_band": {
+    "verts": 3178,
+    "split_2joints_pct": 23.6941472624292,
+    "leg_weight_mean": 0.8314021825790405
+   },
+   "skirt_band": {
+    "verts": 802,
+    "split_2joints_pct": 12.593516209476311
+   }
+  }
+ },
+ "melika_front_game.glb (NEW)": {
+  "stats": {
+   "MB": 2.77,
+   "tris": 18880,
+   "verts": 12869,
+   "materials": 1,
+   "alpha": [
+    "OPAQUE"
+   ],
+   "textures": [
+    [
+     2048,
+     2048,
+     "jpg"
+    ]
+   ],
+   "skins": 1,
+   "joints": 78,
+   "clips": 22,
+   "ext": []
+  },
+  "clip_names": [
+   "idle",
+   "walk",
+   "run",
+   "jump",
+   "fall",
+   "land",
+   "dodge",
+   "hit",
+   "death",
+   "knockdown",
+   "punch_a",
+   "punch_b",
+   "kick_a",
+   "kick_b",
+   "cast",
+   "aim",
+   "talk",
+   "bow",
+   "cry",
+   "look_around",
+   "cheer",
+   "angry"
+  ],
+  "bones": {
+   "kind": "1:1 with the game rig (core bones present)",
+   "joints": 78,
+   "missing_vs_game": [],
+   "extra_vs_game": [],
+   "missing_core": []
+  },
+  "skin_weights": {
+   "verts": 12869,
+   "weight_sum_min": 0.9999998807907104,
+   "weight_sum_bad_pct": 0.0,
+   "max_influences_pct_4": 36.38200326365685,
+   "unweighted_pct": 0.0,
+   "shoulder_band": {
+    "verts": 2375,
+    "split_2joints_pct": 38.23157894736842,
+    "arm_weight_mean": 0.6497980952262878
+   },
+   "hip_band": {
+    "verts": 3245,
+    "split_2joints_pct": 17.627118644067796,
+    "leg_weight_mean": 0.8092039227485657
+   },
+   "skirt_band": {
+    "verts": 1113,
+    "split_2joints_pct": 12.578616352201259
+   }
+  }
+ }
+}
