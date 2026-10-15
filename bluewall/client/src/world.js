@@ -422,7 +422,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     smoke.update(dt, 0.995, 0.08); embers.update(dt, 0.99, 0.2); dust.update(dt, 0.95, -0.4); breath.update(dt, 0.965, 3.2); pe('particles');
     if (dragon.root.visible) dragon.update(t, dt);
     pe('dragon');
-    if (!bat) { units.update(dt); patrols && patrols.update(t, dt, camera); }
+    if (!bat) { units.update(dt, camera); patrols && patrols.update(t, dt, camera); }       // AN1_R3: units.update gets the camera (F6)
     pe('units+patrols');
     lateTick(); pe('lateTick');
     if (!bat) { if (campHome) campHome.update(t, camera); /* BT1_R2: camera = pavilion LOD */ life.update(t, dt, lastP, camera); pe('life'); army.update(t, dt, camera, lastP); pe('army'); }

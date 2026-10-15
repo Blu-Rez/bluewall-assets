@@ -18,6 +18,8 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { mergeSkinned } from './creature.js';
 import { gearOf, METAL } from './unitlook.js';
 import { crestTexture } from './gear_shield.js';
+import { LOD } from './walk_kit.js';
+let _phi = 0;                 // AN1_R3: F6 (opt-in per kind: opts.lodF6)
 
 const FPS = 30, BLEND = 0.25;
 function toFloat(src) {   // plain float copy of a geometry (see below)
@@ -265,6 +267,10 @@ export function createKind(cfg) {
 
   // ---- instances
   const all_ = [];
+  // AN1_R3 F6 (only for kinds that ask: opts.lodF6): when the camera stands still and no instance of this kind is nearer than 60 m, the instance buffers are rewritten every 2nd (60 .. 140 m) or 4th (> 140 m) frame (never more than 0.12 / 0.25 s apart).
+  // The baked clips run on the GPU clock (uniforms.time), so a skipped frame costs nothing visible: only the walking positions / clip switches (set by the owner of the kind at its own LOD rate) wait for the next write.
+  // Anything near, any camera movement and any add / remove = a full update, exactly as before.
+  const f6 = { t: -1, near: 0, dirty: true, ph: ((_phi = (_phi + 0.61803398875) % 1)), cp: new THREE.Vector3(), cq: new THREE.Quaternion(), pe: 0, pf: 0, k: 0, stag: true };
   const T0 = { base: 0, count: 2, start: 0, rate: 1 };
   function add({ x = 0, y = 0, z = 0, yaw = 0, scale = 1, clip = null, speed = 1, phase = 0 } = {}) {
     const p = { x, y, z, yaw, scale, r: 3 * scale, cur: T0, prv: T0, sw: -1e9, now: 0 };
@@ -278,21 +284,30 @@ export function createKind(cfg) {
     // change the playback speed of the running clip without a jump in its phase (a walk that follows the ground speed frame by frame)
     p.setSpeed = (sp) => { const cu = p.cur, nr = cu.k * sp; if (!cu.k || Math.abs(nr - cu.rate) < 1e-3) return; const t = uniforms.time.value; cu.start = t - ((t - cu.start) * cu.rate) / nr; cu.rate = nr; };
     if (clip) p.play(clip, { fade: false, speed, offset: phase });
-    all_.push(p); return p;
+    all_.push(p); f6.dirty = true; return p;
   }
 
-  function remove(p) { const i = all_.indexOf(p); if (i >= 0) all_.splice(i, 1); }
+  function remove(p) { const i = all_.indexOf(p); if (i >= 0) { all_.splice(i, 1); f6.dirty = true; } }
 
   // ---- per frame: cull, pick the LOD, write the instance buffers
   let acc = 0;
-  function update(t, camera, { lodDist = 90, maxDist = 700, lod2Dist = 1e9 } = {}) {
+  function update(t, camera, { lodDist = 90, maxDist = 700, lod2Dist = 1e9, lodF6 = false } = {}) {
     uniforms.time.value = t;
+    const cp = camera.position;
+    if (lodF6 && LOD.on) {                                                       // AN1_R3: F6
+      const far = f6.near > LOD.far + 4;
+      if (!f6.dirty && f6.near > LOD.near + 4 && cp.distanceToSquared(f6.cp) < 0.01 && camera.quaternion.dot(f6.cq) > 0.999999 && camera.projectionMatrix.elements[0] === f6.pe && camera.projectionMatrix.elements[5] === f6.pf) {
+        if (++f6.k < (far ? LOD.f2 : LOD.f1) && t - f6.t < (far ? LOD.c2 : LOD.c1) && t >= f6.t) { LOD.ks[far ? 2 : 1]++; return; }
+      }
+      LOD.kr++;
+    }
     _pm.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse); _fr.setFromProjectionMatrix(_pm);
     for (const lv of lods) lv.list.length = 0; list2.length = 0;
-    const cp = camera.position;
+    let nd = 1e9;
     for (const p of all_) {
       _sph.center.set(p.x, p.y + p.scale * 0.95, p.z); _sph.radius = p.cr || p.scale * 1.5;
       const d = _sph.center.distanceTo(cp);
+      if (d < nd) nd = d;
       if (d > maxDist || !_fr.intersectsSphere(_sph)) continue;
       if (lod2 && d > lod2Dist) { list2.push(p); continue; }
       lods[d > lodDist && lods.length > 1 ? 1 : 0].list.push(p);
@@ -319,6 +334,7 @@ export function createKind(cfg) {
       const n = Math.min(list2.length, CAP); lod2.count = n; lod2.visible = n > 0;
       if (n) { const ma = lod2.instanceMatrix.array; for (let i = 0; i < n; i++) { const p = list2[i]; _q.setFromAxisAngle(_up, p.yaw); if (p.l2pitch) _q.multiply(_q2.setFromEuler(_e.set(p.l2pitch, 0, 0))); _p.set(p.x, p.y + (p.l2pitch ? 0.3 * p.scale : 0), p.z); _s.setScalar(p.scale); _m.compose(_p, _q, _s).toArray(ma, i * 16); } lod2.instanceMatrix.needsUpdate = true; }
     }
+    if (lodF6) { f6.t = t; f6.k = f6.stag ? Math.floor(f6.ph * (nd > LOD.far + 4 ? LOD.f2 : LOD.f1)) : 0; f6.stag = false; f6.near = nd; f6.dirty = false; f6.cp.copy(cp); f6.cq.copy(camera.quaternion); f6.pe = camera.projectionMatrix.elements[0]; f6.pf = camera.projectionMatrix.elements[5]; }
   }
   // the tier colour of the cloth can change later (home army camp: the barracks levelled up) — no rebuild, two uniforms
   const setCloth = (c, k) => { if (uniforms.cloth) { uniforms.cloth.value.fromArray(c); uniforms.clothK.value = k; } };

@@ -44,6 +44,46 @@ export function turnTo(p, yaw, rate, dt) { const e = wrapA(yaw - p.yaw); p.yaw +
 // ease a speed towards a target with separate acceleration / braking (for animals driven by a script: lunge, led horse, carrier)
 export const approach = (v, t, up, down, dt) => v + clampN(t - v, -down * dt, up * dt);
 
+// ------------------------------------------------------------------------------------------------ AN1_R3 · F6: update-rate LOD of the movers
+// A mover that is far from the camera is a few pixels: its brain (routes, steer, clip rates) and its crowd / mixer update run at 1/2 (60 .. 140 m) or 1/4 (> 140 m) of the FRAME rate, and the time it owes is added to
+// the next step, so the speed is the same and only the number of steps drops.  (creature.js lodStep is the pattern, but it counts TIME - owed >= 0.032 s - so on a phone that already runs at 30 fps or less it skips
+// nothing, exactly where the CPU is short.  Counting frames saves CPU in proportion; the cap keeps the owed time short when the frame rate is low: 0.12 s at 1/2, 0.25 s at 1/4, i.e. >= 8 / 4 steps a second at any fps.)
+// Level 0 (< 60 m from the camera, the camera's own height counts) is the old code path, step for step: lodGate hands back exactly `dt` (plus whatever it owed when it came from a far level).
+// Switch: ?an1lod=0 in the page address (or window.__AN1_LOD = false) = everything as before F6 (A/B measurements).  window.__an1lod = counters for the tests.
+const _qs = () => { try { return typeof location !== 'undefined' ? location.search || '' : ''; } catch (e) { return ''; } };
+export const LOD = { on: !/[?&]an1lod=0(&|$)/.test(_qs()) && !(typeof window !== 'undefined' && window.__AN1_LOD === false), near: 60, far: 140, f1: 2, f2: 4, c1: 0.12, c2: 0.25, n: [0, 0, 0], s: [0, 0, 0], kr: 0, ks: [0, 0, 0] };
+// level for a distance d (m) from the camera: 0 = full rate, 1 = half, 2 = quarter
+// ------------------------------------------------------------------------------------------------ AN1_R3 A3: the real-world sizes of everything that lives (workers/docs/SCALE.md)
+// ONE table (metres) the people and animals are fitted to.  Until R3 the people were x1.7 (a 1.75 m man = 3.0 m, so they read from the strategy camera) and the horses 2.6 x (withers 3.8 m, 7.5 m long) while the
+// hero is 1.96 m, a house door 2.0-2.4 m and a cart 4.8 m long.  SZ_GAIN multiplies every entry: `?an1gain=1.4` on the URL tries bigger people for the strategy camera without a code change (default 1 = real size).
+// The `back` of a quadruped = the highest point of the middle of its body (withers); LEN = the bind-box length of the shipped model per metre of back (measured by dev/an1_r3/scale_models.js, SCALE.md section 3).
+export const SZ_GAIN = (() => { const m = /[?&]an1gain=([0-9.]+)/.exec(_qs()); const g = m ? parseFloat(m[1]) : 1; return g > 0.3 && g < 3 ? g : 1; })();
+export const SZ = { man: 1.75, woman: 1.65, youngman: 1.78, oldman: 1.68, oldwoman: 1.55, boy: 1.35, girl: 1.25, littlegirl: 1.0, rider: 1.85,
+  horse: 1.45, draught: 1.55, barded: 1.6, cow: 1.3, sheep: 0.75, pig: 0.9, dog: 0.6, wolf: 0.8, hen: 0.4, rooster: 0.6 };
+export const LEN = { horse: 3.194 / 1.619, barded: 5.702 / 3.86, cow: 8.067 / 4.587, sheep: 5.919 / 4.075, pig: 9.771 / 4.575, wolf: 5.272 / 2.263 };
+export const sz = (k) => SZ[k] * SZ_GAIN;                           // metres, with the gain
+export const lenOf = (k, model = k) => sz(k) * LEN[model];          // bind-box length of a model that must stand `k` tall at the back
+
+export const lodLevelD = (d) => (!LOD.on || d < LOD.near ? 0 : d < LOD.far ? 1 : 2);
+// level of a point dx, dy, dz metres from the camera
+export function lodLevel(dx, dy, dz) {
+  if (!LOD.on) return 0;
+  const d2 = dx * dx + dy * dy + dz * dz;
+  return d2 < LOD.near * LOD.near ? 0 : d2 < LOD.far * LOD.far ? 1 : 2;
+}
+// o keeps `lgo` (the time it owes) and `lgn` (frames since its last step).  Returns the time to simulate NOW (0 = skip this frame).  A far mover starts with a spread phase so that they do not all step on the same frame.
+let _lph = 0;
+export function lodGate(o, lv, dt) {
+  LOD.n[lv]++;
+  if (lv === 0) { const d = (o.lgo || 0) + dt; o.lgo = 0; o.lgn = 0; LOD.s[0]++; return d; }
+  const need = lv === 1 ? LOD.f1 : LOD.f2;
+  if (o.lgo === undefined) { _lph = (_lph + 0.61803398875) % 1; o.lgo = 0; o.lgn = Math.floor(_lph * need); }
+  o.lgo += dt; o.lgn++;
+  if (o.lgn < need && o.lgo < (lv === 1 ? LOD.c1 : LOD.c2)) return 0;
+  const d = o.lgo; o.lgo = 0; o.lgn = 0; LOD.s[lv]++; return d;
+}
+if (typeof window !== 'undefined') window.__an1lod = { cfg: LOD, reset() { LOD.n = [0, 0, 0]; LOD.s = [0, 0, 0]; LOD.kr = 0; LOD.ks = [0, 0, 0]; }, snapshot() { return { on: LOD.on, calls: LOD.n.slice(), steps: LOD.s.slice(), crowdRun: LOD.kr, crowdSkip: LOD.ks.slice() }; } };      // dev peek (tests / measurements)
+
 // the ground speed a gait clip was made for (units/s at timeScale 1, at the rig's own scale): how fast the PLANTED feet slide back along the body.  The four lowest bones, the frames where each is near its
 // lowest point (stance: y within 25 % of its own range, at least 2 cm), the mean fore-aft (z) speed of the foot over those frames, the median of the feet.  0 when there is no clear stance.
 // (The old hoof z-range / duty-factor guess agreed for walks but read a trot 25 % too slow.)  `rig` = a clone of the model in a holder at identity; +z = forward.

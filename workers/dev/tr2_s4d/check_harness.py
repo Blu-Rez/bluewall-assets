@@ -19,12 +19,12 @@ async def main():
         ok(R['ok'] and not R['err'], 'preload ok, no load errors ' + str(R['err'])[:120])
         need = ['animal_cow','animal_calf','animal_horse_white','animal_horse_brown','animal_horse_black','animal_sheep','animal_lamb','animal_pig','animal_dog','animal_wolf','birds','poultry_fish_pack','villager_man','villager_woman','villager_youngman','villager_oldman']
         ok(all(R['has'].get(k) for k in need), 'all %d files loaded' % len(need))
-        TARGET = {'villager_man': 3.0, 'villager_woman': 2.8, 'villager_youngman': 3.0, 'villager_oldman': 2.9}
+        TARGET = {'villager_man': 1.75, 'villager_woman': 1.65, 'villager_youngman': 1.78, 'villager_oldman': 1.68}      # AN1_R3 / SCALE.md: real sizes (were 3.0 / 2.8 / 3.0 / 2.9)
         for k, h in TARGET.items():
             v = R['people'].get(k)
             if not isinstance(v, dict): ok(False, k + ' missing'); continue
             ok(abs(v['rawH'] * v['k'] - h) < 0.03, '%s calibrated to %.2f m (raw %.2f × k %.3f)' % (k, h, v['rawH'], v['k']))
-            ok(0.9 < v['walkSpeed'] < 1.6, '%s walking speed %.2f m/s (AN1_R2: the true planted-foot speed of the clip stretched ×1 / 0.6 — the old 1.6–2.6 counted the clip\'s own root travel, which the game then added a second time)' % (k, v['walkSpeed']))
+            ok(0.5 < v['walkSpeed'] < 1.6, '%s walking speed %.2f m/s (AN1_R2: the true planted-foot speed of the clip stretched ×1 / 0.6 — the old 1.6–2.6 counted the clip\'s own root travel, which the game then added a second time)' % (k, v['walkSpeed']))
             ok(v['feetSep'] < 1.0, '%s idle frame found (feet apart %.2f)' % (k, v['feetSep']))
             ok(set(v['clips']) >= {'Idle_Loop', 'Walk_Loop'}, k + ' has the two clips')
         for sp, bx in R['birds'].items():

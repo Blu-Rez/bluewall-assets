@@ -20,8 +20,8 @@ PY
 echo "== 2. the life modules compile for the browser (imports resolve, no syntax errors)"
 cd $APP/client
 for f in tr2_life pas_life wslife life units world; do NODE_PATH=$PWD/node_modules npx esbuild src/$f.js --bundle --platform=browser --format=esm --outfile=/tmp/tr2_s4d_$f.js --log-level=error && ok "$f.js bundles" || bad "$f.js bundle"; done
-echo "== 3. the army is untouched; S4d's own changes are in the files of §1 only and world.js stays ≤ 6 marked lines"
-python3 - <<'PY' || FAIL=1
+echo "== 3. the army is untouched; S4d's own changes are in the files of §1 only and world.js stays ≤ 6 marked lines   (merge-time check against the kit HEAD: only with S4D_STAGE=1; mother 15 Oct: S4d is merged, later stages touch these files)"
+if [ -n "$S4D_STAGE" ]; then python3 - <<'PY' || FAIL=1
 import subprocess, re, sys
 APP = '/home/claude/bot/bluebot_v2'
 out = subprocess.run(['git', '-C', APP, 'status', '--porcelain', '--', 'bluewall/client/src', 'bluewall/web/assets/tr2'], capture_output=True, text=True).stdout.splitlines()
@@ -47,6 +47,7 @@ else:
     if unm or len(add) > 6: bad = 1
 sys.exit(bad)
 PY
+fi
 echo "== 4. before preload every entry point says no (the old models / code stay in charge)"
 NODE_PATH=$PWD/node_modules npx esbuild $D/tr2_s4d/node_test.js --bundle --platform=node --format=cjs --outfile=/tmp/tr2_s4d_node.cjs --log-level=error && node /tmp/tr2_s4d_node.cjs || FAIL=1
 if [ -z "$S4D_NOBROWSER" ]; then

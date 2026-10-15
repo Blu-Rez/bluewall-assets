@@ -1,0 +1,1405 @@
+{
+ "viewport": "844x390",
+ "views": {
+  "map": {
+   "x1": {
+    "on": [
+     {
+      "n": 566,
+      "fps": 56.5,
+      "avg": 17.7,
+      "p95": 33.3,
+      "js": 15.91,
+      "calls": 629,
+      "tris": 4299666,
+      "prof": {
+       "dragon": 0.13,
+       "units+patrols": 0.2,
+       "life": 0.73,
+       "army": 0.09,
+       "extras": 0.09,
+       "moat": 0.42,
+       "render(submit)": 13.88
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        0,
+        9510,
+        99118
+       ],
+       "steps": [
+        0,
+        4755,
+        24963
+       ],
+       "crowdRun": 4293,
+       "crowdSkip": [
+        0,
+        2844,
+        4275
+       ]
+      }
+     },
+     {
+      "n": 301,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 18.42,
+      "calls": 600,
+      "tris": 4101000,
+      "prof": {
+       "dragon": 0.13,
+       "units+patrols": 0.2,
+       "life": 0.87,
+       "army": 0.1,
+       "extras": 0.11,
+       "moat": 0.45,
+       "render(submit)": 16.04
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        0,
+        4911,
+        52207
+       ],
+       "steps": [
+        0,
+        2463,
+        13309
+       ],
+       "crowdRun": 2250,
+       "crowdSkip": [
+        0,
+        1485,
+        2223
+       ]
+      }
+     }
+    ],
+    "off": [
+     {
+      "n": 333,
+      "fps": 33.2,
+      "avg": 30.1,
+      "p95": 33.4,
+      "js": 19.76,
+      "calls": 615,
+      "tris": 4177198,
+      "prof": {
+       "dragon": 0.13,
+       "units+patrols": 0.5,
+       "life": 1.07,
+       "army": 0.12,
+       "extras": 0.11,
+       "moat": 0.73,
+       "render(submit)": 16.34
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        60506,
+        0,
+        0
+       ],
+       "steps": [
+        60506,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     },
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 20.68,
+      "calls": 603,
+      "tris": 4099151,
+      "prof": {
+       "dragon": 0.14,
+       "units+patrols": 0.55,
+       "life": 1.21,
+       "army": 0.14,
+       "extras": 0.14,
+       "moat": 0.75,
+       "render(submit)": 17.15
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        54801,
+        0,
+        0
+       ],
+       "steps": [
+        54801,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     }
+    ]
+   },
+   "x4": {
+    "on": [
+     {
+      "n": 103,
+      "fps": 10.3,
+      "avg": 97.5,
+      "p95": 150.1,
+      "js": 94.32,
+      "calls": 590,
+      "tris": 4004992,
+      "prof": {
+       "dragon": 0.91,
+       "units+patrols": 0.71,
+       "life": 3.63,
+       "army": 0.43,
+       "extras": 0.42,
+       "moat": 1.88,
+       "render(submit)": 77.67
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        0,
+        2117,
+        18051
+       ],
+       "steps": [
+        0,
+        1058,
+        4625
+       ],
+       "crowdRun": 801,
+       "crowdSkip": [
+        0,
+        513,
+        774
+       ]
+      }
+     },
+     {
+      "n": 148,
+      "fps": 14.7,
+      "avg": 67.8,
+      "p95": 116.7,
+      "js": 65.42,
+      "calls": 584,
+      "tris": 3990216,
+      "prof": {
+       "dragon": 0.46,
+       "units+patrols": 0.66,
+       "life": 2.95,
+       "army": 0.36,
+       "extras": 0.38,
+       "moat": 1.8,
+       "render(submit)": 56.66
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        0,
+        3494,
+        24808
+       ],
+       "steps": [
+        0,
+        1737,
+        6376
+       ],
+       "crowdRun": 1098,
+       "crowdSkip": [
+        0,
+        738,
+        1098
+       ]
+      }
+     }
+    ],
+    "off": [
+     {
+      "n": 111,
+      "fps": 11.1,
+      "avg": 90.5,
+      "p95": 150,
+      "js": 87.91,
+      "calls": 585,
+      "tris": 3975617,
+      "prof": {
+       "dragon": 0.5,
+       "units+patrols": 1.8,
+       "life": 4.49,
+       "army": 0.61,
+       "extras": 0.49,
+       "moat": 3.32,
+       "render(submit)": 75.84
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        21034,
+        0,
+        0
+       ],
+       "steps": [
+        21034,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     },
+     {
+      "n": 132,
+      "fps": 13.1,
+      "avg": 76.3,
+      "p95": 116.7,
+      "js": 74.63,
+      "calls": 592,
+      "tris": 3999022,
+      "prof": {
+       "dragon": 0.35,
+       "units+patrols": 1.75,
+       "life": 4.1,
+       "army": 0.61,
+       "extras": 0.46,
+       "moat": 2.93,
+       "render(submit)": 61.54
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        24521,
+        0,
+        0
+       ],
+       "steps": [
+        24521,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "gate": {
+   "x1": {
+    "on": [
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 16.96,
+      "calls": 491,
+      "tris": 3787073,
+      "prof": {
+       "dragon": 0.15,
+       "units+patrols": 0.36,
+       "life": 0.89,
+       "army": 0.11,
+       "extras": 0.11,
+       "moat": 0.66,
+       "render(submit)": 16.24
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        3573,
+        15419,
+        51304
+       ],
+       "steps": [
+        3573,
+        7709,
+        12825
+       ],
+       "crowdRun": 3219,
+       "crowdSkip": [
+        0,
+        696,
+        2349
+       ]
+      }
+     },
+     {
+      "n": 301,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 17.04,
+      "calls": 507,
+      "tris": 3892747,
+      "prof": {
+       "dragon": 0.13,
+       "units+patrols": 0.31,
+       "life": 0.82,
+       "army": 0.09,
+       "extras": 0.1,
+       "moat": 0.57,
+       "render(submit)": 14.6
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        3087,
+        17132,
+        50077
+       ],
+       "steps": [
+        3087,
+        8565,
+        12519
+       ],
+       "crowdRun": 3219,
+       "crowdSkip": [
+        0,
+        696,
+        2349
+       ]
+      }
+     }
+    ],
+    "off": [
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.4,
+      "p95": 33.4,
+      "js": 19.78,
+      "calls": 502,
+      "tris": 3892297,
+      "prof": {
+       "dragon": 0.14,
+       "units+patrols": 0.55,
+       "life": 1.23,
+       "army": 0.11,
+       "extras": 0.1,
+       "moat": 0.82,
+       "render(submit)": 16.41
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        64545,
+        0,
+        0
+       ],
+       "steps": [
+        64545,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     },
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 20.81,
+      "calls": 507,
+      "tris": 3903929,
+      "prof": {
+       "dragon": 0.15,
+       "units+patrols": 0.55,
+       "life": 1.28,
+       "army": 0.11,
+       "extras": 0.11,
+       "moat": 0.83,
+       "render(submit)": 17.29
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        64545,
+        0,
+        0
+       ],
+       "steps": [
+        64545,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     }
+    ]
+   },
+   "x4": {
+    "on": [
+     {
+      "n": 113,
+      "fps": 11.2,
+      "avg": 89,
+      "p95": 133.3,
+      "js": 86.75,
+      "calls": 501,
+      "tris": 3849178,
+      "prof": {
+       "dragon": 0.69,
+       "units+patrols": 1.22,
+       "life": 3.87,
+       "army": 0.44,
+       "extras": 0.34,
+       "moat": 2.79,
+       "render(submit)": 71.37
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        1152,
+        6488,
+        18216
+       ],
+       "steps": [
+        1152,
+        3244,
+        4554
+       ],
+       "crowdRun": 1184,
+       "crowdSkip": [
+        0,
+        256,
+        864
+       ]
+      }
+     },
+     {
+      "n": 137,
+      "fps": 13.7,
+      "avg": 73.2,
+      "p95": 116.7,
+      "js": 71.22,
+      "calls": 502,
+      "tris": 3852494,
+      "prof": {
+       "dragon": 0.51,
+       "units+patrols": 1.22,
+       "life": 3.62,
+       "army": 0.43,
+       "extras": 0.37,
+       "moat": 2.81,
+       "render(submit)": 61.95
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        1701,
+        7066,
+        21735
+       ],
+       "steps": [
+        1701,
+        3511,
+        5467
+       ],
+       "crowdRun": 1397,
+       "crowdSkip": [
+        0,
+        304,
+        1017
+       ]
+      }
+     }
+    ],
+    "off": [
+     {
+      "n": 111,
+      "fps": 11,
+      "avg": 90.9,
+      "p95": 133.4,
+      "js": 87.58,
+      "calls": 496,
+      "tris": 3824345,
+      "prof": {
+       "dragon": 0.67,
+       "units+patrols": 2.24,
+       "life": 5.37,
+       "army": 0.56,
+       "extras": 0.48,
+       "moat": 3.85,
+       "render(submit)": 71.36
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        24570,
+        0,
+        0
+       ],
+       "steps": [
+        24570,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     },
+     {
+      "n": 118,
+      "fps": 11.7,
+      "avg": 85.5,
+      "p95": 133.4,
+      "js": 83.18,
+      "calls": 503,
+      "tris": 3862672,
+      "prof": {
+       "dragon": 0.57,
+       "units+patrols": 2.2,
+       "life": 5.28,
+       "army": 0.51,
+       "extras": 0.42,
+       "moat": 3.62,
+       "render(submit)": 68.14
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        25740,
+        0,
+        0
+       ],
+       "steps": [
+        25740,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "fields": {
+   "x1": {
+    "on": [
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 19.09,
+      "calls": 644,
+      "tris": 4154849,
+      "prof": {
+       "dragon": 0.16,
+       "units+patrols": 0.23,
+       "life": 1.08,
+       "army": 0.12,
+       "extras": 0.1,
+       "moat": 0.68,
+       "render(submit)": 18.14
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        2749,
+        8129,
+        48482
+       ],
+       "steps": [
+        2749,
+        4065,
+        12344
+       ],
+       "crowdRun": 3306,
+       "crowdSkip": [
+        0,
+        1392,
+        1566
+       ]
+      }
+     },
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 19.79,
+      "calls": 667,
+      "tris": 4283511,
+      "prof": {
+       "dragon": 0.14,
+       "units+patrols": 0.19,
+       "life": 0.88,
+       "army": 0.12,
+       "extras": 0.1,
+       "moat": 0.58,
+       "render(submit)": 17.38
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        2317,
+        6965,
+        47158
+       ],
+       "steps": [
+        2317,
+        3473,
+        11900
+       ],
+       "crowdRun": 3136,
+       "crowdSkip": [
+        0,
+        1328,
+        1494
+       ]
+      }
+     }
+    ],
+    "off": [
+     {
+      "n": 298,
+      "fps": 29.8,
+      "avg": 33.6,
+      "p95": 33.4,
+      "js": 21.14,
+      "calls": 661,
+      "tris": 4262766,
+      "prof": {
+       "dragon": 0.14,
+       "units+patrols": 0.52,
+       "life": 1.3,
+       "army": 0.11,
+       "extras": 0.09,
+       "moat": 0.75,
+       "render(submit)": 17.64
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        53817,
+        0,
+        0
+       ],
+       "steps": [
+        53817,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     },
+     {
+      "n": 301,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 20.63,
+      "calls": 663,
+      "tris": 4270740,
+      "prof": {
+       "dragon": 0.14,
+       "units+patrols": 0.51,
+       "life": 1.21,
+       "army": 0.11,
+       "extras": 0.09,
+       "moat": 0.74,
+       "render(submit)": 17.32
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        54284,
+        0,
+        0
+       ],
+       "steps": [
+        54284,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     }
+    ]
+   },
+   "x4": {
+    "on": [
+     {
+      "n": 103,
+      "fps": 10.2,
+      "avg": 98,
+      "p95": 149.9,
+      "js": 95.63,
+      "calls": 644,
+      "tris": 4169033,
+      "prof": {
+       "dragon": 0.51,
+       "units+patrols": 0.66,
+       "life": 4.11,
+       "army": 0.46,
+       "extras": 0.35,
+       "moat": 2.64,
+       "render(submit)": 78.34
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        797,
+        2504,
+        16819
+       ],
+       "steps": [
+        797,
+        1241,
+        4278
+       ],
+       "crowdRun": 1106,
+       "crowdSkip": [
+        0,
+        472,
+        528
+       ]
+      }
+     },
+     {
+      "n": 108,
+      "fps": 10.7,
+      "avg": 93.1,
+      "p95": 150,
+      "js": 90.88,
+      "calls": 651,
+      "tris": 4159563,
+      "prof": {
+       "dragon": 0.46,
+       "units+patrols": 0.89,
+       "life": 4.11,
+       "army": 0.48,
+       "extras": 0.55,
+       "moat": 2.33,
+       "render(submit)": 77.89
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        744,
+        2852,
+        17716
+       ],
+       "steps": [
+        744,
+        1426,
+        4549
+       ],
+       "crowdRun": 1116,
+       "crowdSkip": [
+        0,
+        558,
+        558
+       ]
+      }
+     }
+    ],
+    "off": [
+     {
+      "n": 107,
+      "fps": 10.7,
+      "avg": 93.9,
+      "p95": 133.4,
+      "js": 91.8,
+      "calls": 644,
+      "tris": 4143027,
+      "prof": {
+       "dragon": 0.43,
+       "units+patrols": 1.91,
+       "life": 5.4,
+       "army": 0.54,
+       "extras": 0.45,
+       "moat": 3.53,
+       "render(submit)": 77.84
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        20782,
+        0,
+        0
+       ],
+       "steps": [
+        20782,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     },
+     {
+      "n": 104,
+      "fps": 10.3,
+      "avg": 97.1,
+      "p95": 150.1,
+      "js": 95.3,
+      "calls": 655,
+      "tris": 4180678,
+      "prof": {
+       "dragon": 0.36,
+       "units+patrols": 1.86,
+       "life": 5.55,
+       "army": 0.55,
+       "extras": 0.44,
+       "moat": 3.45,
+       "render(submit)": 81.31
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        18802,
+        0,
+        0
+       ],
+       "steps": [
+        18802,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "mill": {
+   "x1": {
+    "on": [
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.4,
+      "p95": 33.4,
+      "js": 16.53,
+      "calls": 329,
+      "tris": 2592571,
+      "prof": {
+       "dragon": 0.14,
+       "units+patrols": 0.24,
+       "life": 1.04,
+       "army": 0.08,
+       "extras": 0.11,
+       "moat": 0.66,
+       "render(submit)": 16.41
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        694,
+        7035,
+        56289
+       ],
+       "steps": [
+        694,
+        3513,
+        14321
+       ],
+       "crowdRun": 2776,
+       "crowdSkip": [
+        0,
+        870,
+        2600
+       ]
+      }
+     },
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 15.62,
+      "calls": 334,
+      "tris": 2655250,
+      "prof": {
+       "dragon": 0.14,
+       "units+patrols": 0.2,
+       "life": 0.8,
+       "army": 0.08,
+       "extras": 0.1,
+       "moat": 0.47,
+       "render(submit)": 13.43
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        670,
+        7949,
+        55233
+       ],
+       "steps": [
+        670,
+        3975,
+        13948
+       ],
+       "crowdRun": 2763,
+       "crowdSkip": [
+        0,
+        865,
+        2600
+       ]
+      }
+     }
+    ],
+    "off": [
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 17.28,
+      "calls": 334,
+      "tris": 2659912,
+      "prof": {
+       "dragon": 0.16,
+       "units+patrols": 0.47,
+       "life": 1.18,
+       "army": 0.09,
+       "extras": 0.1,
+       "moat": 0.78,
+       "render(submit)": 14.02
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        61605,
+        0,
+        0
+       ],
+       "steps": [
+        61605,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     },
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 16.89,
+      "calls": 337,
+      "tris": 2657291,
+      "prof": {
+       "dragon": 0.15,
+       "units+patrols": 0.5,
+       "life": 1.15,
+       "army": 0.09,
+       "extras": 0.09,
+       "moat": 0.73,
+       "render(submit)": 13.74
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        61414,
+        0,
+        0
+       ],
+       "steps": [
+        61414,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "town": {
+   "x1": {
+    "on": [
+     {
+      "n": 298,
+      "fps": 29.8,
+      "avg": 33.6,
+      "p95": 33.4,
+      "js": 18.7,
+      "calls": 545,
+      "tris": 3970983,
+      "prof": {
+       "dragon": 0.14,
+       "units+patrols": 0.32,
+       "life": 0.93,
+       "army": 0.11,
+       "extras": 0.09,
+       "moat": 0.69,
+       "render(submit)": 15.79
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        1789,
+        14660,
+        58434
+       ],
+       "steps": [
+        1789,
+        7312,
+        14646
+       ],
+       "crowdRun": 3781,
+       "crowdSkip": [
+        0,
+        161,
+        1944
+       ]
+      }
+     },
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.4,
+      "p95": 33.4,
+      "js": 20.22,
+      "calls": 537,
+      "tris": 3946039,
+      "prof": {
+       "dragon": 0.15,
+       "units+patrols": 0.35,
+       "life": 0.98,
+       "army": 0.12,
+       "extras": 0.1,
+       "moat": 0.7,
+       "render(submit)": 17.27
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        2598,
+        14299,
+        58673
+       ],
+       "steps": [
+        2598,
+        7147,
+        14584
+       ],
+       "crowdRun": 3637,
+       "crowdSkip": [
+        0,
+        319,
+        1984
+       ]
+      }
+     }
+    ],
+    "off": [
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 18.95,
+      "calls": 539,
+      "tris": 3946162,
+      "prof": {
+       "dragon": 0.14,
+       "units+patrols": 0.5,
+       "life": 1.21,
+       "army": 0.1,
+       "extras": 0.09,
+       "moat": 0.79,
+       "render(submit)": 15.64
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        73260,
+        0,
+        0
+       ],
+       "steps": [
+        73260,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     },
+     {
+      "n": 301,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 21.36,
+      "calls": 542,
+      "tris": 3961028,
+      "prof": {
+       "dragon": 0.16,
+       "units+patrols": 0.55,
+       "life": 1.36,
+       "army": 0.12,
+       "extras": 0.11,
+       "moat": 0.9,
+       "render(submit)": 17.7
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        73482,
+        0,
+        0
+       ],
+       "steps": [
+        73482,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "close": {
+   "x1": {
+    "on": [
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 14.99,
+      "calls": 333,
+      "tris": 2645780,
+      "prof": {
+       "dragon": 0.15,
+       "units+patrols": 0.18,
+       "life": 0.73,
+       "army": 0.08,
+       "extras": 0.08,
+       "moat": 0.53,
+       "render(submit)": 12.91
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        692,
+        5609,
+        57535
+       ],
+       "steps": [
+        692,
+        2804,
+        14652
+       ],
+       "crowdRun": 2936,
+       "crowdSkip": [
+        0,
+        692,
+        2600
+       ]
+      }
+     },
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.4,
+      "p95": 33.4,
+      "js": 15.92,
+      "calls": 327,
+      "tris": 2627054,
+      "prof": {
+       "dragon": 0.15,
+       "units+patrols": 0.19,
+       "life": 0.77,
+       "army": 0.08,
+       "extras": 0.11,
+       "moat": 0.58,
+       "render(submit)": 13.61
+      },
+      "f6": {
+       "on": true,
+       "calls": [
+        602,
+        6082,
+        57334
+       ],
+       "steps": [
+        602,
+        3050,
+        14586
+       ],
+       "crowdRun": 2954,
+       "crowdSkip": [
+        0,
+        692,
+        2600
+       ]
+      }
+     }
+    ],
+    "off": [
+     {
+      "n": 300,
+      "fps": 30,
+      "avg": 33.3,
+      "p95": 33.4,
+      "js": 15.96,
+      "calls": 324,
+      "tris": 2619614,
+      "prof": {
+       "dragon": 0.16,
+       "units+patrols": 0.49,
+       "life": 1.11,
+       "army": 0.11,
+       "extras": 0.1,
+       "moat": 0.77,
+       "render(submit)": 12.81
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        61780,
+        0,
+        0
+       ],
+       "steps": [
+        61780,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     },
+     {
+      "n": 298,
+      "fps": 29.8,
+      "avg": 33.6,
+      "p95": 33.4,
+      "js": 16.72,
+      "calls": 327,
+      "tris": 2631572,
+      "prof": {
+       "dragon": 0.14,
+       "units+patrols": 0.48,
+       "life": 1.12,
+       "army": 0.11,
+       "extras": 0.1,
+       "moat": 0.78,
+       "render(submit)": 13.53
+      },
+      "f6": {
+       "on": false,
+       "calls": [
+        60905,
+        0,
+        0
+       ],
+       "steps": [
+        60905,
+        0,
+        0
+       ],
+       "crowdRun": 0,
+       "crowdSkip": [
+        0,
+        0,
+        0
+       ]
+      }
+     }
+    ]
+   }
+  }
+ },
+ "errors": [],
+ "lod_cfg": "{\"on\":true,\"near\":60,\"far\":140,\"f1\":2,\"f2\":4,\"c1\":0.12,\"c2\":0.25,\"n\":[70,14016,179648],\"s\":[70,7007,45578],\"kr\":7474,\"ks\":[0,4761,7922]}"
+}

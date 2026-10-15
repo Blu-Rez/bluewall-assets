@@ -10,6 +10,6 @@ ok(TL.people('villager_man', {}) === null, 'people() → null before preload');
 ok(TL.skinned('villager_man') === null, 'skinned() → null before preload (units.js keeps the old peasants)');
 ok(TL.gltfLike('birds/eagle', { w: 4 }) === null, 'gltfLike() → null before preload (life.js keeps the old eagle)');
 ok(TL.dyn('poultry_fish_pack/hen', 4, { h: 0.8 }) === null, 'dyn() → null before preload (life.js keeps the old hens)');
-ok(TL.PEOPLE.villager_man > 2 && TL.PEOPLE.villager_man < 4, 'villager heights are in game metres (man ' + TL.PEOPLE.villager_man + ')');
+ok(TL.PEOPLE.villager_man > 1.5 && TL.PEOPLE.villager_man < 2.2, 'villager heights are in game metres (man ' + TL.PEOPLE.villager_man + ')');
 ok(TL.ANIMAL_FILES.length === 12 && TL.PEOPLE_FILES.length === 4, '12 animal files + 4 villager files');
 process.exit(bad);

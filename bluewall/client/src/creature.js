@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { toFloatGeo } from './assets.js';
-import { steer, wrapA, clampN, stanceSpeed } from './walk_kit.js';          // AN1_R2: speed ramps + limited turns for the herds
+import { steer, wrapA, clampN, stanceSpeed, LOD, lodGate } from './walk_kit.js';          // AN1_R2: speed ramps + limited turns for the herds
 
 // animation level of detail (B14): the mixer of a far creature steps at half / quarter rate with the time it owes (same speed, fewer updates)
 export function lodStep(c, dt) {
@@ -218,8 +218,10 @@ export function herd(scene, gltf, n, { cx, cz, r, height, size = 2, yaw = 0, spe
     if (c.act) c.act.time = rnd() * 3;
     c.root.userData.bwCull = 320; scene.add(c.root); list.push(c);
   }
-  function update(dt) {
+  function update(dt0) {
     for (const c of list) {
+      let dt = dt0;
+      if (LOD.on) { const lv = c.root.userData.bwLod | 0; if (lv) { dt = lodGate(c, lv, dt0); if (!dt) continue; } else if (c.lgo) dt = lodGate(c, 0, dt0); }       // AN1_R3: F6 - the brain of a creature beyond 60 m steps at 1/2 (> 140 m: 1/4) with the time it owes
       c.timer -= dt;
       if (c.state === 'idle' && c.timer <= 0) { c.state = 'walk'; c.target = pick(); c.pp.x = c.root.position.x; c.pp.z = c.root.position.z; c.pp.yaw = c.root.rotation.y; c.m.v = 0; c.m.stuck = 0; c.play(WALK, { speed: 0.1 }); c.moving = false; }
       if (c.state === 'walk') {

@@ -17,6 +17,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { tr2 } from './tr2lib.js';
 import { createKind } from './crowd.js';
+import { sz } from './walk_kit.js';                                          // AN1_R3 A3: the real-world size table
 import { REACH } from './reach.js';                                              // RP1C: hero mode: life beyond REACH.life metres is not packed or animated (neutral = 0 for everyone else)
 
 /* global __BUILD__ */
@@ -24,8 +25,9 @@ const V = typeof __BUILD__ !== 'undefined' ? '?v=' + __BUILD__ : '';
 
 // ---------------------------------------------------------------- what is loaded
 export const ANIMAL_FILES = ['animal_cow', 'animal_calf', 'animal_horse_white', 'animal_horse_brown', 'animal_horse_black', 'animal_sheep', 'animal_lamb', 'animal_pig', 'animal_dog', 'animal_wolf', 'birds', 'poultry_fish_pack'];
-// villager -> height in metres (the game scales people x1.7 so they read from the strategy camera: a 1.75 m man = 3.0 m)
-export const PEOPLE = { villager_man: 3.0, villager_woman: 2.8, villager_youngman: 3.0, villager_oldman: 2.9, villager_oldwoman: 2.65, villager_boy: 2.3, villager_girl: 2.2, villager_littlegirl: 1.7 };
+// villager -> height in metres.  AN1_R3 A3: real sizes (walk_kit.SZ, workers/docs/SCALE.md).  Until R3 the game scaled people x1.7 (a 1.75 m man = 3.0 m) so they read from the strategy camera; the owner:
+// «the hero is a bit small, the horses are far bigger than she is».  `?an1gain=` (walk_kit.SZ_GAIN) brings a gain back for a test.
+export const PEOPLE = { villager_man: sz('man'), villager_woman: sz('woman'), villager_youngman: sz('youngman'), villager_oldman: sz('oldman'), villager_oldwoman: sz('oldwoman'), villager_boy: sz('boy'), villager_girl: sz('girl'), villager_littlegirl: sz('littlegirl') };
 export const PEOPLE_FILES = ['villager_man', 'villager_woman', 'villager_youngman', 'villager_oldman'];
 
 // AN1 (15 Oct 2026, owner's decision): the Tripo animals are static meshes (no rig → they glide, legs never move), so by DEFAULT the game keeps the OLD animated animals (Mesh2Motion horses,
@@ -206,7 +208,7 @@ function study(scene, walk) {
   const box = new THREE.Box3().setFromObject(rig, true), sz = box.getSize(new THREE.Vector3());
   return { tf, minY: box.min.y, height: sz.y, feetSep: best };
 }
-export function people(key, { capacity = 40, fps = 15, lod2 = null, height = PEOPLE[key] || 3.0 } = {}) {
+export function people(key, { capacity = 40, fps = 15, lod2 = null, height = PEOPLE[key] || sz('man') } = {}) {
   const v = state.vill[key]; if (!v) return null;
   const scene = SkeletonUtils.clone(v.scene);
   scene.traverse((o) => { if (o.isMesh && o.material) { const m = o.material; m.metalness = 0; m.roughness = 0.9; m.metalnessMap = null; m.roughnessMap = null; m.envMapIntensity = 0.35; if (m.map) m.map.anisotropy = 4; } });
@@ -228,7 +230,7 @@ export function people(key, { capacity = 40, fps = 15, lod2 = null, height = PEO
 }
 
 // a plain skinned character (units.js: the few villagers that walk the fort): { root, scene, mixer, S, k, walk, idle } — metres, feet on y = 0, own mixer
-export function skinned(key, { height = PEOPLE[key] || 3.0 } = {}) {
+export function skinned(key, { height = PEOPLE[key] || sz('man') } = {}) {
   const v = state.vill[key]; if (!v) return null;
   const scene = SkeletonUtils.clone(v.scene);
   scene.traverse((o) => { if (o.isMesh && o.material) { const m = o.material; m.metalness = 0; m.roughness = 0.9; m.metalnessMap = null; m.roughnessMap = null; m.envMapIntensity = 0.35; } });

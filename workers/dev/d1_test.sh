@@ -47,7 +47,10 @@ if 'v.removeAt = t + DIS.gone' not in death: bad('removeAt is not t + DIS.gone')
 if 'RARITY[v.u.type]' not in death or 'TIERS' not in death: bad('death colour does not come from rarity.js')
 if re.search(r'#[0-9a-fA-F]{6}', death): bad('a hard-coded colour in the death code (colours must come from rarity.js)')
 if 'api.dissolve' not in bf or 'export const activeFX' not in bf: bad('bfx.js lacks dissolve / activeFX')
-if open(S + 'crowd.js').read() != open(B + 'crowd.js').read(): bad('crowd.js differs from the base (D1 needs no shader / attribute change)')
+# AN1_R3: crowd.js may differ from the base ONLY by the marked F6 change (ROUND3_JOBS: «crowd.js (F6 only)») and only if it adds no shader / program / attribute (what D1 really needs): same count of these tokens as the base
+_cn, _cb = open(S + 'crowd.js').read(), open(B + 'crowd.js').read()
+_tok = lambda t: [t.count(k) for k in ('ShaderMaterial', 'onBeforeCompile', 'setAttribute', 'InstancedBufferAttribute', 'Material(', 'program')]
+if _cn != _cb and not ('AN1_R3' in _cn and _tok(_cn) == _tok(_cb)): bad('crowd.js differs from the base (D1 needs no shader / attribute change)')
 for f in ('bunits.js', 'bfx.js'):
     now = open(S + f).read(); old = open(B + f).read()
     for pat in ('ShaderMaterial', 'onBeforeCompile', 'customProgramCacheKey', 'new THREE.Points', 'InstancedMesh'):

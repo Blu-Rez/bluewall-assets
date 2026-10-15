@@ -14,12 +14,14 @@ import { instance } from './assets.js';
 import { buildModelDragon } from './dragon_model.js';
 import { roadPoints } from './terrain.js';
 import { road, roadDist } from './roads.js';
-import { approach, clampN } from './walk_kit.js';        // AN1_R2
+import { approach, clampN, LOD, lodGate, sz, lenOf } from './walk_kit.js';        // AN1_R2 (+ AN1_R3: F6 update-rate LOD)
 import { buildPastureLife } from './pas_life.js';
 import * as TL from './tr2_life.js';                       // TR2-S4d: Tripo animals (eagles, crows, hens, dogs, wolves, the pasture) when loaded; the old models stay as the fallback
 
 const v3 = new THREE.Vector3();
-const HS = 1.335;                                         // Mesh2Motion horses: bind box is long (tail straight back), scale lengths by this
+// AN1_R3 A3 (workers/docs/SCALE.md): everything that lives is fitted to the real sizes of walk_kit.SZ.  The Mesh2Motion horses' bind box is long (tail straight back): lenOf() = the length that puts the withers at
+// sz('horse') = 1.45 m (was 5.6 x 1.335 = 7.5 m long, withers 3.8 m).  The knights' scale = world scale 3.087 x `size` (measured: K3 size 1.24 -> 3.83) -> a 1.85 m knight.
+const RIDER_K = 3.087;
 
 export function buildLife(sceneRoot, height, Q, hooks) {
   let scene = sceneRoot;                                  // while a model handler runs, `scene` is that model's own (hidden) bucket group
@@ -44,7 +46,7 @@ export function buildLife(sceneRoot, height, Q, hooks) {
     updaters.push((t, dt) => {
       acc += dt; const ref = c.root.userData.farRef || c.root;
       if (!ref.visible || ref.userData.bwFar) { if (acc > 1) acc = 0; return; }
-      if ((F.n + ph) % 2 === 0) { c.mixer.update(acc); acc = 0; }
+      if ((F.n + ph) % ((LOD.on && ref.userData.bwLod === 2) ? 4 : 2) === 0) { c.mixer.update(acc); acc = 0; }       // AN1_R3: beyond 140 m the mixer steps at 1/4 (the time it owes is added)
     });
   };
   const G = L.TGATES[0] || L.GATE, POLY = L.TGATES[0] ? L.TOWN : L.OUTER, a0 = POLY[G.seg ?? L.GATE_SEG], a1 = POLY[((G.seg ?? L.GATE_SEG) + 1) % POLY.length];
@@ -173,12 +175,12 @@ export function buildLife(sceneRoot, height, Q, hooks) {
     _hensT(cx, cz, bx) {
       const inside = (x, z) => x > bx.min.x && x < bx.max.x && z > bx.min.z && z < bx.max.z, yx = bx.min.x - 7, yz = cz + 3, h0 = height(yx, yz), flat = (x, z) => Math.abs(height(x, z) - h0) < 1.0;
       const grp = new THREE.Group(); grp.name = 'hens'; scene.add(grp); dayOnly.push(grp);
-      const PK = 'poultry_fish_pack/', D = { hen: TL.dyn(PK + 'hen', 8, { h: 0.8, parent: grp }), rooster: TL.dyn(PK + 'rooster', 2, { h: 0.95, parent: grp }), chick: TL.dyn(PK + 'chick', 4, { h: 0.35, parent: grp }) };
+      const PK = 'poultry_fish_pack/', D = { hen: TL.dyn(PK + 'hen', 8, { h: sz('hen'), parent: grp }), rooster: TL.dyn(PK + 'rooster', 2, { h: sz('rooster'), parent: grp }), chick: TL.dyn(PK + 'chick', 4, { h: 0.15 * sz('hen') / 0.4, parent: grp }) };
       if (!D.hen || !D.rooster || !D.chick) return false;
       const plan = [['hen', 1.0], ['hen', 1.0], ['hen', 1.05], ['hen', 0.97], ['hen', 1.0], ['hen', 1.03], ['rooster', 1.1], ['hen', 0.95], ['chick', 1.0], ['chick', 0.9], ['chick', 1.05]];
       const M = new THREE.Matrix4(), Eu = new THREE.Euler(), Qn = new THREE.Quaternion(), Sc = new THREE.Vector3(), cnt = { hen: 0, rooster: 0, chick: 0 };
       const ring = () => { for (let k = 0; k < 20; k++) { const a = Math.random() * 6.28, d = 1.5 + Math.random() * 8, x = yx + Math.cos(a) * d, z = yz + Math.sin(a) * d; if (!inside(x, z) && flat(x, z)) return [x, z]; } return [yx, yz]; };
-      const hens = plan.map(([kind, size]) => { const [x, z] = ring(); return { kind, slot: cnt[kind]++, x, z, ry: Math.random() * 6.28, tx: x, tz: z, walk: false, tm: Math.random() * 4, ph: Math.random() * 6.28, size: size * (kind === 'chick' ? 1.1 : 1.15) }; });
+      const hens = plan.map(([kind, size]) => { const [x, z] = ring(); return { kind, slot: cnt[kind]++, x, z, ry: Math.random() * 6.28, tx: x, tz: z, walk: false, tm: Math.random() * 4, ph: Math.random() * 6.28, size: size }; });      // (AN1_R3: the model heights above are the real ones: hen 0.4 m, cock 0.6 m, chick 0.15 m)
       const pick = (h) => { for (let k = 0; k < 8; k++) { const [x, z] = ring(); if (Math.hypot(x - h.x, z - h.z) < 7) { h.tx = x; h.tz = z; return; } } const [x, z] = ring(); h.tx = x; h.tz = z; };
       updaters.push((t, dt) => {
         if (!grp.visible || (camRef && Math.hypot(camRef.position.x - cx, camRef.position.z - cz) > 300)) return;
@@ -227,7 +229,7 @@ export function buildLife(sceneRoot, height, Q, hooks) {
       const N = tints.length, mesh = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.85, metalness: 0, envMapIntensity: 0.4 }), N);
       mesh.name = 'hens'; mesh.frustumCulled = false; mesh.castShadow = true; mesh.receiveShadow = true;
       const ring = () => { for (let k = 0; k < 20; k++) { const a = Math.random() * 6.28, d = 1.5 + Math.random() * 8, x = yx + Math.cos(a) * d, z = yz + Math.sin(a) * d; if (!inside(x, z) && flat(x, z)) return [x, z]; } return [yx, yz]; };
-      const hens = tints.map((c, i) => { mesh.setColorAt(i, new THREE.Color(c[0], c[1], c[2])); const [x, z] = ring(); return { x, z, ry: Math.random() * 6.28, tx: x, tz: z, walk: false, tm: Math.random() * 4, ph: Math.random() * 6.28, size: i === 6 ? 1.35 : 1.15 + Math.random() * 0.15 }; });
+      const hens = tints.map((c, i) => { mesh.setColorAt(i, new THREE.Color(c[0], c[1], c[2])); const [x, z] = ring(); return { x, z, ry: Math.random() * 6.28, tx: x, tz: z, walk: false, tm: Math.random() * 4, ph: Math.random() * 6.28, size: (i === 6 ? sz('rooster') : sz('hen') * (1 + Math.random() * 0.12)) / 0.678 }; });      // AN1_R3: the hen model is 0.678 m from foot to comb at size 1: a hen 0.4 m, the cock 0.6 m (was size 1.15-1.35 = 0.8-0.9 m)
       mesh.instanceColor.needsUpdate = true; scene.add(mesh); dayOnly.push(mesh);
       const pick = (h) => { for (let k = 0; k < 8; k++) { const [x, z] = ring(); if (Math.hypot(x - h.x, z - h.z) < 7) { h.tx = x; h.tz = z; return; } } const [x, z] = ring(); h.tx = x; h.tz = z; };
       updaters.push((t, dt) => {
@@ -294,20 +296,20 @@ export function buildLife(sceneRoot, height, Q, hooks) {
         bone.attach(k.root); return true;
       };
       routes.forEach((R) => {
-        const hg = G2[R.coat], len = R.coat === 'barded' ? 5.6 : 5.6 * HS;
-        const h = makeCreature(hg, { length: len * (R.lord ? 1.1 : 1) }); if (!h) return;
+        const hg = G2[R.coat], len = R.coat === 'barded' ? lenOf('barded') : lenOf('horse');      // AN1_R3: withers 1.6 m (the barded war-horse) / 1.45 m
+        const h = makeCreature(hg, { length: len * (R.lord ? 1.05 : 1) }); if (!h) return;
         const k = makeCreature(R.axe ? G2.axe : G2.rider, { height: 1 }); if (!k) return;
         const vn = gaitSpeed(h, new RegExp('^' + R.gait + '$'));          // AN1_R2: measured BEFORE the rider is mounted (his userData.farRef makes the horse's skeleton uncloneable)
         h.root.userData.bwCull = 380; scene.add(h.root);
         h.play(R.gait); h.mixer.update(0.01); h.root.updateMatrixWorld(true);
-        if (!mount(h, k, len, 1.24 * (R.lord ? 1.12 : R.axe ? 1.1 : 1))) { k.root.position.y = 2.6; h.root.add(k.root); }
+        if (!mount(h, k, len, sz('rider') / RIDER_K * (R.lord ? 1.05 : R.axe ? 1.03 : 1))) { k.root.position.y = 1.4; h.root.add(k.root); }
         k.root.userData.farRef = h.root;
         if (R.axe) {                                                    // the long axe in the right fist, resting on the shoulder (gear_axe.js, gear_sword.js AXE_RIDE)
           const hand = byName(k.inner, 'hand_r');
           if (hand) { const a = makeAxe({ blued: false, shadows: false, long: true }); a.rotation.set(...AXE_RIDE.rotDeg.map((d) => d * Math.PI / 180)); a.position.set(...AXE_RIDE.pos); a.scale.setScalar(AXE_RIDE.s); hand.add(a); }
         }
         loop(k, R.axe ? /^AxeShoulder$/ : /^RideShoulder$/, R.gait === 'Gallop' ? 1.4 : 0.8);    // (the blade / the axe rests on his right shoulder: gear_sword.js)
-        pick(h.root, R.axe ? 'axerider' : 'knight', 3, 3);
+        pick(h.root, R.axe ? 'axerider' : 'knight', 1.7, 1.4);        // AN1_R3: the tap sphere of a 2.6 m horseman (was r 3 at +3 m for a 6 m one)
         // follow the route (ping-pong on open roads, loop on the ring street)
         const pts = R.pts.map(([x, z]) => new THREE.Vector3(x, 0, z));
         const curve = new THREE.CatmullRomCurve3(pts, !!R.loop, 'centripetal'), len2 = curve.getLength();
@@ -320,6 +322,7 @@ export function buildLife(sceneRoot, height, Q, hooks) {
         const liftAt = (u) => { const f = u * len2 / 2, i = Math.min(nLift - 1, Math.floor(f)), j = Math.min(nLift - 1, i + 1), w = f - i; return lift[i] * (1 - w) + lift[j] * w; };
         h.act && (h.act.timeScale = 1);
         updaters.push((t, dt) => {
+          dt = lodGate(h, LOD.on ? h.root.userData.bwLod | 0 : 0, dt); if (!dt) return;        // AN1_R3: a far horseman (> 60 m) rides at 1/2, > 140 m at 1/4 of the frame rate, with the time it owes
           const u = ((s2 % len2) + len2) % len2 / len2, u2 = ((s2 + dir * 1.5) % len2 + len2) % len2 / len2;
           curve.getPointAt(u, p); curve.getPointAt(u2, p2);
           const want = Math.atan2(p2.x - p.x, p2.z - p.z), err = Math.atan2(Math.sin(want - h.root.rotation.y), Math.cos(want - h.root.rotation.y));
@@ -342,11 +345,11 @@ export function buildLife(sceneRoot, height, Q, hooks) {
       // dogs in town (warm tint) by day, grey wolves at the forest edge at night
       const TD = TL.ready() && TL.has('animal_dog') && TL.has('animal_wolf'), gd = TD ? TL.gltfLike('animal_dog') : g, gwf = TD ? TL.gltfLike('animal_wolf') : g;     // TR2-S4d: static Tripo dog / wolf (a procedural trot below)
       const cobble = (x, z) => height(x, z) + (roadDist(x, z, 'cobble') < -0.15 ? 0.07 : 0);       // AN1_R2: town.js lays the street ribbon 7 cm over the terrain
-      const dogs = herd(scene, gd, 3, { cx: L.PLAZA.x - 6, cz: L.PLAZA.z + 14, r: 14, height, size: 2.2, speed: 2.2, seed: 7, ground: cobble,
+      const dogs = herd(scene, gd, 3, { cx: L.PLAZA.x - 6, cz: L.PLAZA.z + 14, r: 14, height, size: lenOf('dog', 'wolf'), speed: 2.2, seed: 7, ground: cobble,
         avoid: (x, z) => L.sdPoly(L.OUTER, x, z) > -4 });
       for (const c of dogs.list) c.inner.traverse((o) => { if (o.isMesh) { o.material = o.material.clone(); o.material.color.multiply(new THREE.Color(1.25, 1.0, 0.7)); } });
       updaters.push((t, dt) => dogs.update(dt));
-      const wolves = herd(scene, gwf, 4, { cx: 60, cz: -300, r: 30, height, size: 2.8, speed: 1.8, seed: 13 });
+      const wolves = herd(scene, gwf, 4, { cx: 60, cz: -300, r: 30, height, size: lenOf('wolf'), speed: 1.8, seed: 13 });
       for (const c of wolves.list) nightOnly.push(c.root);
       updaters.push((t, dt) => wolves.update(dt));
       if (typeof window !== 'undefined') window.__herds = { dogs, wolves };      // AN1: dev peek (tests read the herds)
@@ -424,7 +427,7 @@ export function buildLife(sceneRoot, height, Q, hooks) {
       camera.updateMatrixWorld(); pvm.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse); fr.setFromProjectionMatrix(pvm);
       for (const o of cullList) {
         const dd = o.position.distanceTo(camera.position), far = dd > (o.userData.bwCull || 320);
-        o.userData.bwFar = far; o.userData.bwLod = dd < 90 ? 0 : dd < 200 ? 1 : 2;
+        o.userData.bwFar = far; o.userData.bwLod = LOD.on ? (dd < LOD.near ? 0 : dd < LOD.far ? 1 : 2) : (dd < 90 ? 0 : dd < 200 ? 1 : 2);       // AN1_R3: 60 / 140 m (was 90 / 200); ?an1lod=0 = the old numbers
         sph.center.copy(o.position); sph.radius = o.userData.bwR || 30; o.userData.bwOff = !fr.intersectsSphere(sph);
         if (!dayOnly.includes(o) && !nightOnly.includes(o)) o.visible = !far && !o.userData.bwOff;   // (bwLod: animate at full / half / quarter rate with the distance)
       }

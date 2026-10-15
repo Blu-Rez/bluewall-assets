@@ -7,6 +7,7 @@ import { cloneSkinned } from './assets.js';
 import { mergeSkinned } from './creature.js';
 import { makeAxe, AXE_GRIP } from './gear_axe.js';
 import { peasantHead } from './peasanthead.js';
+import { lodLevel, lodGate } from './walk_kit.js';                        // AN1_R3: F6
 import * as TL from './tr2_life.js';                                  // TR2-S4d: Tripo villagers
 
 const SC = 1.75;                     // gameplay scale for people (readable from the strategy camera)
@@ -108,11 +109,12 @@ export function buildUnits(scene, A, height, opts = {}) {
     u.root.rotation.y += d * Math.min(1, dt * 6);
   }
 
-  function update(dt) {
+  function update(dt, camera) {       // AN1_R3: camera (F6; was update(dt))
     for (const u of units) {
       if (!u.root.visible) continue;
-      if (u.path) walk(u, dt);
-      u.mixer.update(dt);
+      let d = dt; if (camera) { const q = u.root.position, c = camera.position; d = lodGate(u, lodLevel(q.x - c.x, q.y - c.y, q.z - c.z), dt); if (!d) continue; }       // AN1_R3: F6 - beyond 60 m the walk + the mixer step every 2nd (140 m: 4th) frame with the time they owe
+      if (u.path) walk(u, d);       // AN1_R3: d (was dt)
+      u.mixer.update(d);       // AN1_R3: d (was dt)
     }
     for (const g of giants) {
       if (!g.root.visible) continue;

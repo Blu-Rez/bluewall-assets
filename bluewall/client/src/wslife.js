@@ -17,12 +17,13 @@ import { crowdShadows, cowPatch, coatPatch, smoothSkinned, measure, prepHorse, s
 import * as TL from './tr2_life.js';                                   // TR2-S4d: Tripo animals + villagers
 import { sites, counts, wsLevel, tierOf, inClip } from './worksites.js';
 import { planStores } from './stores.js';
+import { makeGroundY, bridgesFromLayout } from './nav.js';          // AN1_R3: the decks (a cart route may not wade where a mover could not)
 import * as C1 from './c1_kinds.js';       // C1: workers / carts of the panning + smokehouse sites
 import * as C2 from './c2_kinds.js';       // C2: workers / carts of the sawmill / masonry / smelter sites
 import { LEVEL_CAP } from './tiers.js';   // TR2-S4b: the level cap (30 today, 50 when the server says so)
-import { steer, turnTo, approach, smooth01, makeGrid, smoothLine, clampN } from './walk_kit.js';   // AN1_R2: acceleration / braking / limited turns, the walking grids of the sites, smoothed cart lines
+import { steer, turnTo, approach, smooth01, makeGrid, smoothLine, clampN, LOD, lodLevel, lodGate, sz, lenOf } from './walk_kit.js';   // AN1_R2: acceleration / braking / limited turns, the walking grids of the sites, smoothed cart lines
 
-const PS0 = 1.75 * 0.95;                        // the people's scale (pas_life.js); the Tripo villagers are calibrated to metres: scale 1
+const PS0 = sz('man') / 1.562;                    // the old peasant model's scale (pas_life.js): AN1_R3: 1.75 m (it was x1.66 = 2.6 m); the Tripo villagers are calibrated to metres: scale 1
 const rnd = (() => { let s = 90210; return () => { s = (s * 16807) % 2147483647; return s / 2147483647; }; })();
 const R2 = (a, b) => a + (b - a) * rnd();
 const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a));
@@ -144,11 +145,20 @@ export const chainDest = (site, castle = 30) => {
   for (const t of sites()) if (t.kind === want && t.id !== site.id && wsLevel(t, castle) > 0) { const d = Math.hypot(t.x - site.x, t.z - site.z); if (d < bd) { bd = d; best = t; } }
   return best;
 };
-export function haulRoute(site, castle = 30) {
+export function haulRoute(site, castle = 30, deep = null) {
   try {
     const dest = chainDest(site, castle), st = dest ? null : planStores().find((s) => s.id === STORE_OF[site.kind]); if (!dest && !st) return null;
-    const G = graph(), front = toW(site, 0, site.r * 0.55), a = G.near(front[0], front[1]);
-    const fd = dest ? toW(dest, 0, dest.r * 0.55) : null, b = fd ? G.near(fd[0], fd[1]) : G.near(st.x, st.z);
+    const G = graph(), front = toW(site, 0, site.r * 0.55);
+    // AN1_R3: the first / last leg (site front -> nearest road node) is a straight line: when it would wade through deep water (no deck) the nearest node whose leg stays dry is taken (the cart audit: 2 of 33 routes forded 1.45 m at the river bend beside the smokehouse)
+    const nodeFor = (px, pz) => {
+      const a0 = G.near(px, pz); if (!deep) return a0;
+      const cand = []; for (let i = 0; i < G.N.length; i++) { const d = (G.N[i].x - px) ** 2 + (G.N[i].z - pz) ** 2; if (d < 3600) cand.push([d, i]); }
+      cand.sort((p, q) => p[0] - q[0]);
+      for (let c = 0; c < cand.length && c < 60; c++) { const [d, i] = cand[c], n = Math.ceil(Math.sqrt(d) / 1.5); let dry = true; for (let k = 0; k <= n && dry; k++) { const u = k / n; if (deep(px + (G.N[i].x - px) * u, pz + (G.N[i].z - pz) * u)) dry = false; } if (dry) return i; }
+      return a0;
+    };
+    const a = nodeFor(front[0], front[1]);
+    const fd = dest ? toW(dest, 0, dest.r * 0.55) : null, b = fd ? nodeFor(fd[0], fd[1]) : G.near(st.x, st.z);
     const path = shortest(a, b); if (!path || path.length < 2) return null;
     const route = [[front[0], front[1]], ...path, fd ? [fd[0], fd[1]] : [st.x + Math.sin(st.ry) * 6, st.z + Math.cos(st.ry) * 6]];
     const cum = [0]; for (let i = 1; i < route.length; i++) cum.push(cum[i - 1] + Math.hypot(route[i][0] - route[i - 1][0], route[i][1] - route[i - 1][1]));
@@ -219,7 +229,7 @@ export function buildWsLife(group, height, opt) {
   const makeAnimals = () => {
     if (TA) {                                                              // static Tripo animals (tr2_life.js): the clip names only pick a procedural gait
       const fa = (spec, len, cap) => { const k = TL.fauna(spec, { len, capacity: cap, shadows }); if (k) root.add(k.group); return k; };
-      kinds.cow = fa('animal_cow', 3.3, 40); kinds.horse = TL.horses({ len: 3.4, capacity: 40, shadows }); if (kinds.horse) root.add(kinds.horse.group);
+      kinds.cow = fa('animal_cow', lenOf('cow'), 40); kinds.horse = TL.horses({ len: lenOf('draught', 'horse'), capacity: 40, shadows }); if (kinds.horse) root.add(kinds.horse.group);
       kinds.sheep = fa('animal_sheep', 1.6, 40); kinds.pig = fa('animal_pig', 1.8, 40);
       alive.animals = !!(kinds.cow && kinds.horse && kinds.sheep && kinds.pig); return;
     }
@@ -232,14 +242,14 @@ export function buildWsLife(group, height, opt) {
     if (models.cow) {
       const src = SkeletonUtils.clone(models.cow.scene); mergeSkinned(src); smoothSkinned(src); src.userData.pasClips = models.cow.animations;
       const clips = ['Idle', 'Idle_2', 'Idle_Headlow', 'Eating', 'Walk'].filter((n) => models.cow.animations.some((a) => a.name === n));
-      kinds.cow = animKind(src, clips, 40, cowPatch); const f = fit(src, 3.3); kinds.cow.fit = { k: f.k, y: f.y * f.k }; kinds.cow.has = (n) => clips.includes(n); kinds.cow.vnat = gaitOf(src, f.k);
+      kinds.cow = animKind(src, clips, 40, cowPatch); const f = fit(src, lenOf('cow')); kinds.cow.fit = { k: f.k, y: f.y * f.k }; kinds.cow.has = (n) => clips.includes(n); kinds.cow.vnat = gaitOf(src, f.k);
     }
     if (models.horse) {
       const src = prepHorse(models.horse); const clips = ['Idle', 'Eating', 'Walk'].filter((n) => models.horse.animations.some((a) => a.name === n));
-      kinds.horse = animKind(src, clips, 40, null); const f = fit(src, 3.4); kinds.horse.fit = { k: f.k, y: f.y * f.k }; kinds.horse.has = (n) => clips.includes(n); kinds.horse.vnat = gaitOf(src, f.k);
+      kinds.horse = animKind(src, clips, 40, null); const f = fit(src, lenOf('draught', 'horse')); kinds.horse.fit = { k: f.k, y: f.y * f.k }; kinds.horse.has = (n) => clips.includes(n); kinds.horse.vnat = gaitOf(src, f.k);
       if (opt.coats && opt.coats.length) coatPatch(kinds.horse, [null, ...opt.coats]);
     }
-    for (const [id, g, len] of [['sheep', opt.sheep, 1.6], ['pig', opt.pig, 1.8]]) {
+    for (const [id, g, len] of [['sheep', opt.sheep, lenOf('sheep')], ['pig', opt.pig, lenOf('pig')]]) {
       if (!g) continue;
       const src = SkeletonUtils.clone(g.scene); mergeSkinned(src); src.userData.pasClips = g.animations;
       const clips = ['Idle', 'Jump'].filter((n) => g.animations.some((a) => a.name === n));
@@ -336,6 +346,8 @@ export function buildWsLife(group, height, opt) {
   // AN1_R2 carts: a smoothed road line (walk_kit smoothLine, tangent tails at both ends), a trapezoid speed profile (the horse's Walk clip is played at the rate of the speed it really goes),
   // the cart on a 4.6 m hitch behind the horse, and a turn-round at each end (the horse steps round on the spot, the cart swings after it) instead of a 180° flip.  Still a pure function of time.
   const CART_ACC = 0.9, HITCH = 4.6, PIVOT = 3.6;
+  let _deck = null;      // AN1_R3: the bridge decks of the movers (nav.js), built once
+  const deepNoDeck = (x, z) => { const h = height(x, z); if (h > LV() - 0.3) return false; if (!_deck) _deck = makeGroundY(bridgesFromLayout(L)); return _deck(x, z, h) - h < 0.3; };
   const liftOf = (Ln) => {                                                  // 1 where the route runs on a cobble street (town.js lays the ribbon 7 cm over the terrain), blurred
     const n = Math.ceil(Ln.len / 2) + 1, a = new Float32Array(n), o = {};
     for (let i = 0; i < n; i++) { Ln.at(Math.min(Ln.len, i * 2), o); a[i] = roadDist(o.x, o.z, 'cobble') < -0.2 ? 1 : 0; }
@@ -344,7 +356,7 @@ export function buildWsLife(group, height, opt) {
   const liftAt = (b, sd) => { const f = clampN(sd / 2, 0, b.length - 1), i = Math.floor(f), u = f - i; return b[i] * (1 - u) + b[Math.min(b.length - 1, i + 1)] * u; };
   const roadY = (x, z, f) => { const h = height(x, z); return f > 0.001 ? h + f * (Math.max(h, 0.2) + 0.07 - h) : h; };
   function spawnCarts(S, n) {
-    const rt = haulRoute(S.site, typeof castle === 'number' ? castle : 30); if (!rt || rt.len < 20) return;
+    const rt = haulRoute(S.site, typeof castle === 'number' ? castle : 30, deepNoDeck); if (!rt || rt.len < 20) return;      // AN1_R3: deep water without a deck
     if (!rt.L) { rt.L = smoothLine(rt.pts, { iter: 2, step: 0.5 }); rt.lift = liftOf(rt.L); }
     const [cartName, loadName, nLoad] = CART_OF[S.site.kind] || CART_OF.lumber;
     for (let i = 0; i < n; i++) {
@@ -510,11 +522,17 @@ export function buildWsLife(group, height, opt) {
     c.ph = 'w2'; c.s = 0; c.vel = 0; c.hy = h0 + c.sgn * Math.PI * smooth01(u); c.om = tau > c.stand ? c.sgn * Math.PI * 6 * u * (1 - u) / PIVOT : 0;
     c.cy = rotTo(c0, c1, c.sgn, smooth01((tau - c.stand - lag) / (PIVOT - lag))); c.loaded = tau > c.stand;
   }
-  function drawCarts(t, dt) {
+  let cartsDrawn = false, cartsN = -1;
+  function drawCarts(t, dt0) {
     const need = {}, vnH = (kinds.horse && kinds.horse.vnat) || 1.5, wsD = alive.people ? (kinds.man.stats.walkSpeed || 1.25) * PS : 1.25;
+    let posed = false;                                                         // AN1_R3: did any cart get a new pose this frame (or leave the range)?  If not, the instance buffers already hold what they should
     for (const c of carts) {
-      c.vis = false; const o = c.rt.pts[0]; if (Math.hypot(cam.x - o[0], cam.z - o[1]) > 900) { if (c.horse) c.horse.y = -999; if (c.driver) c.driver.y = -999; c.has = false; continue; }
-      cartPose(c, (t + c.off) % c.cycle);
+      c.vis = false; const o = c.rt.pts[0]; if (Math.hypot(cam.x - o[0], cam.z - o[1]) > 900) { if (c.has) posed = true; if (c.horse) c.horse.y = -999; if (c.driver) c.driver.y = -999; c.has = false; continue; }
+      // AN1_R3 F6: a cart (its horse and driver with it) more than 60 m from the camera is posed at 1/2, beyond 140 m at 1/4 of the frame rate (the pose is a function of the clock t, so nothing is owed but the
+      // driver's measured speed gets the elapsed time); the instance matrices of the frames in between are the last ones.  Nearer = the old code, every frame.
+      const lv = c.has ? lodLevel(c.x - cam.x, (c.y2 || 0) - cam.y, c.z - cam.z) : 0, dt = lodGate(c, lv, dt0);
+      if (!dt) { if (c.m && cartI[c.cartName]) { (need[c.cartName] = need[c.cartName] || []).push(c); if (c.loaded) (need['L:' + c.loadName] = need['L:' + c.loadName] || []).push(c); } continue; }
+      posed = true; cartPose(c, (t + c.off) % c.cycle);
       const Ln = c.rt.L; Ln.at(c.s, tmp); const hx = tmp.x, hz = tmp.z, f = liftAt(c.rt.lift, c.s), sn = Math.sin(c.hy), cs = Math.cos(c.hy), yH = roadY(hx, hz, f);
       c.x = hx; c.z = hz; c.yaw = c.hy; c.cyaw = c.cy;
       const moving = c.vel > 0.05 || Math.abs(c.om) > 0.05, vh = Math.max(c.vel, Math.abs(c.om) * 0.9);
@@ -531,10 +549,12 @@ export function buildWsLife(group, height, opt) {
       c.mode = moving ? 'w' : 'i'; c.has = true;
       const ci = cartI[c.cartName]; if (!ci) continue;
       const cxp = hx - Math.sin(c.cy) * HITCH, czp = hz - Math.cos(c.cy) * HITCH, y2 = roadY(cxp, czp, f);
-      m4.compose(pp.set(cxp, y2 + 0.05, czp), q.setFromAxisAngle(up, c.cy - Math.PI / 2), sc.set(1, 1, 1)); c.m = m4.clone(); c.y2 = y2; c.cxp = cxp; c.czp = czp;
+      m4.compose(pp.set(cxp, y2 + 0.05, czp), q.setFromAxisAngle(up, c.cy - Math.PI / 2), sc.set(1, 1, 1)); (c.m || (c.m = new THREE.Matrix4())).copy(m4); c.y2 = y2; c.cxp = cxp; c.czp = czp;
       (need[c.cartName] = need[c.cartName] || []).push(c);
       if (c.loaded) (need['L:' + c.loadName] = need['L:' + c.loadName] || []).push(c);
     }
+    if (!posed && cartsDrawn && carts.length === cartsN) return;                                           // AN1_R3: every cart was far and skipped this frame: the matrices of the last frame stand (no copy, no buffer upload)
+    cartsDrawn = true; cartsN = carts.length;
     for (const [name, ci] of Object.entries(cartI)) { const list = need[name] || []; list.forEach((c, i) => ci.set(i, c.m)); ci.flush(list.length); }
     for (const [name, li] of Object.entries(loadI)) {
       const list = need['L:' + name] || [], LD = LOADS[name] || LOADS.ws_logs; let n2 = 0;
@@ -560,14 +580,19 @@ export function buildWsLife(group, height, opt) {
     if (boatI) boatI.flush(n);
   }
   let last = 0;
+  const kl = { n: -1, list: [] }, kOptsP = { lodDist: 70, lod2Dist: 150, maxDist: FAR_DIST, lodF6: true }, kOptsA = { lodDist: 70, lod2Dist: 1e9, maxDist: FAR_DIST, lodF6: true };       // AN1_R3
   function update(t, dt, camera) {
     if (!populated) return; camera.getWorldPosition(cam);
     const sim = Math.min(0.1, dt);
     if (gridQ.length && gridQ[0].pump(5)) gridQ.shift();                       // AN1_R2: the site grids are built a few ms per frame
-    for (const a of agents) { const o = a.S.site; if (Math.hypot(cam.x - o.x, cam.z - o.z) < WORK_DIST) stepAgent(a, sim); }
-    for (const a of animals) { const o = a.S.site; if (Math.hypot(cam.x - o.x, cam.z - o.z) < WORK_DIST) stepAnimal(a, sim); }
+    // AN1_R3 F6: a worker / animal more than 60 m from the camera (its own position, the camera's height counts) steps at 1/2, beyond 140 m at 1/4 of the frame rate, with the time it owes (walk_kit lodGate);
+    // nearer than 60 m = the old call, every frame, with the same dt
+    for (const a of agents) { const o = a.S.site; if (Math.hypot(cam.x - o.x, cam.z - o.z) < WORK_DIST) { const p = a.p, d = lodGate(a, lodLevel(p.x - cam.x, p.y - cam.y, p.z - cam.z), sim); if (d) stepAgent(a, d); } }
+    for (const a of animals) { const o = a.S.site; if (Math.hypot(cam.x - o.x, cam.z - o.z) < WORK_DIST) { const p = a.p, d = lodGate(a, lodLevel(p.x - cam.x, p.y - cam.y, p.z - cam.z), sim); if (d) stepAnimal(a, d); } }
     drawCarts(t, sim); drawBoats(t);
-    for (const k of new Set(Object.values(kinds))) if (k.update) k.update(t, camera, { lodDist: 70, lod2Dist: k.people ? 150 : 1e9, maxDist: FAR_DIST });      // (a Set: axe / pick share one Tripo kind)
+    let nk = 0; for (const _ in kinds) nk++;
+    if (nk !== kl.n) { kl.n = nk; kl.list = [...new Set(Object.values(kinds))].filter((k) => k.update); }      // (a Set: axe / pick share one Tripo kind; rebuilt only when a kind is added)
+    for (const k of kl.list) k.update(t, camera, k.people ? kOptsP : kOptsA);
   }
   const steps = [makePeople, makeAnimals, makeMeshes, () => refresh(castle)];
   return { steps, update, refresh, respawn, root, kinds, agents, animals, carts, boats, grids, gridOf, stats: () => ({ agents: agents.length, animals: animals.length, carts: carts.length, boats: boats.length }), group: root, tradesOf };      // TR2-S5: + respawn

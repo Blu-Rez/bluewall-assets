@@ -24,10 +24,13 @@ import { mergeSkinned } from './creature.js';
 import { SPOTS, STABLE_FX } from './pas_stable.js';
 import { ENT, levelOf } from './skin.js';
 import * as TL from './tr2_life.js';                         // TR2-S4d: Tripo animals + villagers
-import { approach, turnTo, clampN, stanceSpeed } from './walk_kit.js';    // AN1_R2: speed ramps + limited turns (the gait clips are played at the rate of the speed the body really has)
+import { approach, turnTo, clampN, stanceSpeed, LOD, lodLevel, lodLevelD, lodGate, sz, lenOf, SZ_GAIN } from './walk_kit.js';    // AN1_R2: speed ramps + limited turns (the gait clips are played at the rate of the speed the body really has)
 
-const HS = 1.335, H_LEN = 5.6 * HS;                          // Mesh2Motion horse: bind box (tail straight back) -> a 5.6 m horse
-const COW_LEN = 4.9;
+// AN1_R3 A3 (workers/docs/SCALE.md): real sizes.  The Mesh2Motion horse's bind box is long (tail straight back): H_LEN = the bind-box length that puts the WITHERS at sz('horse') = 1.45 m (2.86 m long, the head tops out at
+// ~1.8 m), the cow's the one for withers 1.3 m (2.29 m long).  Until R3: 7.5 m / 4.9 m (withers 3.8 m / 2.8 m next to the 1.96 m hero).  HF / CF / PK = today's size / the old size: they carry the hand-tuned absolute
+// offsets (lead rope, hay bundle, pick spheres, contact blobs) along.
+const H_LEN = lenOf('horse'), COW_LEN = lenOf('cow');
+const HF = H_LEN / (5.6 * 1.335), CF = COW_LEN / 4.9, PK = sz('man') / 3.0;
 // the lunge line (p34 P2: it was a 1 px line): a real rope — 6-sided cord with a twisted-strand texture, a slack belly (owner: «شل کن که شکم بندازه»), a brass snap at the horse's end and a loop at the trainer's hand.  One mesh + one snap, updated in place (no allocations).
 function makeLungeLine() {
   const RS = 16, RR = 6, RAD = 0.04, group = new THREE.Group(); group.name = 'lungeLine';
@@ -217,7 +220,7 @@ export function buildPastureLife(group, height, opt) {
     gaitV = { Walk: HM.v.Walk ? THREE.MathUtils.clamp(HM.v.Walk * HK, 1.6, 6) : 3.1, Trot: HM.v.Trot ? THREE.MathUtils.clamp(HM.v.Trot * HK, 3, 12) : 6.4 };
   }
   const COATS = { bay: 0, black: 1, grey: 2 };
-  const horse = (coat, s = 1, blob = true) => { const p = hk.add({ x: 0, y: -999, z: 0, yaw: 0, scale: TH ? s : scaleK(HK * s, COATS[coat] || 0), coat: COATS[coat] || 0 }); p.cr = 5 * s; p.s = s; p.lift = HY * s; if (blob) blobList.push([p, 6.2 * s, 2.5 * s]); return p; };
+  const horse = (coat, s = 1, blob = true) => { const p = hk.add({ x: 0, y: -999, z: 0, yaw: 0, scale: TH ? s : scaleK(HK * s, COATS[coat] || 0), coat: COATS[coat] || 0 }); p.cr = 5 * s * HF; p.s = s; p.lift = HY * s; if (blob) blobList.push([p, 6.2 * s * HF, 2.5 * HF * s]); return p; };
 
   // ---- people (peasant crowds); without the models the yard keeps its animals only
   let pm = null, pf = null;
@@ -234,7 +237,7 @@ export function buildPastureLife(group, height, opt) {
     if (anims && models.peasant_f) { pf = createKind({ gltf: models.peasant_f, anims, clips: PCLIPS, capacity: 8, fps: 15, props: [peasantHeadProp(true, 1)], lod2: { cloth: 0x7d5b4a, legs: 0x4a3a30, h: 1.75 } }); pf.people = true; crowdShadows(pf, shadows); group.add(pf.group); kinds.push(pf); }
     }
   } catch (e) { console.warn('pasture people', e); }
-  const PS = TP && pm ? 1 : 1.75 * 0.95;
+  const PS = TP && pm ? 1 : sz('man') / 1.562;      // (AN1_R3: the old peasant model is 1.56 m tall at scale 1; was x1.66 = 2.6 m)
   const manRate = (v) => { const ws = (pm && pm.stats.walkSpeed) || 1.25; return THREE.MathUtils.clamp(v / (ws * PS), 0.2, 1.8); };   // Walk_Loop playback for a ground speed (no sliding feet)
   // AN1_R2: a person who is moved by a script: his gait follows the speed he REALLY has (measured from his own motion), the idle pose when he stands
   const follow = (q, st, dt) => {
@@ -242,7 +245,7 @@ export function buildPastureLife(group, height, opt) {
     if (st.v > 0.14) { if (st.mode !== 'w') { st.mode = 'w'; const sp = Math.max(0.2, st.v / (ws * PS)); if (q.startWalk) q.startWalk(sp); else q.play('Walk_Loop', { speed: sp }); } else q.setSpeed(THREE.MathUtils.clamp(st.v / (ws * PS), 0.15, 1.8)); }
     else if (st.v < 0.08 && st.mode !== 'i') { st.mode = 'i'; q.play('Idle_Loop'); }
   };
-  const person = (k, x, z, yaw, clip, phase = rnd() * 3) => { const kk = k === 'f' ? pf || pm : pm || pf; if (!kk) return null; const p = kk.add({ x, y: height(x, z), z, yaw, scale: PS, clip, phase }); p.cr = 2.6; yard.push(p); p.homeY = p.y; p.lift = 0; blobList.push([p, 1.7, 1.5]); return p; };
+  const person = (k, x, z, yaw, clip, phase = rnd() * 3) => { const kk = k === 'f' ? pf || pm : pm || pf; if (!kk) return null; const p = kk.add({ x, y: height(x, z), z, yaw, scale: PS, clip, phase }); p.cr = 2.6; yard.push(p); p.homeY = p.y; p.lift = 0; blobList.push([p, 1.7 * PK, 1.5 * PK]); return p; };
 
   // ---- soft contact shadows under every animal and person (one instanced draw; real shadows only exist where the sun's shadow map reaches)
   let blobs = null;
@@ -261,7 +264,7 @@ export function buildPastureLife(group, height, opt) {
   }
   // ---- the hay bundle the carrier shoulders (one tiny mesh)
   const bundle = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.62, 0.7), new THREE.MeshStandardMaterial({ color: 0xc8a75e, roughness: 1 }));
-  bundle.castShadow = shadows; bundle.visible = false; group.add(bundle);
+  bundle.castShadow = shadows; bundle.visible = false; bundle.scale.setScalar(0.7 * SZ_GAIN); group.add(bundle);      // AN1_R3: a 0.9 x 0.43 x 0.49 m bale on a 1.75 m man's shoulder (was 1.3 m)
 
   // ================================================================ the pasture herd
   const fenceR = (SPOTS.fenceR || PA.r + 2) - 3.6;
@@ -286,7 +289,7 @@ export function buildPastureLife(group, height, opt) {
     return null;
   };
   const addAnimal = (p, kind, o = {}) => {
-    const a = { p, kind, rad: kind === 'cow' ? 2.1 : 2.4 * (p.s || 1), state: 'graze', timer: 2 + rnd() * 10, tx: null, tz: null, speed: 0, gait: '', mom: o.mom || null, pitch: 0, roll: 0, sAcc: rnd(), id: animals.length, m: { v: 0 }, gait: '' };
+    const a = { p, kind, rad: kind === 'cow' ? 2.1 * CF : 2.4 * (p.s || 1) * HF, state: 'graze', timer: 2 + rnd() * 10, tx: null, tz: null, speed: 0, gait: '', mom: o.mom || null, pitch: 0, roll: 0, sAcc: rnd(), id: animals.length, m: { v: 0 }, gait: '' };
     animals.push(a); return a;
   };
   const playA = (a, clip, sp = 1) => { if (a.clip === clip && Math.abs((a.cs || 1) - sp) < 0.01) return; a.clip = clip; a.cs = sp; a.p.play(clip, { speed: sp, offset: rnd() * 2 }); };
@@ -308,7 +311,7 @@ export function buildPastureLife(group, height, opt) {
     const p = horse(coat, s); const a = addAnimal(p, 'horse'); const xz = spot(a, 'horse') || [PA.x, PA.z];
     p.x = xz[0]; p.z = xz[1]; p.yaw = rnd() * 6.28; setGround(a); a.state = rnd() < 0.7 ? 'graze' : 'stand'; playA(a, a.state === 'graze' ? 'Eating' : 'Idle', 0.9 + rnd() * 0.2);
     mares.push(a);
-    creatures && creatures.push({ id: 'horse', r: 2.8, vis: () => group.visible && p.y > -500, center: () => _v.set(p.x, p.y + 2.4, p.z) });
+    creatures && creatures.push({ id: 'horse', r: 2.8 * HF, vis: () => group.visible && p.y > -500, center: () => _v.set(p.x, p.y + 2.4 * HF, p.z) });
   }
   for (const [mi, coat] of [[0, 'bay'], [4, 'grey']]) {
     const m = mares[mi], p = horse(coat, 0.6); const a = addAnimal(p, 'horse', { mom: m });
@@ -429,7 +432,8 @@ export function buildPastureLife(group, height, opt) {
 
   // ================================================================ per frame
   let far = true, yardOn = false, acc = 0;
-  const camP = new THREE.Vector3();
+  const camP = new THREE.Vector3(), yardG = {}, kOptsP = { lodDist: 1e9, maxDist: 460, lod2Dist: 150, lodF6: true }, kOptsA = { lodDist: 1e9, maxDist: 460, lod2Dist: 1e9, lodF6: true };       // AN1_R3
+  const yd = (e) => (e ? Math.hypot(camP.x - e.x, camP.y - e.y, camP.z - e.z) : 1e9);
   const setYard = (on) => { if (on === yardOn) return; yardOn = on; for (const p of yard) p.y = on ? p.homeY ?? p.y : -999; if (!on) bundle.visible = false; if (lunge) lunge.rope.visible = on; };
   function update(t, dt, P, camera) {
     if (!camera) return;
@@ -442,10 +446,17 @@ export function buildPastureLife(group, height, opt) {
     for (const k of kinds) k.group.visible = true;
     // the herd (a slower brain when the camera is not close)
     acc += dt; const step = dP > 260 ? 0.2 : 0;
-    if (acc >= step) { const d2 = Math.min(0.25, acc); acc = 0; for (const a of animals) think(a, d2); }
+    if (acc >= step) {
+      const d2 = Math.min(0.25, acc); acc = 0;
+      // AN1_R3 F6: an animal more than 60 m from the camera thinks / steps at 1/2 (beyond 140 m: 1/4) with the time it owes; nearer = as before
+      for (const a of animals) { const p = a.p, dA = lodGate(a, lodLevel(p.x - camP.x, p.y - camP.y, p.z - camP.z), d2); if (dA) think(a, dA); }
+    }
     // the yard
     setYard(yOn);
-    if (yOn) {
+    // AN1_R3 F6: the yard (the lunging horse, the led horse + boy, the hay carrier) steps as one at 1/2 / 1/4 of the frame rate when even the nearest of them is beyond 60 / 140 m
+    const dtY = yOn ? lodGate(yardG, lodLevelD(Math.min(yd(lunge && lunge.p), yd(lunge && lunge.tr), yd(led && led.p), yd(led && led.b), yd(carrier && carrier.q))), dt) : 0;
+    if (yOn && dtY) {
+      const dt = dtY;
       if (lunge) {
         const L2 = lunge; L2.mt += dt; if (L2.mt > L2.M[L2.mi][2]) { L2.mt = 0; L2.mi = (L2.mi + 1) % L2.M.length; }
         const M = L2.M[L2.mi]; L2.vel = approach(L2.vel, M[1], 1.0, 1.4, dt); L2.ang += M[3] * L2.vel / 6.3 * dt;
@@ -455,8 +466,8 @@ export function buildPastureLife(group, height, opt) {
           if (gt !== L2.gait) { L2.gait = gt; L2.p.play(gt, { speed: rate }); } else if (gt !== 'Idle') L2.p.setSpeed(rate); }
         if (L2.tr) { const want = Math.atan2(x - L2.pn.x, z - L2.pn.z) - 0.25 * M[3]; L2.tr.yaw += wrap(want - L2.tr.yaw) * Math.min(1, dt * 3); }
         // the line: the trainer's hand -> a little sag -> the horse's head
-        const hx = L2.pn.x + Math.sin(L2.tr ? L2.tr.yaw : 0) * 0.7, hz = L2.pn.z + Math.cos(L2.tr ? L2.tr.yaw : 0) * 0.7, hy = L2.pn.floor + 2.2;
-        const [nx, nz] = fwd(L2.p.yaw, noseI - 0.8), ny = L2.p.y - L2.p.lift + 3.4;
+        const hx = L2.pn.x + Math.sin(L2.tr ? L2.tr.yaw : 0) * 0.7, hz = L2.pn.z + Math.cos(L2.tr ? L2.tr.yaw : 0) * 0.7, hy = L2.pn.floor + 2.2 * PK;                       // (the trainer's hand: AN1_R3 scaled with the man)
+        const [nx, nz] = fwd(L2.p.yaw, noseI - 0.8 * HF), ny = L2.p.y - L2.p.lift + 3.4 * HF;
         L2.line.set(hx, hy, hz, x + nx, ny, z + nz, L2.pn.floor + 0.35);
       }
       if (led) {                                                          // AN1_R2: wait · turn on the spot (the boy walks round the horse's head) · go with a speed ramp and a braking curve into each end
@@ -474,7 +485,7 @@ export function buildPastureLife(group, height, opt) {
         }
         if (D.mode === 'go') { if (D.v > 0.12 * gaitV.Walk) gaitD('Walk', clampN(D.v / gaitV.Walk, 0.1, 1.8)); else gaitD('Idle', 0.85); }
         at(D.s); p.x = D.pt.x; p.z = D.pt.z; p.y = height(p.x, p.z) + p.lift;
-        if (b) { const sx = Math.cos(p.yaw) * 1.7, sz = -Math.sin(p.yaw) * 1.7, [fx, fz] = fwd(p.yaw, 1.6); b.x = p.x - sx + fx; b.z = p.z - sz + fz; b.y = height(b.x, b.z); { const ddx = b.x - D.bst.px, ddz = b.z - D.bst.pz; turnTo(b, D.bst.has && D.bst.v > 0.25 && ddx * ddx + ddz * ddz > 1e-6 ? Math.atan2(ddx, ddz) : p.yaw, 4.0, dt); } follow(b, D.bst, dt); }       // he faces where he goes (round the horse's head too), not where the horse looks
+        if (b) { const sx = Math.cos(p.yaw) * 0.95 * SZ_GAIN, sz = -Math.sin(p.yaw) * 0.95 * SZ_GAIN, [fx, fz] = fwd(p.yaw, 0.9 * SZ_GAIN); b.x = p.x - sx + fx; b.z = p.z - sz + fz; b.y = height(b.x, b.z); { const ddx = b.x - D.bst.px, ddz = b.z - D.bst.pz; turnTo(b, D.bst.has && D.bst.v > 0.25 && ddx * ddx + ddz * ddz > 1e-6 ? Math.atan2(ddx, ddz) : p.yaw, 4.0, dt); } follow(b, D.bst, dt); }       // he faces where he goes (round the horse's head too), not where the horse looks      // AN1_R3: the boy walks at the head of a 2.9 m horse (was 1.7 m aside, 1.6 ahead of a 7.5 m one)
       }
       if (carrier) {                                                      // AN1_R2: wait (Interact) · turn on the spot · go with a speed ramp / braking curve
         const C2 = carrier, q = C2.q; if (C2.mode === undefined) { C2.mode = 'go'; C2.v = 0; C2.st = { v: 0, has: false, mode: '', px: 0, pz: 0 }; }
@@ -488,10 +499,10 @@ export function buildPastureLife(group, height, opt) {
         }
         q.x = C2.a.x + (C2.b.x - C2.a.x) * C2.f; q.z = C2.a.z + (C2.b.z - C2.a.z) * C2.f; q.y = height(q.x, q.z);
         bundle.visible = C2.load && C2.mode !== 'wait';
-        if (bundle.visible) { const sx = Math.cos(q.yaw) * 0.45, sz = -Math.sin(q.yaw) * 0.45; bundle.position.set(q.x + sx, q.y + 3.05, q.z + sz); bundle.rotation.set(0, q.yaw + Math.PI / 2, 0.1); }
+        if (bundle.visible) { const sx = Math.cos(q.yaw) * 0.45 * PK, sz = -Math.sin(q.yaw) * 0.45 * PK; bundle.position.set(q.x + sx, q.y + 3.05 * PK, q.z + sz); bundle.rotation.set(0, q.yaw + Math.PI / 2, 0.1); }
       }
     }
-    for (const k of kinds) k.update(t, camera, { lodDist: 1e9, maxDist: 460, lod2Dist: k.people ? 150 : 1e9 });      // (far people: the crowd's 100-triangle figures)
+    for (const k of kinds) k.update(t, camera, k.people ? kOptsP : kOptsA);      // (far people: the crowd's 100-triangle figures)
     if (blobs) {
       let n = 0;
       for (const [p, l, w] of blobList) {
@@ -513,11 +524,11 @@ export function buildPastureLife(group, height, opt) {
       if (ck && kc) {
         group.add(ck.group, kc.group); kinds.push(ck, kc); cowV = 1.6;
         [[0, 1.0], [1, 1.04], [2, 0.97], [4, 0.95], [3, 1.02], [1, 0.6]].forEach(([coat, s], i) => {
-          const calf = i === 5, p = (calf ? kc : ck).add({ x: 0, y: -999, z: 0, yaw: 0, scale: calf ? 1 : s }); p.cr = 3.5; p.s = s; p.lift = 0; blobList.push([p, 5.0 * s, 2.4 * s]);
+          const calf = i === 5, p = (calf ? kc : ck).add({ x: 0, y: -999, z: 0, yaw: 0, scale: calf ? 1 : s }); p.cr = 3.5 * CF; p.s = s; p.lift = 0; blobList.push([p, 5.0 * s * CF, 2.4 * s * CF]);
           const a = addAnimal(p, 'cow'); a.rad = 2.0 * s;
           const xz = calf && animals.length > 1 ? [animals[animals.length - 2].p.x + 3, animals[animals.length - 2].p.z + 2] : spot(a, 'cow') || [PA.x - 6, PA.z + 6];
           p.x = xz[0]; p.z = xz[1]; p.yaw = rnd() * 6.28; setGround(a); a.state = rnd() < 0.75 ? 'graze' : 'stand'; playA(a, a.state === 'graze' ? 'Eating' : 'Idle');
-          creatures && creatures.push({ id: 'cow', r: 2.4, vis: () => group.visible && p.y > -500, center: () => _v.set(p.x, p.y + 1.6, p.z) });
+          creatures && creatures.push({ id: 'cow', r: 2.4 * CF, vis: () => group.visible && p.y > -500, center: () => _v.set(p.x, p.y + 1.6 * CF, p.z) });
         });
         return;
       }
@@ -530,11 +541,11 @@ export function buildPastureLife(group, height, opt) {
     cowPatch(ck); crowdShadows(ck, shadows); group.add(ck.group); kinds.push(ck);
     const K = COW_LEN / Math.max(CM.size.x, CM.size.z), Y = -CM.minY * K; cowV = CM.v.Walk ? THREE.MathUtils.clamp(CM.v.Walk * K, 0.8, 4) : 1.6;
     [[0, 1.0], [1, 1.04], [2, 0.97], [4, 0.95], [3, 1.02], [1, 0.6]].forEach(([coat, s], i) => {
-      const p = ck.add({ x: 0, y: -999, z: 0, yaw: 0, scale: scaleK(K * s, coat) }); p.cr = 3.5; p.s = s; p.lift = Y * s; blobList.push([p, 5.0 * s, 2.4 * s]);
+      const p = ck.add({ x: 0, y: -999, z: 0, yaw: 0, scale: scaleK(K * s, coat) }); p.cr = 3.5 * CF; p.s = s; p.lift = Y * s; blobList.push([p, 5.0 * s * CF, 2.4 * s * CF]);
       const a = addAnimal(p, 'cow'); a.rad = 2.0 * s;
       const xz = i === 5 && animals.length > 1 ? [animals[animals.length - 2].p.x + 3, animals[animals.length - 2].p.z + 2] : spot(a, 'cow') || [PA.x - 6, PA.z + 6];
       p.x = xz[0]; p.z = xz[1]; p.yaw = rnd() * 6.28; setGround(a); a.state = rnd() < 0.75 ? 'graze' : 'stand'; playA(a, a.state === 'graze' ? 'Eating' : 'Idle');
-      creatures && creatures.push({ id: 'cow', r: 2.4, vis: () => group.visible && p.y > -500, center: () => _v.set(p.x, p.y + 1.6, p.z) });
+      creatures && creatures.push({ id: 'cow', r: 2.4 * CF, vis: () => group.visible && p.y > -500, center: () => _v.set(p.x, p.y + 1.6 * CF, p.z) });
     });
   }
   if (typeof window !== 'undefined') window.__pas = { animals, yard, kinds, HM, HK, noseI, noseE, gaitV, get cowV() { return cowV; }, hide(k) { for (const q of kinds) q.group.visible = !k; if (blobs) blobs.visible = !k; bundle.visible = false; if (lunge) lunge.rope.visible = !k; }, get far() { return far; } };

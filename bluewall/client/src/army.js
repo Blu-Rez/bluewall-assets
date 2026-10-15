@@ -18,6 +18,7 @@ import { dressPegasus } from './gear_pegasus.js';
 import { setPlumeTier } from './gear_plume.js';
 import { Flags } from './fx.js';
 import { road } from './roads.js';
+const KO = { lodDist: 90, maxDist: 700, lod2Dist: 1e9, lodF6: true };      // AN1_R3: F6 (as patrol.js)
 
 export const ARMY_MODELS = ['pegasus', 'anims_army', 'helmet2', 'helmet3', 'shield_heater', 'spear', 'claymore', 'shieldmaiden', 'shield_round2'];
 
@@ -230,7 +231,7 @@ export function buildArmy(api) {
       const climbing = Math.cos(ph) > -0.1, want = climbing ? 'Fly' : 'Glide';
       if (want !== f.mode) { f.mode = want; f.p.play(want, { speed: 1 }); }
     }
-    for (const k of Object.values(kinds)) k.update(t, camera);
+    for (const k of Object.values(kinds)) k.update(t, camera, KO);       // AN1_R3
     if (peg) peg.update(t, camera);
   }
   // the camp follows the level tier of the barracks (unitlook.js): cloth colour + gear tint, no rebuild

@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import * as L from './layout.js';
 import { createKind } from './crowd.js';
 import { DIMS } from './a1_rings.js';
+const KO = { lodDist: 90, maxDist: 700, lod2Dist: 1e9, lodF6: true };      // AN1_R3: F6 - the crowd kinds rewrite their buffers every 2nd / 4th frame while the camera stands and nothing is nearer than 60 m
 
 const SC = 1.75;                                  // people scale in this game (readable from the strategy camera)
 const TURN = 3.4;                                 // rad/s turning on the spot
@@ -99,7 +100,7 @@ export function buildPatrols(scene, A, opts = {}) {
       place(a);
     }
     for (const q of sentries) if (q.p) q.p.yaw = q.yaw0 + 0.55 * Math.sin(t * q.f + q.ph) * Math.sin(t * q.f * 0.37 + q.ph * 2);   // looking left and right, slowly
-    for (const k of kinds) k.update(t, camera);
+    for (const k of kinds) k.update(t, camera, KO);       // AN1_R3
   }
   // A1: only the archers / sentries of the rings that stand at the castle's level are drawn (a1_rings.js calls this whenever the level changes)
   const idle = (q, f) => { q.p.play('Idle_Loop', { fade: false, speed: 0.9 + f * 0.2, offset: f * 2 }); };
