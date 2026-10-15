@@ -591,7 +591,9 @@ export async function buildWorld(renderer, scene, Q, progress) {
     targetsUp(); restoreZones();
     if (on) {
       bat = { stage: stage.children.map((c) => [c, c.visible]), people: units.units.map((u) => u.root.visible), dragon: dragon.root.visible, giants: units.giants.map((g) => g.visible), badges: badges.map((b) => b.sprite.visible), patrol: patrols ? patrols.kinds.map((k) => k.group.visible) : [] };
-      for (const c of stage.children) if (c.name !== 'late:defenses' && c.name !== 'late:worksites' && c.name !== 'late:wslife' && c.name !== 'late:deffield') c.visible = false;     // (p38: the enemy's worksites and the people at work stay)
+      // BT1: the attack map IS the home map: what stays is every static part of the base — the planned town (B2 homes + B3 civic, `late:townplan`: its meshes carry the target ids, so they crumble), the fields' crops and bales — plus (p38) the worksites and the people at work
+      const BT_KEEP = ['late:defenses', 'late:worksites', 'late:wslife', 'late:deffield', 'late:townplan', 'late:cabbage', 'late:corn', 'late:pumpkin', 'late:haybale'];     // BT1: (life — animals, birds, riders, creatures, the camp army — stays hidden)
+      for (const c of stage.children) if (!BT_KEEP.includes(c.name)) c.visible = false;     // BT1:
       for (const u of units.units) u.root.visible = false;               // gate guards, villagers, the stable's trainer and groom: not in the enemy base
       dragon.root.visible = false; for (const g of units.giants) g.visible = false; for (const b of badges) b.sprite.visible = false; if (patrols) patrols.kinds.forEach((k) => { k.group.visible = false; });
       if (extras.ballistas) extras.ballistas.setManual(true);
@@ -609,6 +611,8 @@ export async function buildWorld(renderer, scene, Q, progress) {
   const targetDown = (id) => {
     flames.hide(id); flags.hide(id); if (extras.ballistas) extras.ballistas.hide(id); if (tesla) tesla.hide(id);
     const a = liveBy.get(id); if (a) for (const o of a) { downSaved.push([o, o.visible]); o.visible = false; o.userData.down = true; }
+    // BT1: the procedural parts of a town lot (refinery column + tanks, mint yard ... = `ws:<lot>:soup|glass|oil`) carry no target id in their vertices, so the shader cannot crumble them: they go with the lot's target
+    if (ctx.townTids) { const lots = []; for (const [k, t] of ctx.townTids) if (t === id) lots.push(k); if (lots.length) stage.traverse((o) => { const m = o.isMesh && /^ws:(.+):(soup|glass|oil)$/.exec(o.name); if (m && lots.includes(m[1]) && o.visible) { downSaved.push([o, true]); o.visible = false; o.userData.down = true; } }); }
   };
   // rects: oriented boxes { x, z, tx, tz, nx, nz, l0, l1, b0, b1 } (lateral along (tx,tz), back along (nx,nz), both relative to x,z): instances inside are hidden until restoreZones
   const clearZones = (rects) => {
