@@ -7,7 +7,8 @@ import * as THREE from 'three';
 import * as L from './layout.js';
 import { roadDist } from './roads.js';
 import { marketSpot } from './terrain.js';
-import { mat4, gableRoof } from './util.js';
+import { mat4, gableRoof, Batcher } from './util.js';
+import { patchDestruct } from './destruct.js';                          // TR2-S5
 import { uLv } from './skin.js';
 import { gemGeometry, gemMaterial } from './gemgeo.js';
 // (tr2lib / tr2atlas / village are imported lazily in warmYards: they need the browser (assets.js), and the plan half of this file must stay importable by the node tests)
@@ -423,7 +424,7 @@ export { buildYard as labBuildYard };
 
 // ---------------------------------------------------------------- game side
 // warmYards(look): fetch + parse the Tripo pieces of the quarter and pack them into ONE atlas (one material = one draw call).  Resolves false when something is missing (the old stores stay).
-let WARM = null, TR = null;
+let WARM = null, TR = null, LAMP = null;
 /* global __BUILD__ */
 // the swap.json models table (tr2lib keeps it private, and a model with ry 0 has an empty record: only the table itself tells "no entry" from "entry"; the same URL as tr2.init's, so the browser has it already)
 async function swapModels(tr2) { try { const r = await fetch(tr2.base + 'swap.json' + (typeof __BUILD__ !== 'undefined' ? '?v=' + __BUILD__ : '')); return r.ok ? (await r.json()).models || {} : {}; } catch (e) { return {}; } }
@@ -432,8 +433,8 @@ export function warmYards(look = st1Param()) {                 // look: 0..3 as 
   if (!planQuarter()) return Promise.resolve(false);
   const key = look == null ? 'auto' : look; if (WARM && WARM.key === key) return WARM.p;
   const p = (async () => {
-    const [{ tr2 }, { buildAtlas, fileOfSpec, specOf }, { bakeTr2 }] = await Promise.all([import('./tr2lib.js'), import('./tr2atlas.js'), import('./village.js')]);
-    TR = { bakeTr2 };
+    const [{ tr2 }, { buildAtlas, fileOfSpec, specOf }, { bakeTr2 }, s4c] = await Promise.all([import('./tr2lib.js'), import('./tr2atlas.js'), import('./village.js'), import('./tr2_s4c.js').catch(() => ({}))]);      // TR2-S5: + tr2_s4c (the lamp posts of a moved yard)
+    TR = { bakeTr2 }; LAMP = s4c.S4C || null;
     await tr2.init();
     setStorageHave({});
     if (look == null || look === 3) {                                // the storage family: try only the files the library has an entry for (swap.json), keep the ones that load
@@ -458,13 +459,123 @@ export function warmYards(look = st1Param()) {                 // look: 0..3 as 
 }
 export const yardsReady = () => !!(WARM && WARM.r);
 
-export function buildStoreYards(ctx, { M, height, scene }) {
+// TR2-S5: the six storehouse yards can be moved by the player (layout_live.js -> rebuildSteps()).  NOTHING moved = exactly ST1: every yard is drawn into the static batch ctx.B and into the quarter's ONE Tripo bake (+0 draw calls).
+// We remember where each yard's vertices live (per material a range of the merged static mesh, and a range of the Tripo atlas mesh) and put a moved yard away the way a1_rings.js puts a wall ring away (its positions
+// collapsed to 0, only that range uploaded; the saved numbers come back when the yard returns to its default place).  A moved yard is drawn again at its new place in a small group of its own (its own Batcher + its
+// own Tripo bake: draw calls only while something is moved).  Its door lamps are NOT drawn again: the flame sprite and the glow pool they took stay in the world's lists and are moved in place.
+export function buildStoreYards(ctx, { M, height, scene, onMeshes, plan }) {
   const Q = planQuarter(), W = WARM && WARM.r; if (!Q || !W) return null;
-  const look = W.look, tri = QTRI, list = [], env = { B: ctx.B, M, height, tri, ctx, bid: 0 };
+  const look = W.look, tri = QTRI, list = [], B = ctx.B, fx = ctx.fx || {}, lampLog = [];
+  const ctxL = Object.create(ctx);                                                                 // the door lamps: remember the flame / pool slots they take (and where they stood)
+  ctxL.torch = (x, y, z, o = {}) => {
+    const fl = fx.flames, po = fx.pools, fi = fl ? fl.s.length : -1, pi = o.pool && po ? po.items.length : -1;
+    ctx.torch(x, y, z, o);
+    lampLog.push({ fi, pi, home: { f: fi >= 0 && fl.s.length > fi ? [fl.p[fi * 3], fl.p[fi * 3 + 1], fl.p[fi * 3 + 2]] : null, p: pi >= 0 && po.items.length > pi ? { x: po.items[pi].x, y: po.items[pi].y, z: po.items[pi].z } : null } });
+  };
+  const env = { B, M, height, tri, ctx: ctxL, bid: 0 };
   initYardLevels();
-  for (const S of Q.stores) { const Y = buildYard(env, look, S); list.push({ id: S.id, x: S.x, y: Y.y0, z: S.z, ry: S.ry }); }
+  const vcount = (b) => { const m = new Map(); for (const [mat, g] of b.groups) { let n = 0; for (const geo of g.geos) n += geo.attributes.position.count; m.set(mat, n); } return m; };
+  const rec = new Map();
+  for (const S of Q.stores) {
+    const c0 = vcount(B), t0 = tri.length, l0 = lampLog.length, Y = buildYard(env, look, S), c1 = vcount(B), ranges = [];
+    for (const [mat, n] of c1) { const a = c0.get(mat) || 0; if (n > a) ranges.push({ mat, a, b: n }); }
+    list.push({ id: S.id, x: S.x, y: Y.y0, z: S.z, ry: S.ry });
+    rec.set(S.id, { S, ranges, tri: tri.slice(t0), lamps: lampLog.slice(l0), y0: Y.y0 });
+  }
   ctx.B.tag(0, 1); ctx.B.bid(0);
-  bakeYardTr2(scene, W.atlas, tri);
-  return { list, setFill(w) { for (const id of STORE_IDS) { const q = w && w[id]; if (q && q.cap > 0) setHeapFill(id, q.n / q.cap); } } };
+  const quarter = bakeYardTr2(scene, W.atlas, tri);
+  // where each store's Tripo pieces sit in the atlas mesh: the same accounting as bakeTr2 (one merged mesh per material, pieces in list order)
+  const runs = new Map(); for (const id of rec.keys()) runs.set(id, []);
+  { const off = new Map(), ent = new Map();
+    for (const e of tri) { let parts; try { parts = W.atlas.get(e.n); } catch (er) { continue; } const rr = []; for (const { geometry, material } of parts) { const a = off.get(material) || 0, n = geometry.attributes.position.count; off.set(material, a + n); rr.push({ mat: material, a, b: a + n }); } ent.set(e, rr); }
+    for (const [id, r] of rec) for (const e of r.tri) for (const g of ent.get(e) || []) {
+      const m = quarter.meshes.find((q) => q.material === g.mat), L0 = runs.get(id), last = L0[L0.length - 1];
+      if (!m) continue; if (last && last.attr === m.geometry.attributes.position && last.b === g.a) last.b = g.b; else L0.push({ attr: m.geometry.attributes.position, a: g.a, b: g.b, saved: null });
+    }
+  }
+  let attached = false, broken = false;
+  const setRun = (r, show) => {
+    const arr = r.attr.array, o = r.a * 3, len = (r.b - r.a) * 3;
+    if (!show) { if (!r.saved) r.saved = arr.slice(o, o + len); arr.fill(0, o, o + len); } else if (r.saved) arr.set(r.saved, o); else return;
+    r.attr.addUpdateRange(o, len); r.attr.needsUpdate = true;
+  };
+  const shown = new Map([...rec.keys()].map((id) => [id, true]));
+  const setShown = (id, show) => { if (shown.get(id) === show) return; shown.set(id, show); for (const r of runs.get(id)) setRun(r, show); };
+  const moveFlame = (i, a) => {
+    const fl = fx.flames; if (!fl || i < 0 || !a || i >= fl.s.length) return;
+    fl.p[i * 3] = a[0]; fl.p[i * 3 + 1] = a[1]; fl.p[i * 3 + 2] = a[2];
+    if (fl.points) { const at = fl.points.geometry.attributes.position; at.setXYZ(i, a[0], a[1], a[2]); at.needsUpdate = true; }
+  };
+  const movePool = (i, q) => {
+    const po = fx.pools; if (!po || i < 0 || !q || i >= po.items.length) return;
+    const it = po.items[i]; it.x = q.x; it.y = q.y; it.z = q.z;
+    if (po.mesh) { const at = po.mesh.geometry.attributes.position; [[0, 0], [1, 0], [1, 1], [0, 1]].forEach(([u, w], k) => at.setXYZ(i * 4 + k, it.x + (u - 0.5) * 2 * it.r, it.y, it.z + (w - 0.5) * 2 * it.r)); at.needsUpdate = true; }
+  };
+  const isDef = (S) => { const d = rec.get(S.id).S; return Math.hypot(S.x - d.x, S.z - d.z) < 0.01 && Math.abs(S.ry - d.ry) < 0.001; };
+  const key = (S) => S.x + ',' + S.z + ',' + S.ry;
+  // a yard at a moved place, drawn into a Batcher of its own (cached by pose): its lamp posts are drawn here, its flames / pools are only COMPUTED (apply1 moves them)
+  const cache = new Map();
+  function drawMoved(S) {
+    const Bm = new Batcher(), tm = [], lamps = [];
+    const ctxM = { torch(x, y, z, o = {}) {
+      const T4 = LAMP && LAMP.on && (o.post || o.sconce) ? LAMP.lamp(Bm, height(x, z), x, y, z, o, []) : null;
+      if (o.post && !T4) { const gy = height(x, z); Bm.add(new THREE.CylinderGeometry(0.1, 0.14, y - gy, 6), M.wood, mat4(x, gy + (y - gy) / 2, z), { tint: 0x5a3a22 }); Bm.add(new THREE.CylinderGeometry(0.28, 0.14, 0.35, 8), M.metal, mat4(x, y, z)); }
+      lamps.push({ f: T4 ? [T4.x, T4.y, T4.z] : [x, y + 0.35, z], p: o.pool ? { x, y: height(x, z) + 0.06, z } : null });
+    }, pool() {} };
+    const Y = buildYard({ B: Bm, M, height, tri: tm, ctx: ctxM, bid: 0 }, look, S);
+    return { key: key(S), groups: Bm.groups, tri: tm, lamps, y0: Y.y0 };
+  }
+  let group = null, gKey = '', gMeshes = [];
+  const dropGroup = () => { if (!group) return; group.traverse((o) => { if (o.geometry) o.geometry.dispose(); }); group.parent && group.parent.remove(group); group = null; gMeshes = []; };
+  function apply1(pl) {                                                   // put the default pictures away / back, carry the lamps
+    for (const S of pl) {
+      const r = rec.get(S.id); if (!r) continue; const def = isDef(S), c = def ? null : cache.get(S.id); if (!def && !c) continue;
+      setShown(S.id, def);
+      r.lamps.forEach((l, i) => { const w = def ? l.home : c.lamps[i]; if (w) { moveFlame(l.fi, w.f); movePool(l.pi, w.p); } });
+      const e = list.find((q) => q.id === S.id); if (e) { e.x = S.x; e.z = S.z; e.ry = S.ry; e.y = def ? r.y0 : c.y0; }
+    }
+  }
+  const movedNow = (pl) => pl.filter((S) => rec.has(S.id) && !isDef(S) && cache.has(S.id));
+  function apply2(pl) {                                                   // the moved yards' own Batcher group
+    const mv = movedNow(pl), k = mv.map((S) => cache.get(S.id).key + '@' + S.id).join('|');
+    if (k === gKey) return; gKey = k; dropGroup(); if (!mv.length) return;
+    group = new THREE.Group(); group.name = 'stores-moved'; scene.add(group);
+    const Bg = new Batcher();
+    for (const S of mv) for (const [mat, g] of cache.get(S.id).groups) { let t = Bg.groups.get(mat); if (!t) Bg.groups.set(mat, t = { geos: [], opts: {} }); t.geos.push(...g.geos); }
+    gMeshes = Bg.build(group, { name: 'stores-moved' }); for (const m of gMeshes) patchDestruct(m.material);
+    if (onMeshes) onMeshes(gMeshes);
+  }
+  function apply3(pl) {                                                   // ... and their Tripo pieces (one more mesh)
+    const mv = movedNow(pl); if (!group || !mv.length) return;
+    const ent = []; for (const S of mv) ent.push(...cache.get(S.id).tri);
+    if (ent.length) { const r = TR.bakeTr2(group, W.atlas, ent, { shadows: true, tag: 'st1mv' }); gMeshes = gMeshes.concat(r.meshes); }
+  }
+  const api = {
+    list, meshes: () => gMeshes, onMeshes: null, get moved() { return gKey; },
+    get movable() { return attached && !broken; },
+    // world.js hands over the static meshes once the batch is built: from now on a yard can be put away
+    attach(ms) {
+      for (const r of rec.values()) for (const g of r.ranges) {
+        const m = ms.find((q) => q.material === g.mat), at = m && m.geometry.attributes.position;
+        if (!at || at.isInterleavedBufferAttribute) { broken = true; if (typeof console !== 'undefined') console.warn('ST1 / TR2-S5: no static mesh for a yard range: the storehouses cannot be moved'); continue; }
+        runs.get(r.S.id).push({ attr: at, a: g.a, b: g.b, saved: null });
+      }
+      attached = true;
+    },
+    setFill(w) { for (const id of STORE_IDS) { const q = w && w[id]; if (q && q.cap > 0) setHeapFill(id, q.n / q.cap); } },
+    // rebuildSteps() = the work of showing planStores() (the player's places), in slices of a few ms: one step per yard that moved to a new place (drawn into its own cache), then put away / back + lamps, then
+    // the group's meshes, then its Tripo bake.  The live layer runs one step per frame; rebuild() runs them all (start-up, tests).  Every step compares and applies: running them again changes nothing.
+    rebuildSteps() {
+      if (!attached || broken) return [];
+      const pl = (plan ? plan() : Q.stores) || [], out = [];
+      for (const S of pl) { if (!rec.has(S.id) || isDef(S)) continue; const c = cache.get(S.id); if (!c || c.key !== key(S)) out.push(() => { cache.set(S.id, drawMoved(S)); }); }
+      out.push(() => apply1(pl), () => apply2(pl), () => apply3(pl));
+      out.push(() => { for (const id of [...cache.keys()]) { const S = pl.find((q) => q.id === id); if (!S || isDef(S)) cache.delete(id); } });
+      return out;
+    },
+    rebuild() { const st = api.rebuildSteps(); for (const f of st) f(); return st.length; },
+  };
+  return api;
 }
+// TR2-S5: end of the movable-yard part of buildStoreYards (everything from its header comment to here is TR2-S5's; the rest of the file is ST1's, untouched)
 export function bakeYardTr2(scene, atlas, tri) { return TR.bakeTr2(scene, atlas, tri, { shadows: true, tag: 'st1' }); }

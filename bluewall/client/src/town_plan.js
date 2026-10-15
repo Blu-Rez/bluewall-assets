@@ -14,9 +14,10 @@ import { planTownSteps } from './b1_townplan.js';
 import { CIVIC_KINDS, civicLevel, civicPieces, civicSolids } from './b3_civic.js';
 import { HOME_KINDS } from './b2_homes.js';
 import { setTownSiteProvider, WS_KINDS } from './worksites.js';
+import * as LS from './layout_store.js';                                // TR2-S5: the player's moved lots
 
-let LAY = null, RES = null, STEPS = null, STREET = null;
-export const resetTownPlan = () => { LAY = null; RES = null; STEPS = null; STREET = null; PROD = null; setTownSiteProvider(prodSites); };
+let LAY = null, RES = null, STEPS = null, STREET = null, APP = null, APP_REV = -1;
+export const resetTownPlan = () => { LAY = null; RES = null; STEPS = null; STREET = null; PROD = null; APP = null; APP_REV = -1; setTownSiteProvider(prodSites); };
 export const townLayout = () => LAY || (LAY = layoutFromGame());
 export function startTownPlan() {
   if (RES) return { step: () => true, result: () => RES, get done() { return true; } };
@@ -24,7 +25,19 @@ export function startTownPlan() {
   const st = STEPS;
   return { step() { const d = st.step(); if (d && !RES) RES = st.result(); return d; }, result: () => RES, get done() { return !!RES; } };
 }
-export function townPlan() { if (!RES) { const st = startTownPlan(); while (!st.step()); } return RES; }
+export function townPlan0() { if (!RES) { const st = startTownPlan(); while (!st.step()); } return RES; }          // TR2-S5: the DEFAULT plan (what B1 computes from the map; the player's moves are not in it)
+// TR2-S5: the plan the game shows = the default plan with the player's moved lots (layout_store.js).  Same ids, same kinds, same footprints: only x, z, ry differ.  Cached per layout revision.
+export const MOVABLE_ROLE = { H: 1, C: 1, P: 1 };
+export const isMovableLot = (p) => !!MOVABLE_ROLE[p.role] && !p.existing && p.kind !== 'market';
+export function townPlan() {
+  const B = townPlan0();
+  if (APP && APP_REV === LS.rev()) return APP;
+  APP_REV = LS.rev(); PROD = null; setTownSiteProvider(prodSites);                       // (the production lots are worksite sites: wsbuild / wslife read them again)
+  if (!LS.count()) return (APP = B);
+  APP = { ...B, list: B.list.map((p) => { const o = isMovableLot(p) ? LS.ovr(p.id) : null; return o ? { ...p, x: o[0], z: o[1], ry: o[2], moved: true } : p; }) };
+  return APP;
+}
+export const planId = () => 'p' + hashId(townPlan0().list.filter(isMovableLot).map((p) => p.id).join(',')).toString(36);
 
 export const castleLevel = (lv20) => { const v = +lv20; if (!(v > 0)) return LEVEL_CAP; return Math.max(1, Math.min(LEVEL_CAP, Math.round(v <= 1 ? v : 1 + (v - 1) * (LEVEL_CAP - 1) / 19))); };
 export const hashId = (s) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
@@ -53,6 +66,7 @@ export const BUILT_ROLES = new Set(['H', 'C', 'P']);
 const NO_MODEL = new Set(['jeweler']);
 const isBuilt = (p) => BUILT_ROLES.has(p.role) && !NO_MODEL.has(p.kind);
 export const planLots = () => townPlan().list.filter(isBuilt).map((p) => ({ id: p.id, kind: p.kind, x: p.x, z: p.z, ry: p.ry, w: p.w, d: p.d, r: p.r }));
+export const planLots0 = () => townPlan0().list.filter(isBuilt).map((p) => ({ id: p.id, kind: p.kind, x: p.x, z: p.z, ry: p.ry, w: p.w, d: p.d, r: p.r }));      // TR2-S5: the DEFAULT lots (town.js keeps the generic fill houses off THESE: they do not depend on the player's layout)
 
 // ---- P1: B1's role-P lots as worksite sites ------------------------------------------------------------------------------------------------------------------------------------------------------
 // A site's local frame has its building at the BACK (z < 0) and the yard in front (z > 0); a lot's x, z is the middle of its rectangle.  TOWN_ANCHOR[kind] = the local point of the kit layout that
@@ -117,13 +131,13 @@ const CELL = 40;                                                        // (a bi
 export function townTargetSpecs(level) {
   const out = [], cells = new Map(), floorsOf = (l) => (HOME_KINDS[l.kind] ? HOME_KINDS[l.kind].floors : 3);
   for (const l of [...homeLots(level), ...civicLots(level), ...prodLots(level)]) {
-    if (l.kind === 'chapel') { out.push({ ids: [l.id], t: { type: 'church', x: l.x, z: l.z, w: l.w, d: l.d, h: 28, rot: 0, n: 1, share: 2.4 } }); continue; }
+    if (l.kind === 'chapel') { out.push({ ids: [l.id], key: 'c:' + l.id, t: { type: 'church', x: l.x, z: l.z, w: l.w, d: l.d, h: 28, rot: 0, n: 1, share: 2.4 } }); continue; }
     const k = Math.floor(l.x / CELL) + ',' + Math.floor(l.z / CELL); if (!cells.has(k)) cells.set(k, []); cells.get(k).push(l);
   }
-  for (const arr of cells.values()) {
+  for (const [ck, arr] of cells) {
     let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9, hy = 0;
     for (const l of arr) { const e = Math.max(l.w, l.d) / 2; x0 = Math.min(x0, l.x - e); x1 = Math.max(x1, l.x + e); z0 = Math.min(z0, l.z - e); z1 = Math.max(z1, l.z + e); hy = Math.max(hy, floorsOf(l)); }
-    out.push({ ids: arr.map((l) => l.id), t: { type: 'house', x: (x0 + x1) / 2, z: (z0 + z1) / 2, w: x1 - x0, d: z1 - z0, h: 4 + hy * 3.2, rot: 0, n: arr.length, share: +(0.5 + 0.16 * arr.length).toFixed(2) } });
+    out.push({ ids: arr.map((l) => l.id), key: 'b:' + ck, t: { type: 'house', x: (x0 + x1) / 2, z: (z0 + z1) / 2, w: x1 - x0, d: z1 - z0, h: 4 + hy * 3.2, rot: 0, n: arr.length, share: +(0.5 + 0.16 * arr.length).toFixed(2) } });
   }
   return out;
 }

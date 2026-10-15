@@ -3,7 +3,7 @@
 // so everything it needs comes through this one object (see the header of b1_townplan.js for the shape).  `perturbLayout()` makes the test variants (rings rotated, river shifted).
 import * as L from './layout.js';
 import { buildRoads, ROADS } from './roads.js';
-import { planStores } from './stores.js';
+import { planStoresDefault } from './stores.js';          // TR2-S5: the planner works from the DEFAULT places (a move of the player's never re-plans the town)
 import { planVaults } from './vault.js';
 import { marketSpot } from './terrain.js';
 import { civicSolids, CIVIC_KINDS } from './b3_civic.js';
@@ -37,7 +37,7 @@ export function layoutFromGame() {
   const G = L.GATE;
   const streets = ROADS.filter((r) => r.kind === 'cobble').map((r) => ({ name: r.name, w: r.w, pts: copy(r.pts), closed: !!r.closed }));
   const fixed = [
-    ...planStores().map((s) => ({ id: 'store_' + s.id, kind: 'stores', res: s.id, x: s.x, z: s.z, ry: s.ry, r: s.r })),
+    ...planStoresDefault().map((s) => ({ id: 'store_' + s.id, kind: 'stores', res: s.id, x: s.x, z: s.z, ry: s.ry, r: s.r })),
     ...planVaults().map((v) => ({ id: 'vault_' + v.id, kind: 'vault', res: v.id, x: v.x, z: v.z, ry: v.ry, r: v.r })),
   ];
   return {

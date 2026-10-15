@@ -399,6 +399,22 @@ export function buildWsLife(group, height, opt) {
     populated = true; return n;
   }
 
+  // TR2-S5: the player moved a production lot (siteIds) and / or a storehouse (storeIds = 'wood' …): the people, animals and carts of every site that depends on it are made again at the new places
+  // (a site's workers stand around ITS place; its carts drive to its store / to the next site of the chain).  Returns the number of sites made again.
+  function respawn(siteIds = new Set(), storeIds = new Set()) {
+    let n = 0;
+    for (const [id, S] of [...SITES_LIFE]) {
+      const site = S && S.site; if (!site) continue;
+      const dest = chainDest(site, typeof castle === 'number' ? castle : 30);
+      if (siteIds.has(id) || (dest ? siteIds.has(dest.id) : storeIds.has(STORE_OF[site.kind]))) { clearSite(S); SITES_LIFE.delete(id); n++; }
+    }
+    for (const id of [...SITES_LIFE.keys()]) if (!sites().some((q) => q.id === id)) { clearSite(SITES_LIFE.get(id)); SITES_LIFE.delete(id); }
+    // AN1_R2 (TR2-S5 rebase): the walking grid of a moved site was rasterised from its OLD meshes and place: forget it (and the mesh index, the moved site's meshes are new) so gridOf makes it again where it stands now
+    for (const id of siteIds) { const g = grids.get(id); if (g) { const gi = gridQ.indexOf(g); if (gi >= 0) gridQ.splice(gi, 1); } grids.delete(id); }
+    wsMeshes = null;
+    refresh(castle); return n;
+  }
+
   // ---- per frame
   const cam = new THREE.Vector3(), m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), up = new THREE.Vector3(0, 1, 0), sc = new THREE.Vector3(), pp = new THREE.Vector3(), tmp = { x: 0, z: 0, yaw: 0 };
   const eul = new THREE.Euler(), q2 = new THREE.Quaternion();
@@ -554,5 +570,5 @@ export function buildWsLife(group, height, opt) {
     for (const k of new Set(Object.values(kinds))) if (k.update) k.update(t, camera, { lodDist: 70, lod2Dist: k.people ? 150 : 1e9, maxDist: FAR_DIST });      // (a Set: axe / pick share one Tripo kind)
   }
   const steps = [makePeople, makeAnimals, makeMeshes, () => refresh(castle)];
-  return { steps, update, refresh, root, kinds, agents, animals, carts, boats, grids, gridOf, stats: () => ({ agents: agents.length, animals: animals.length, carts: carts.length, boats: boats.length }), group: root, tradesOf };
+  return { steps, update, refresh, respawn, root, kinds, agents, animals, carts, boats, grids, gridOf, stats: () => ({ agents: agents.length, animals: animals.length, carts: carts.length, boats: boats.length }), group: root, tradesOf };      // TR2-S5: + respawn
 }

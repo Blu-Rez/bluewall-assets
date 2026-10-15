@@ -22,6 +22,9 @@ import { buildNav, bridgesFromLayout } from './nav.js';
 import { staticSolids } from './solids.js';
 import { CamCtl } from './controls.js';
 import { createCamBlock } from './camblock.js';
+import { createLayoutLive } from './layout_live.js';      // TR2-S5: the player's own layout
+import { createLayoutUI } from './layout_ui.js';
+import { createLayoutSync } from './layout_sync.js';
 import { UI } from './ui.js';
 import { Ambience } from './audio.js';
 import { PX } from './fx.js';
@@ -111,6 +114,8 @@ async function start(opts) {
   const G = L.GATE;
   const ctl = new CamCtl(camera, renderer.domElement, world.fastHeight || ((x, z) => L.height(x, z)), { azim: Math.atan2(G.nx, G.nz) + 0.22 });
   ctl.block = createCamBlock({ height: world.fastHeight }).set(world.targets || []).spheres(() => world.creatures || []);
+  world.layout = createLayoutLive(world, { onChange: () => { ctl.block.set(world.targets || []); } });      // TR2-S5: shows the player's moved homes / production lots / storehouses (layout_live.js)
+  world.applyLayout = (rec) => world.layout.apply(rec);      // TR2-S5: the attack map applies the defender's record (player_target.layout): idempotent, null = nothing happens (BT1_R2)
   const applyCtl = () => { ctl.rotSpeed = +settings.rotSpeed || 1; ctl.zoomSpeed = +settings.zoomSpeed || 1; ctl.invert = !!settings.invertRotate; };
   applyCtl();
   let composer = null, bloom = null;
@@ -422,6 +427,10 @@ async function start(opts) {
     if (opts.dev) window.__rpLoad = async (q) => { if (hero) { hero.exit(); hero.closePick(); } return mkHero(q); };
     root.appendChild(hb); setInterval(() => { hb.style.display = (hero && hero.active) || (battle && battle.active) || root.classList.contains('wel') ? 'none' : ''; }, 400);
   }
+  // TR2-S5: the editor («Arrange») + where the layout is kept (server / this browser)
+  const layoutSync = createLayoutSync(econ, { onServer: (j) => { if (j && j.ok && j.changed) { world.layout.load(j.layout || { v: 1, m: {} }); if (j.dropped && j.dropped.length) ui.toast('Some buildings were put back where they fit'); } } });      // (the server's effective record is what the game shows; sync 'changed' = it is not what we sent)
+  const layoutUI = createLayoutUI({ root, world, camera, renderer, ctl, scene, blocked: () => !!((battle && battle.active) || (hero && hero.active) || root.classList.contains('wel') || ui.settingsOpen || panelUp), save: (rec) => layoutSync.save(rec), toast: (m) => ui.toast(m) });
+  econ.on((st, ev) => { if (ev === 'load' && !(battle && battle.active)) layoutSync.load().then((rec) => { if (rec && !layoutUI.active) world.layout.load(rec); }).catch((e) => console.warn('layout', e)); });
   let coachBat = false, hdt = 0;
   const perf = { acc: 0, n: 0, checked: 0 }, fpsm = { n: 0, t: 0, max: 0 };
   const loop = (now) => {
@@ -459,6 +468,8 @@ async function start(opts) {
     renderer.toneMappingExposure = P.exposure * (world.exposureMul ? world.exposureMul(inBattle) : 1);
     if (bloom) bloom.strength = P.bloom;
     pe('main:time'); hdt += dt; if (!uw && (!inHero || REACH.upd < 2 || frames % REACH.upd === 0)) { world.update(t, inHero ? Math.min(hdt, 0.1) : dt, camera); hdt = 0; } else if (!inHero || uw) hdt = 0; pb();      // (RP1B: in hero mode the world may update every 2nd drawn frame, with the time it missed)
+    if (world.layout && world.layout.pending) world.layout.tick();      // TR2-S5: one stage of "show the moved things" per frame
+    layoutUI.update(dt);      // TR2-S5
     scene.matrixWorldAutoUpdate = !(inHero && !uw && REACH.mtx && REACH.upd > 1 && frames % REACH.upd !== 0);       // RP1C: hero mode: between two world updates only the hero's own nodes get new matrices (cull.js era()); the world's nodes only move inside world.update
     if (inBattle) battle.frame(now, dt);
     if (inHero) hero.frame(now, dt);
@@ -532,6 +543,7 @@ async function start(opts) {
     if (settings.bgMute) audio.pause && audio.pause(document.hidden);
   });
   if (opts.dev) window.__bw = { armyUI, DS, DU, THREE, refl, coach, scene, camera, ctl, world, renderer, ui, Q, settings, audio, econ, get battle() { return battle; }, get lateReady() { return lateReady; }, pathReady, sw, lateT, useComposer, get t() { return t; }, get frames() { return frames; }, pause(v) { running = !v; }, dynTo(v) { DYN.s = v; wantResize(); }, loseCtx(ms = 600) { const x = renderer.getContext().getExtension('WEBGL_lose_context'); if (!x) return false; x.loseContext(); setTimeout(() => x.restoreContext(), ms); return true; }, get ctxLost() { return ctxLost; }, P: () => P, bloom: () => bloom, composer: () => composer, ov: {} };
+  if (opts.dev) window.__bw.layoutUI = layoutUI;                                                       // (TR2-S5: the layout editor, for dev/tr2_s5_*.py)
   if (opts.dev) window.__bw.bbox = bbox;                                                                  // (PERF2: the black box, for dev/pf_battle_gate.py)
   return { stop() { cancelAnimationFrame(raf); } };
 }

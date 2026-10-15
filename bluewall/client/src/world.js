@@ -22,7 +22,8 @@ import { createCastleTr2 } from './castle_tr2.js';                              
 import { LEVEL_CAP } from './tiers.js';
 import { buildBuildings } from './buildings.js';
 import { buildTown } from './town.js';
-import { startTownPlan, planLots, homeLots, castleLevel } from './town_plan.js';              // p41: B1's town plan -> the town (town_build.js: B2 homes + B3 civic lots)
+import { startTownPlan, planLots0 as planLots, homeLots, castleLevel } from './town_plan.js';  // TR2-S5: planLots0 (the generic fill houses keep off the DEFAULT lots)
+//              // p41: B1's town plan -> the town (town_build.js: B2 homes + B3 civic lots)
 import { registerTownTargets, createPlannedTown, warmTown } from './town_build.js';       // TR2-S4a: warmTown
 import { b1Dev } from './b1_dev.js';
 import { buildMines } from './mines.js';
@@ -148,7 +149,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
       const fan = o.getObjectByName('building_windmill_top_fan_blue');
       if (fan) anim.push((t, dt) => { fan.rotation.z -= dt * 0.7; });
     },
-    pick(b, id) { picks.push({ id, box: new THREE.Box3(new THREE.Vector3(b.x - b.r, b.y0, b.z - b.r), new THREE.Vector3(b.x + b.r, b.y1, b.z + b.r)) }); },
+    pick(b, id, lot = null) { picks.push({ id, lot, box: new THREE.Box3(new THREE.Vector3(b.x - b.r, b.y0, b.z - b.r), new THREE.Vector3(b.x + b.r, b.y1, b.z + b.r)) }); },      // TR2-S5: + lot (the lot id the box belongs to: layout_live.js moves it with the lot)
     torch(x, y, z, o = {}) {
       const T4 = S4C.on && (o.post || o.sconce) ? S4C.lamp(B, height(x, z), x, y, z, o, ctx.targets) : null;      // TR2-S4c: a Tripo post lamp / wall torch (baked, falls with its wall); returns the flame anchor
       flames.add(T4 ? T4.x : x, T4 ? T4.y : y + 0.35, T4 ? T4.z : z, o.big ? 2.6 : o.forge ? 3.0 : 1.5, o.forge ? [1, 0.42, 0.12] : [1, 0.62, 0.25], B.tagB);      // TR2-S4c: flame anchor from the Tripo lamp when there is one
@@ -267,7 +268,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
   // ctx.levelHooks (filled by mines / vaults): (n) => … callbacks run when a level changes
   buildDefenses(ctx);
   const vaults = buildVaults(ctx, { scene, M, Q, A, height }) || { setFill() {}, update() {}, list: [] };
-  const stores = buildStores(ctx, { M, height, scene }) || { list: [], setFill() {} };    // ST1: + scene (the quarter's Tripo meshes)            // p38: wood / stone / iron / gold / oil / food storehouses
+  const stores = buildStores(ctx, { M, height, scene, onMeshes: (ms) => { if (Q.level === 'high' || Q.level === 'ultra') tagReflected(ms); } }) || { list: [], setFill() {}, rebuild() { return 0; }, rebuildSteps() { return []; }, attach() {}, meshes: () => [] };    // ST1: + scene (the quarter's Tripo meshes); TR2-S5: + onMeshes (the group of a moved yard is mirrored in the moat like the rest)            // p38: wood / stone / iron / gold / oil / food storehouses
   const moat = buildMoat(ctx, { scene, M, Q, A, height, fastHeight: terrain.fastHeight, water }) || { update() {} };
   const falls = buildFalls({ scene, fh: terrain.fastHeight || height }) || { update() {} };
   const fallsA2 = (L.STREAMS || []).map((S) => L.withRiver(S.pts, () => buildFalls({ scene, fh: terrain.fastHeight || height }))).filter(Boolean);      // (A2: one fall at the head of every mountain stream)
@@ -281,6 +282,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     }
     B.bid(0); }
   const staticMeshes = B.build(scene);
+  if (stores.attach) stores.attach(staticMeshes);      // TR2-S5: the storehouse yards know now which part of the static meshes is theirs (a moved yard is put away there)
   if (Q.level === 'high' || Q.level === 'ultra') tagReflected([...staticMeshes, key, hemi]);   // what the moat mirrors (reflect.js)
   { const seen = new Set(); for (const m of staticMeshes) if (!seen.has(m.material)) { seen.add(m.material); patchDestruct(m.material); } initDestruct(ctx.targets, terrain.fastHeight || height); }   // (the battle collapses the tagged structures of the home map: destruct.js)
   // real kit houses + farm pieces, each kit baked into one mesh per material
@@ -517,7 +519,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     () => { if (planned) try { while (!planned.idle) planned.tick(); } catch (e) { console.warn('planned town', e); } },
     () => { const b = bucketFor('worksites'); const defers = []; curDefers = defers; try { worksites = buildWorksites(b, A.models.kit_ws, terrain.fastHeight, { shadows: !!Q.shadows, castle: castleLevel(levelOf('keep')), kitC1: A.models.kit_c1, kitC2: A.models.kit_c2, kitC3: A.models.kit_c3, kitC4: A.models.kit_c4, smokeList: smokers, tids: ctx.townTids || null }); ctx.levelHooks.push(() => { if (worksites) worksites.rebuild(castleLevel(levelOf('keep'))); });
         // P1: a tap box for every worksite (the 12 old ones, panning, the 4 mills, the town's production lots): id `ws:<site id>`; T1 maps these ids to panels (nothing is shown for an unknown id)
-        for (const q of wsSites()) { const cx = q.lot ? q.lot.x : q.x, cz = q.lot ? q.lot.z : q.z, g0 = terrain.fastHeight(cx, cz); ctx.pick({ x: cx, z: cz, y0: g0 - 1, y1: g0 + 15, r: q.lot ? Math.max(q.lot.w, q.lot.d) / 2 : Math.min(14, q.r * 0.6) }, 'ws:' + q.id); } } catch (e) { console.warn('worksites', e); } curDefers = null; revealQ.push({ b, defers }); },
+        for (const q of wsSites()) { const cx = q.lot ? q.lot.x : q.x, cz = q.lot ? q.lot.z : q.z, g0 = terrain.fastHeight(cx, cz); ctx.pick({ x: cx, z: cz, y0: g0 - 1, y1: g0 + 15, r: q.lot ? Math.max(q.lot.w, q.lot.d) / 2 : Math.min(14, q.r * 0.6) }, 'ws:' + q.id, q.lot ? q.id : null); } } catch (e) { console.warn('worksites', e); } curDefers = null; revealQ.push({ b, defers }); },      // TR2-S5: + the lot id of a production lot's tap box
     // p38: the people, animals, boats and carts of the worksites (wslife.js) — the crowds are created in pieces, one late job each, so no frame stalls
     () => {
       const b = bucketFor('wslife'); const defers = []; curDefers = defers;
@@ -639,7 +641,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     if (metaCache) return metaCache;
     if (!L.TOWN) return null;
     const gates = L.TGATES.map((g) => ({ x: g.x, z: g.z, nx: g.nx, nz: g.nz })), g0 = gates[0], tx = -g0.nz, tz = g0.nx;
-    const solid = ctx.targets.filter((t) => t.type !== 'wall' && t.type !== 'gate');
+    const solid = ctx.targets.filter((t) => t.type !== 'wall' && t.type !== 'gate' && !t.off);      // TR2-S5: !t.off
     let best = { d: 62, lat: 0 }, bc = 1e9;
     for (let d = 44; d <= 76; d += 4) for (let lat = -70; lat <= 70; lat += 7) {
       const cx = g0.x + g0.nx * d + tx * lat, cz = g0.z + g0.nz * d + tz * lat; let cost = 0, n = 0;
@@ -707,7 +709,10 @@ export async function buildWorld(renderer, scene, Q, progress) {
       try { setGemEnv(jewelEnvironment(pmrem)); } catch (e) { console.warn('restore gems', e); } TS.envAt = -1e9; TS.envHour = -99; },
     exposureMul: (calm) => (calm ? 1 + weather.W.flashSoft * 0.05 : 1 + weather.W.flash * 0.5),      // (calm = in an attack: a lightning flash used to lift the whole picture by up to 23 % and flicker it at 14 Hz - measured; now a 5 % swell without the flicker) takeThunder: () => thunderQ.splice(0),
     get breathing() { return dragon.root.visible && dragon.breathing; },
-    badges, setLevel, levels, vaults, stores, falls, church: ctx.town && ctx.town.church, ctx, assets: A, mats: M, targets: ctx.targets,
+    badges, setLevel, levels, vaults, stores, falls, church: ctx.town && ctx.town.church, ctx, assets: A, mats: M,
+    get targets() { return ctx.targets.some((t) => t.off) ? ctx.targets.filter((t) => !t.off) : ctx.targets; },      // TR2-S5: a block whose last lot the player moved away is switched off (town_build.js retargetTown)
+    // TR2-S5: what layout_live.js needs of the world (the late-built parts are read when asked)
+    layoutParts: { get planned() { return planned; }, get worksites() { return worksites; }, get wsLife() { return wsLife; }, picks, ctx, castle: () => castleLevel(levelOf('keep')), height: terrain.fastHeight || height, ground: terrain.ground, stores, vaults },      // (ground: GR1's contact shadows follow the moved lots)
     // what the battle sim needs besides the targets: the gates (muster point in front of the first one), the town ring polygon, the keep
     get baseMeta() { return baseMetaNow(); },
     tesla: teslaApi, setArmyTiers, setDragonlings, setCamp, get armyLv() { return armyLv; },

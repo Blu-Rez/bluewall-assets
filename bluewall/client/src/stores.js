@@ -11,6 +11,7 @@ import { marketSpot } from './terrain.js';
 import { planVaults } from './vault.js';
 import { mat4, gableRoof } from './util.js';
 import { planQuarter, buildStoreYards } from './storeyards.js';        // ST1: the Treasury Quarter plan (null = the planner below)
+import * as LS from './layout_store.js';                                // TR2-S5: the player's moved storehouses
 
 const BOX = new THREE.BoxGeometry(1, 1, 1);
 const CYL = (rt, rb, h, s = 12) => new THREE.CylinderGeometry(rt, rb, h, s);
@@ -26,8 +27,18 @@ const LOOK = {         // wall material key + tint, roof tint, trim tint
   food:  { wall: 'plaster', wt: 0xf4ecdc, roof: 0x6f8f56, trim: 0x8a6a46 },
 };
 
-let PLAN = null;
+let PLAN = null, APP = null, APP_REV = -1, YARDS_ON = null;
+// TR2-S5: planStores() = the plan the game shows (the player's moved storehouses applied); planStoresDefault() = what the planner / the Treasury Quarter says (b1_layout.js and the town plan are made from THIS one,
+// so a move never re-plans the town).  Only the Treasury Quarter's yards (storeyards.js) can be moved: with the old storehouses below (?st1=0, the quarter did not fit, the Tripo files did not load) nothing moves.
+export const storesMovable = () => !!planQuarter() && YARDS_ON !== false;            // YARDS_ON: null until buildStores ran (node tests), then whether the yards were really built
 export function planStores() {
+  const B = planStoresDefault();
+  if (!storesMovable()) return B;
+  if (APP && APP_REV === LS.rev()) return APP;
+  APP_REV = LS.rev();
+  return (APP = LS.count() ? B.map((s) => { const o = LS.ovr('store_' + s.id); return o ? { ...s, x: o[0], z: o[1], ry: o[2], moved: true } : s; }) : B);
+}
+export function planStoresDefault() {
   if (PLAN) return PLAN;
   PLAN = [];
   if (!L.TOWN) return PLAN;
@@ -56,9 +67,9 @@ export function planStores() {
 }
 
 export function buildStores(ctx, api) {
-  { const Y = buildStoreYards(ctx, api); if (Y) return Y; }                                     // ST1: the Treasury Quarter (storeyards.js); null = the old storehouses below
-  const { M, height } = api, B = ctx.B, plan = planStores(), list = [];
-  if (!plan.length) return { list, setFill() {} };
+  { const Y = buildStoreYards(ctx, { ...api, plan: planStores }); YARDS_ON = !!Y; if (Y) return Y; }      // ST1: the Treasury Quarter (storeyards.js); null = the old storehouses below.  TR2-S5: + plan (the applied places)
+  const { M, height } = api, B = ctx.B, plan = planStoresDefault(), list = [];
+  if (!plan.length) return { list, setFill() {}, rebuildSteps() { return []; }, rebuild() { return 0; }, attach() {}, meshes: () => [] };
   const stoneUV = { worldUV: 0.1 }, fill = {};
   for (const S of plan) {
     const K = LOOK[S.id], c = Math.cos(S.ry), s = Math.sin(S.ry), y0 = Math.max(0.3, height(S.x, S.z));
@@ -110,5 +121,5 @@ export function buildStores(ctx, api) {
     // (tapping a store opens its own panel in p40 — no pick target yet)
     list.push({ id: S.id, x: S.x, y: y0, z: S.z, ry: S.ry });
   }
-  return { list, setFill(w) { Object.assign(fill, w || {}); } };
+  return { list, setFill(w) { Object.assign(fill, w || {}); }, rebuildSteps() { return []; }, rebuild() { return 0; }, attach() {}, meshes: () => [] };      // TR2-S5: the old storehouses do not move
 }

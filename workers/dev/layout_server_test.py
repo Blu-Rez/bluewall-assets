@@ -58,9 +58,9 @@ def pose_for(t):
     if m < .90: return [rng.uniform(-90, 90), rng.uniform(-90, 90), rng.uniform(-3.2, 3.2)]                       # somewhere in / near the town
     return [rng.uniform(-300, 300), rng.uniform(-300, 300), rng.uniform(-3, 3)]                                    # far away
 diff = 0; kept = dropped_n = 0; idem = 0
-NREC = 412   # 400 small / medium records + 8 of 30 things + 4 of 85 things (the reference needs ~1-6 s for the big ones)
+NREC = 412   # 400 small / medium records + 8 of 30 things + 4 of ALL things (the reference needs ~1-6 s for the big ones)
 for i in range(NREC):
-    k = rng.choice([1, 2, 3, 5, 8, 15]) if i < 400 else (30 if i < 408 else 85); m = {}
+    k = rng.choice([1, 2, 3, 5, 8, 15]) if i < 400 else (30 if i < 408 else len(ids)); m = {}
     for id_ in rng.sample(ids, k): m[id_] = pose_for(by[id_])
     if rng.random() < .15: m["not_a_thing_%d" % i] = [1, 2, 3]
     rec = {"v": 1, "g": "x", "m": m}
@@ -84,13 +84,13 @@ for rec, why in (({"v": 1, "m": {"cottage_00": [10 ** 400, 0, 0]}}, "triple cott
 rng2 = random.Random(7)
 worst = {"v": 1, "m": {i: [rng2.uniform(-60, 60), rng2.uniform(-60, 60), rng2.uniform(0, 6)] for i in ids}}
 t0 = time.perf_counter(); r = LY.canonical_load(G, worst); dt = time.perf_counter() - t0
-say(dt < 1.5 and r["status"] == "ok", "cost: all 85 things moved at random (worst record): %.2f s (reference 6+ s), kept %d" % (dt, len(r["effective"])), dt)
+say(dt < 1.5 and r["status"] == "ok", "cost: all %d things moved at random (worst record): %.2f s (reference 6+ s), kept %d" % (len(things), dt, len(r["effective"])), dt)
 honest = {"v": 1, "m": {t["id"]: [t["x"], t["z"], t["ry"]] for t in things}}
 t0 = time.perf_counter(); r = LY.canonical_load(G, honest); dt = time.perf_counter() - t0
-say(dt < 1.0 and r["dropped"] == [] and len(r["effective"]) == 85, "cost: all 85 at their default places (valid): %.2f s" % dt, dt)
+say(dt < 1.0 and r["dropped"] == [] and len(r["effective"]) == len(things), "cost: all %d at their default places (valid): %.2f s" % (len(things), dt), dt)
 stack = {"v": 1, "m": {t["id"]: [things[0]["x"], things[0]["z"], 0] for t in things}}                              # all on one spot: many clashes, one pass drops one
 t0 = time.perf_counter(); r = LY.canonical_load(G, stack); dt = time.perf_counter() - t0
-say(dt < 1.5 and r["status"] == "ok", "cost: all 85 on one spot: %.2f s, kept %d" % (dt, len(r["effective"])), dt)
+say(dt < 1.5 and r["status"] == "ok", "cost: all %d on one spot: %.2f s, kept %d" % (len(things), dt, len(r["effective"])), dt)
 
 # ---------------------------------------------------------------- 5 endpoints
 from aiohttp import web

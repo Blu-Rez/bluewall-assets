@@ -109,6 +109,7 @@ export function createBattleMode({ renderer, scene, camera, root, world, audio, 
   // put the home map back (also used when a start fails half way)
   function restoreWorld(s) {
     dropLightPad();
+    if (world.layout) { try { world.layout.leaveBattle(); } catch (e) { console.warn('layout (leave)', e); } }      // TR2-S5: the player's own layout comes back
     world.setBattle(false); DU.battle.value = 0; DS.reset(); restoreLevels(); if (econ.st.emblem) setEmblem(econ.st.emblem); if (HOME_GATE != null) { setGateName(HOME_GATE); HOME_GATE = null; } world.tesla && world.tesla.set((econ.st.own && econ.st.own.tesla) || 0);
     try { world.setWeather && world.setWeather(weatherMode, true); } catch (e) { /* ignore */ }
     if (s) { uLv.value.set(s.savedLv); if (world.key && world.key.shadow) { const c = world.key.shadow.camera; c.left = c.bottom = -s.shadowHalf0; c.right = c.top = s.shadowHalf0; c.updateProjectionMatrix(); world.key.target.position.set(0, 0, 0); } }
@@ -116,6 +117,7 @@ export function createBattleMode({ renderer, scene, camera, root, world, audio, 
 
   async function build(target, veil, loader = null) {
     const A = world.assets, models = A.models;
+    if (world.layout) { try { world.layout.enterBattle(target.layout || null); await world.layout.settled(); } catch (e) { console.warn('layout (battle)', e); } }      // TR2-S5: the attack is on the DEFENDER's layout (none = the default town)
     const tb0 = performance.now(); let tm = tb0; const lap = (n) => { const t = performance.now(); mk(n, tm); tm = t; };          // (PERF2: named durations of the load stages -> the black box)
     const seenVis = new WeakSet(); if (pf) scene.traverseVisible((o) => { seenVis.add(o); });       // (what the home map had on screen-able at the tap: its first draw was done by the home warm-up)
     const army = attackRoster(econ.st.army), forge = (econ.st.army && econ.st.army.forge) || 1;          // (his guardians stay home: they are not in the attack roster)

@@ -12,7 +12,7 @@ import { mat4, gableRoof, gableWall, grayMap } from './util.js';
 import { rng } from './noise.js';
 import { planHamlets } from './hamlets.js';
 import { planVaults } from './vault.js';
-import { planStores } from './stores.js';
+import { planStoresDefault as planStores } from './stores.js';      // TR2-S5: the generic fill houses keep off the DEFAULT storehouse grounds (they do not depend on the player's layout)
 import { T as THEME } from './theme.js';
 
 const BOX = new THREE.BoxGeometry(1, 1, 1);

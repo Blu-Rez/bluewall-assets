@@ -10,7 +10,11 @@ import { isVillageHome, villageHomeLot, HOME_KINDS, homePieces, homeSmoke, homeT
 import { setCivicTr2, civicTr2Files } from './b3_civic.js';
 import { tr2 } from './tr2lib.js';
 import { buildAtlas, specOf, fileOfSpec } from './tr2atlas.js';
-import { homeLots, civicLots, civicBuild, toWorld, townTargetSpecs } from './town_plan.js';
+import { homeLots, civicLots, civicBuild, toWorld, townTargetSpecs, prodLots } from './town_plan.js';
+import { genKeep, centreOf, STORE_FP } from './layout_rules.js';           // TR2-S5
+import { planStores } from './stores.js';                               // TR2-S5: a moved storehouse also clears the generic fill houses under it
+import * as LS from './layout_store.js';                                // TR2-S5: the player's moved lots
+import { initDestruct } from './destruct.js';
 
 // TR2-S4a: the town is built from the Tripo models (web/assets/tr2/).  Their pieces are packed into two texture atlases (houses + yard props / civic buildings + props) => ONE material each, so a chunk of 40 houses is ONE
 // draw call.  The kit path (kit_homes / kit_civic) stays as the fallback: when the models cannot be loaded the old town is built unchanged.
@@ -42,10 +46,30 @@ const Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3
 const place = (x, y, z, ry, s = 1) => M4().compose(P.set(x, y, z), Q.setFromAxisAngle(UP, ry), S.set(s, s, s));
 
 export function registerTownTargets(ctx, level) {
-  const tids = new Map();
-  for (const { ids, t } of townTargetSpecs(level)) { const id = ctx.tgt(t); for (const k of ids) tids.set(k, id); }
+  const tids = new Map(), slots = new Map();
+  for (const { ids, key, t } of townTargetSpecs(level)) { const id = ctx.tgt(t); slots.set(key, id); for (const k of ids) tids.set(k, id); }
   ctx.B.bid(0);
+  ctx.townSlots = slots; ctx.townTargetLevel = level;                          // TR2-S5: block key -> target id (retargetTown keeps the ids of the blocks that stay)
   return tids;
+}
+// TR2-S5: the player moved lots: the destructible blocks are made again from the lots' NEW places.  A block keeps its target id (its key = the 40 m cell / the chapel), so everything already baked
+// into it (the worksites' pieces, the far mesh until it is rebaked) stays valid; a block whose last lot left is switched off (`off`: world.targets hides it from the battle), a new block takes
+// a switched-off slot or appends one.  `tids` (lot id -> target id) is updated IN PLACE: createPlannedTown / wsbuild read it when they bake.  Returns { changed, added, off }.
+export function retargetTown(ctx, height, tids) {
+  if (!ctx.townSlots) return { changed: 0, added: 0, off: 0 };
+  const specs = townTargetSpecs(ctx.townTargetLevel), seen = new Set(); let changed = 0, added = 0, off = 0;
+  const free = () => ctx.targets.find((q) => q.off && q.type === 'house' && !seen.has(q.id));
+  for (const { ids, key, t } of specs) {
+    let id = ctx.townSlots.get(key), slot = id ? ctx.targets[id - 1] : null;
+    if (!slot) { slot = t.type === 'house' ? free() : null; if (slot) { id = slot.id; } else { id = ctx.tgt(t); ctx.B.bid(0); slot = ctx.targets[id - 1]; added++; } ctx.townSlots.set(key, id); }
+    const o = { x: slot.x, z: slot.z, w: slot.w, d: slot.d, h: slot.h, n: slot.n, share: slot.share };
+    Object.assign(slot, t, { id }); delete slot.off; seen.add(id);
+    if (['x', 'z', 'w', 'd', 'h', 'n', 'share'].some((k) => o[k] !== slot[k])) changed++;
+    for (const k of ids) tids.set(k, id);
+  }
+  for (const [key, id] of [...ctx.townSlots]) if (!seen.has(id)) { const q = ctx.targets[id - 1]; if (q && !q.off) { q.off = true; off++; } ctx.townSlots.delete(key); }
+  if (changed || added || off) initDestruct(ctx.targets, height);
+  return { changed, added, off };
 }
 
 export function createPlannedTown({ scene, kitHomes, kitCivic, height, shadows, ctx, tids = new Map(), level, civicCap = 30, tr2: useTr2 = true, gen = [] }) {
@@ -57,7 +81,7 @@ export function createPlannedTown({ scene, kitHomes, kitCivic, height, shadows, 
   function pick(l) {                                                    // the tap boxes (main.js: house / church / market open their card)
     if (st.picked.has(l.id) || l.kind === 'well') return; st.picked.add(l.id);
     const top = l.kind === 'chapel' ? 40 : l.kind === 'market' ? 7 : HOME_KINDS[l.kind] ? 4 + HOME_KINDS[l.kind].floors * 3.2 : 12;
-    ctx.pick({ x: l.x, z: l.z, y0: 0, y1: top, r: l.kind === 'market' ? 15 : Math.max(l.w, l.d) / 2 }, l.kind === 'chapel' ? 'church' : l.kind === 'market' ? 'market' : 'house');
+    ctx.pick({ x: l.x, z: l.z, y0: 0, y1: top, r: l.kind === 'market' ? 15 : Math.max(l.w, l.d) / 2 }, l.kind === 'chapel' ? 'church' : l.kind === 'market' ? 'market' : 'house', l.id);      // TR2-S5: + the lot id (the tap box moves with the lot)
   }
   function swap(group, smoke, cells, far) {
     const old = st.group; st.group = group; group.visible = true; dispose(old);
@@ -117,7 +141,7 @@ export function createPlannedTown({ scene, kitHomes, kitCivic, height, shadows, 
     }
     const T2 = !!st.atlas;
     const lv = level(), homes = homeLots(lv), civic = civicLots(lv).map((c) => ({ ...c, lv: Math.min(c.lv, civicCap) }));
-    const sig = [homes.map((h) => h.id).join(','), homeTier(lv), civic.map((c) => c.id + ':' + c.lv).join(','), shadows ? 1 : 0].join('|');
+    const sig = [homes.map((h) => h.id).join(','), homeTier(lv), civic.map((c) => c.id + ':' + c.lv).join(','), shadows ? 1 : 0, [...homes, ...civic, ...prodLots(lv)].map((l) => LS.ovr(l.id)).filter(Boolean).map((o) => o.join(',')).join(';'), planStores().filter((s) => s.moved).map((s) => s.id + ':' + s.x + ',' + s.z + ',' + s.ry).join(';')].join('|');      // TR2-S5: + the moved lots' and storehouses' places (a moved lot / store rebakes the town — the generic houses under it go)
     if (sig === st.sig) return false;
     st.sig = sig; st.queue.length = 0; st.lazy.length = 0; if (st.staging) { dispose(st.staging); st.staging = null; } for (const q of st.pend) q.off = true;          // (a rebuild still under way is dropped, with its smoke)
     const group = st.staging = new THREE.Group(); group.name = 'planned-town'; group.visible = !st.group; scene.add(group);       // the very first build stays under the hidden bucket until it is revealed
@@ -129,7 +153,8 @@ export function createPlannedTown({ scene, kitHomes, kitCivic, height, shadows, 
       bakeTr2(group, st.atlas.civic, list, { shadows, tag: 'civic-tr2' });
     });
     if (T2) {
-      const G = gen.concat(ctx.tr2town ? (ctx.houses || []).filter(isVillageHome).map(villageHomeLot) : []);        // (+ the plain homes of buildings.js: plaza, farm, lake — bakeVillage skipped them)
+      const G0 = gen.concat(ctx.tr2town ? (ctx.houses || []).filter(isVillageHome).map(villageHomeLot) : []);        // (+ the plain homes of buildings.js: plaza, farm, lake — bakeVillage skipped them)
+      const sLots = planStores().filter((s) => s.moved).map((s) => { const [cx, cz] = centreOf(s.x, s.z, s.ry, STORE_FP); return { x: cx, z: cz, ry: s.ry, w: STORE_FP.w, d: STORE_FP.d }; }), movedLots = [...homes, ...civic, ...prodLots(lv)].filter((l) => LS.ovr(l.id)).concat(sLots), kp = genKeep(G0, movedLots), G = G0.filter((_, i) => kp[i]);      // TR2-S5: a generic fill house under a lot the player moved there is not drawn
       const lots = homes.concat(G.map((g, i) => ({ ...g, kind: 'generic', id: 'gen' + i, i })));                // the planned homes + the generic fill houses + the hamlet houses
       const byCell = new Map();
       for (const lot of lots) { const k = townCellKey(lot); let c = byCell.get(k); if (!c) byCell.set(k, c = { key: k, lots: [], pts: [], hi: null, lo: null, want: 'lo', shown: null, lv, group }); c.lots.push(lot); c.pts.push(lot.x, lot.z); }

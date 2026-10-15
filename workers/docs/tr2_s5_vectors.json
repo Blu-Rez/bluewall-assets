@@ -2,12 +2,12 @@
  "single": [
   {
    "name": "valid cottage at a free place",
-   "id": "cottage_09",
+   "id": "cottage_02",
    "kind": "cottage",
    "pose": [
-    -74,
-    122,
-    7.339
+    96,
+    -112,
+    5.617
    ],
    "layout": {},
    "expect": {
@@ -18,12 +18,12 @@
   },
   {
    "name": "valid store at a free place",
-   "id": "store_wood",
+   "id": "store_oil",
    "kind": "store",
    "pose": [
-    -79,
-    -22,
-    3.142
+    -78,
+    92,
+    0
    ],
    "layout": {},
    "expect": {
@@ -34,12 +34,12 @@
   },
   {
    "name": "valid merchant (civic) at a free place",
-   "id": "merchant_05",
+   "id": "merchant_04",
    "kind": "merchant",
    "pose": [
-    69,
-    125,
-    3.068
+    78,
+    122,
+    -1.12
    ],
    "layout": {},
    "expect": {
@@ -53,9 +53,9 @@
    "id": "smokehouse_01",
    "kind": "smokehouse",
    "pose": [
-    -85,
-    64,
-    3.309
+    -88,
+    72,
+    2.524
    ],
    "layout": {},
    "expect": {
@@ -66,12 +66,12 @@
   },
   {
    "name": "valid mill",
-   "id": "mill_01",
+   "id": "mill_00",
    "kind": "mill",
    "pose": [
-    -85,
-    81,
-    1.473
+    88,
+    -50,
+    4.983
    ],
    "layout": {},
    "expect": {
@@ -82,12 +82,12 @@
   },
   {
    "name": "valid lot turned 90 degrees",
-   "id": "cottage_04",
+   "id": "cottage_12",
    "kind": "cottage",
    "pose": [
-    -32,
-    131,
-    4.46
+    -143,
+    -15,
+    3.265
    ],
    "layout": {},
    "expect": {
@@ -101,9 +101,9 @@
    "id": "cottage_00",
    "kind": "cottage",
    "pose": [
-    60.98,
-    102.65,
-    0.712
+    64.64,
+    -55.23,
+    1.923
    ],
    "layout": {},
    "expect": {
@@ -114,12 +114,12 @@
   },
   {
    "name": "rule WALL only",
-   "id": "cottage_04",
-   "kind": "cottage",
+   "id": "merchant_11",
+   "kind": "merchant",
    "pose": [
-    149,
-    10,
-    4.198
+    -64,
+    -148,
+    9.011
    ],
    "layout": {},
    "expect": {
@@ -132,12 +132,12 @@
   },
   {
    "name": "rule MOAT only",
-   "id": "cottage_13",
+   "id": "cottage_12",
    "kind": "cottage",
    "pose": [
-    18,
-    -32,
-    6.03
+    -39,
+    -1,
+    6.668
    ],
    "layout": {},
    "expect": {
@@ -150,12 +150,12 @@
   },
   {
    "name": "rule GATE only",
-   "id": "cottage_06",
-   "kind": "cottage",
+   "id": "merchant_05",
+   "kind": "merchant",
    "pose": [
-    -120,
-    -75,
-    4.047
+    -119,
+    -73,
+    0.601
    ],
    "layout": {},
    "expect": {
@@ -168,12 +168,12 @@
   },
   {
    "name": "rule MARKET only",
-   "id": "merchant_13",
-   "kind": "merchant",
+   "id": "cottage_03",
+   "kind": "cottage",
    "pose": [
-    114,
-    75,
-    4.561
+    126,
+    48,
+    4.983
    ],
    "layout": {},
    "expect": {
@@ -186,12 +186,12 @@
   },
   {
    "name": "rule VAULT only",
-   "id": "cottage_10",
-   "kind": "cottage",
+   "id": "merchant_01",
+   "kind": "merchant",
    "pose": [
-    103,
-    23,
-    5.507
+    -35,
+    94,
+    -0.185
    ],
    "layout": {},
    "expect": {
@@ -204,12 +204,12 @@
   },
   {
    "name": "rule STREET only",
-   "id": "cottage_01",
+   "id": "cottage_03",
    "kind": "cottage",
    "pose": [
-    -40,
+    -43,
     -86,
-    1.344
+    3.936
    ],
    "layout": {},
    "expect": {
@@ -222,12 +222,12 @@
   },
   {
    "name": "rule RIVER only",
-   "id": "cottage_08",
-   "kind": "cottage",
+   "id": "merchant_10",
+   "kind": "merchant",
    "pose": [
-    -1,
-    -103,
-    -0.142
+    -6,
+    -104,
+    1.488
    ],
    "layout": {},
    "expect": {
@@ -243,9 +243,9 @@
    "id": "smokehouse_01",
    "kind": "smokehouse",
    "pose": [
-    -148,
-    -31,
-    2.786
+    -144,
+    -25,
+    -0.356
    ],
    "layout": {},
    "expect": {
@@ -258,12 +258,12 @@
   },
   {
    "name": "rule STREAM (with WALL)",
-   "id": "merchant_09",
+   "id": "merchant_14",
    "kind": "merchant",
    "pose": [
-    -57,
-    -151,
-    8.749
+    -44,
+    -161,
+    4.037
    ],
    "layout": {},
    "expect": {
@@ -280,9 +280,9 @@
    "id": "merchant_12",
    "kind": "merchant",
    "pose": [
-    -162,
-    60,
-    0.614
+    -145,
+    223,
+    6.131
    ],
    "layout": {},
    "expect": {
@@ -296,12 +296,12 @@
   },
   {
    "name": "rule SLOPE (with WALL)",
-   "id": "store_food",
-   "kind": "store",
+   "id": "cottage_02",
+   "kind": "cottage",
    "pose": [
-    -111,
-    -162,
-    4.014
+    -100,
+    -166,
+    3.785
    ],
    "layout": {},
    "expect": {
@@ -315,12 +315,12 @@
   },
   {
    "name": "rule OVERLAP only",
-   "id": "store_stone",
-   "kind": "store",
+   "id": "merchant_14",
+   "kind": "merchant",
    "pose": [
-    -64,
-    93,
-    1.396
+    -18,
+    134,
+    9.011
    ],
    "layout": {},
    "expect": {
@@ -333,19 +333,19 @@
   },
   {
    "name": "a store too near the river (rc 10: a store may not stand within 10 m of the river line)",
-   "id": "store_gold",
+   "id": "store_stone",
    "kind": "store",
    "pose": [
-    73,
-    -60,
-    3.578
+    -127,
+    65,
+    4.974
    ],
    "layout": {},
    "expect": {
     "ok": false,
     "why": [
-     "RIVER",
-     "STREET"
+     "OVERLAP",
+     "RIVER"
     ]
    },
    "note": ""
@@ -355,9 +355,9 @@
    "id": "mill_00",
    "kind": "mill",
    "pose": [
-    122,
-    -63,
-    -1.143
+    87,
+    -54,
+    4.198
    ],
    "layout": {},
    "expect": {
@@ -368,32 +368,33 @@
   },
   {
    "name": "pile-up: many rules at once",
-   "id": "store_iron",
-   "kind": "store",
+   "id": "merchant_10",
+   "kind": "merchant",
    "pose": [
-    93,
-    54,
-    -1.309
+    -118,
+    24,
+    -1.392
    ],
    "layout": {},
    "expect": {
     "ok": false,
     "why": [
-     "MARKET",
-     "STREET",
-     "VAULT"
+     "DRY",
+     "RIVER",
+     "SLOPE",
+     "STREET"
     ]
    },
    "note": ""
   },
   {
    "name": "pair: street + overlap",
-   "id": "cottage_04",
-   "kind": "cottage",
+   "id": "merchant_01",
+   "kind": "merchant",
    "pose": [
-    -79,
-    -33,
-    7.863
+    33,
+    95,
+    1.124
    ],
    "layout": {},
    "expect": {
@@ -407,19 +408,19 @@
   },
   {
    "name": "overlap with a thing that was moved there (the others are judged at their CURRENT places)",
-   "id": "cottage_08",
+   "id": "cottage_05",
    "kind": "cottage",
    "pose": [
-    80,
-    -118,
+    95,
+    -110,
     -0.404
    ],
    "layout": {
     "v": 1,
     "m": {
-     "cottage_06": [
-      77,
-      -118,
+     "cottage_02": [
+      92,
+      -110,
       -0.404
      ]
     }
@@ -438,7 +439,7 @@
    "name": "empty record = the default layout",
    "record": {
     "v": 1,
-    "g": "p15w5gkf",
+    "g": "p1oqct4l",
     "m": {}
    },
    "expect": {
@@ -452,32 +453,32 @@
    "name": "two valid moves (a cottage and a store)",
    "record": {
     "v": 1,
-    "g": "p15w5gkf",
+    "g": "p1oqct4l",
     "m": {
-     "cottage_09": [
-      -74,
-      122,
-      7.339
+     "cottage_02": [
+      96,
+      -112,
+      5.617
      ],
-     "store_wood": [
-      -79,
-      -22,
-      3.142
+     "store_oil": [
+      -78,
+      92,
+      0
      ]
     }
    },
    "expect": {
     "status": "ok",
     "effective": {
-     "cottage_09": [
-      -74,
-      122,
-      7.339
+     "cottage_02": [
+      96,
+      -112,
+      5.617
      ],
-     "store_wood": [
-      -79,
-      -22,
-      3.142
+     "store_oil": [
+      -78,
+      92,
+      0
      ]
     },
     "dropped": []
@@ -488,31 +489,31 @@
    "name": "two things on one spot: the one with the smaller id goes back to its default place",
    "record": {
     "v": 1,
-    "g": "p15w5gkf",
+    "g": "p1oqct4l",
     "m": {
-     "cottage_09": [
-      -81,
-      84,
-      2.889
+     "cottage_12": [
+      -145,
+      -25,
+      1.694
      ],
-     "cottage_07": [
-      -81,
-      84,
-      2.889
+     "cottage_02": [
+      -145,
+      -25,
+      1.694
      ]
     }
    },
    "expect": {
     "status": "ok",
     "effective": {
-     "cottage_09": [
-      -81,
-      84,
-      2.889
+     "cottage_12": [
+      -145,
+      -25,
+      1.694
      ]
     },
     "dropped": [
-     "cottage_07"
+     "cottage_02"
     ]
    },
    "note": ""
@@ -528,20 +529,20 @@
       2,
       0
      ],
-     "cottage_09": [
-      -74,
-      122,
-      7.339
+     "cottage_02": [
+      96,
+      -112,
+      5.617
      ]
     }
    },
    "expect": {
     "status": "ok",
     "effective": {
-     "cottage_09": [
-      -74,
-      122,
-      7.339
+     "cottage_02": [
+      96,
+      -112,
+      5.617
      ]
     },
     "dropped": [
@@ -576,20 +577,20 @@
    "record": {
     "v": 1,
     "m": {
-     "cottage_09": [
-      -73.99877,
-      121.99766,
-      7.3394900000000005
+     "cottage_02": [
+      96.00123,
+      -112.00234,
+      5.61749
      ]
     }
    },
    "expect": {
     "status": "ok",
     "effective": {
-     "cottage_09": [
-      -74,
-      122,
-      7.339
+     "cottage_02": [
+      96,
+      -112,
+      5.617
      ]
     },
     "dropped": []
@@ -602,9 +603,9 @@
     "v": 1,
     "m": {
      "cottage_00": [
-      60.98,
-      102.65,
-      0.712
+      64.64,
+      -55.23,
+      1.923
      ]
     }
    },
@@ -612,9 +613,9 @@
     "status": "ok",
     "effective": {
      "cottage_00": [
-      60.98,
-      102.65,
-      0.712
+      64.64,
+      -55.23,
+      1.923
      ]
     },
     "dropped": []
@@ -4243,7 +4244,7 @@
  ],
  "meta": {
   "v": 1,
-  "planId": "p15w5gkf",
+  "planId": "p1oqct4l",
   "map": "night",
   "hTol": 0.25,
   "gridMaxErr": 0.778,
