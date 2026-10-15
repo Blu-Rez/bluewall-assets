@@ -10,7 +10,7 @@ import { marketSpot } from './terrain.js';
 import { mat4, gableRoof, Batcher } from './util.js';
 import { patchDestruct } from './destruct.js';                          // TR2-S5
 import { uLv } from './skin.js';
-import { gemGeometry, gemMaterial } from './gemgeo.js';
+import { gemGeometry, gemMaterial, haloRGB } from './gemgeo.js';      // ST1_R2: haloRGB
 // (tr2lib / tr2atlas / village are imported lazily in warmYards: they need the browser (assets.js), and the plan half of this file must stay importable by the node tests)
 
 export const YARD = { w: 16, d: 16, r: 13 };             // footprint of one yard (door side = local +z) and the radius the town / B1 plan reserves around it
@@ -250,7 +250,7 @@ function library3(Y, id, env) {
 }
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- the gem vaults
-// vault.js keeps the LIVE parts (the cut-gem crown on the roof, the floating gem, its glow, the pile in the basin: they follow the wallet and the vault level) and asks for the STATIC hall here.  Same yard
+// vault.js keeps the LIVE parts (the small floating gem, its halo, the pile in the basin: they follow the wallet and the vault level) and asks for the STATIC hall here.  Same yard
 // frame as the storehouses (door side = +z): the hall stands at the back, the basin with the pile in the court.  A builder returns where the live parts go: { crownY, heroY, basin: [lx, lz], pileR }.
 const BASIN_Z = 4.9;
 function vbasin(Y, id, env) {
@@ -259,8 +259,8 @@ function vbasin(Y, id, env) {
   Y.cyl('stoneDark', 0, 0.5, BASIN_Z, 3.0, 3.3, 1.0, { ...T_ST, tint: 0xc2c7d2 }, 20);
   Y.geo('gold', new THREE.TorusGeometry(3.0, 0.24, 6, 24).rotateX(Math.PI / 2), 0, 1.03, BASIN_Z);
   for (let k = 0; k < 6; k++) { const a = (k / 6) * Math.PI * 2 + 0.5; Y.cyl('gold', Math.cos(a) * 3.55, 0.8, BASIN_Z + Math.sin(a) * 3.55, 0.17, 0.17, 1.6, {}, 6); Y.geo('gold', SPH(0.26, 8, 6), Math.cos(a) * 3.55, 1.7, BASIN_Z + Math.sin(a) * 3.55); }
-  const [px, pz] = Y.P(0, BASIN_Z), c = K.col;
-  env.ctx.pool(px, Y.y0 + 0.06, pz, 9, [(c >> 16 & 255) / 255, (c >> 8 & 255) / 255, (c & 255) / 255], 0.28);
+  const [px, pz] = Y.P(0, BASIN_Z), hc = haloRGB(id);
+  env.ctx.pool(px, Y.y0 + 0.375, pz, 8, hc, 0.9);          // ST1_R2: a faint pool of the gem's colour ON the court paving under the heap (the paving top is y0 + 0.36; the old pool lay at y0 + 0.06, under the stone, r 9 / 0.28).  The pool shader adds colour x a x texture-alpha^2, so only ~1.5 m of soft rim shows round the bowl: that is the 'faint pool'
 }
 function vdoor(Y, id, z) {                                    // gold-barred door in a marble frame, on the hall's front face (z)
   Y.box('stoneDark', 0, 0.9 + 2.2, z + 0.15, 4.2, 4.4, 0.6, { ...T_ST, tint: 0xd7dae2 });

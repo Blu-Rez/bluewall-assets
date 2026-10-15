@@ -8,8 +8,9 @@ const CACHE = {};
 // build a closed convex solid from triangles; every triangle is wound to look away from the centre -> flat facets.
 // Each facet also gets a baked stylised-lighting colour (key + fill light, facet-to-facet variation, a few white sparkle facets):
 // that is what makes a low-poly cut read as a glittering gem without any texture or per-pixel work.
+const HSL = { h: 0, s: 0, l: 0 };
 const KEY = new THREE.Vector3(-0.45, 0.85, 0.5).normalize(), FILL = new THREE.Vector3(0.7, 0.15, -0.4).normalize();
-function solid(tris, look) {
+function solid(tris, look, rich = false) {   // ST1_R2: rich = the small floating gems (fewer white sparkle facets, a little more saturation)
   const pos = new Float32Array(tris.length * 9), col = new Float32Array(tris.length * 9);
   const deep = new THREE.Color(look.deep), body = new THREE.Color(look.body), c = new THREE.Color(), white = new THREE.Color(1, 1, 1), n = new THREE.Vector3();
   let o = 0;
@@ -23,8 +24,9 @@ function solid(tris, look) {
     let sh = 0.26 + 0.66 * Math.pow(Math.max(0, n.dot(KEY)), 0.9) + 0.28 * Math.pow(Math.max(0, n.dot(FILL)), 1.5) + (h - 0.5) * 0.26;
     if (n.y < -0.1) sh += 0.16 * Math.abs(Math.sin(f * 2.3));            // pavilion facets catch light from inside
     c.copy(deep).lerp(body, Math.min(1, Math.max(0, sh)));
-    if (sh > 1) c.lerp(white, Math.min(0.75, (sh - 1) * 1.6));
-    else if (h > 0.9) c.lerp(white, 0.45);                              // sparkle facets
+    if (sh > 1) c.lerp(white, Math.min(rich ? 0.3 : 0.75, (sh - 1) * 1.6));
+    else if (h > 0.9) c.lerp(white, rich ? 0.2 : 0.45);                 // sparkle facets
+    if (rich) { c.getHSL(HSL); c.setHSL(HSL.h, Math.min(1, HSL.s * 1.12 + 0.04), HSL.l * 0.97); }       // ST1_R2: richer colour
     for (const v of p) { pos[o] = v[0]; pos[o + 1] = v[1]; pos[o + 2] = v[2]; col[o] = c.r; col[o + 1] = c.g; col[o + 2] = c.b; o += 3; }
   });
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.BufferAttribute(col, 3)); g.computeVertexNormals();
@@ -46,26 +48,27 @@ function brilliant(n, look, o = {}) {
     tris.push([G2[i], G2[j], P[i]], [G2[j], P[j], P[i]]);           // lower girdle
     tris.push([P[i], P[j], C]);                                     // pavilion mains
   }
-  return solid(tris, look);
+  return solid(tris, look, o.rich);
 }
 // rectangular step cut: 8-sided rings (clipped corners) stepping up to a flat table and down to a keel
 function stepCut(look, o = {}) {
   const sx = 0.92, sz = 0.7, oct = (s, y0) => { const y = y0 * 1.22; return [[1, 0.52], [0.52, 1], [-0.52, 1], [-1, 0.52], [-1, -0.52], [-0.52, -1], [0.52, -1], [1, -0.52]].map(([a, b]) => [a * s * sx, y, b * s * sz]); };
   const R = [oct(0.58, 0.36), oct(0.76, 0.27), oct(0.9, 0.15), oct(1, 0.07), oct(1, -0.07), oct(0.86, -0.26), oct(0.64, -0.5), oct(0.38, -0.74), oct(0.14, -0.9)];
-  void o; const tris = [];
+  const tris = [];
   for (let k = 0; k < R.length - 1; k++) for (let i = 0; i < 8; i++) { const j = (i + 1) % 8; tris.push([R[k][i], R[k][j], R[k + 1][j]], [R[k][i], R[k + 1][j], R[k + 1][i]]); }
   const top = [0, 0.36 * 1.22, 0], bot = [0, -0.9 * 1.22, 0];
   for (let i = 0; i < 8; i++) { const j = (i + 1) % 8; tris.push([top, R[0][i], R[0][j]]); tris.push([bot, R[R.length - 1][j], R[R.length - 1][i]]); }
-  return solid(tris, look);
+  return solid(tris, look, o.rich);
 }
 
-export function gemGeometry(kind) {
-  if (CACHE[kind]) return CACHE[kind];
-  const look = GEM_LOOK[kind];
-  if (kind === 'sap') return (CACHE[kind] = brilliant(4, look, { table: 0.6, crown: 0.52, star: 0.88, pav: 1.25, lower: 0.5, girdle: 0.07 }));                 // a diamond-shaped (kite) cut
-  if (kind === 'onyx') return (CACHE[kind] = brilliant(10, look, { table: 0.5, crown: 0.4, star: 0.84, pav: 0.95, lower: 0.6 }));                          // a many-faceted round cut
-  const g = kind === 'ruby' ? brilliant(8, look, { crown: 0.5, pav: 1.12, table: 0.6, star: 0.82, lower: 0.56 }) : kind === 'emerald' ? stepCut(look) : brilliant(6, look, { table: 0.52, crown: 0.5, star: 0.8, pav: 1.25, lower: 0.5 });
-  return (CACHE[kind] = g);
+export function gemGeometry(kind, rich = false) {                       // ST1_R2: rich = the small floating gems (own cached geometry, same triangles)
+  const key = rich ? kind + '_rich' : kind;
+  if (CACHE[key]) return CACHE[key];
+  const look = GEM_LOOK[kind], o = { rich };
+  if (kind === 'sap') return (CACHE[key] = brilliant(4, look, { table: 0.6, crown: 0.52, star: 0.88, pav: 1.25, lower: 0.5, girdle: 0.07, ...o }));                 // a diamond-shaped (kite) cut
+  if (kind === 'onyx') return (CACHE[key] = brilliant(10, look, { table: 0.5, crown: 0.4, star: 0.84, pav: 0.95, lower: 0.6, ...o }));                          // a many-faceted round cut
+  const g = kind === 'ruby' ? brilliant(8, look, { crown: 0.5, pav: 1.12, table: 0.6, star: 0.82, lower: 0.56, ...o }) : kind === 'emerald' ? stepCut(look, o) : brilliant(6, look, { table: 0.52, crown: 0.5, star: 0.8, pav: 1.25, lower: 0.5, ...o });
+  return (CACHE[key] = g);
 }
 
 // natural crystal: hexagonal prism that tapers into a faceted point (base at y=0, ~3.5 tall, radius 1); used for the veins / clusters growing out of the mine rock
@@ -114,3 +117,34 @@ export function gemMaterial(kind, { envMapIntensity = 1.5, glow = 0.22 } = {}) {
 export const gemPileMaterial = (kind) => gemMaterial(kind, { envMapIntensity: 1.3, glow: 0.3 });
 // kept for the icon renderer (glassy two-layer variant)
 export function gemMaterials(kind, o = {}) { const m = gemMaterial(kind, o); return { front: m, back: null }; }
+
+// ---------------------------------------------------------------------------------------------------------------------------------------------------------------- ST1_R2: the gem halo
+// One small, soft, colour-rich sprite round every floating gem (vault hero gems, mine gems).  Old look: a big white-core glow (10-26 m, up to 0.9 opacity at night) = washed out and a heavy additive overdraw.
+// New: a steep smooth falloff (no white core), the saturated gem hue, diameter ~2.5x the gem, opacity capped (night 0.25 / day 0.08 at the default look).  +0 shader programs (same SpriteMaterial), +0 draw calls (it replaces the old sprite).
+//   ?st1g=1 subtle   ?st1g=2 medium (default)   ?st1g=3 rich     (night cap / day cap / diameter in gem diameters)
+export const HALO_STYLES = { 1: { night: 0.16, day: 0.05, d: 2.2 }, 2: { night: 0.25, day: 0.08, d: 2.8 }, 3: { night: 0.38, day: 0.12, d: 3.4 } };
+let HALO_LOOK = 0;
+export function haloLook() { if (!HALO_LOOK) { const m = typeof location !== 'undefined' && /[?&]st1g=([123])/.exec(location.search); HALO_LOOK = m ? +m[1] : 2; } return HALO_LOOK; }
+let HALO_TEX = null;
+export function haloTexture() {
+  if (HALO_TEX) return HALO_TEX;
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const g = c.getContext('2d'), gr = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  for (let i = 0; i <= 24; i++) { const r = i / 24, u = Math.min(1, Math.max(0, (r - 0.1) / 0.9)), a = Math.pow(1 - u * u * (3 - 2 * u), 1.6); gr.addColorStop(r, `rgba(255,255,255,${a.toFixed(4)})`); }      // smooth S-curve: full strength inside the gem's own radius, soft shoulder, 0 at the rim (no white core: the colour is the saturated hue)
+  g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.needsUpdate = true;
+  return (HALO_TEX = t);
+}
+export function haloColor(kind) { const col = new THREE.Color(GEM_LOOK[kind].glow), h = {}; col.getHSL(h); return col.setHSL(h.h, 1, 0.5); }      // the pure, saturated hue (no white)
+export function haloRGB(kind) { const x = haloColor(kind).getHex(); return [(x >> 16 & 255) / 255, (x >> 8 & 255) / 255, (x & 255) / 255]; }       // the same hue as sRGB floats (the pools take raw colour bytes)
+export function makeHalo(kind) {
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: haloTexture(), color: haloColor(kind), blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0 }));
+  sp.userData.halo = true; return sp;
+}
+// night 0..1 (P.night), fill 0..1 (a vault's wallet fill; 1 for a mine), t seconds.  The cap is never exceeded.
+export function haloUpdate(sp, gemScale, night, fill = 1, t = 0, full = false, phase = 0, look = 0) {      // look: only the test passes it (1 / 2 / 3), the game reads ?st1g=
+  const S = HALO_STYLES[look || haloLook()], n = Math.min(1, Math.max(0, night)), cap = S.day + (S.night - S.day) * n;
+  const breathe = 0.94 + 0.06 * Math.sin(t * (full ? 2.2 : 1.4) + phase);
+  sp.material.opacity = cap * (0.75 + 0.25 * fill) * breathe;
+  sp.scale.setScalar(gemScale * 2 * S.d * (0.97 + 0.03 * breathe));
+}

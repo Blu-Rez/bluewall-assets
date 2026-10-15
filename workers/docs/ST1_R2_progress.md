@@ -1,0 +1,5 @@
+ST1_R2 · 100% · done: code (vault crown removed, small rich gem + soft halo cap night 0.25 / day 0.08, pool on the court paving; mines giant gem → small gem + halo), 6+6 before/after frame sets (day/dusk/night × lv30/lv50, map + 9 close-ups) + 3-look sheets, overdraw table (estimate; night alpha-weighted −79…−81 %, programs +0, calls ≈ equal), GATE_W: ALL OK, ST1 OK, ST1R2 OK, BT1 OK (lv30), patch + report · next: owner picks the look (1/2/3, default 2) · blocked: none
+
+# ST1_R2 progress
+- 15 Oct 2026 16:58 (kit 0574fdc): gate baseline GATE_W: ALL OK (noRoute 647). PF2's `pf_overdraw` not available yet → own estimate (projected additive-sprite quads), labelled as an estimate.
+- Finding: the vault build site has NO placeholder gem / glow (checked storeyards.js, worksites.js, wsbuild.js, world.js, town.js). The only other big gem + big glow is on the MINES (mines.js: giant gem scale 5.6, glow 26 m, opacity up to 0.65 at night) = "where the gem is made". ST1_R2 treats the mines as the second place (marked `// ST1_R2:` lines).

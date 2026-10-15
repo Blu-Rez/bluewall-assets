@@ -1,5 +1,5 @@
 // Gem vaults (owned by the "economy" workstream): one treasury hall per gem (ruby / emerald / turquoise) in front of the Blue Wall gate.
-// Each hall wears a giant cut gem as its crown, a fabulous gem floats above it, and in front of the door a stone basin is heaped with
+// Each hall has a small cut gem floating over it (ST1_R2: the giant crown gem on the roof is gone) with a soft halo, and in front of the door a stone basin is heaped with
 // real cut gems — the pile grows and shrinks with the wallet (n / cap), a full vault glitters and pulses.
 //   planVaults()                         -> footprints (the town reserves them so no house is built there)
 //   buildVaults(ctx, api)                -> { setFill({ ruby:{n,cap}, ... }), update(t, dt, camera, P), list } (before the static batch)
@@ -9,7 +9,7 @@ import { roadDist } from './roads.js';
 import { marketSpot } from './terrain.js';
 import { mat4 } from './util.js';
 import { rng } from './noise.js';
-import { gemGeometry, gemMaterial, gemPileMaterial, GEM_LOOK } from './gemgeo.js';
+import { gemGeometry, gemMaterial, gemPileMaterial, GEM_LOOK, makeHalo, haloUpdate, haloRGB } from './gemgeo.js';      // ST1_R2: makeHalo / haloUpdate / haloRGB
 import { ENT, levelOf } from './skin.js';
 import { planQuarter, buildVaultHall } from './storeyards.js';        // ST1: the Treasury Quarter plan + the new static hall (null = the planner / the hall below)
 
@@ -100,15 +100,12 @@ export function buildVaults(ctx, api) {
       put(CYL(4.1, 4.4, 1.0, 20), M.stoneDark, mat4(px, bry, pz), { ...stoneUV, tint: 0xb4bac8 });
       put(new THREE.TorusGeometry(4.1, 0.28, 6, 24).rotateX(Math.PI / 2), M.gold, mat4(px, bry + 0.52, pz));
       for (let k = 0; k < 6; k++) { const a = (k / 6) * Math.PI * 2, [qx, qz] = [px + Math.cos(a) * 4.5, pz + Math.sin(a) * 4.5]; put(CYL(0.22, 0.22, 1.6, 6), M.gold, mat4(qx, y0 + 0.8, qz)); }
-      ctx.pool(px, y0 + 0.06, pz, 9, [GEM_LOOK[V.id].glow >> 16 & 255, GEM_LOOK[V.id].glow >> 8 & 255, GEM_LOOK[V.id].glow & 255].map((v) => v / 255), 0.28);
+      ctx.pool(px, y0 + 0.06, pz, 8, haloRGB(V.id), 0.9);       // ST1_R2: a small, soft, gem-coloured pool (was r 9 / 0.28)
     }
-    // ---- the live parts: gem crown, floating hero gem, glow, pile
+    // ---- the live parts: the small floating gem (hero) + its soft halo + the pile.  ST1_R2: the big crown gem is gone (owner 15 Oct: «remove the big gems, the small one is fine»).
     const geo = gemGeometry(V.id);
-    const crown = new THREE.Mesh(geo, gemMaterial(V.id, { envMapIntensity: 1.25, glow: 0.32 }));
-    const [cx, cz] = P(0, 0); crown.position.set(cx, y0 + (H ? H.crownY : 8.9), cz); crown.scale.set(5.2, 5.2, 5.2); crown.rotation.y = V.ry; scene.add(crown);
-    const hero = new THREE.Mesh(geo, gemMaterial(V.id, { envMapIntensity: 1.6, glow: 0.45 })); hero.scale.setScalar(1.7); scene.add(hero);
-    const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: M.glowWhite, color: L0.glow, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.5 }));
-    glow.scale.setScalar(12); scene.add(glow);
+    const hero = new THREE.Mesh(gemGeometry(V.id, true), gemMaterial(V.id, { envMapIntensity: 1.5, glow: 0.2 })); hero.scale.setScalar(1.7); scene.add(hero);
+    const glow = makeHalo(V.id); scene.add(glow);
     // pile: gems heaped in a mound; the first N (lowest) are shown for a fill of N / PILE_N
     const pile = new THREE.InstancedMesh(geo, gemPileMaterial(V.id), PILE_N); pile.name = 'gem-pile-' + V.id;
     const spots = [];
@@ -120,13 +117,15 @@ export function buildVaults(ctx, api) {
     const m4 = new THREE.Matrix4(), q4 = new THREE.Quaternion(), e4 = new THREE.Euler();
     spots.forEach((sp, i) => { m4.compose(new THREE.Vector3(px + sp.x, bry + 0.55 + sp.y * 0.9, pz + sp.z), q4.setFromEuler(e4.set(sp.rx, sp.ry, sp.rz)), new THREE.Vector3(sp.sc, sp.sc, sp.sc)); pile.setMatrixAt(i, m4); });
     pile.instanceMatrix.needsUpdate = true; pile.count = Math.round(PILE_N * 0.5); pile.castShadow = false; pile.frustumCulled = false; scene.add(pile);
-    ctx.live(crown, hero, glow, pile);
+    ctx.live(hero, glow, pile);
     B.tag(0); B.bid(0);
     ctx.pick({ x: V.x, z: V.z, y0: 0, y1: y0 + 14, r: 9 }, 'vault_' + V.id);
-    const top = new THREE.Vector3(V.x, y0 + (H ? H.heroY + 1.8 : 17), V.z);
-    list.push({ id: V.id, x: V.x, y: y0, z: V.z, ry: V.ry, top, pileCenter: new THREE.Vector3(px, bry, pz) });
-    live.push({ id: V.id, crown, hero, glow, pile, top, f: 0.5, target: 0.5, mats: [crown.material, hero.material, pile.material], baseY: y0 + (H ? H.heroY : 15.2) });
-    ctx.levelHooks.push(() => { const k = (levelOf('vault_' + V.id) - 1) / 19; crown.scale.setScalar(3.6 + 1.9 * k); hero.scale.setScalar(1.2 + 0.7 * k); });
+    const heroY = H ? H.crownY + 1.4 : 15.2;                                                  // ST1_R2: floats 1.4 m over the old crown seat (it used to float 6 m higher, over the crown)
+    const top = new THREE.Vector3(V.x, y0 + heroY + 1.8, V.z);                                  // (the badge anchor keeps the old rule: 1.8 m over the gem)
+    list.push({ id: V.id, x: V.x, y: y0, z: V.z, ry: V.ry, top, gem: hero.position, pileCenter: new THREE.Vector3(px, bry, pz) });
+    hero.position.set(top.x, y0 + heroY, top.z); glow.position.copy(hero.position);
+    live.push({ id: V.id, hero, glow, pile, top, f: 0.5, target: 0.5, mats: [hero.material, pile.material], baseY: y0 + heroY });
+    ctx.levelHooks.push(() => { const k = (levelOf('vault_' + V.id) - 1) / 19; hero.scale.setScalar(1.2 + 0.7 * k); });
   }
 
   let night = 0;
@@ -141,12 +140,10 @@ export function buildVaults(ctx, api) {
         v.f += (v.target - v.f) * Math.min(1, dt * 2.2);                              // the pile rises / sinks smoothly
         const n = Math.round(PILE_N * v.f), full = v.target > 0.985;
         if (v.pile.count !== n) v.pile.count = n;
-        v.hero.position.set(v.top.x, v.baseY + Math.sin(t * 1.3 + v.id.length) * 0.45, v.top.z); v.hero.rotation.y = t * 0.7;
+        v.hero.position.set(v.top.x, v.baseY + Math.sin(t * 0.9 + v.id.length) * 0.35, v.top.z); v.hero.rotation.y = t * 0.35;      // ST1_R2: slower float and turn
         v.glow.position.copy(v.hero.position);
-        const pulse = full ? 0.75 + 0.25 * Math.sin(t * 4) : 0.9;
-        v.glow.material.opacity = (0.22 + 0.35 * v.f + night * 0.3) * pulse; v.glow.scale.setScalar(10 + 5 * v.f + (full ? 2 * Math.sin(t * 4) : 0));
-        const e = 0.22 + night * 0.5 + (full ? 0.25 + 0.2 * Math.sin(t * 4) : 0);
-        v.mats[0].emissiveIntensity = 0.25 + night * 0.4; v.mats[1].emissiveIntensity = e + 0.2; v.mats[2].emissiveIntensity = 0.2 + night * 0.35 + (full ? 0.2 : 0);
+        haloUpdate(v.glow, v.hero.scale.x, night, v.f, t, full, v.id.length);                                                      // ST1_R2: small soft halo, opacity capped (night 0.25 / day 0.08)
+        v.mats[0].emissiveIntensity = 0.1 + night * 0.3 + (full ? 0.08 + 0.06 * Math.sin(t * 2.2) : 0); v.mats[1].emissiveIntensity = 0.2 + night * 0.35 + (full ? 0.2 : 0);
       }
     },
   };

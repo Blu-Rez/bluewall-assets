@@ -10,7 +10,7 @@ import * as THREE from 'three';
 import * as L from './layout.js';
 import { mat4, gableRoof, grayMap } from './util.js';
 import { GEM_COL } from './gems.js';
-import { gemGeometry, crystalGeometry, gemMaterial } from './gemgeo.js';
+import { gemGeometry, crystalGeometry, gemMaterial, makeHalo, haloUpdate } from './gemgeo.js';      // ST1_R2: makeHalo / haloUpdate
 import { rng } from './noise.js';
 import { ENT, applySkin, levelOf } from './skin.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
@@ -42,12 +42,10 @@ const _m4 = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Eul
 
 export function buildMines(ctx, A, Q, scene, anim) {
   const { B, M, height } = ctx, out = [];
-  const gm = {}, glowMats = {}, bigGm = {};
+  const gm = {}, bigGm = {};      // ST1_R2: (the shared glow materials are gone: every mine gem has its own soft halo, gemgeo.js makeHalo)
   for (const id of IDS) {
-    const c = GEM_COL[id];
     gm[id] = gemMaterial(id, { envMapIntensity: 1.2, glow: 0.3 });
-    bigGm[id] = gemMaterial(id, { envMapIntensity: 1.4, glow: 0.45 });
-    glowMats[id] = new THREE.SpriteMaterial({ map: M.glowWhite, color: c.glow, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.5 });
+    bigGm[id] = gemMaterial(id, { envMapIntensity: 1.5, glow: 0.2 });      // ST1_R2: a small rich gem, not the washed-out giant
   }
   const wood = M.woodLight.clone(); wood.vertexColors = false; wood.color.set(0xe6c9a0);
   const metal = M.metal.clone(); metal.vertexColors = false; metal.color.set(0xaab6c8);
@@ -209,10 +207,10 @@ export function buildMines(ctx, A, Q, scene, anim) {
       void x; void z;
     }
 
-    // ---- the giant floating gem + glow: the mine's landmark
-    const gx = W(8, 0), gy = py + 25;
-    const giant = new THREE.Mesh(gemGeometry(id), bigGm[id]); giant.scale.setScalar(5.6); giant.position.set(gx[0], gy, gx[1]); scene.add(giant);
-    const glow = new THREE.Sprite(glowMats[id]); glow.position.set(gx[0], gy, gx[1]); glow.scale.setScalar(26); scene.add(glow);
+    // ---- the small floating gem + its soft halo: the mine's landmark (ST1_R2: the giant 5.6x gem and the 26 m glow are gone — owner 15 Oct: «remove the big gems, the small one is fine», also where the gems are made)
+    const gx = W(8, 0), gy = py + 27;
+    const giant = new THREE.Mesh(gemGeometry(id, true), bigGm[id]); giant.scale.setScalar(2.0); giant.position.set(gx[0], gy, gx[1]); scene.add(giant);
+    const glow = makeHalo(id); glow.position.set(gx[0], gy, gx[1]); scene.add(glow);
     const big = { giant, glow, gy, mat: bigGm[id], ph: R() * 6, k: 1 }; bigs.push(big);
     out.push({ id, glow });
 
@@ -252,7 +250,7 @@ export function buildMines(ctx, A, Q, scene, anim) {
     }
     freezeChildren(machine);
     // size grows with the mine's level
-    ctx.levelHooks.push(() => { const k = (levelOf('mine_' + id) - 1) / 19; big.k = 0.5 + 0.5 * k; giant.scale.setScalar(5.8 * big.k); machine.scale.setScalar(0.9 + 0.45 * k); cart.scale.setScalar(1.0 + 0.3 * k); });
+    ctx.levelHooks.push(() => { const k = (levelOf('mine_' + id) - 1) / 19; big.k = 0.5 + 0.5 * k; giant.scale.setScalar(1.5 + 0.9 * k); machine.scale.setScalar(0.9 + 0.45 * k); cart.scale.setScalar(1.0 + 0.3 * k); });
 
     // ---- mine cart rolling out of the tunnel and back, heaped with gems
     const cart = new THREE.Group(); cart.scale.setScalar(1.3); scene.add(cart);
@@ -279,15 +277,14 @@ export function buildMines(ctx, A, Q, scene, anim) {
     B.tag(0); B.bid(0);
     const [px, pz] = W(-4, 0);
     ctx.pick({ x: px, z: pz, y0: y0 - 2, y1: y0 + 34, r: 20 }, 'mine_' + id);
-    out.push({ id, x: px, y: y0, z: pz, top: (() => { const [x, z] = W(6, 0); return new THREE.Vector3(x, y0 + 36, z); })() });
+    out.push({ id, x: px, y: y0, z: pz, gem: giant.position, top: (() => { const [x, z] = W(6, 0); return new THREE.Vector3(x, y0 + 36, z); })() });
   }
   // emissive pulse (stronger at night) + the giant gems turn and bob
   let night = 0;
-  const GMs = Object.entries(gm), GL = Object.values(glowMats);
+  const GMs = Object.entries(gm);
   anim.push((t) => {
     for (const [k, m] of GMs) m.emissiveIntensity = (0.28 + 0.8 * night) * (0.85 + 0.15 * Math.sin(t * 1.7 + k.length));
-    for (const b of bigs) { b.giant.position.y = b.gy + Math.sin(t * 1.1 + b.ph) * 0.8; b.giant.rotation.y = t * 0.6 + b.ph; b.glow.position.y = b.giant.position.y; b.glow.scale.setScalar((22 + 4 * Math.sin(t * 2.0 + b.ph)) * b.k); b.mat.emissiveIntensity = 0.45 + 0.9 * night + 0.1 * Math.sin(t * 2.3 + b.ph); }
-    for (const g of GL) g.opacity = 0.07 + 0.58 * night;      // (by day the additive halo only washed the crystal out from above; it glows at night)
+    for (const b of bigs) { b.giant.position.y = b.gy + Math.sin(t * 0.9 + b.ph) * 0.35; b.giant.rotation.y = t * 0.35 + b.ph; b.glow.position.y = b.giant.position.y; haloUpdate(b.glow, b.giant.scale.x, night, 1, t, false, b.ph); b.mat.emissiveIntensity = 0.1 + 0.3 * night + 0.03 * Math.sin(t * 2.3 + b.ph); }      // ST1_R2: slow float / turn, capped halo, calmer emissive
   });
   return { list: out.filter((o) => o.top), setNight(n) { night = n; } };
 }
