@@ -1,0 +1,21 @@
+# SM1 — مدل سرباز‌ها: از فایل Studio تا سرباز توی نبرد (چت جدید) · push `SM1`
+
+شروع چت: `workers/docs/GIT_FLOW.md` (add_repo با push → `git clone --depth 1 --branch kit https://github.com/Blu-Rez/bluewall-assets.git` → `setup_kit.sh` → `gate_w.sh`). **هرگز `main` را کلون نکن.** قوانین مشترک همه‌ی چت‌ها = بخش «Common rules» در `workers/docs/ROUND4_JOBS.md` (فایل‌های خودت، درصد پیشرفت، landscape ‏844×390، بدون راز، کلمهٔ «bot/ربات» در متن بازی نباید باشد، `GATE_W: ALL OK` با noRoute < 700 — الان ۶۴۷). **هیچ مدلی بدون «شمارهٔ مالک از شیت» وارد بازی نمی‌شود.** Tripo را فقط TR1 و TP1 خرج می‌کنند.
+
+## هدف
+مالک سربازها را در Tripo Studio می‌سازد (ریگ mixamo با ۶۵ استخوان، فقط پریست Walk). تو کل زنجیره را درست می‌کنی که **وقتی فایل رسید، یک دستور** آن را به سرباز نبرد تبدیل کند، و ثابت می‌کنی که کار می‌کند — با فایل‌های نمونه، نه با حدس.
+
+## کتابخانهٔ ریگ‌ها / انیمیشن‌ها — «همان ۵۴ تا»
+شاخهٔ `inbox/TP1` (`git clone --depth 1 --branch inbox/TP1 https://github.com/Blu-Rez/bluewall-assets.git tp1`): `TP1_clips_lib.glb` (اسکلت + **۵۲ کلیپ** از ۵۴ انیمیشن Studio؛ دوتا رد شده)، `TP1_clips.py` (ابزار: `apply lib hero_walk.glb out.glb [--only=…]`)، `TP1_clips_manifest.json` (برای هر کلیپ: اسم، prompt، حالت root، loop، verdict، بازهٔ active)، `TP1_clips_README.md` (بخوان: verdictها — ok / weak / seat / reject)، `TP1_anim_list.md`، `TP1_melika_G1.glb` (مدل نمونه). ریاضی = همان RP0A: `R_dst(t) = R_src(t)·R_src_rest⁻¹·R_dst_rest`.
+مدل نمونهٔ دیگر: `kit` → `web/assets/rpg/*.glb` (قهرمان‌ها؛ ریگ Tripo-native، ۳۳ کلیپ بازی) و فایل‌های سرباز موجود.
+
+## کارها (به ترتیب)
+1. **بخوان** (قبل از هر کد): `workers/docs/report_BT1_R2.md` §3 (جدول `client/src/unit_models.json` = ۳۷ ردیف، همه `model: null`، و `unit_swap.js`: یک ردیف = `model, anims, h, yaw, clips{idle,run,walk,atk,hit}, ref, lod2`) و `bunits.js` (چه کلیپ‌هایی را کدام نوع می‌خواهد؛ مرگ/death چطور).
+2. **جدول کلیپ‌ها `workers/docs/SM1_CLIPS.md`:** برای هر ۳۷ کلید سرباز (۳۱ تای `unitdefs.json order` + `e_guard e_archer e_hill e_baby e_dragon e_giant`) کدام کلیپ TP1 برای idle / walk / run / atk / hit / death (مثلاً نیزه‌دار → `spear_thrust`، شمشیرزن → `sword_shield_slash`، کماندار → `crossbow_shoot` چون `shoot_bow` ضعیف است، جادوگر → `cast_projectile`، غول → `giant_swing`…). کلیپ‌های `weak` و `seat` (سوارکار: پاها صاف ایستاده، اسب نداریم) را **صریح** علامت بزن و لیست «Needs Tripo» بساز (سوارکار نشسته، اسب، …) — اسم · اندازه به متر · ظاهر، یک خط.
+3. **ابزار `dev/sm1_apply.py`** (از `TP1_clips.py` شروع کن، چیز تازه نساز اگر لازم نیست): ورودی = GLB خروجی Studio + کلید سرباز → خروجی = GLB با **همان اسم کلیپ‌هایی که جدول می‌خواهد**، فقط کلیپ‌های لازم (هر کلیپ ۴۰–۱۲۰ KB؛ بودجهٔ فایل را بگو)، سرعت راه‌رفتن/`ref`، `h`، `yaw`، و ردیف آمادهٔ JSON برای `unit_models.json` (با `lod2` از `bt1r2_lod2cal.py` و LOD با `workers/tools/lod_geo.mjs` — **مدل دست‌ساز یا رنگ‌شده ممنوع**). بودجه: مثلث LOD0 ≤ ۶ هزار، LOD1 ≤ ۱٫۵ هزار برای سربازِ هم‌اندازهٔ آدم، ۶۹۲ سرباز همزمان.
+4. **اثبات با نمونه (نه وارد بازی):** سه ردیف را با مدل‌های نمونه در `dev/bt1r2_units.html` (حالت stand-in) پر کن و نشان بده: کلیپ‌ها پخش می‌شوند، ارتفاع `h` درست، چرخش `yaw` درست (چهره جهت حرکت)، پا روی زمین نمی‌لغزد (cm/s در سرعت `ref`)، سلاح در دست (سیستم WC1 `combat/carry.js` — ببین با ریگ ۶۵‌استخوانی کار می‌کند یا نه؛ اسم استخوان‌ها: بازی `Hip, Pelvis, Spine02, L_Hand, R_Hand, Head, L_/R_Thigh/Calf/Foot` می‌خواهد؛ ابزار `workers/dev/sis_build.py` (مادر) همین تبدیل نام را برای قهرمان‌ها انجام می‌دهد — بخوان و در صورت لزوم همان را استفاده کن)، هزینهٔ ۶۹۲ سرباز با ریگ ۶۵‌استخوانی در `crowd.js` (CPU/draw call/مثلث) در برابر امروز، و `BT1R2 OK` + `GATE_W: ALL OK`.
+5. **راهنمای یک‌صفحه‌ای برای مالک** (فارسی، کوتاه): هر سرباز در Studio چه باید باشد (قد، تعداد مثلث، یک متریال، حالت ایستادن A/T، فقط Walk)، چه فایلی بدهد، چه شمارهٔ شیتی را بگوید.
+6. هیچ فایلِ بازی را عوض نکن مگر `unit_models.json` / `unit_swap.js` / `bunits*.js` (بخش مدل/LOD) با خط‌های علامت‌خورده `// SM1:`. ممنوع: `web/app/*`, `pkg/`, `dev/gate*.sh`, `*.py` سرور، راز.
+
+## تحویل
+`push_result.sh SM1 …` + یک خط «SM1 pushed». گزارش با بخش «ثابت‌نشده» (گوشی واقعی چیزی اندازه‌گیری نشده؛ فقط رندر نرم‌افزاری)، و هر عدد را خودت اجرا کرده باشی — حدس و «احتمالاً درسته» قبول نیست. هر عکس را در اندازهٔ کامل خودت نگاه کن؛ زشت = تمام‌نشده.
