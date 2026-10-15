@@ -5,6 +5,7 @@
 import { settings, onSetting, resetSettings } from './settings.js';
 import { tr } from './i18n.js';
 import { badgeC, gearC, injectKit2 } from './ui_theme_r2.js';      // UI1-R2: look C for the HUD (badge + gear drawn here, the rest is CSS)
+import { injectHudR3 } from './ui_theme_r3.js';                    // UI1-R3: landscape-only HUD placement (3 layouts, html[data-hud])
 import { BASE } from './assets.js';
 
 const GEM_KEYS = ['ruby', 'emerald', 'turq'], PREM_KEYS = ['sap', 'onyx'];
@@ -155,8 +156,6 @@ const CSS = `
 .bw-wel .tap{position:absolute;left:0;right:0;bottom:calc(5.5vh - 7px);text-align:center;font-size:11px;letter-spacing:6px;padding-left:6px;text-transform:uppercase;color:#9fc8ef;opacity:0;transition:opacity 1s ease 1.8s}
 .bw-wel.in .tap{opacity:.85;animation:bwTap 2.4s ease-in-out 2.8s infinite}
 @keyframes bwTap{50%{opacity:.35}}
-/* ---- very narrow phones (320px): the whole HUD scales down a little so the left group never touches the gems on the right */
-@media (max-width:340px){.bw-ui{--hs:.56}}
 /* ---- landscape phones: the sheet moves to the side so it never covers the middle of the view */
 @media (orientation:landscape) and (max-height:560px){
   .bw-ui{--hs:.58}
@@ -195,7 +194,7 @@ export function raidReport(raids) {
 }
 export class UI {
   constructor(opts) {
-    const st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st); injectKit2();
+    const st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st); injectKit2(); injectHudR3();
     const root = document.createElement('div'); root.className = 'bw-ui';
     (opts.mount || document.body).appendChild(root);
     this.root = root; this.tg = opts.tg; this.opts = opts; this.tab = 'sound'; this.shown = {}; this.prof = { name: '', level: 1 };
