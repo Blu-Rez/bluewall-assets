@@ -74,9 +74,7 @@ const CSS = `
 .bwu-btn .core{position:absolute;left:11px;top:9px;width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 50% 28%,#2a5aa8,#0a2352 62%,#041030);box-shadow:inset 0 2px 6px rgba(160,210,255,.5),inset 0 -6px 12px rgba(0,0,0,.55);display:grid;place-items:center;color:#eaf6ff;overflow:hidden}
 .bwu-btn .core svg{filter:drop-shadow(0 2px 2px rgba(0,0,0,.6));width:30px;height:30px}
 .bwu-btn .core:after{content:"";position:absolute;left:-60%;top:0;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-18deg);opacity:0}
-.bwu-btn.hot .core:after{animation:bwuGleam 3s ease-in-out infinite}
 .bwu-btn.hot .ring{box-shadow:0 5px 14px rgba(0,0,0,.55),0 0 0 1.5px #01060f,0 0 22px rgba(110,200,255,.85)}
-@keyframes bwuGleam{0%,55%{left:-60%;opacity:0}60%{opacity:.9}100%{left:130%;opacity:0}}
 .bwu-btn .lb{position:absolute;left:0;right:0;bottom:0;text-align:center;font-size:10.5px;letter-spacing:2.2px;color:#e6f4ff;text-shadow:0 1px 0 #01060f,1px 0 0 #01060f,-1px 0 0 #01060f,0 0 6px rgba(0,0,0,.8);padding-left:2px}
 .bwu-btn .bd{position:absolute;right:-2px;top:-3px;min-width:22px;height:22px;padding:0 5px;box-sizing:border-box;border-radius:11px;background:linear-gradient(#7dffb5,#12a85a);border:1.5px solid #01220f;color:#02150a;font-size:12px;display:grid;place-items:center;box-shadow:0 2px 5px rgba(0,0,0,.5)}
 .bwu-btn .bd.t{background:linear-gradient(#e8f6ff,#8fc4ff);border-color:#0a2a5c;color:#03122b;font-size:10px;letter-spacing:.2px}

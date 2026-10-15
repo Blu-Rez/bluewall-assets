@@ -4,7 +4,7 @@
 //  plus the info sheet, mine sheet, settings panel and the cinematic welcome card.
 import { settings, onSetting, resetSettings } from './settings.js';
 import { tr } from './i18n.js';
-import ART from './hud_art.json';
+import { badgeC, gearC, injectKit2 } from './ui_theme_r2.js';      // UI1-R2: look C for the HUD (badge + gear drawn here, the rest is CSS)
 import { BASE } from './assets.js';
 
 const GEM_KEYS = ['ruby', 'emerald', 'turq'], PREM_KEYS = ['sap', 'onyx'];
@@ -46,8 +46,7 @@ const CSS = `
 .bw-g .fl{height:100%;width:0;border-radius:2px;background:linear-gradient(90deg,var(--d),var(--m) 55%,var(--l));transition:width .9s cubic-bezier(.2,.8,.2,1)}
 .bw-g.full{border-color:var(--gl)}
 .bw-g.full .ct span{color:var(--l)}
-.bw-g.full:after{content:"";position:absolute;inset:-2px;border-radius:16px;box-shadow:0 0 11px 2px var(--gl);opacity:.55;animation:bwFull 1.9s ease-in-out infinite;pointer-events:none}
-@keyframes bwFull{50%{opacity:.12}}
+.bw-g.full:after{content:"";position:absolute;inset:-2px;border-radius:16px;box-shadow:0 0 11px 2px var(--gl);opacity:.55;pointer-events:none}
 .gem3{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 2px 3px rgba(0,0,0,.55));pointer-events:none;user-select:none}
 .bw-col i .gem3{width:26px;height:26px}
 .bw-g.pop .gm{animation:bwPop .6s}
@@ -196,7 +195,7 @@ export function raidReport(raids) {
 }
 export class UI {
   constructor(opts) {
-    const st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st);
+    const st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st); injectKit2();
     const root = document.createElement('div'); root.className = 'bw-ui';
     (opts.mount || document.body).appendChild(root);
     this.root = root; this.tg = opts.tg; this.opts = opts; this.tab = 'sound'; this.shown = {}; this.prof = { name: '', level: 1 };
@@ -206,7 +205,7 @@ export class UI {
   build() {
     const t = tr(), root = this.root;
     root.innerHTML = `<div class="bw-top"></div>
-      <div class="bw-lvl" data-a="set">${ART.badge}<div class="lvn num">1</div><div class="gear">${ART.gear}</div></div>
+      <div class="bw-lvl" data-a="set">${badgeC()}<div class="lvn num">1</div><div class="gear">${gearC()}</div></div>
       <div class="bw-who"><div class="nm num"></div><div class="sub"></div></div>
       <div class="bw-gems">${GEM_KEYS.map((k) => `<div class="bw-g" data-g="${k}" style="--l:${LQ[k].l};--m:${LQ[k].m};--d:${LQ[k].d};--gl:${LQ[k].g}">
         <div class="gm">${GEMS[k]}</div><div class="ct num"><span>0</span><small>/ 0</small></div><div class="tk"><div class="fl"></div></div></div>`).join('')}</div>

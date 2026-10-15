@@ -104,9 +104,7 @@ const CSS = `
 .bwa-btn .core svg{filter:drop-shadow(0 2px 2px rgba(0,0,0,.7));width:34px;height:34px;margin-top:-6px}
 .bwa-btn .core b{position:absolute;left:0;right:0;bottom:7px;text-align:center;font-size:13px;color:#d9f2ff;text-shadow:0 1px 0 #000,0 0 6px #000;letter-spacing:.3px}
 .bwa-btn .core:after{content:"";position:absolute;left:-60%;top:0;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-18deg);opacity:0}
-.bwa-btn.hot .core:after{animation:bwaGleam 3.2s ease-in-out infinite}
 .bwa-btn.hot .ring{box-shadow:0 6px 16px rgba(0,0,0,.6),0 0 0 2px #01060f,0 0 24px rgba(255,90,100,.8)}
-@keyframes bwaGleam{0%,55%{left:-60%;opacity:0}60%{opacity:.9}100%{left:130%;opacity:0}}
 .bwa-btn .lb{position:absolute;left:0;right:0;bottom:0;text-align:center;font-size:11px;letter-spacing:2.4px;color:#ffe6e8;text-shadow:0 1px 0 #01060f,1px 0 0 #01060f,-1px 0 0 #01060f,0 0 6px rgba(0,0,0,.85);padding-left:2px}
 .bwa-btn.off{filter:grayscale(.6) brightness(.8)}
 .bwa-chip{pointer-events:auto;position:absolute;left:calc(14px + var(--sl));bottom:calc(var(--sb) + 118px);height:44px;padding:0 15px 0 11px;display:flex;align-items:center;gap:6px;border-radius:22px;font-size:11.5px;letter-spacing:.8px;color:#cfe8ff;
