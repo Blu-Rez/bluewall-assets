@@ -6,6 +6,7 @@ const SIS = [   // the element is shown by the emblem from the owner's character
   { k: 'elina', n: 'ELINA', c: '#ff6a3a' }, { k: 'elika', n: 'ELIKA', c: '#9fe8ff' }, { k: 'melika', n: 'MELIKA', c: '#7fe06a' },
   { k: 'mobina', n: 'MOBINA', c: '#f0a666' }, { k: 'aylin', n: 'AYLIN', c: '#4fb0ff' }, { k: 'aylar', n: 'AYLAR', c: '#cfeeff' },
 ];
+const CAM_MIN = 3.0, CAM_RISE = 3.2;   // RP1C-R4: the closest the third-person camera may get to her (m, 3-D) and the most it may rise to keep that
 const GATE_HALF = { outer: 7.5, inner: 4.5, town: 5.2 };
 const EDGE_SOFT = 16, EDGE_R = 420;                                        // RP1B: the soft edge of the walkable map (was a hard 335 m circle that shut out the outer mills, mines and hamlets)
 const HS = 1.12 * 1.12, HC = 1.06 * 1.06;   // RP1C-R3 (ROUND4 A1/8): +12 % over R2's 1.12 (the owner: «a bit small»; AN1_R3's SCALE.md / lineup decides the final pick: THIS line is the one constant);                                                                                 // RP1C-R2 Job 9: the owner's «a bit bigger»: everything that depends on her size follows ONE factor (the model, the body radius, the camera pivot, the speeds + strides = the same cadence; the camera's DISTANCE follows with HC = 1.06 only: with the full 1.12 the picture on the screen would be exactly the old one — she would only be bigger next to the houses)
@@ -81,6 +82,13 @@ const CSS = `
 .rp-em img{width:23px;height:23px;object-fit:contain;filter:drop-shadow(0 0 4px var(--ac))}
 .rp-x{position:absolute;left:12px;top:calc(${TOP} + 10px);width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(205,214,224,.5);background:radial-gradient(circle at 50% 35%,rgba(66,74,84,.62),rgba(22,26,32,.72));box-shadow:0 0 12px rgba(61,245,224,.2);display:flex;align-items:center;justify-content:center;color:#e6ecf2;padding:0}
 .rp-x svg{width:46%;height:46%;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;filter:drop-shadow(0 0 4px rgba(61,245,224,.7))}
+/* RP1C-R4: the HUD «i» joins the UI1 top row (exit 12 · eye 66 · gate 120 · info 174; ui_theme_r3.js places the others, it does not know this one) */
+html[data-hud] .rp-b[data-rp="info"]{width:46px!important;height:46px!important;left:calc(var(--hl) + 174px)!important;top:calc(var(--ht) + 5px)!important}
+/* RP1C-R4: the «i» on a hero card — a 32 px round sign inside a 44 x 44 hit area (top corner; it never starts the game) */
+.rp-i{position:absolute;z-index:3;top:-3px;right:-3px;width:44px;height:44px;padding:0;margin:0;border:0;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.rp-i i{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(205,214,224,.75);background:radial-gradient(circle at 50% 35%,rgba(66,74,84,.88),rgba(22,26,32,.92));box-shadow:0 0 9px var(--ac),0 2px 6px rgba(0,0,0,.6);color:#e6ecf2}
+.rp-i svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;filter:drop-shadow(0 0 3px rgba(61,245,224,.6))}
+.rp-i:active i{transform:scale(.9);border-color:#3df5e0}
 
 `;
 
@@ -668,7 +676,7 @@ export function create(H) {
   }
 
   // ------------------------------------------------------------------ the camera
-  function segHit(ax, ay, az, bx, bz, by, wd) {                           // first hit of the segment A->B with the boxes / discs / ground; returns t in 0..1 (1 = clear)
+  function segHit(ax, ay, az, bx, bz, by, wd, hi) {   // RP1C-R4: hi = the camera was RAISED over low props: the poles / trees (2-D discs, no height) and the mesh grid (<= 2 m) do not stop it, only boxes (walls, roofs) and the ground                           // first hit of the segment A->B with the boxes / discs / ground; returns t in 0..1 (1 = clear)
     let best = 1; const mgD = 0.38;
     const boxes = (S.layer === 'top' && S.top && wd === homeWorld) ? wd.boxes().concat([-1, 1].map((sd) => { const b = S.top, [mx, mz] = wrd(b, 0, sd * (b.hd - 0.35)); return { x: mx, z: mz, hw: b.hw, hd: 0.35, ux: b.ux, uz: b.uz, vx: b.vx, vz: b.vz, h: b.h + 2.3, mg: 0.1 }; })) : wd.boxes();   // on the wall-walk the merlons are solid for the camera, and the camera does not look over their top from outside the walkway (0.55 m taller than the stone: she stays in the picture)
     for (const b of boxes) {
@@ -683,11 +691,11 @@ export function create(H) {
       }
       if (ok && t0 > 0 && t0 < best) { const yy = ay + (by - ay) * t0; if (yy < wd.ground(ax + (bx - ax) * t0, az + (bz - az) * t0) + b.h) best = t0; }
     }
-    for (const [sx, sz, sr] of wd.discs()) {
+    if (!hi) for (const [sx, sz, sr] of wd.discs()) {
       const dx = bx - ax, dz = bz - az, fx = ax - sx, fz = az - sz, a = dx * dx + dz * dz, b2 = 2 * (fx * dx + fz * dz), c = fx * fx + fz * fz - (sr + mgD) ** 2, disc = b2 * b2 - 4 * a * c;
       if (a < 1e-8 || disc < 0 || c < 0) continue; const t = (-b2 - Math.sqrt(disc)) / (2 * a); if (t > 0 && t < best) best = t;
     }
-    if (grid && wd === homeWorld && S.layer === 0 && CONTACT.grid && grid.st.ready) {   // RP1C-R3: the camera meets the same solids as the body (the real meshes: a house wall, a fence, a tent) — not through them
+    if (!hi && grid && wd === homeWorld && S.layer === 0 && CONTACT.grid && grid.st.ready) {   // RP1C-R3: the camera meets the same solids as the body (the real meshes: a house wall, a fence, a tent) — not through them
       const dx = bx - ax, dz = bz - az, L = Math.hypot(dx, dz);
       if (L > 0.05) { const t = grid.ray(ax, az, dx, dz, L); if (t >= 0) { const f = Math.max(0, (t - 0.12) / L); if (f < best && ay + (by - ay) * f < wd.ground(ax + dx * f, az + dz * f) + 2.0) best = f; } }
     }
@@ -714,10 +722,23 @@ export function create(H) {
     if (dt === 0 || S.snap) { S.pivot.set(S.x, S.y + cpr.py, S.z); S.snap = false; }
     const D = cpr.D, sh = S.layer === 'top' ? 0 : cpr.sh, px = S.pivot.x, py = S.pivot.y, pz = S.pivot.z;      // (on the wall-walk the camera is straight behind her: the walkway is 1.8 m wide)
     const tx = px - vx * D + rx * sh, ty = py - vy * D + 0.1, tz = pz - vz * D + rz * sh;           // wanted camera spot (behind, a little to the right)
-    const t = segHit(px, py, pz, tx, tz, ty, wd), want = Math.max(0.55, t * D - 0.25);
+    const t = segHit(px, py, pz, tx, tz, ty, wd), want = Math.max(S.camFix !== false ? 0.15 : 0.55, t * D - 0.25);   // RP1C-R4: the old floor of 0.55 m put the camera INSIDE a wall that stood closer than that (head hidden below 1.2 m, see the end of this function)
+    
     if (want < S.camD) S.camD = want; else S.camD += (want - S.camD) * kExp(3.5, dt); if (dt === 0) S.camD = want;      // (closer at once when something is in the way — a smoothed approach left the camera 1 m inside a tower for a frame; away from it slowly)
     const dd = Math.min(S.camD, D), kk = dd / D;
-    const cx = px + (tx - px) * kk, cyy = py + (ty - py) * kk, cz = pz + (tz - pz) * kk;
+    let cx = px + (tx - px) * kk, cyy = py + (ty - py) * kk, cz = pz + (tz - pz) * kk;
+    // RP1C-R4 (QA1 006 007 008 009 010 016 017 042 051 063): a wall / prop behind her used to squeeze the camera to 0.55 m = the back of her hair.  The camera keeps CAM_MIN (3-D) from her:
+    //   when less room is left behind her it RISES over her shoulders and looks down at her (up at once, down slowly), and it never rises into a roof / overhang (the pivot -> camera segment is tested again).
+    let camR = 0;
+    if (S.camFix !== false && S.where === 'home' && S.layer === 0) {
+      const hz = Math.hypot(cx - px, cz - pz), dy = cyy - py;
+      if (hz * hz + dy * dy < CAM_MIN * CAM_MIN) camR = Math.min(CAM_RISE, Math.sqrt(Math.max(0, CAM_MIN * CAM_MIN - hz * hz)) - dy);
+    }
+    S.camR = dt === 0 || camR > (S.camR || 0) ? camR : (S.camR || 0) + (camR - (S.camR || 0)) * kExp(4, dt);
+    if (S.camR > 0.01) {
+      const ry = cyy + S.camR, t2 = segHit(px, py, pz, cx, cz, ry, wd, true), f = t2 < 1 ? Math.max(0.2, t2 - 0.06) : 1;
+      cx = px + (cx - px) * f; cz = pz + (cz - pz) * f; cyy = py + (ry - py) * f;
+    }
     let fl = wd.ground(cx, cz), mgFl = 0;
     const tb = S.layer === 'top' ? S.top : (S.layer === 'climb' && S.climb ? S.climb.b : null);
     if (tb) { const [cu, cv] = loc(tb, cx, cz); if (Math.abs(cu) <= tb.hw && Math.abs(cv) <= tb.hd) fl = Math.max(fl, Math.abs(cv) > tb.hd - 0.7 ? tb.h + 1.7 : topY(tb)); }        // never below the wall-walk while over it, and above the parapet when over its edge
@@ -727,7 +748,10 @@ export function create(H) {
     }
     if (S.where === 'home' && world.fastHeight(cx, cz) < WSURF) fl = Math.max(fl, WSURF);                                               // never under the water
     const camY = Math.max(cyy, fl + 0.3, mgFl), lift = camY - cyy, pe = lift > 0.05 ? Math.min(0.55, Math.atan(lift / Math.max(1.2, dd))) : 0, p2 = S.pitch + pe, cp2 = Math.cos(p2), sp2 = Math.sin(p2);       // RP1C-R3: when the floor lifts the camera (a bank, a parapet) it also tips down by that much, so she stays in the frame (it left her at its bottom edge)
-    camera.position.set(cx, camY, cz); camera.lookAt(cx + sy * cp2, camY - sp2, cz + cy * cp2);
+    camera.position.set(cx, camY, cz);
+    if (S.camR > 0.01 && !tb) camera.lookAt(px + vx * 0.5, py + vy * 0.5 + 0.1, pz + vz * 0.5);   // RP1C-R4: raised -> aim at her (a point just in front of the pivot); with camR = 0 this is the old aim
+    else camera.lookAt(cx + sy * cp2, camY - sp2, cz + cy * cp2);
+    if (S.hero && S.hero.head && S.camFix !== false) S.hero.head.scale.setScalar(camera.position.distanceTo(S.pivot) < 1.2 ? 0.001 : 1);   // RP1C-R4: where even the raised camera cannot get away from her (a roof right above), her head is hidden like in first person: never the back of her hair
   }
 
   // ------------------------------------------------------------------ DOM: HUD, pick screen, perf overlay
@@ -745,6 +769,7 @@ export function create(H) {
       cam: '<svg viewBox="0 0 24 24"><path d="M2 12s3.8-6.5 10-6.5S22 12 22 12s-3.8 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
       exit: '<svg viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>',
       gate: '<svg viewBox="0 0 24 24"><path d="M3 21V9l3-2 3 2v12M15 21V9l3-2 3 2v12M9 21v-6a3 3 0 0 1 6 0v6M3 21h18"/></svg>',
+      info: '<svg viewBox="0 0 24 24"><path d="M12 10.6v6.4"/><path d="M12 7.1v.2" stroke-width="2.8"/></svg>',   // RP1C-R4:
       act: '<svg viewBox="0 0 24 24"><path d="M4 21V10l8-6 8 6v11"/><path d="M9.5 21v-6.5a2.5 2.5 0 0 1 5 0V21"/><path d="M2.5 21h19"/></svg>',
     };
     const mk = (id, css, fn, hold, long) => {
@@ -763,6 +788,7 @@ export function create(H) {
     mk('sprint', `right:30px;bottom:${sb}186px);width:58px;height:58px`, (d) => { S.sprint = d; }, true);
     mk('cam', `left:12px;top:calc(${TOP} + 58px);width:46px;height:46px`, (d) => { if (d) setMode(S.mode === 'third' ? 'first' : 'third'); }, false, () => setPerf(!stats.open));
     mk('exit', `left:12px;top:calc(${TOP} + 6px);width:42px;height:42px`, (d) => { if (d) exit(); });
+    mk('info', `left:12px;top:calc(${TOP} + 174px);width:46px;height:46px`, (d) => { if (d && S.key) openInfo(S.key); });   // RP1C-R4: the «i» of the hero you are playing (plain layout: the 4th button of the left column; the UI1 theme row: see the html[data-hud] rule in CSS)
     mk('act', `right:30px;bottom:${sb}256px);width:62px;height:62px;display:none`, (d) => { if (d) useNear(); });
     mk('gate', `left:12px;top:calc(${TOP} + 116px);width:46px;height:46px`, (d) => { if (d && S.where === 'home' && !S.busy2) toGate(); });
     perfEl = el('div', 'rp-perf rp-k'); hudEl.appendChild(perfEl); try { if (localStorage.getItem('bw_rpg_perf') === '1') setPerf(true); } catch (e) { /* storage blocked */ }
@@ -826,11 +852,27 @@ export function create(H) {
     for (const s of SIS) {
       const c = el('div', 'rp-card' + (s.k === last ? ' sel' : ''), `<div class="rp-art"><img alt="" src="${BASE}rpg/c_${s.k}.webp${V}"></div><div class="rp-em"><img alt="" src="${BASE}rpg/e_${s.k}.png${V}"></div>`); c.dataset.k = s.k; c.style.setProperty('--ac', s.c);
       c.addEventListener('click', () => start(s.k)); grid.appendChild(c);
+      const ib = el('button', 'rp-i rp-k', '<i><svg viewBox="0 0 24 24"><path d="M12 10.6v6.4"/><path d="M12 7.1v.2" stroke-width="2.8"/></svg></i>'); ib.type = 'button'; ib.dataset.info = s.k; ib.setAttribute('aria-label', 'Info ' + s.n);   // RP1C-R4:
+      ib.addEventListener('click', (ev) => { ev.stopPropagation(); ev.preventDefault(); openInfo(s.k); }); c.appendChild(ib);
     }
     const x = el('button', 'rp-x rp-k', '<svg viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>'); x.type = 'button'; x.addEventListener('click', closePick); pickEl.appendChild(x);
     root.appendChild(pickEl); api.pickEl = pickEl;
   }
   function closePick() { if (pickEl) { pickEl.remove(); pickEl = null; api.pickEl = null; } }
+  // RP1C-R4: the «i» page (hero_info.js, loaded on the first tap).  While it is open in hero mode the world stands still (S.paused), and it gives the old value back on close.
+  let info = null, infoWas = null;
+  async function openInfo(k) {
+    try {
+      if (!info) {
+        const m = await import(/* @vite-ignore */ new URL('hero_info.js' + (new URL(import.meta.url).search || V), import.meta.url).href);
+        info = m.createInfo({ root, url: (f) => BASE + 'rpg/' + f + V, sisters: SIS, top: TOP, bot: BOT,
+          onOpen: () => { if (api.active && infoWas === null) { infoWas = S.paused; S.paused = true; } },
+          onClose: () => { if (infoWas !== null) { S.paused = infoWas; infoWas = null; } } });
+        api.info = info;
+      }
+      info.open(k);
+    } catch (e) { console.warn('hero info', e); }
+  }
 
   // ------------------------------------------------------------------ RP1C-R3 (PF1 F9): warm-up behind the loading card, not at the first hero frame
   // (a) hero mode on a phone switches the bloom composer off (R.nobloom), so at NIGHT the world is suddenly drawn on the plain (screen) path; when the game booted at night that path is built only at idle: main.js `warm`
@@ -892,6 +934,7 @@ export function create(H) {
   }
   function exit() {
     if (!api.active) return;
+    if (info) info.close();   // RP1C-R4:
     if (marker) marker.exit();   // RP1C-R3:
     if (goup) goup.exit();   // RP1C-R3:
     if (ramps) ramps.exit();   // RP1C-R3:
@@ -966,7 +1009,7 @@ export function create(H) {
   }
 
   Object.defineProperty(api, 'scene', { get: () => (S.where === 'under' && S.under ? S.under.scene : scene) });
-  Object.assign(api, { openPick, closePick, exit, frame, start, SIS });
+  Object.assign(api, { openPick, closePick, exit, frame, start, SIS, openInfo });   // RP1C-R4: openInfo
   // ------------------------------------------------------------------ dev / proof API (only reachable through window.__rp in the dev page)
   api.dev = {
     S, setInput: (x, y) => { S.inp.x = x; S.inp.y = y; }, look: (dyaw, dp) => { S.camYaw += dyaw; S.pitch = clamp(S.pitch + dp, -0.75, 1.25); },
@@ -974,6 +1017,7 @@ export function create(H) {
     jump: () => { S.reqJump = true; }, dodge: () => { S.reqDodge = true; }, sprint: (b) => { S.sprint = !!b; }, cam: (m) => setMode(m),
     camLook: (n) => { if (n) { S.camLook = n; S.pitch = camP().pit; S.snap = true; S.camD = camP().D; } return { look: S.camLook || 2, ...camP() }; },   // RP1C-R3
     shadowLook: (n) => { if (n) S.shLook = n; return S.shLook || 2; },   // RP1C-R3
+    camFix: (on) => { S.camFix = !!on; S.camR = 0; }, camInfo: () => ({ d3: camera.position.distanceTo(S.pivot), camD: S.camD, camR: S.camR || 0, y: camera.position.y }),   // RP1C-R4: dev — the fix on / off (before / after) + the camera's distance to her
     setPos: (x, z, yaw) => { S.layer = 0; S.top = S.climb = null; S.sw = 0; S.x = x; S.z = z; S.y = W().ground(x, z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; if (yaw != null) { S.camYaw = yaw; S.body = yaw; } S.snap = true; S.camD = camP().D; },
     gait: (o) => (o ? Object.assign(GAIT, o) : { ...GAIT }),
     jumpInfo: () => ({ JUMP_V, GRAV, JUMP_T, apex: +(JUMP_V * JUMP_V / (2 * GRAV)).toFixed(3), air: +(2 * JUMP_V / GRAV).toFixed(3) }),

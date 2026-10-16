@@ -13,6 +13,7 @@ elif op == 'shot':
 elif op == 'sleep': cmd['s'] = float(args[1])
 elif op == 'dsf': cmd['v'] = float(args[1])
 elif op == 'touch': cmd['x'] = float(args[1]); cmd['y'] = float(args[2])
+elif op == 'vp': cmd['w'] = int(args[1]); cmd['h'] = int(args[2])   # RP1C-R4
 n = len(glob.glob(B + 'r/*.json')) + len(glob.glob(B + 'q/*.json')) + int(time.time() * 10) % 100000
 name = '%08d.json' % n; json.dump(cmd, open(B + 'q/' + name + '.tmp', 'w')); os.rename(B + 'q/' + name + '.tmp', B + 'q/' + name)
 tmo = float(os.environ.get('TMO', 600)); t0 = time.time()

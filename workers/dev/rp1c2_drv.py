@@ -34,6 +34,8 @@ async def main():
                     out['v'] = SH + cmd['name'] + '.png'
                 elif op == 'dsf':                                                                   # change the device scale factor live (CDP) — one loaded session serves dpr 1 and dpr 2
                     cdp = await pg.context.new_cdp_session(pg); await cdp.send('Emulation.setDeviceMetricsOverride', {'width': W, 'height': H, 'deviceScaleFactor': float(cmd['v']), 'mobile': True}); out['v'] = 'dsf ' + str(cmd['v'])
+                elif op == 'vp':                                                                    # RP1C-R4: resize the viewport live (844x390, 800x360, 932x430 on ONE loaded session)
+                    cdp = await pg.context.new_cdp_session(pg); await cdp.send('Emulation.setDeviceMetricsOverride', {'width': int(cmd['w']), 'height': int(cmd['h']), 'deviceScaleFactor': float(cmd.get('dsf', 1)), 'mobile': True}); out['v'] = 'vp %dx%d' % (int(cmd['w']), int(cmd['h']))
                 elif op == 'click': await pg.click(cmd['sel'], timeout=60000)
                 elif op == 'touch': await pg.touchscreen.tap(cmd['x'], cmd['y'])
                 elif op == 'mouse':

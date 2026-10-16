@@ -34,6 +34,7 @@ PY
 ( bash /home/claude/dev/st1_test.sh 2>&1 | tail -1 | grep -q "ST1 OK" ) && ok "st1_test (Treasury Quarter: nine storages, doors, fit, skin ids, family files)" || bad "st1_test (Treasury Quarter)"
 ( bash /home/claude/dev/st1r2_test.sh 2>&1 | tail -1 | grep -q "ST1R2 OK" ) && ok "st1r2_test (vault gem: no crown, halo caps, target-id order)" || bad "st1r2_test (vault gem)"
 ( bash /home/claude/dev/st1r3_test.sh 2>&1 | tail -1 | grep -q "ST1R3 OK" ) && ok "st1r3_test (storage yards: poles, heaps, lamps, court tints; no new material)" || bad "st1r3_test (storage yards)"
+( bash /home/claude/dev/rp1c4_info_test.sh 2>&1 | tail -1 | grep -q "RP1C_R4_INFO OK" ) && ok "rp1c4_info_test (hero i-page table + kit reader; only allowed files differ)" || bad "rp1c4_info_test (hero i-page)"
 ( bash /home/claude/dev/gr1_test.sh 2>&1 | tail -1 | grep -q "GR1 OK" ) && ok "gr1_test (roads: dead ends / water / tiers; near-ground map + shader budget)" || bad "gr1_test (roads + near ground)"
 ( bash /home/claude/dev/gr1r2_test.sh 2>&1 | tail -1 | grep -q "GR1_R2 TEST OK" ) && ok "gr1r2_test (horizon colour table, 24 h continuity, night ceiling)" || bad "gr1r2_test (horizon / mountains)"
 ( bash /home/claude/dev/gr1r3_test.sh 2>&1 | tail -1 | grep -q "GR1R3 BRIDGES OK" ) && ok "gr1r3_test (bridge-head ramps <= 0.5 m/m, 26 of 26 crossings)" || bad "gr1r3_test (bridge heads)"
