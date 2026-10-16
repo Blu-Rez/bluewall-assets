@@ -143,8 +143,10 @@ export function buildBuildings(ctx) {
     put(new THREE.CylinderGeometry(2.25, 2.25, 0.3, 16, 1, true), M.rune, mat4(p.x, y0 + 1.5, p.z), { uvScale: [1.3, 1] });
     for (let k = 0; k < 6; k++) {
       const a = k / 6 * 6.28, x = p.x + Math.cos(a) * 6.8, z = p.z + Math.sin(a) * 6.8;
-      box(M.stone, x, 1.8, z, -a, 0.9, 3.6, 0.9, { worldUV: 0.25 });
-      put(new THREE.OctahedronGeometry(0.45), M.crystal, mat4(x, 4.1, z));
+      // TR2_H_R4 (QA1-088): the six gem pillars were 3.6 m tall (twice the hero) dark-blue bricks with a diamond high above; now hero-sized (1.9 m) light stone plinths with a cap, the gem just over each
+      box(M.stone, x, 0.95, z, -a, 0.8, 1.9, 0.8, { worldUV: 0.25, tint: 0xd6dae4 });
+      box(M.stoneDark, x, 1.98, z, -a, 1.05, 0.16, 1.05, { worldUV: 0.25, tint: 0xe4e6ee });
+      put(new THREE.OctahedronGeometry(0.4), M.crystal, mat4(x, 2.62, z));
     }
     ctx.crystal(p.x, y0 + 5.4, p.z);
     ctx.pick({ x: p.x, z: p.z, y0: 0, y1: 10, r: 4 }, 'crystal');

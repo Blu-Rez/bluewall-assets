@@ -27,6 +27,19 @@ export function bridgesFromLayout(L) {
   return out;
 }
 
+// TR2_H_R4 (QA1-051): the stone parapets of the bridges as walls for the hero (rpg.js refreshColliders reads nav.rails()).  castle.js draws them as a 0.6 m thick wall whose centre is 0.4 m inside the deck edge,
+// 1.1 m high on the 0.72 m deck (top 1.75 m) — the box is the same record as a wall target (x, z, hw, hd, rot, h): rot = atan2(-nz, nx) so the box's long axis runs ALONG the bridge (u = the gate normal).
+// `h` is measured from the deck (the hero's ground there).  No battle target, no soldier cell: soldiers keep nav.onBridge's own corridor.
+export const RAIL = { inset: 0.4, thick: 0.6, h: 1.03 };
+export function bridgeRails(bridges) {
+  const out = [];
+  bridges.forEach((b, i) => {
+    const off = b.wid / 2 - RAIL.inset;
+    for (const e of [-1, 1]) out.push({ x: b.x + b.tx * e * off, z: b.z + b.tz * e * off, hw: b.len / 2, hd: RAIL.thick / 2, rot: Math.atan2(-b.nz, b.nx), h: RAIL.h, type: 'rail', id: 'rail' + i + (e < 0 ? 'a' : 'b') });
+  });
+  return out;
+}
+
 // height to stand at: the bridge deck when on a bridge (blended into the bank over the last 2.5 m), the terrain otherwise (shared with the home map's walkers)
 export function makeGroundY(bridges) {
   const local = (b, x, z) => { const dx = x - b.x, dz = z - b.z; return [dx * b.nx + dz * b.nz, dx * b.tx + dz * b.tz]; };
@@ -187,5 +200,5 @@ export function buildNav({ height, bridges = [], solids = [] }) {
     for (let j = Math.max(0, j0); j < Math.min(N, j1); j++) for (let i = 0; i < N; i++) { const x = cc(i), z = cc(j); if (x * x + z * z < 330 * 330) cell(i, j); }
     if (j1 >= N) label();                                                            // the last slice of the loading screen also draws the region map
   };
-  return { isWet, isBlocked, isSolid, solids, clear, route, nearestDry, groundY, onBridge, bridges, warm, rows: N, nodes: () => nodesTotal, regionOf };
+  return { isWet, isBlocked, isSolid, solids, clear, route, nearestDry, groundY, onBridge, bridges, rails: () => bridgeRails(bridges), warm, rows: N, nodes: () => nodesTotal, regionOf };   // TR2_H_R4: rails() = the bridge parapets as hero walls (QA1-051)
 }

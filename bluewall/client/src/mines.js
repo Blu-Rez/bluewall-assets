@@ -112,7 +112,18 @@ export function buildMines(ctx, A, Q, scene, anim) {
     // ---- gateway: stone piers + deep lintel slab with crystals growing out of its roof, dark mouth, timber props
     // (pieces wear the mine's tier skin; `at(min, fn)` makes a group appear only once the mine reaches that level)
     const at = (min, fn) => { B.tag(ent, min); gmin = min; fn(); B.tag(ent, 1); gmin = 1; };
-    box(7.6, py + 4.4, 0, 5.2, 8.8, 7.2, M.dark);
+    // TR2_H_R4 (QA1-038): the mouth was ONE solid black block (a flat pure-black rectangle: no depth, no inner frame, no gradient).  Now a lined passage in the same footprint (u 5..10, the flat yard ground): side walls, ceiling and floor that darken with depth (3 segments), two timber sets behind the front pair, the rails running in; only the back wall stays black.
+    box(10.0, py + 4.4, 0, 0.4, 8.8, 7.2, M.dark);
+    for (let j = 0; j < 3; j++) {
+      const uc = 5.85 + j * 1.7, T = [0x5c5e68, 0x3c3d46, 0x24252c][j], Tf = [0x6e6a64, 0x48433e, 0x2c2825][j];
+      for (const e of [-1, 1]) box(uc, py + 4.35, e * 3.55, 1.7, 8.7, 0.35, M.stoneDark, { ...stone, tint: T });
+      box(uc, py + 8.63, 0, 1.7, 0.3, 7.1, M.stoneDark, { ...stone, tint: T });
+      box(uc, py + 0.2, 0, 1.7, 0.4, 7.1, cob, { ...stone, tint: Tf });
+    }
+    box(5.5, py + 9.65, 0, 1.0, 1.9, 7.4, M.stoneDark, { ...stone, tint: 0x7a7c86 });                      // header over the passage
+    for (const [uu, tn] of [[7.2, 0x6a4f33], [8.9, 0x45331f]]) { for (const e of [-1, 1]) box(uu, py + 4.2, e * 3.0, 0.45, 8.4, 0.45, M.woodLight, { tint: tn }); box(uu, py + 8.35, 0, 0.5, 0.45, 6.5, M.woodLight, { tint: tn }); }
+    for (let u = 5; u < 9.6; u += 1.0) box(u + 0.4, py + 0.46, 0, 0.3, 0.16, 2.8, M.woodLight, { tint: 0x6a5030 });
+    for (const v of [-0.85, 0.85]) for (const c of [6.4, 8.8]) box(c, py + 0.66, v, 2.5, 0.14, 0.12, M.metal, { tint: 0x8a8a96 });
     for (const e of [-1, 1]) {
       box(5.0, py + 5.2, e * 4.9, 2.8, 10.4, 2.4, M.stone, { ...stone, tint: 0xe4e6ee });
       box(4.4, py + 0.6, e * 4.9, 3.6, 1.2, 3.2, M.stoneDark, { ...stone, tint: 0xe0e2ea });             // plinth

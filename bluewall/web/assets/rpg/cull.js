@@ -166,7 +166,7 @@ export function createCull(H, S, diet) {
 
   // ---- the planned town: cut each giant chunk into cells once, hide the cells that are too far
   const sceneTown = (o) => { for (let p = o.parent; p; p = p.parent) if (p.name === 'planned-town') return true; return false; };
-  function townDrop(e) { for (const c of e.cells) { c.mesh.removeFromParent(); c.geo.dispose(); } e.cells.length = 0; if (e.src.parent) e.src.visible = true; }
+  function townDrop(e) { for (const c of e.cells) { c.mesh.removeFromParent(); c.geo.dispose(); } e.cells.length = 0; if (e.src.parent) e.src.visible = e.src.userData.tr2off !== true; }   // TR2_H_R4: a chunk the town's LOD hides stays hidden (it was all visible for one 4 Hz step)
   function setTown(on) { st.townOff = !on; if (!on) { for (const e of st.town.values()) townDrop(e); st.town.clear(); st.nCells = st.nCellsOn = 0; } else townCollect(99); }                  // (dev / A-B: the cells off = the world's own chunks)
   function townCollect(maxN = 1) {                                                                                             // (a chunk is cut in one go: ~0.2 s for 235 k triangles; at enter() all of them — behind the loading screen — later one per pass)
     if (st.townOff) return; const seen = new Set(); let cut = 0;
@@ -192,9 +192,10 @@ export function createCull(H, S, diet) {
     let on = 0;
     for (const e of st.town.values()) {
       if (!e.cells.length) continue; if (e.src.visible) e.src.visible = false;                                              // (the world may set it again)
+      const lodOff = e.src.userData.tr2off === true;                                                                       // TR2_H_R4: the town's level of detail (town_build.js setVis) does NOT want this chunk drawn: the far (lo) mesh while full houses stand, a cell's hi / lo mesh while the other one shows — its cells follow, else lo and hi z-fight (QA1-035 / 046 / 086)
       for (let i = 0; i < e.cells.length; i++) {
         const c = e.cells[i], dx = hx < c.x0 ? c.x0 - hx : hx > c.x1 ? hx - c.x1 : 0, dz = hz < c.z0 ? c.z0 - hz : hz > c.z1 ? hz - c.z1 : 0, d = Math.sqrt(dx * dx + dz * dz);
-        const vis = c.on ? d < R + 12 : d < R; if (vis !== c.on) { c.on = vis; c.mesh.visible = vis; } if (vis) on++;
+        const vis = lodOff ? false : c.on ? d < R + 12 : d < R; if (vis !== c.on) { c.on = vis; c.mesh.visible = vis; } if (vis) on++;   // TR2_H_R4: lodOff
       }
     }
     st.nCellsOn = on;

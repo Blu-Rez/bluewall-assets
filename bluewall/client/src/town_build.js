@@ -109,7 +109,7 @@ export function createPlannedTown({ scene, kitHomes, kitCivic, height, shadows, 
   const bakeCell = (cell, which) => {                                    // one mesh (per material) of a cell, hidden until lod() shows it
     const list = []; for (const lot of cell.lots) for (const e of pieceList(lot, which === 'lo', cell.lv)) list.push(e);
     const r = bakeTr2(cell.group, st.atlas.homes, list, { shadows, tag: which === 'hi' ? 'homes-tr2' : 'homes-lo' });
-    for (const m of r.meshes) { m.visible = false; m.userData.tr2lod = which; m.userData.tr2cell = cell.key; if (CULL_MARK) m.userData.rpProxy = 1; }     // TR2_H: see CULL_MARK
+    for (const m of r.meshes) { m.visible = false; m.userData.tr2lod = which; m.userData.tr2cell = cell.key; if (CULL_MARK) m.userData.rpProxy = 1; m.userData.tr2off = true; }     // TR2_H: see CULL_MARK; TR2_H_R4: tr2off = the town's LOD does not want this mesh
     cell[which] = r.meshes; st.stats.cellBakes++;
   };
   const queued = (cell, which) => st.lazy.some((j) => j.cell === cell && j.which === which);
@@ -117,7 +117,7 @@ export function createPlannedTown({ scene, kitHomes, kitCivic, height, shadows, 
     if (cell[which] || queued(cell, which)) return;
     const gen = st.gen; st.lazy.push({ cell, which, run: () => { if (gen === st.gen && !cell[which] && cell.group === st.group) bakeCell(cell, which); } });
   }
-  const setVis = (ms, v) => { if (ms) for (const m of ms) if (m.visible !== v) m.visible = v; };
+  const setVis = (ms, v) => { if (ms) for (const m of ms) { if (m.visible !== v) m.visible = v; m.userData.tr2off = !v; } };   // TR2_H_R4: + the flag (QA1-035 / 046 / 086)
   // TR2_H H6: a chimney smokes only while it is within SMOKE_R of the camera (or of the ground point it looks at: the strategic view looks from far, at a street), at most SMOKE_MAX plumes at a time (the nearest).
   // The old rule was a global cap of 18 + 20 plumes spread over the whole town — most of them far from any eye.  `off` is the plume flag world.js reads (no emission, no cost).
   const SMOKE_R = 60, SMOKE_MAX = 16;
@@ -185,7 +185,7 @@ export function createPlannedTown({ scene, kitHomes, kitCivic, height, shadows, 
         st.queue.push(() => {                                          // the far mesh: the lo bodies of every house, ONE call
           const list = []; for (const lot of lots) for (const e of pieceList(lot, true, lv)) list.push(e);
           const r = bakeTr2(group, st.atlas.homes, list, { shadows, tag: 'homes-far' });
-          for (const m of r.meshes) { m.userData.tr2lod = 'far'; m.visible = true; if (CULL_MARK) m.userData.rpProxy = 1; }     // TR2_H: see CULL_MARK
+          for (const m of r.meshes) { m.userData.tr2lod = 'far'; m.visible = true; if (CULL_MARK) m.userData.rpProxy = 1; m.userData.tr2off = false; }     // TR2_H: see CULL_MARK; TR2_H_R4
           far = r.meshes; st.stats.farBakes++;
         });
       } else {                                                         // no lo copies: every cell at full detail, baked now (the S4a way: chunks of <= 40 houses)
