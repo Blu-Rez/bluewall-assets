@@ -99,14 +99,22 @@ export function buildBuildings(ctx) {
   // campfire
   { const x = 16, z = -36; for (let k = 0; k < 7; k++) { const a = k / 7 * 6.28; box(M.stoneDark, x + Math.cos(a) * 1.1, 0.3, z + Math.sin(a) * 1.1, a, 0.6, 0.5, 0.5, { tint: 0x77736e }); } ctx.torch(x, 0.8, z, { pool: true, light: false, big: true }); ctx.smokeAt(x, 2.2, z); }
 
-  // wooden archer towers
+  // wooden archer towers — TW1: guard posts with 4.6 m legs (were 8 m = 4x the hero, 6x with the roof: the giant black poles of the night screenshot).  One local frame (ry) for every part, two ring beams so the legs read as a frame
   for (const [x, z] of [[-2, 8], [46, 30], [-50, -8]]) {
-    for (const [dx, dz] of [[-1.2, -1.2], [1.2, -1.2], [-1.2, 1.2], [1.2, 1.2]]) box(M.wood, x + dx, 4, z + dz, 0.3, 0.35, 8, 0.35, { tint: 0x7a5a3a });
-    box(M.wood, x, 8.1, z, 0.3, 3.6, 0.35, 3.6, { tint: 0x8a6a48 });
-    for (const e of [-1, 1]) { box(M.wood, x + e * 1.7, 8.8, z, 0.3, 0.2, 1.1, 3.6, { tint: 0x6b4a30 }); box(M.wood, x, 8.8, z + e * 1.7, 0.3, 3.6, 1.1, 0.2, { tint: 0x6b4a30 }); }
-    put(new THREE.ConeGeometry(2.9, 2.4, 4, 1, true), M.roof, mat4(x, 10.9, z, 0.3 + Math.PI / 4), { tint: 0x8e3b2e, uvScale: [3, 2] });
-    ctx.torch(x + 1.3, 9.8, z + 1.3, { pool: false });
-    ctx.pick({ x, z, y0: 0, y1: 12, r: 2.5 }, 'archer');
+    const ry = 0.3, P = local(x, z, ry), TH = 4.6, py = TH + 0.1;                              // TH = leg height, py = platform height (same relations as before: rails py + 0.7, roof py + 2.8, torch py + 1.7)
+    for (const [dx, dz] of [[-1.2, -1.2], [1.2, -1.2], [-1.2, 1.2], [1.2, 1.2]]) { const [px, pz] = P(dx, dz); box(M.wood, px, TH / 2, pz, ry, 0.35, TH, 0.35, { tint: 0x7a5a3a }); }
+    for (const yy of [1.5, 3.2]) for (const e of [-1, 1]) {
+      const [bx, bz] = P(0, e * 1.2), [cx, cz] = P(e * 1.2, 0);
+      box(M.wood, bx, yy, bz, ry, 2.6, 0.16, 0.16, { tint: 0x6b4a30 }); box(M.wood, cx, yy, cz, ry, 0.16, 0.16, 2.6, { tint: 0x6b4a30 });
+    }
+    box(M.wood, x, py, z, ry, 3.6, 0.35, 3.6, { tint: 0x8a6a48 });
+    for (const e of [-1, 1]) {
+      const [rx, rz] = P(e * 1.7, 0), [qx, qz] = P(0, e * 1.7);
+      box(M.wood, rx, py + 0.7, rz, ry, 0.2, 1.1, 3.6, { tint: 0x6b4a30 }); box(M.wood, qx, py + 0.7, qz, ry, 3.6, 1.1, 0.2, { tint: 0x6b4a30 });
+    }
+    put(new THREE.ConeGeometry(2.9, 2.4, 4, 1, true), M.roof, mat4(x, py + 2.8, z, ry + Math.PI / 4), { tint: 0x8e3b2e, uvScale: [3, 2] });
+    const [tx, tz] = P(1.3, 1.3); ctx.torch(tx, py + 1.7, tz, { pool: false });
+    ctx.pick({ x, z, y0: 0, y1: py + 4.2, r: 2.5 }, 'archer');
   }
 
   // training yard dummies

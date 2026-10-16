@@ -13,7 +13,7 @@ export function makeMaterials() {
   M.stoneLight = new THREE.MeshStandardMaterial({ map: stoneL.map, normalMap: stoneL.normalMap, normalScale: new THREE.Vector2(1.3, 1.3), roughness: 0.9, vertexColors: true, envMapIntensity: 0.45 });
   M.roof = new THREE.MeshStandardMaterial({ map: roof.map, normalMap: roof.normalMap, roughness: 0.7, metalness: 0.05, vertexColors: true, envMapIntensity: 0.5 });
   M.plaster = new THREE.MeshStandardMaterial({ map: T.plasterTexture(), roughness: 0.95, vertexColors: true, envMapIntensity: 0.25 });
-  M.wood = new THREE.MeshStandardMaterial({ map: T.woodTexture(), roughness: 0.9, vertexColors: true, envMapIntensity: 0.25 });
+  M.wood = new THREE.MeshStandardMaterial({ map: T.woodTexture(), roughness: 0.9, vertexColors: true, envMapIntensity: 0.25, emissive: new THREE.Color().setRGB(0.022, 0.0135, 0.0075), emissiveIntensity: 0 });      // TW1: the night floor of the old procedural wood (world.js raises emissiveIntensity with the night; 0 by day) — posts / towers never go pure black
   M.woodLight = new THREE.MeshStandardMaterial({ map: T.woodTexture(12, [205, 160, 108]), roughness: 0.85, vertexColors: true, envMapIntensity: 0.3 });
   M.metal = new THREE.MeshStandardMaterial({ color: 0x5b6270, roughness: 0.45, metalness: 0.75, vertexColors: true, envMapIntensity: 0.9 });
   M.gold = new THREE.MeshStandardMaterial({ color: 0xffc94a, roughness: 0.3, metalness: 1.0, emissive: 0x6b4300, emissiveIntensity: 0.5, vertexColors: true, envMapIntensity: 1.2 });

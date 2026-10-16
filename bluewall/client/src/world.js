@@ -454,6 +454,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
     sky.setTime(P, W); water.setTime(P, W); weather.setLight(P); if (W.fog > 1.01) { water.mesh.material.uniforms.uFogCol.value.copy(scene.fog.color); water.mesh.material.uniforms.uFogD.value = scene.fog.density; }
     const n = P.night;
     M.window.emissiveIntensity = 0.15 + 2.1 * n;
+    M.wood.emissiveIntensity = n;                                      // TW1: night floor of the procedural wood (materials.js: the colour holds the level)
     if (glass) glass.emissiveIntensity = 0.05 + 2.6 * n;
     TS.rune = 0.9 + 1.7 * n; TS.lamps = Math.max(0, (n - 0.15) / 0.85);
     flames.setNight(n); pools.setNight(TS.lamps); ffly.setNight && ffly.setNight(n); fairies.setNight(n);
