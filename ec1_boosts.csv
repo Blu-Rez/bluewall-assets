@@ -1,0 +1,49 @@
+kind,percent,days,sapphire,per_day,effect
+build,5,1,5,5.0,every running upgrade is 5 % faster
+build,5,7,25,3.57,every running upgrade is 5 % faster
+build,5,30,90,3.0,every running upgrade is 5 % faster
+build,10,1,10,10.0,every running upgrade is 10 % faster
+build,10,7,50,7.14,every running upgrade is 10 % faster
+build,10,30,180,6.0,every running upgrade is 10 % faster
+build,15,1,15,15.0,every running upgrade is 15 % faster
+build,15,7,75,10.71,every running upgrade is 15 % faster
+build,15,30,270,9.0,every running upgrade is 15 % faster
+build,20,1,20,20.0,every running upgrade is 20 % faster
+build,20,7,100,14.29,every running upgrade is 20 % faster
+build,20,30,360,12.0,every running upgrade is 20 % faster
+army,5,1,4,4.0,training and brewing 5 % faster
+army,5,7,20,2.86,training and brewing 5 % faster
+army,5,30,72,2.4,training and brewing 5 % faster
+army,10,1,8,8.0,training and brewing 10 % faster
+army,10,7,40,5.71,training and brewing 10 % faster
+army,10,30,144,4.8,training and brewing 10 % faster
+army,15,1,12,12.0,training and brewing 15 % faster
+army,15,7,60,8.57,training and brewing 15 % faster
+army,15,30,216,7.2,training and brewing 15 % faster
+army,20,1,16,16.0,training and brewing 20 % faster
+army,20,7,80,11.43,training and brewing 20 % faster
+army,20,30,288,9.6,training and brewing 20 % faster
+mine,5,1,5,5.0,the three gem mines make 5 % more
+mine,5,7,25,3.57,the three gem mines make 5 % more
+mine,5,30,90,3.0,the three gem mines make 5 % more
+mine,10,1,10,10.0,the three gem mines make 10 % more
+mine,10,7,50,7.14,the three gem mines make 10 % more
+mine,10,30,180,6.0,the three gem mines make 10 % more
+mine,15,1,15,15.0,the three gem mines make 15 % more
+mine,15,7,75,10.71,the three gem mines make 15 % more
+mine,15,30,270,9.0,the three gem mines make 15 % more
+mine,20,1,20,20.0,the three gem mines make 20 % more
+mine,20,7,100,14.29,the three gem mines make 20 % more
+mine,20,30,360,12.0,the three gem mines make 20 % more
+royal,5,1,12,12.0,"build + army + mine, each 5 %"
+royal,5,7,60,8.57,"build + army + mine, each 5 %"
+royal,5,30,216,7.2,"build + army + mine, each 5 %"
+royal,10,1,24,24.0,"build + army + mine, each 10 %"
+royal,10,7,120,17.14,"build + army + mine, each 10 %"
+royal,10,30,432,14.4,"build + army + mine, each 10 %"
+royal,15,1,36,36.0,"build + army + mine, each 15 %"
+royal,15,7,180,25.71,"build + army + mine, each 15 %"
+royal,15,30,648,21.6,"build + army + mine, each 15 %"
+royal,20,1,48,48.0,"build + army + mine, each 20 %"
+royal,20,7,240,34.29,"build + army + mine, each 20 %"
+royal,20,30,864,28.8,"build + army + mine, each 20 %"
