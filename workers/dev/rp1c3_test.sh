@@ -8,7 +8,7 @@
 #     and the F9 warm-up numbers (rp1c_f9_test.py).  The shader-program count of the go-up markers and of the marker is asserted inside rp1c3_page.py (+0 programs).
 R=/home/claude/bot/bluebot_v2; W=$R/bluewall; A=$W/web/assets/rpg; C=$W/client/src; FAIL=0
 ok(){ echo "OK   $1"; }; bad(){ echo "FAIL $1"; FAIL=1; }
-FILES="rpg.js rpg_diet.js rpg_foot.js cull.js doors.js ramps.js rp_grid.js rp_marker.js rp_goup.js"
+FILES="rpg.js rpg_diet.js rpg_foot.js cull.js doors.js ramps.js rp_grid.js rp_marker.js rp_goup.js rp_clear.js"   # CL1: + rp_clear.js (the door keep-clear module; the allowed-set regex below got it too)
 for f in $FILES; do [ -f $A/$f ] || continue; node --input-type=module --check < $A/$f 2>/tmp/rp1c3_syn.log && ok "$f parses" || { bad "$f does not parse"; head -3 /tmp/rp1c3_syn.log; }; done
 for f in main.js water_life.js world.js; do node --input-type=module --check < $C/$f 2>/tmp/rp1c3_syn.log && ok "client/src/$f parses" || { bad "client/src/$f does not parse"; head -3 /tmp/rp1c3_syn.log; }; done
 python3 - <<'PY' && ok "no Persian text in the hero's code (icons only)" || bad "Persian text in the hero's code (icons only)"
@@ -26,7 +26,7 @@ if grep -rnE "(sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|BEGIN (
 N=$(grep -c "// RP1C" $C/main.js); [ "$N" -le 12 ] && ok "main.js: $N RP1C lines (<= 12)" || bad "main.js has $N RP1C lines (> 12)"
 if grep -il "rp1c" /home/claude/dev/gate*.sh 2>/dev/null | grep -q .; then bad "RP1C was added to a dev/gate*.sh"; else ok "nothing added to dev/gate*.sh"; fi
 D=$( cd $R && { git diff --name-only HEAD; git ls-files --others --exclude-standard; } | grep -v "^bluewall/web/app/" | sort -u )
-BADF=$(echo "$D" | grep -vE "^bluewall/(web/assets/rpg/(rpg|rpg_diet|rpg_foot|cull|doors|ramps|rp_grid|rp_marker|rp_goup|hero_info)\.js|client/src/(main|water_life|world)\.js)$|^workers/dev/" | grep .)
+BADF=$(echo "$D" | grep -vE "^bluewall/(web/assets/rpg/(rpg|rpg_diet|rpg_foot|cull|doors|ramps|rp_grid|rp_marker|rp_goup|rp_clear|hero_info)\.js|client/src/(main|water_life|world)\.js)$|^workers/dev/" | grep .)
 [ -z "$BADF" ] && ok "only the allowed files differ from the kit: $(echo $D | sed 's#bluewall/##g' | tr '\n' ' ')" || bad "files outside the allowed set differ from the kit: $BADF"
 ( cd $R && git diff --quiet HEAD -- bluewall/web/assets/rpg/cull.js ) && grep -q "mxThaw" $A/cull.js && ok "cull.js untouched (the mxThaw line stays)" || bad "cull.js changed or its mxThaw line is gone"
 python3 - <<'PY' && ok "no allocation in the per-frame functions (cull.tick, doors.tick, rp_goup.tick, rp_marker.tick)" || bad "an allocation inside a per-frame function"

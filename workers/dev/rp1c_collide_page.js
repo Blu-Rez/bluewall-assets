@@ -31,7 +31,7 @@
     if (qx > 0 || qz > 0) { nx = qx > 0 ? Math.sign(lx) * qx : 0; nz = qz > 0 ? Math.sign(lz) * qz : 0; const l = Math.hypot(nx, nz) || 1; nx /= l; nz /= l; } else if (qx > qz) { nx = Math.sign(lx) || 1; nz = 0; } else { nx = 0; nz = Math.sign(lz) || 1; }
     return { d, nx: nx * o.ux + nz * o.vx, nz: nx * o.uz + nz * o.vz };
   };
-  const gInside = (x, z) => GR && GR.st.ready && GR.solid(x, z);
+  const gInside = (x, z) => GR && GR.st.ready && (GR.solidAll || GR.solid)(x, z)   // CL1: both layers (the instance layer = trunks, rocks, props);
   const under = (o) => o.y0 !== undefined && !!S.rIn;                          // RP1C_R5: the rule of rpg.js pushOut — a bridge parapet is not a wall for a body IN the water BELOW its deck (swimming / wading under the bridge), nor while she is still inside its strip after the water ended (S.rIn)
   const inside = (x, z) => {                                                                              // -> the name of a solid the point is inside, or null
     if (gInside(x, z)) return 'grid';

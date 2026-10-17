@@ -112,7 +112,7 @@ export function create(H) {
     inp: { x: 0, y: 0 }, keys: new Set(), pivot: new T.Vector3(), camD: CAM_D, burst: { x: 0, z: 0 },
     saved: null, models: {}, hero: null, door: null, under: null, nav: null, boxes: [], discs: [], solids: [], hdiscs: [], cache: 0, unT: 0.5, stuck: 0, layer: 0, top: null, climb: null, sw: 0, near: null, nearT: 0, sheetOn: false, rib: -1, cHold: 0, dHold: 0, lean: 0, climbV: 0, auto: null, act: null, joyOn: false, nearK: '', bk: 0, bkS: false,   // RP1C-R2: bk = she is moving backwards (the reversed clip), bkS = the stick points towards the camera
   };
-  let hudEl = null, pickEl = null, perfEl = null, styleEl = null, joyEl = null, knobEl = null, btns = {}, diet = null, cull = null, doors = null, foot = null, marker = null, ramps = null, grid = null, goup = null;   // RP1C-R3: marker, ramps, grid (the body band of the real meshes)
+  let hudEl = null, pickEl = null, perfEl = null, styleEl = null, joyEl = null, knobEl = null, btns = {}, diet = null, cull = null, doors = null, foot = null, marker = null, ramps = null, grid = null, goup = null, clear = null;   // RP1C-R3: marker, ramps, grid (the body band of the real meshes);  CL1: clear = the keep-clear of the door corridors (rp_clear.js)
   const stats = { f: [], t: 0, n: 0, fps: 0, p95: 0, calls: 0, tris: 0, progs: 0, pr: 0, txt: '', open: false, prev: false };
   let sisters = null;   // RS1: rp_sisters.js (the strip of six cards, the stand-ins, the places) — loaded in start()
 
@@ -933,6 +933,12 @@ export function create(H) {
       const m = await loadHero(key, lv);
       lv.progress(0.85, 'Warming up…'); if (!window.__rpNoWarm) await warmHero(m, lv);   // RP1C-R3: PF1 F9 (window.__rpNoWarm = dev-only switch for the before / after measurement)
       lv.progress(0.9, 'Collision…'); try { await grid.build({ progress: (f) => lv.progress(0.9 + 0.08 * f) }); gcovM.clear(); refreshColliders(); } catch (e) { console.warn('hero grid', e); }   // RP1C-R3: ~0.2 s on a desktop, in slices
+      try {                                                                                                                      // CL1: the 3 m x 3 m in front of every door is kept clear of separable decor (rp_clear.js: the quarry's block field, the saw mill's carts, the greenhouse table); the grid + the doors are made again after a cut (the quarry door stood IN the blocks)
+        if (!clear) { const cm = await import(/* @vite-ignore */ new URL('rp_clear.js' + (new URL(import.meta.url).search || V), import.meta.url).href); clear = cm.createClear(H, S, { ground: (x, z) => homeWorld.ground(x, z) }); api.clear = clear; }
+        for (let pass = 0; pass < 3; pass++) { doors.st.items = []; doors.build(); const cut = window.__rpNoClear ? [] : clear.run(doors.items()); if (!cut.length) break;   // CL1: window.__rpNoClear = dev-only switch for the before / after measurement
+           await grid.build({ progress: (f) => lv.progress(0.98 + 0.01 * f) }); gcovM.clear(); refreshColliders(); }
+        doors.st.items = []; doors.build();
+      } catch (e) { console.warn('hero clear', e); }
       closePick(); enter(m, key); try { if (H.warmAfter) await H.warmAfter((f) => lv.progress(0.98 + 0.02 * f, 'Warming up…')); } catch (e) { /* PF3 */ } lv.progress(1); setTimeout(() => lv.hide(), 250);   // PF3: warmAfter = the door / tufts / hero depth programs, compiled behind the card (main.js heroAfter)
     } catch (e) { console.warn('hero start', e); lv.setTitle('خطا در بارگذاری'); lv.progress(1); setTimeout(() => lv.hide(), 1800); }   // RS2:
     busy = false;
@@ -1094,7 +1100,7 @@ export function create(H) {
     // RP1C-R2: the angle between HER facing (the model's +Z in the world) and the CAMERA's forward direction (horizontal), measured on the real objects — the face rule keeps it <= 70° in every frame
     faceInfo: () => { const f = new T.Vector3(), c = new T.Vector3(); S.hero.grp.getWorldDirection(f); camera.getWorldDirection(c); const ang = Math.abs(wrapPi(Math.atan2(f.x, f.z) - Math.atan2(c.x, c.z))); return { ang, deg: +(ang * 57.29578).toFixed(2), body: S.body, cam: S.camYaw, bk: S.bk, st: S.st, bkS: S.bkS }; },
     proj: (x, y, z) => { camera.updateMatrixWorld(); const v = new T.Vector3(x, y, z).project(camera); return [(v.x + 1) * 0.5 * innerWidth, (1 - v.y) * 0.5 * innerHeight, v.z]; },       // world point -> CSS px on screen (dev / tests)
-    useGrid: (b) => { CONTACT.grid = !!b; gcovM.clear(); refreshColliders(); if (doors) { doors.st.items = []; doors.build(); } return { grid: CONTACT.grid, boxes: S.boxes.length, discs: S.discs.length }; }, grid: () => grid, rbody: R_BODY, phys: (sec, step = 1 / 30) => { S.phys = true; const n = Math.round(sec / step); for (let i = 0; i < n; i++) update(step); S.phys = false; },   // RP1C-R3: physics only (no model / camera)
+    useGrid: (b) => { CONTACT.grid = !!b; gcovM.clear(); refreshColliders(); if (doors) { doors.st.items = []; doors.build(); } return { grid: CONTACT.grid, boxes: S.boxes.length, discs: S.discs.length }; }, grid: () => grid, clear: () => clear, rbody: R_BODY, phys: (sec, step = 1 / 30) => { S.phys = true; const n = Math.round(sec / step); for (let i = 0; i < n; i++) update(step); S.phys = false; },   // RP1C-R3: physics only (no model / camera)
     sim: (sec, step = 1 / 60) => { const n = Math.round(sec / step); for (let i = 0; i < n; i++) { update(step); placeCamera(step); } },
     // is the camera inside any solid right now?  (walls: body + merlons, towers / keep / gates up to their height, cottage discs; the water surface counts as a floor)
     camCheck: (detail) => {
