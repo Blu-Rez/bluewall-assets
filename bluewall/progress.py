@@ -12,7 +12,7 @@ Concepts
   * Builders: 2 at the start, 3 from castle level 7.  Every active upgrade occupies one builder.
     Up to RESERVE_MAX more upgrades can be *reserved*: their gems are paid right away and they start by themselves,
     the moment a builder is free (to the second, computed from timestamps - nothing runs in the background).
-  * Nothing may be higher than castle level + 2 (the castle itself goes to MAX_LEVEL = 30).
+  * Nothing may be higher than castle level + 2 (the castle itself goes to MAX_LEVEL = 50).
   * Rounds: the castle can go to level L only when every structure it has unlocked stands at level L-1 or higher (one clear flow:
     each castle level is a "round" in which the whole kingdom climbs one step).
   * Speed-up (rush): turquoise per remaining hour, but at most RUSH_DAY_H hours of building a day (saved up to RUSH_BANK_D days):
@@ -30,7 +30,7 @@ from . import boost as BO
 
 GEMS = ("ruby", "emerald", "turq")
 BASE_LEVELS = 30                         # p35 (owner 5 Oct 2026): the economy, the unit unlock levels and the defence counts were fitted on 30 levels: levels 1-30 never change
-MAX_LEVEL = 50                          # 15 Oct 2026 (owner: «لول ۵۰»): the castle goes to 50.  Levels 31-50 are PLACEHOLDERS (T_HOURS / COST_K continue the 26-30 slope; waits for the E1 table the owner approves)
+MAX_LEVEL = 50                          # 15 Oct 2026 (owner: «لول ۵۰»): the castle goes to 50.  Levels 31-50: T_HOURS / COST_K carried on from level 30 by EC1 (17 Oct 2026; flat values chosen by comparing families with dev/ec1_sim.py, dev/ec1_fit.py is the fitter that was tried)
 RESERVE_MAX = 2
 CANCEL_REFUND = 0.5                    # of the paid gems when an *active* upgrade is cancelled (reserved ones refund fully)
 SPEEDUP_FREE_S = 180.0                 # an upgrade with less than 3 minutes left finishes for free
@@ -49,21 +49,26 @@ T_HOURS = [
     0.167, 28.1, 10.6, 12.9, 33.2, 70.2, 87.9, 109.0, 112.0, 115.0,
     115.0, 115.0, 115.0, 119.0, 123.0, 127.0, 128.0, 129.0, 131.0, 132.0,
     132.0, 132.0, 132.0, 132.0, 132.0, 134.0, 139.0, 144.0, 150.0, 155.0,
-    # ---- 31-50: PLACEHOLDERS (15 Oct 2026): +5 h per level (the 26-30 slope), 160 h at 31 ... 255 h at 50
-    160.0, 165.0, 170.0, 175.0, 180.0, 185.0, 190.0, 195.0, 200.0, 205.0,
-    210.0, 215.0, 220.0, 225.0, 230.0, 235.0, 240.0, 245.0, 250.0, 255.0,
+    # ---- 31-50 (EC1, 17 Oct 2026): the 30-level curve carried on: T and COST_K stay at their level-30 values (chosen with dev/ec1_sim.py: target = the pace of 21-30, ~29 days per castle level for the good player,
+    #      the best one at ~0.67 of that).  The old +5 h / level placeholder made the tail ~45 % longer than levels 21-30.
+    155.0, 155.0, 155.0, 155.0, 155.0, 155.0, 155.0, 155.0, 155.0, 155.0,
+    155.0, 155.0, 155.0, 155.0, 155.0, 155.0, 155.0, 155.0, 155.0, 155.0,
 ]
 COST_K = [
     0.669, 0.669, 1.568, 1.496, 0.763, 0.389, 0.520, 0.696, 0.734, 0.774,
     0.707, 0.645, 0.589, 0.537, 0.586, 0.640, 0.698, 0.762, 0.832, 0.908,
     0.916, 0.923, 0.931, 0.939, 0.947, 0.955, 0.963, 0.971, 0.979, 0.987,
-    # ---- 31-50: PLACEHOLDERS: +0.008 per level
-    0.995, 1.003, 1.011, 1.019, 1.027, 1.035, 1.043, 1.051, 1.059, 1.067,
-    1.075, 1.083, 1.091, 1.099, 1.107, 1.115, 1.123, 1.131, 1.139, 1.147,
+    # ---- 31-50 (EC1): flat at the level-30 value (see T_HOURS); a price still grows x1.13 a level because the mine output it is measured in does
+    0.987, 0.987, 0.987, 0.987, 0.987, 0.987, 0.987, 0.987, 0.987, 0.987,
+    0.987, 0.987, 0.987, 0.987, 0.987, 0.987, 0.987, 0.987, 0.987, 0.987,
 ]
 assert len(T_HOURS) == MAX_LEVEL and len(COST_K) == MAX_LEVEL, "T_HOURS / COST_K must have MAX_LEVEL entries"
 # ---- gems: a level costs  K[gem] * (hours it takes) * (structure's weight for that gem) * (mine output per hour of the level below); never less than 12 * weight
 GEM_K = {"emerald": 0.985, "ruby": 0.885, "turq": 1.97}
+# EC1 (17 Oct 2026): above level 30 the army stops being a ruby sink (a raid costs ~53 % of its ruby loot at castle 30 but 8 % at 50: the unit prices are fixed while the loot grows x1.13 a level), so
+# 21-30 spend 99 % of the ruby they get but 41-49 only 75 % and throw 21 % away (full vault).  Every ruby price of a level above BASE_LEVELS is multiplied by 1 + RUBY_TAIL * (level - 30)
+# (x1.2 at 40, x1.4 at 50) - server only, the clients read prices from the catalog.  Pace unchanged (emerald is the gem that binds): dev/ec1_sim.py, tests: dev/ec1_test.py.
+RUBY_TAIL = 0.02
 
 
 def t_hours(to: int) -> float:
@@ -126,7 +131,8 @@ def cost(ent: str, to: int) -> Dict[str, int]:
     w = STRUCTS[ent][2]
     th = t_hours(to) * STRUCTS[ent][1]
     k = COST_K[max(1, min(MAX_LEVEL, int(to))) - 1]
-    return {g: int(math.ceil(int(math.ceil(max(12.0 * w[g], GEM_K[g] * th * w[g] * mine_rate(g, max(1, to - 1))))) * k)) for g in GEMS if g in w}
+    tail = 1.0 + RUBY_TAIL * max(0, int(to) - BASE_LEVELS)                    # (EC1) levels 31-50: ruby only, see RUBY_TAIL; exactly 1.0 up to level 30
+    return {g: int(math.ceil(int(math.ceil(max(12.0 * w[g], GEM_K[g] * th * w[g] * mine_rate(g, max(1, to - 1))))) * (k * tail if g == "ruby" else k))) for g in GEMS if g in w}
 
 
 def dur(ent: str, to: int) -> float:

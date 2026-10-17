@@ -126,7 +126,7 @@ def run(prof: str, layer: bool, eff: float = 1.0, shift: int = 0) -> dict:
     if layer:
         P.can_start, P.start = can_start, start
     try:
-        r = S.simulate(p)
+        r = S.simulate(p, 4200)
     finally:
         P.can_start, P.start = _orig_can, _orig_start
     return r["keep_days"]
@@ -137,8 +137,8 @@ def mean_run(prof: str, layer: bool, eff: float = 1.0, offsets=OFFSETS) -> dict:
     return {m: sum(r[m] for r in runs) / len(runs) for m in MARKS if all(m in r for r in runs)}
 
 
-MARKS = (5, 10, 15, 20, 25, 30)
-GATE = (20, 30)                      # the days the owner's targets are about (sim.py docstring); the other marks are printed too but jump when a round shifts
+MARKS = (5, 10, 15, 20, 25, 30, 40, 50)
+GATE = (20, 30, 40, 50)              # (EC1: 40 and 50 added) the days the owner's targets are about (sim.py docstring); the other marks are printed too but jump when a round shifts
 
 
 def _pct(a: dict, b: dict, m: int) -> float:
@@ -173,7 +173,7 @@ def main(argv) -> int:
     if "free" in names:
         a, b = mean_run("free", False), mean_run("free", True, 0.6)
         out["stress_free_eff60"] = {"before": {str(m): round(a[m], 1) for m in a}, "after": {str(m): round(b[m], 1) for m in b}}
-        print("stress (free, every producer at 60 %% = loyalty far below the threshold): " + " | ".join("%d: %.1f -> %.1f (%+.1f%%)" % (m, a[m], b[m], _pct(a, b, m)) for m in (10, 20, 30) if m in a and m in b))
+        print("stress (free, every producer at 60 %% = loyalty far below the threshold): " + " | ".join("%d: %.1f -> %.1f (%+.1f%%)" % (m, a[m], b[m], _pct(a, b, m)) for m in (10, 20, 30, 40, 50) if m in a and m in b))
     print("castle %s: worst |delta| = %.2f %% (limit 5 %%) | castle 10..30 all marks: worst |delta| = %.2f %%, the jitter alone gives up to %.2f %%   [%.0f s]" % ("/".join(map(str, GATE)), worst, worst_all, noise, time.time() - t0))
     os.makedirs("/home/claude/work", exist_ok=True)
     json.dump({"worst_abs_pct_castle_20_30": round(worst, 2), "worst_abs_pct_all_10_30": round(worst_all, 2), "noise_floor_pct": round(noise, 2), "offsets": list(OFFSETS), "runs": out},

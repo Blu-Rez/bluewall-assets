@@ -23,7 +23,7 @@ from bluewall import progress as P  # noqa: E402
 ROOT = "/home/claude/bot/bluebot_v2/bluewall"
 DOCS = os.path.join(ROOT, "docs")
 GROWTH = 1.13            # per level, same as progress.RATE_GROWTH (gem mines): x3 at 10, x10 at 20, x35 at 30
-LEVELS = (5, 10, 20, 30)
+LEVELS = (5, 10, 20, 30, 40, 50)
 STORE_HOURS = 48         # a store holds at least this many hours of the output of its resource (and never less than the dearest upgrade of the next round)
 BUILD_SHARE = 0.3        # an upgrade of H hours of build costs  BUILD_SHARE x weight x H hours of ONE building's output of that resource
 
@@ -57,21 +57,21 @@ KINDS = [
          use="سنگ: ساخت‌وساز (دیوار و برج بیشتر) + خوراک سنگ‌تراشی"),
     dict(id="iron", fa="معدن آهن", role="S", place="mount", unlock=8, steps=[[8, 1], [14, 2], [26, 3]], out=("iron_ore", 28), crew_h=1, price=(3, 0),
          use="سنگ آهن: خوراک کوره‌ی ذوب"),
-    dict(id="gold", fa="معدن طلا", role="S", place="mount", unlock=14, steps=[[14, 1], [22, 2]], out=("gold_ore", 8), crew_h=1, price=(3, 0),
+    dict(id="gold", fa="معدن طلا", role="S", place="mount", unlock=14, steps=[[14, 1], [22, 2], [36, 3], [46, 4]], out=("gold_ore", 8), crew_h=1, price=(3, 0),
          use="سنگ طلا: خوراک ضرابخانه"),
-    dict(id="panning", fa="طلاشویی رود", role="S", place="water", unlock=12, steps=[[12, 1], [24, 2]], out=("gold_dust", 5), crew_h=1, price=(3, 0),
+    dict(id="panning", fa="طلاشویی رود", role="S", place="water", unlock=12, steps=[[12, 1], [24, 2], [40, 3]], out=("gold_dust", 5), crew_h=1, price=(3, 0),
          use="خاک طلا: خوراک ضرابخانه"),
     dict(id="oil", fa="میدان نفت", role="S", place="free", unlock=17, steps=[[17, 1], [26, 2]], out=("crude", 12), crew_h=1, price=(3, 0),
          use="نفت خام: خوراک پالایشگاه"),
-    dict(id="farm", fa="مزرعه", role="S", place="free", unlock=3, steps=[[3, 1], [7, 2], [18, 3], [27, 4]], out=("wheat", 45), crew_h=1, price=(3, 0),
+    dict(id="farm", fa="مزرعه", role="S", place="free", unlock=3, steps=[[3, 1], [7, 2], [18, 3], [27, 4], [36, 5], [45, 6]], out=("wheat", 45), crew_h=1, price=(3, 0),
          use="گندم: خوراک آسیاب"),
-    dict(id="greenhouse", fa="گلخانه", role="S", place="free", unlock=11, steps=[[11, 1], [20, 2], [28, 3]], out=("vegetables", 36), crew_h=1, price=(3, 0),
+    dict(id="greenhouse", fa="گلخانه", role="S", place="free", unlock=11, steps=[[11, 1], [20, 2], [28, 3], [38, 4], [47, 5]], out=("vegetables", 36), crew_h=1, price=(3, 0),
          use="سبزی: خوراک ارتش (مستقیم)"),
-    dict(id="livestock", fa="دامداری", role="S", place="free", unlock=5, steps=[[5, 1], [14, 2], [24, 3]], out=("livestock", 12), crew_h=1, price=(3, 0),
+    dict(id="livestock", fa="دامداری", role="S", place="free", unlock=5, steps=[[5, 1], [14, 2], [24, 3], [34, 4], [44, 5]], out=("livestock", 12), crew_h=1, price=(3, 0),
          use="دام: خوراک قصابی و کشتارگاه"),
     dict(id="slaughter", fa="کشتارگاه", role="S/P", place="free", unlock=9, steps=[[9, 1], [20, 2]], proc=(("livestock",), "carcass", 2.0, 24), crew_h=2, price=(4, 3),
          use="لاشه: خوراک ارتش (ارزون و فراوان)"),
-    dict(id="fishery", fa="ماهی‌گیری", role="S", place="water", unlock=6, steps=[[6, 1], [13, 2], [24, 3]], out=("fish", 30), crew_h=1, price=(3, 0),
+    dict(id="fishery", fa="ماهی‌گیری", role="S", place="water", unlock=6, steps=[[6, 1], [13, 2], [24, 3], [36, 4], [46, 5]], out=("fish", 30), crew_h=1, price=(3, 0),
          use="ماهی: خوراک دودخانه"),
     dict(id="sawmill", fa="اره‌کشی", role="P", place="free", unlock=4, steps=[[4, 1], [18, 2]], proc=(("wood",), "planks", 0.5, 120), crew_h=2, price=(4, 3),
          use="تخته: ساخت‌وساز (از لول 4) + خونه‌ها"),
@@ -79,13 +79,13 @@ KINDS = [
          use="سنگ تراشیده: دیوار، برج و ساختمون‌های شهری"),
     dict(id="smelter", fa="کوره‌ی ذوب", role="P", place="free", unlock=9, steps=[[9, 1], [22, 2]], proc=(("iron_ore",), "iron_bars", 0.5, 90), crew_h=2, price=(4, 3),
          use="شمش آهن: تجهیزات سرباز + آهنگری"),
-    dict(id="mint", fa="ضرابخانه", role="P", place="free", unlock=15, steps=[[15, 1], [25, 2]], proc=(("gold_ore", "gold_dust"), "coins", 4.0, 24), crew_h=2, price=(4, 3),
+    dict(id="mint", fa="ضرابخانه", role="P", place="free", unlock=15, steps=[[15, 1], [25, 2], [40, 3]], proc=(("gold_ore", "gold_dust"), "coins", 4.0, 24), crew_h=2, price=(4, 3),
          use="سکه: طلسم‌ها + ساختمون شهری"),
     dict(id="refinery", fa="پالایشگاه", role="P", place="free", unlock=18, steps=[[18, 1], [27, 2]], proc=(("crude",), "oil", 0.5, 36), crew_h=2, price=(4, 3),
          use="نفت: برج آتشین و تله‌ی شعله"),
-    dict(id="mill", fa="آسیاب", role="P", place="free", unlock=4, steps=[[4, 1], [16, 2]], proc=(("wheat",), "flour", 1.0, 135), crew_h=2, price=(4, 3),
+    dict(id="mill", fa="آسیاب", role="P", place="free", unlock=4, steps=[[4, 1], [16, 2], [38, 3]], proc=(("wheat",), "flour", 1.0, 135), crew_h=2, price=(4, 3),
          use="آرد: خوراک نانوایی"),
-    dict(id="bakery", fa="نانوایی", role="P", place="free", unlock=5, steps=[[5, 1], [16, 2], [26, 3]], proc=(("flour",), "bread", 1.0, 135), crew_h=2, price=(4, 3),
+    dict(id="bakery", fa="نانوایی", role="P", place="free", unlock=5, steps=[[5, 1], [16, 2], [26, 3], [40, 4]], proc=(("flour",), "bread", 1.0, 135), crew_h=2, price=(4, 3),
          use="نان: خوراک ارتش"),
     dict(id="butcher", fa="قصابی", role="P", place="free", unlock=7, steps=[[7, 1], [18, 2]], proc=(("livestock",), "meat", 3.0, 36), crew_h=2, price=(4, 3),
          use="گوشت: خوراک ارتش (کیفیت بالا)"),
@@ -95,13 +95,13 @@ KINDS = [
          use="تراش جواهر برای تزئین قلعه و پرچم؛ فقط ظاهر، اقتصاد جواهر رو دست نمی‌زنه"),
     dict(id="stores", fa="انبارها", role="T", place="free", unlock=1, steps=[[1, 6]], crew_h=1, price=(4, 4),
          use="6 انبار: چوب / سنگ / آهن / خزانه / نفت / غذا؛ ظرفیت با لول بالا می‌ره"),
-    dict(id="cottage", fa="کلبه", role="H", place="free", unlock=1, steps=[[1, 3], [4, 5], [8, 8], [12, 10], [16, 13], [20, 16], [26, 18], [30, 20]], residents=4, wage=1.0, crew_h=0.25, price=(1, 0.5),
+    dict(id="cottage", fa="کلبه", role="H", place="free", unlock=1, steps=[[1, 3], [4, 5], [8, 8], [12, 10], [16, 13], [20, 16], [26, 18], [30, 20], [35, 22], [40, 24], [45, 26], [50, 28]], residents=4, wage=1.0, crew_h=0.25, price=(1, 0.5),
          use="مردم عادی؛ مالیات"),
-    dict(id="craftsman", fa="خانه‌ی پیشه‌ور", role="H", place="free", unlock=6, steps=[[6, 2], [12, 4], [18, 6], [24, 8], [30, 10]], residents=6, wage=1.5, crew_h=0.25, price=(1.5, 1.5),
+    dict(id="craftsman", fa="خانه‌ی پیشه‌ور", role="H", place="free", unlock=6, steps=[[6, 2], [12, 4], [18, 6], [24, 8], [30, 10], [36, 12], [42, 14], [48, 16]], residents=6, wage=1.5, crew_h=0.25, price=(1.5, 1.5),
          use="پیشه‌ورها؛ مالیات بیشتر"),
-    dict(id="merchant", fa="خانه‌ی تاجر", role="H", place="free", unlock=12, steps=[[12, 2], [18, 4], [24, 7], [30, 10]], residents=8, wage=2.5, crew_h=0.25, price=(2, 3),
+    dict(id="merchant", fa="خانه‌ی تاجر", role="H", place="free", unlock=12, steps=[[12, 2], [18, 4], [24, 7], [30, 10], [36, 12], [42, 14], [48, 16]], residents=8, wage=2.5, crew_h=0.25, price=(2, 3),
          use="تاجرها؛ مالیات خوب"),
-    dict(id="noble", fa="خانه‌ی اشراف", role="H", place="free", unlock=20, steps=[[20, 1], [25, 3], [30, 5]], residents=10, wage=4.0, crew_h=0.25, price=(3, 6),
+    dict(id="noble", fa="خانه‌ی اشراف", role="H", place="free", unlock=20, steps=[[20, 1], [25, 3], [30, 5], [35, 7], [40, 9], [45, 11], [50, 13]], residents=10, wage=4.0, crew_h=0.25, price=(3, 6),
          use="اشراف؛ بیشترین مالیات"),
     dict(id="market", fa="بازار", role="C", place="free", unlock=3, steps=[[3, 1], [18, 2]], tax_bonus_per_tier=0.05, loyalty=3, crew_h=2, price=(4, 4),
          use="تجارت: +5% مالیات در هر پله‌ی ظاهر (تا +25%) + کمی وفاداری"),
@@ -111,7 +111,7 @@ KINDS = [
          use="مالیات رو جمع می‌کنه؛ نرخ مالیات 0 تا 30% اینجا تنظیم می‌شه"),
     dict(id="chapel", fa="کلیسا", role="C", place="free", unlock=1, steps=[[1, 1], [12, 2], [24, 3]], loyalty=6, crew_h=2, price=(4, 6),
          use="وفاداری +6 هر کدوم"),
-    dict(id="well", fa="چاه", role="C", place="free", unlock=1, steps=[[1, 2], [8, 4], [14, 6], [22, 8], [28, 10]], loyalty=1, serves=40, crew_h=0.5, price=(0.5, 1),
+    dict(id="well", fa="چاه", role="C", place="free", unlock=1, steps=[[1, 2], [8, 4], [14, 6], [22, 8], [28, 10], [34, 12], [40, 14], [46, 16]], loyalty=1, serves=40, crew_h=0.5, price=(0.5, 1),
          use="آب شهر: هر چاه 40 نفر؛ بیشتر از ظرفیتِ آب مالیات نمی‌دن"),
 ]
 KIND_IDS = [k["id"] for k in KINDS]
@@ -309,11 +309,11 @@ def kind_record(k: dict) -> dict:
          "place_price_hours": {"wood": k["price"][0], "stone": k["price"][1]}, "place_crew_hours": k["crew_h"]}
     if "out" in k:
         res, base = k["out"]
-        r["out"] = {"res": res, "base_per_h": base, "per_h_at_unlock": round(base * lf(k["unlock"]), 1), "per_h_at_30": round(base * lf(30), 1)}
+        r["out"] = {"res": res, "base_per_h": base, "per_h_at_unlock": round(base * lf(k["unlock"]), 1), "per_h_at_30": round(base * lf(30), 1), "per_h_at_50": round(base * lf(50), 1)}
         r["store"] = RES[res][1]
     if "proc" in k:
         ins, outp, ratio, thr = k["proc"]
-        r["proc"] = {"in": list(ins), "out": outp, "ratio": ratio, "throughput_in_per_h": thr, "throughput_at_unlock": round(thr * lf(k["unlock"]), 1), "throughput_at_30": round(thr * lf(30), 1)}
+        r["proc"] = {"in": list(ins), "out": outp, "ratio": ratio, "throughput_in_per_h": thr, "throughput_at_unlock": round(thr * lf(k["unlock"]), 1), "throughput_at_30": round(thr * lf(30), 1), "throughput_at_50": round(thr * lf(50), 1)}
         r["store"] = RES[outp][1] if outp in RES else "treasury"
     if k["role"] == "H":
         r["home"] = {"residents": k["residents"], "wage_per_resident_h": k["wage"], "tax_per_h_per_home_at_10pct": {str(L): round(k["residents"] * k["wage"] * 0.10 * lf(L), 2) for L in LEVELS}}
@@ -329,7 +329,7 @@ def build_json() -> dict:
     steps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30]
     return {
         "version": "E1-1", "date": "2026-10-07", "ph": "every number is a placeholder (ph) for the server owner; the sim only proves pacing",
-        "level_factor": {"formula": "1.13^(L-1)", "x10": round(lf(10), 2), "x20": round(lf(20), 2), "x30": round(lf(30), 2)},
+        "level_factor": {"formula": "1.13^(L-1)", "x10": round(lf(10), 2), "x20": round(lf(20), 2), "x30": round(lf(30), 2), "x40": round(lf(40), 2), "x50": round(lf(50), 2)},
         "levels_follow_castle": True,
         "resources": {r: {"fa": v[0], "store": v[1], "class": v[2], "food_value": v[3]} for r, v in RES.items()},
         "kinds": [kind_record(k) for k in KINDS],
@@ -350,7 +350,7 @@ def build_json() -> dict:
                     "slow": "below 50 every producer works x(0.5 + 0.5 x loyalty / 50)",
                     "target_at": {str(L): {str(p): round(loyalty_target(L, p)) for p in (0, 10, 20, 30)} for L in LEVELS}},
         "raid": {**RAID, "rule": "a win also takes from the six stores of the victim: each store gives min(25 % of its content, 6 h (bot) / 8 h (player) of ONE building's output at the attacker's castle level) x the same share (destruction x stars) as the gems; plus 25 % of the tax not yet collected; the victim loses exactly what is taken; gems as today"},
-        "time": {"upgrade": {"rule": "unchanged: progress.T_HOURS x structure multiplier; builders 2 (3 from castle 7); 2 reserved", "hours_at_x1": {str(n): P.t_hours(n) for n in (1, 2, 3, 5, 10, 20, 30)}},
+        "time": {"upgrade": {"rule": "unchanged: progress.T_HOURS x structure multiplier; builders 2 (3 from castle 7); 2 reserved", "hours_at_x1": {str(n): P.t_hours(n) for n in (1, 2, 3, 5, 10, 20, 30, 40, 50)}},
                  "town_crew": {"rule": "placing a resource / home / civic kind takes its crew hours x (1 + 0.04 (L-1)) with 2 town crews, separate from the builders", "simultaneous": 2},
                  "attack": {"scout_cooldown_s": MI.ATTACK_COOLDOWN, "owner_scout_cooldown_s": 2, "battle_token_min": MI.BATTLE_TIMEOUT // 60, "note": "unchanged"},
                  "shield": {"today_h": MI.SHIELD_SECONDS // 3600, "by_stars_h": SHIELD_H, "attacking_ends_own_shield": True, "target_filter": "offline > 10 min and no shield (unchanged)"}},
@@ -374,7 +374,7 @@ def _cnt(k: dict) -> str:
 
 def _out(k: dict) -> str:
     if "out" in k:
-        return "%s → %s" % (_fmt(k["out"][1] * lf(k["unlock"])), _fmt(k["out"][1] * lf(30)))
+        return "%s → %s" % (_fmt(k["out"][1] * lf(k["unlock"])), _fmt(k["out"][1] * lf(50)))
     return "-"
 
 
@@ -404,32 +404,32 @@ def build_md() -> str:
     chain("ماهی", ["fishery", "smokehouse"], "ماهی خشک = خوراک خوب؛ خوراک متنوع (2 / 3 / 4+ نوع) = آموزش 10 / 20 / 30 درصد سریع‌تر")
     chain("جواهرساز", ["jeweler"], "فقط ظاهر (تزئین و پرچم)، به جواهر دست نمی‌زنه", ["-"])
     add("**انبارها**: چوب/سنگ/آهن/خزانه/نفت/غذا", "1", "6 ثابت",
-        "جا: چوب %s → %s" % (_fmt(store_cap("wood", 5)), _fmt(store_cap("wood", 30))),
+        "جا: چوب %s → %s" % (_fmt(store_cap("wood", 5)), _fmt(store_cap("wood", 50))),
         "جا = 48 ساعت تولید و هیچ‌وقت کمتر از گرون‌ترین ارتقای دور بعد؛ پر شد تولید می‌ایسته؛ غارت از همین‌ها می‌بره")
     for kid, use in (("cottage", "مردم عادی، 4 نفر؛ 1 سکه/نفر/ساعت پایه"), ("craftsman", "6 نفر؛ 1.5 سکه/نفر"),
                      ("merchant", "8 نفر؛ 2.5 سکه/نفر"), ("noble", "10 نفر؛ 4 سکه/نفر")):
         k = R(kid)
         add("**%s**" % k["fa"], str(k["unlock"]), _cnt(k),
-            "%s → %s سکه (هر خونه، نرخ 10 درصد)" % (_fmt(k["residents"] * k["wage"] * 0.1 * lf(k["unlock"])), _fmt(k["residents"] * k["wage"] * 0.1 * lf(30))), use)
+            "%s → %s سکه (هر خونه، نرخ 10 درصد)" % (_fmt(k["residents"] * k["wage"] * 0.1 * lf(k["unlock"])), _fmt(k["residents"] * k["wage"] * 0.1 * lf(50))), use)
     add("**تالار شهر / بازار**", "2 / 3", "1 / " + _cnt(R("market")), "جمع مالیات / +5 درصد مالیات در هر پله‌ی ظاهر (تا +25 درصد)",
         "تالار: اسلایدر نرخ مالیات 0 تا 30 درصد (پیش‌فرض 10)؛ مالیات تا 24 ساعت می‌مونه تا برداری")
     add("**کلیسا / میخانه / چاه**", "1 / 6 / 1", " / ".join(_cnt(R(i)) for i in ("chapel", "tavern", "well")), "وفاداری +6 / +8 / +1 هر کدوم",
         "چاه: آب 40 نفر؛ بیشتر از آب، مالیات نمی‌دن")
-    th = {n: P.t_hours(n) for n in (1, 2, 5, 6, 10, 20, 30)}
-    rows.append("| **زمان ارتقا** | - | سازنده 2 (3 از لول 7)، رزرو 2 | همون منحنی فعلی | لول 1: %d دقیقه، 2: %d ساعت، 5: %d ساعت، 6: %.1f روز، 10: %.1f روز، 20: %.1f روز، 30: %.1f روز؛ قلعه 1.5 برابر. ساختمون شهری جدا از سازنده‌ها: 2 کارگر شهری، 15 دقیقه تا 2 ساعت |"
-                % (round(th[1] * 60), round(th[2]), round(th[5]), th[6] / 24, th[10] / 24, th[20] / 24, th[30] / 24))
+    th = {n: P.t_hours(n) for n in (1, 2, 5, 6, 10, 20, 30, 50)}
+    rows.append("| **زمان ارتقا** | - | سازنده 2 (3 از لول 7)، رزرو 2 | همون منحنی فعلی | لول 1: %d دقیقه، 2: %d ساعت، 5: %d ساعت، 6: %.1f روز، 10: %.1f روز، 20: %.1f روز، 30: %.1f روز، 50: %.1f روز؛ قلعه 1.5 برابر. ساختمون شهری جدا از سازنده‌ها: 2 کارگر شهری، 15 دقیقه تا 2 ساعت |"
+                % (round(th[1] * 60), round(th[2]), round(th[5]), th[6] / 24, th[10] / 24, th[20] / 24, th[30] / 24, th[50] / 24))
     rows.append("| **زمان حمله** | - | - | پیدا کردن هدف 20 ثانیه | نبرد تا 20 دقیقه؛ ارتش از دست‌رفته دوباره آموزش می‌بینه (تجهیز = شمش آهن، از لول 9) |")
     rows.append("| **سپر بعد از ضربه** | - | - | 1 ستاره 4 ساعت، 2 ستاره 8، 3 ستاره 12 | اگه خودت حمله کنی سپرت می‌پره؛ هدف: آفلاین بیش از 10 دقیقه و بدون سپر |")
     tx = {L: tax_per_hour(L, 10) * (1 + market_bonus(L)) for L in LEVELS}
-    rows.append("| **مالیات** | - | - | لول 5 / 10 / 20 / 30 با نرخ 10 درصد: %s / %s / %s / %s سکه در ساعت (نرخ 30 درصد: سه برابر) | مجموع (نفر × درآمد هر نفر) × نرخ × 1.13^(لول-1) × (1 + بازار) |"
+    rows.append("| **مالیات** | - | - | لول 5 / 10 / 20 / 30 / 40 / 50 با نرخ 10 درصد: %s / %s / %s / %s / %s / %s سکه در ساعت (نرخ 30 درصد: سه برابر) | مجموع (نفر × درآمد هر نفر) × نرخ × 1.13^(لول-1) × (1 + بازار) |"
                 % tuple(_fmt(tx[L]) for L in LEVELS))
     lt = [round(loyalty_target(L, 20)) for L in LEVELS]
-    rows.append("| **وفاداری** | - | - | هر 1 درصد مالیات = 3 وفاداری کم | سقف 100؛ زیر 50 همه‌ی تولیدها تا نصف کند می‌شن. با نرخ 20 درصد، لول 5 / 10 / 20 / 30: %s |" % " / ".join(str(x) for x in lt))
+    rows.append("| **وفاداری** | - | - | هر 1 درصد مالیات = 3 وفاداری کم | سقف 100؛ زیر 50 همه‌ی تولیدها تا نصف کند می‌شن. با نرخ 20 درصد، لول 5 / 10 / 20 / 30 / 40 / 50: %s |" % " / ".join(str(x) for x in lt))
     rows.append("| **غارت** | - | - | از هر انبار تا 25 درصد محتوا | علاوه بر جواهر: تا 6 ساعت (پایگاه کامپیوتری) یا 8 ساعت (بازیکن) تولید یک ساختمون هم‌لول از هر منبع + 25 درصد مالیات جمع‌نشده؛ طرف مقابل دقیقا همون رو از دست می‌ده |")
-    head = ["| چی | باز شدن (لول) | تعداد در لول 5·10·20·30 | تولید یک ساختمون در ساعت (اول → لول 30) | به چه دردی می‌خوره |", "|---|---|---|---|---|"]
+    head = ["| چی | باز شدن (لول) | تعداد در لول 5·10·20·30·40·50 | تولید یک ساختمون در ساعت (اول → لول 50) | به چه دردی می‌خوره |", "|---|---|---|---|---|"]
     intro = ("# جدول اقتصاد بلو وال (E1) - پیش‌نویس برای تایید\n\n"
              "همه‌ی عددها پیشنهادین (ph). جواهر همچنان پول اصلیه و قیمت جواهرِ ارتقاها عوض نشده.\n"
-             "ساختمون‌های تولیدی خودشون با لول قلعه بالا می‌رن (تولید ×1.13 هر لول: ×3 در لول 10، ×10 در 20، ×35 در 30). "
+             "ساختمون‌های تولیدی خودشون با لول قلعه بالا می‌رن (تولید ×1.13 هر لول: ×3 در لول 10، ×10 در 20، ×35 در 30، ×400 در 50). "
              "منابع فقط یه قیمت دوم و کوچیک روی ارتقاها می‌ذارن (حدود 30 درصدِ تولید یک ساختمون در مدت ساخت)، پس سرعت پیشرفت جابه‌جا نمی‌شه.\n"
              "توی ردیف‌هایی که چند ساختمونه، عددها به ترتیب اسم‌ها هستن (جدا شده با /).\n\n")
     return intro + "\n".join(head + rows) + "\n"
@@ -447,7 +447,7 @@ def write_all() -> None:
 if __name__ == "__main__":
     if "--flow" in sys.argv:
         print("%-3s %s" % ("L", "  ".join("%-12s" % r for r in ("wood", "stone", "iron_bars", "oil", "food", "coins"))))
-        for L in (3, 5, 8, 10, 14, 20, 25, 30):
+        for L in (3, 5, 8, 10, 14, 20, 25, 30, 35, 40, 45, 50):
             fl = flow(L)
             print("%-3d %s" % (L, "  ".join("%-12s" % ("%5.0f%% (%s)" % (100.0 * d / s if s else float("nan"), _fmt(s))) for d, s in (fl[r] for r in ("wood", "stone", "iron_bars", "oil", "food", "coins")))))
     else:

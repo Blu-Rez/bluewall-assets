@@ -23,7 +23,7 @@ CONTRACT = {
     "jeweler": ("P", "free", 20), "stores": ("T", "free", 1), "cottage": ("H", "free", 1), "craftsman": ("H", "free", 6), "merchant": ("H", "free", 12),
     "noble": ("H", "free", 20), "market": ("C", "free", 3), "tavern": ("C", "free", 6), "townhall": ("C", "free", 2), "chapel": ("C", "free", 1), "well": ("C", "free", 1),
 }
-LEVELS = ("5", "10", "20", "30")
+LEVELS = ("5", "10", "20", "30", "40", "50")
 BAD = []
 
 
@@ -62,8 +62,8 @@ def main() -> int:
         need(st and st[0][0] == k["unlock"], "%s: first step must open at the unlock level" % i)
         need(all(st[j][0] < st[j + 1][0] and st[j][1] < st[j + 1][1] for j in range(len(st) - 1)), "%s: steps must rise in level and in count" % i)
         c = [k["count_at"][L] for L in LEVELS]
-        need(c == sorted(c), "%s: counts at 5/10/20/30 fall: %s" % (i, c))
-        need(all(k["count_at"][str(L)] == M.count_at(M.BY_ID[i], L) for L in (5, 10, 20, 30)), "%s: count_at does not match the steps" % i)
+        need(c == sorted(c), "%s: counts at 5/10/20/30/40/50 fall: %s" % (i, c))
+        need(all(k["count_at"][str(L)] == M.count_at(M.BY_ID[i], L) for L in (5, 10, 20, 30, 40, 50)), "%s: count_at does not match the steps" % i)
         need(all(0 <= x <= 30 for x in c) and (k["unlock"] > 5 or c[0] >= 1), "%s: count at level 5 is %s but it opens at %s" % (i, c[0], k["unlock"]))
         need(all((k["count_at"][L] == 0) == (int(L) < k["unlock"]) for L in LEVELS), "%s: a count is 0 exactly while the kind is still locked" % i)
         need(all(("x" not in k and "z" not in k and "pos" not in k) for _ in [0]), "%s: no hard-wired positions allowed" % i)
@@ -90,7 +90,7 @@ def main() -> int:
     need(all(pop[L] <= d["tax"]["water_capacity"][L] for L in LEVELS), "residents exceed the water of the wells: %s vs %s" % (pop, d["tax"]["water_capacity"]))
 
     # 4. the rules that must not move: the time curve and the attack numbers are the live ones
-    need(d["time"]["upgrade"]["hours_at_x1"] == {str(n): P.t_hours(n) for n in (1, 2, 3, 5, 10, 20, 30)}, "upgrade time table differs from progress.T_HOURS")
+    need(d["time"]["upgrade"]["hours_at_x1"] == {str(n): P.t_hours(n) for n in (1, 2, 3, 5, 10, 20, 30, 40, 50)}, "upgrade time table differs from progress.T_HOURS")
     need(d["time"]["attack"]["scout_cooldown_s"] == MI.ATTACK_COOLDOWN and d["time"]["shield"]["today_h"] == MI.SHIELD_SECONDS // 3600, "attack / shield numbers differ from military.py")
     sh = d["time"]["shield"]["by_stars_h"]
     need([x[0] for x in sh] == [0, 1, 2, 3] and [x[1] for x in sh] == sorted(x[1] for x in sh) and sh[1][1] == d["time"]["shield"]["today_h"], "shield by stars must rise and keep today's 4 h for 1 star")
@@ -110,11 +110,11 @@ def main() -> int:
 
     # 6. stores never block an upgrade, supply covers demand (every resource at 5 / 10 / 20 / 30)
     for r in ("wood", "stone", "planks", "cut_stone", "iron_bars", "oil"):
-        for L in (5, 10, 20, 30):
+        for L in (5, 10, 20, 30, 40, 50):
             if L >= d["construction"]["needs_from"][r]:
-                dear = M.dearest(r, min(30, L + 1))
+                dear = M.dearest(r, min(P.MAX_LEVEL, L + 1))
                 need(d["stores"]["cap"][r][str(L)] >= dear, "store cap of %s at %s is below the dearest next price" % (r, L))
-    for L in (5, 10, 20, 30):
+    for L in (5, 10, 20, 30, 35, 40, 45, 50):
         fl = M.flow(L)
         for r, (dem, sup) in fl.items():
             need(dem <= 1.10 * sup + 1e-9, "demand %.0f > supply %.0f of %s at castle %s" % (dem, sup, r, L))

@@ -6,6 +6,8 @@ Design targets (owner, 5 Oct 2026 22:16 / 22:21; fitted with dev/fit5.py into pr
   castle 20 after ~14 months (428 days) and castle 30 after ~23.5 months (717 days);  the BEST player (every boost at 20 %, gems bought, rush allowance used up)
   needs 30-40 % less (castle 20 in ~8.5 months = 260 days, castle 30 in ~15 months = 453 days);  boosts alone (no gems bought) give about -19 %;  a lazy player (2 short visits a day) takes more.
   (The single run of one profile jumps by +-15 % when a visit hour or a price moves a little - the numbers above are the mean of 3 runs whose visit times differ by an hour, see dev/days_table.py.)
+  CASTLE 50 (EC1, 17 Oct 2026; T_HOURS / COST_K 31-50 = the 30-level curve carried on, ruby price tail RUBY_TAIL; mean of 9 runs, see dev/ec1_report.py): the same four profiles reach
+  castle 40 / 50 on day ~1036 / ~1325 (good, no boost), ~913 / ~1157 (boosts only), ~672 / ~890 (best), ~1312 / ~1771 (idle); 31-50 costs ~29.6 days per level (21-30: 28.5).
 The player should never run out of things to do, but has to be patient.
 
 It runs the REAL rules of progress.py (round rule, builders, reserve queue, boosts, rush allowance, mines with banked output) and
