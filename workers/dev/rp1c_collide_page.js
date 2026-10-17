@@ -20,7 +20,7 @@
   const grid = () => rp.grid();
   function solids() {                                                                                     // the game's colliders as they are NOW (the grid mode drops the ghost ones)
     const L = [];
-    for (const b of S.boxes) L.push({ k: 'box:' + b.type, soft: !!b.soft, ramp: b.type === 'ramp', x: b.x, z: b.z, hw: b.hw, hd: b.type === 'wall' ? b.hd * 0.72 : b.hd, ux: b.ux, uz: b.uz, vx: b.vx, vz: b.vz, id: b.id || b.type });
+    for (const b of S.boxes) L.push({ k: 'box:' + b.type, soft: !!b.soft, ramp: b.type === 'ramp', x: b.x, z: b.z, hw: b.hw, hd: b.type === 'wall' ? b.hd * 0.72 : b.hd, ux: b.ux, uz: b.uz, vx: b.vx, vz: b.vz, id: b.id || b.type, y0: b.y0 });   // RP1C_R5: y0 = a bridge parapet's deck
     for (const d of S.discs) L.push({ k: 'disc', disc: true, x: d[0], z: d[1], r: d[2], id: 'disc' });
     return L;
   }
@@ -32,9 +32,10 @@
     return { d, nx: nx * o.ux + nz * o.vx, nz: nx * o.uz + nz * o.vz };
   };
   const gInside = (x, z) => GR && GR.st.ready && GR.solid(x, z);
+  const under = (o) => o.y0 !== undefined && !!S.rIn;                          // RP1C_R5: the rule of rpg.js pushOut — a bridge parapet is not a wall for a body IN the water BELOW its deck (swimming / wading under the bridge), nor while she is still inside its strip after the water ended (S.rIn)
   const inside = (x, z) => {                                                                              // -> the name of a solid the point is inside, or null
     if (gInside(x, z)) return 'grid';
-    for (const o of SOL) { if (o.soft) continue; const dx = x - o.x, dz = z - o.z, rr = (o.disc ? o.r : Math.hypot(o.hw, o.hd)) + 0.5; if (dx * dx + dz * dz > rr * rr) continue; if (info(o, x, z).d < -0.02) return o.k; }
+    for (const o of SOL) { if (o.soft || under(o)) continue; const dx = x - o.x, dz = z - o.z, rr = (o.disc ? o.r : Math.hypot(o.hw, o.hd)) + 0.5; if (dx * dx + dz * dz > rr * rr) continue; if (info(o, x, z).d < -0.02) return o.k; }
     return null;
   };
   const crosses = (x0, z0, x1, z1) => {                                                                   // both ends outside, something solid between
@@ -43,7 +44,7 @@
   // the nearest surface (the game's colliders AND the grid): distance to the surface and its outward normal
   const nearest = (x, z) => {
     let best = null;
-    for (const o of SOL) { if (o.soft) continue; const dx = x - o.x, dz = z - o.z, rr = (o.disc ? o.r : Math.hypot(o.hw, o.hd)) + 3; if (dx * dx + dz * dz > rr * rr) continue; const q = info(o, x, z); if (!best || q.d < best.d) { best = q; best.k = o.k; best.id = o.id; } }
+    for (const o of SOL) { if (o.soft || under(o)) continue; const dx = x - o.x, dz = z - o.z, rr = (o.disc ? o.r : Math.hypot(o.hw, o.hd)) + 3; if (dx * dx + dz * dz > rr * rr) continue; const q = info(o, x, z); if (!best || q.d < best.d) { best = q; best.k = o.k; best.id = o.id; } }
     if (GR && GR.st.ready) { const d0 = GR.d(x, z) - GR.HALF; if (d0 < 3 && (!best || d0 < best.d)) { const e = 0.12, gx = GR.d(x + e, z) - GR.d(x - e, z), gz = GR.d(x, z + e) - GR.d(x, z - e), l = Math.hypot(gx, gz) || 1; best = { d: d0, nx: gx / l, nz: gz / l, k: 'grid', id: 'grid' }; } }
     return best;
   };

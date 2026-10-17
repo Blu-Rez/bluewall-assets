@@ -6,6 +6,7 @@ const SIS = [   // the element is shown by the emblem from the owner's character
   { k: 'elina', n: 'ELINA', c: '#ff6a3a' }, { k: 'elika', n: 'ELIKA', c: '#9fe8ff' }, { k: 'melika', n: 'MELIKA', c: '#7fe06a' },
   { k: 'mobina', n: 'MOBINA', c: '#f0a666' }, { k: 'aylin', n: 'AYLIN', c: '#4fb0ff' }, { k: 'aylar', n: 'AYLAR', c: '#cfeeff' },
 ];
+const CAM_FAR = 1.25;   // RP1C_R5: the default third-person distance x 1.25 (look B in CAMS)
 const CAM_MIN = 3.0, CAM_RISE = 3.2;   // RP1C-R4: the closest the third-person camera may get to her (m, 3-D) and the most it may rise to keep that
 const GATE_HALF = { outer: 7.5, inner: 4.5, town: 5.2 };
 const EDGE_SOFT = 16, EDGE_R = 420;                                        // RP1B: the soft edge of the walkable map (was a hard 335 m circle that shut out the outer mills, mines and hamlets)
@@ -123,7 +124,7 @@ export function create(H) {
       out.push({ x: t.x, z: t.z, hw: t.w / 2, hd: t.d / 2, rot: t.rot || 0, h: t.h || 6, type: t.type, id: t.id, ringId: t.ringId });   // RP1C-R3: ringId (the ramp planner groups the wall runs by ring)
     }
     if (ramps) for (const b of ramps.boxes()) out.push(b);   // RP1C-R3: the ramps' parapets (type 'ramp') are hero walls like the others
-    if (S.nav && S.nav.rails) for (const b of S.nav.rails()) out.push(b);   // TR2_H_R4: the parapets of the stone bridges (type 'rail', nav.js bridgeRails) are hero walls — QA1-051: she walked 8-14 m sideways through them into the river
+    if (S.nav && S.nav.rails) for (const b of S.nav.rails()) { const br = S.nav.bridges[parseInt(b.id.slice(4), 10)]; b.y0 = br && br.y != null ? br.y : undefined; out.push(b); }   // RP1C_R5: y0 = the deck the parapet stands on (pushOut / segHit: a body IN the water BELOW the deck passes under it).  TR2_H_R4: the parapets of the stone bridges (type 'rail', nav.js bridgeRails) are hero walls — QA1-051: she walked 8-14 m sideways through them into the river
     for (const b of out) { b.ux = Math.cos(b.rot); b.uz = -Math.sin(b.rot); b.vx = Math.sin(b.rot); b.vz = Math.cos(b.rot); b.R2 = (b.hw + b.hd + 2.5) ** 2; }
     if (useGrid()) { const keepB = []; for (const b of out) { if (!GRID_DROP.has(b.type)) { keepB.push(b); continue; } if (!gcov(b.id, () => grid.coverBox(b))) keepB.push(b); } out.length = 0; out.push(...keepB); for (const b of out) if (b.type === 'wall') b.soft = gcov('c' + (b.id || '') + b.x.toFixed(1) + b.z.toFixed(1), () => Math.max(edgeCov(b, 1), edgeCov(b, 0.72)) - 0.5); }   // RP1C-R3: (a castle WALL run whose stone the raster draws along ≥ 90 % of its outline stays for the wall-walk / climb logic but no longer pushes: its box is 0.5 m wider than the stone and met the real surface in a needle gap; towers / ballistae / gates are drawn by < 85 % — they keep pushing) a building's target box (church, mine, keep …) the grid already draws from the real mesh is not a collider any more (it was an invisible wall)
     S.boxes = out; S.cache = performance.now();
@@ -172,6 +173,10 @@ export function create(H) {
   let underWorld = null;
   const W = () => (S.where === 'under' ? underWorld : homeWorld);
 
+  function inRailStrip(x, z) {   // RP1C_R5: is the body circle on a bridge parapet's footprint (the rails of refreshColliders)?
+    for (const b of S.boxes) { if (b.type !== 'rail') continue; const dx = x - b.x, dz = z - b.z; if (dx * dx + dz * dz > b.R2) continue; if (Math.abs(dx * b.ux + dz * b.uz) < b.hw + R_BODY && Math.abs(dx * b.vx + dz * b.vz) < b.hd + R_BODY) return true; }
+    return false;
+  }
   // push a circle (radius r) out of the boxes and discs; returns true when it moved
   function pushOut(p, r, wd) {
     let moved = false; const gOn = grid && wd === homeWorld && S.layer === 0 && CONTACT.grid && grid.st.ready;   // RP1C-R3
@@ -179,6 +184,7 @@ export function create(H) {
       let any = false;
       for (const b of wd.boxes()) {
         if (b.soft && gOn) continue;   // RP1C-R3: the raster draws it
+        if (b.y0 !== undefined && S.rIn) continue;   // RP1C_R5: a bridge parapet (y0 = its deck) is 2-D here and was a wall across the river for everyone swimming / wading UNDER the bridge (QA1 water exit: 2 of the 5 failed runs); on the deck, or on dry land beside it, it stays solid.  S.rIn = she came out of the water INSIDE a parapet's strip (the water ended under the bridge): it lets go of her only when she is out of the strip, no 0.9 m pop
         const dx = p.x - b.x, dz = p.z - b.z; if (dx * dx + dz * dz > b.R2) continue;
         const lx = dx * b.ux + dz * b.uz, lz = dx * b.vx + dz * b.vz, cx = clamp(lx, -b.hw, b.hw), cz = clamp(lz, -b.hd, b.hd), ox = lx - cx, oz = lz - cz, d2 = ox * ox + oz * oz;
         if (d2 >= r * r) continue;
@@ -215,7 +221,7 @@ export function create(H) {
     if (!wd.inside(p.x, p.z)) return;
     if (S.grounded) {                                                                // no climbing: a rise steeper than ~40 degrees stops the move
       const run = Math.hypot(p.x - S.x, p.z - S.z), sw2 = S.sw === 2 && S.where === 'home', rise = (sw2 ? world.fastHeight(p.x, p.z) : wd.ground(p.x, p.z)) - (sw2 ? Math.max(S.y, WSURF) : S.y);   // (swimming: she pulls herself out over a bank up to ~1.1 m above the water)
-      if (run > 1e-4 && rise > 0.85 * run + 0.06 + (sw2 ? 1.1 : 0)) return;
+      if (run > 1e-4 && rise > 0.85 * run + 0.06 + (sw2 ? 1.1 : S.where === 'home' && S.layer === 0 && S.dep > 0.02 ? 0.3 + 0.8 * clamp(S.dep / 0.95, 0, 1) : 0)) return;   // RP1C_R5: anyone with water over her feet (> 2 cm) pulls herself out of it over a bank (0.3 m at the ankle .. 1.1 m at the chest) — swimmers could, waders could not: 3 of the 5 failed exits of rp1c3 'water exit' stood ankle / knee-deep at a 55–65° cut bank, stuck (the pull-out ends where the water ends: dry land keeps the old limit)
     }
     S.x = p.x; S.z = p.z;
   }
@@ -241,7 +247,7 @@ export function create(H) {
   function toGate() {                                                              // the castle gate of HIS map: just inside, facing the keep (the spawn, and the «back to the gate» button)
     const G = L.GATE, k = (world.targets || []).find((t) => t.type === 'keep') || { x: 0, z: 0 };
     const p = { x: G.x - G.nx * 9, z: G.z - G.nz * 9 }; pushOut(p, R_BODY + 0.1, homeWorld);
-    S.where = 'home'; S.layer = 0; S.top = S.climb = null; S.sw = 0; S.x = p.x; S.z = p.z; S.y = homeGround(S.x, S.z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; S.stT = 0;
+    S.where = 'home'; S.layer = 0; S.top = S.climb = null; S.sw = 0; S.rIn = false; S.x = p.x; S.z = p.z; S.y = homeGround(S.x, S.z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; S.stT = 0;
     S.camYaw = Math.atan2(k.x - S.x, k.z - S.z); S.body = S.camYaw; S.pitch = camP().pit; S.snap = true; S.camD = camP().D; S.cool = Math.max(S.cool, 0.5);
   }
 
@@ -599,7 +605,7 @@ export function create(H) {
     const air = !S.grounded;
     const cb = S.cmb && S.cmb.pre(dt, S, wantX, wantZ, S.bkS ? 0 : m); // RP4: combat tick (RP1C-R2: a push towards the camera is passed as «no push»: attack / block would turn her to face it, a dodge becomes the sim's own back-step); true = it owns the hero (attack / roll / hurt / skill): no host locomotion
     let dep = 0;                                                                     // RP1B: wade (< 0.95 m: slower) / swim (deeper: a slow crawl, no jump / dodge)
-    if (S.where === 'home' && S.layer === 0) { dep = waterDepth(S.x, S.z); const w0 = S.sw; S.sw = (S.grounded || S.y <= WSURF + 0.5) && dep > (w0 === 2 ? SWIM_DEEP - 0.2 : SWIM_DEEP) ? 2 : dep > 0.12 ? 1 : 0; } else S.sw = 0;
+    if (S.where === 'home' && S.layer === 0) { dep = S.dep = waterDepth(S.x, S.z); const w0 = S.sw; S.sw = (S.grounded || S.y <= WSURF + 0.5) && dep > (w0 === 2 ? SWIM_DEEP - 0.2 : SWIM_DEEP) ? 2 : dep > 0.12 ? 1 : 0; if (S.sw > 0 && S.y < 0.3) S.rIn = true; else if (S.rIn && S.sw === 0 && !inRailStrip(S.x, S.z)) S.rIn = false; } else { S.sw = 0; S.rIn = false; }   // RP1C_R5: rIn (see pushOut)
     waterFx(dt);   // RP1C-R3: ring + splash on entry / exit, ripples while she moves in the water (the water_life.js quad)
     if (S.sw === 1) { const q = clamp(dep / 0.38, 0, 1); target = Math.min(target, RUN + (WALK * 0.9 - RUN) * q) * (1 - 0.3 * clamp((dep - 0.5) / 0.45, 0, 1)); }   // RP1C-R3: wading — at the knee (0.5 m) the walk clip slowed, no running through water, thigh-deep 0.63 of the walk
     else if (S.sw === 2) { target = m > 0 ? SWIM_V * (0.45 + 0.55 * m) : 0; if (S.st === 'dodge') { S.st = 'loco'; S.stT = 0; } const sp0 = Math.hypot(S.vx, S.vz); if (sp0 > SWIM_V * 1.25) { const f = Math.exp(-9 * dt); S.vx *= f; S.vz *= f; } }   // RP1C-R3: the water takes the run's momentum away in ~0.3 s (it carried 4.3 m/s into the deep)
@@ -690,7 +696,7 @@ export function create(H) {
         else { let ta = (-h - p) / d, tb = (h - p) / d; if (ta > tb) { const q = ta; ta = tb; tb = q; } t0 = Math.max(t0, ta); t1 = Math.min(t1, tb); if (t0 > t1) ok = false; }
         if (!ok) break;
       }
-      if (ok && t0 > 0 && t0 < best) { const yy = ay + (by - ay) * t0; if (yy < wd.ground(ax + (bx - ax) * t0, az + (bz - az) * t0) + b.h) best = t0; }
+      if (ok && t0 > 0 && t0 < best) { const yy = ay + (by - ay) * t0; if (yy < wd.ground(ax + (bx - ax) * t0, az + (bz - az) * t0) + b.h && !(b.y0 > yy + 0.3 && S.sw > 0)) best = t0; }   // RP1C_R5: (the camera of a swimmer under a bridge passes under the parapet too)
     }
     if (!hi) for (const [sx, sz, sr] of wd.discs()) {
       const dx = bx - ax, dz = bz - az, fx = ax - sx, fz = az - sz, a = dx * dx + dz * dz, b2 = 2 * (fx * dx + fz * dz), c = fx * fx + fz * fz - (sr + mgD) ** 2, disc = b2 * b2 - 4 * a * c;
@@ -704,7 +710,7 @@ export function create(H) {
     return best;
   }
   // RP1C-R3 (ROUND4 A1/3): the camera framing, 3 looks (S.camLook: 1 = A today, 2 = B lower + closer over-shoulder: she stands at ~0.35 of the screen width, the horizon at ~40 % from the top, the ground ahead in view, 3 = C higher + wider); default B.  The pitch is only the DEFAULT of a look (she can still drag it: the clamp is unchanged)
-  const CAMS = [null, { D: 3.6, sh: 0.55, py: 1.45, pit: 0.2 }, { D: 3.4, ndc: 0.30, py: 0.95, pit: -1 }, { D: 4.8, ndc: 0.12, py: 1.62, pit: 0.4 }];
+  const CAMS = [null, { D: 3.6, sh: 0.55, py: 1.45, pit: 0.2 }, { D: 3.4 * CAM_FAR, ndc: 0.30, py: 0.95, pit: -1 }, { D: 4.8, ndc: 0.12, py: 1.62, pit: 0.4 }];   // RP1C_R5: B (the default look) 25 % farther (the owner: «a bit close» on his phone): D 3.4 -> 4.25 m (x HC = 4.78 m); the shoulder offset follows (ndc 0.30 stays), pitch / pivot height / CAM_MIN / CAM_RISE are unchanged
   function camP() {
     const c = CAMS[S.camLook || 2], fov = camera.fov * Math.PI / 180, asp = camera.aspect || 1.7, D = c.D * HC;
     return { D, sh: c.ndc ? clamp(c.ndc * D * asp * Math.tan(fov / 2), 0.3 * HS, 1.4 * HS) : c.sh * HS, py: c.py * HS, pit: c.pit < 0 ? Math.atan(0.2 * Math.tan(fov / 2)) : c.pit };   // (B: the lateral offset that puts her at ndc -0.30 whatever the aspect; the horizon at 0.40 of the height = a pitch of atan(0.2 tan(fov/2)))
@@ -1019,7 +1025,7 @@ export function create(H) {
     camLook: (n) => { if (n) { S.camLook = n; S.pitch = camP().pit; S.snap = true; S.camD = camP().D; } return { look: S.camLook || 2, ...camP() }; },   // RP1C-R3
     shadowLook: (n) => { if (n) S.shLook = n; return S.shLook || 2; },   // RP1C-R3
     camFix: (on) => { S.camFix = !!on; S.camR = 0; }, camInfo: () => ({ d3: camera.position.distanceTo(S.pivot), camD: S.camD, camR: S.camR || 0, y: camera.position.y }),   // RP1C-R4: dev — the fix on / off (before / after) + the camera's distance to her
-    setPos: (x, z, yaw) => { S.layer = 0; S.top = S.climb = null; S.sw = 0; S.x = x; S.z = z; S.y = W().ground(x, z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; if (yaw != null) { S.camYaw = yaw; S.body = yaw; } S.snap = true; S.camD = camP().D; },
+    setPos: (x, z, yaw) => { S.layer = 0; S.top = S.climb = null; S.sw = 0; S.rIn = false; S.x = x; S.z = z; S.y = W().ground(x, z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; if (yaw != null) { S.camYaw = yaw; S.body = yaw; } S.snap = true; S.camD = camP().D; },
     gait: (o) => (o ? Object.assign(GAIT, o) : { ...GAIT }),
     jumpInfo: () => ({ JUMP_V, GRAV, JUMP_T, apex: +(JUMP_V * JUMP_V / (2 * GRAV)).toFixed(3), air: +(2 * JUMP_V / GRAV).toFixed(3) }),
     knobs: () => H.reach, frame: (n, d) => frame(n, d), setPerf: (b) => setPerf(b), perfLine: () => (perfEl ? perfEl.textContent : ''), fakeClock: (b) => { S.fakeNow = b ? 0 : null; },
