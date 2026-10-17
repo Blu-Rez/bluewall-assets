@@ -1,0 +1,25 @@
+--- a/bluewall/military.py	2026-10-18 01:09:41.426747352 +0330
++++ b/bluewall/military.py	2026-10-18 01:09:41.442637341 +0330
+@@ -996,16 +996,20 @@
+         st["army"][u] = max(0, int(st["army"].get(u, 0)) - n)
+         if not st["army"][u]:
+             del st["army"][u]
++    cut = {}                                    # BT1_R3 (PL1-01): what the soldiers carried out but the vault had no room for — the client may show it exactly (it can already work it out from its own sim loot)
+     for g in GEMS:
+         room = max(0, PR.vault_cap(g, max(1, PR.level(st, "vault_" + g))) - int(st["gems"].get(g, 0)))
+-        loot[g] = min(loot[g], room)
++        took = min(loot[g], room)
++        if loot[g] > took:
++            cut[g] = int(loot[g] - took)
++        loot[g] = took
+         st["gems"][g] = int(st["gems"].get(g, 0)) + loot[g]
+     a["done"] = True
+     report = {"t": now, "target": spec.get("name"), "kind": spec.get("kind"), "stars": stars, "destruction": destruction, "loot": loot,
+               "lost": lost, "sent": sent, "spells": cast}
+     st.setdefault("rep", []).append(report)
+     st["rep"] = st["rep"][-20:]
+-    return "ok", {"report": report, "loot": loot, "stars": stars}
++    return "ok", {"report": report, "loot": loot, "stars": stars, "cut": cut}
+ 
+ 
+ # ------------------------------------------------------------------ reference power (the strength of a full, typical army at castle K)
