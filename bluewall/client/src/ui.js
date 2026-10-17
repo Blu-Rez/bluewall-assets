@@ -292,7 +292,7 @@ export class UI {
       box.innerHTML = Object.entries(groups).map(([g, items]) => `<h4>${esc(g)}</h4>` + items.map((it) => `<div>${esc(it.name)} — <b>${esc(it.by)}</b> <span class="lc">(${esc(it.license)})</span></div>`).join('')).join('');
     } catch (e) { box.textContent = 'Quaternius · KayKit · Poly Haven · OpenGameArt (CC0)'; }
   }
-  toast(msg) { const el = this.toastEl; el.textContent = msg; el.classList.add('on'); clearTimeout(this._tt); clearTimeout(this._tt2); this._tt = setTimeout(() => el.classList.remove('on'), 2100); this._tt2 = setTimeout(() => { if (!el.classList.contains('on')) el.textContent = ''; }, 2500); }   // UI1_R4: gone within 2.5 s (2.1 s + the .4 s fade) and the text is removed (it stayed in the element for ever)
+  toast(msg, ms = 2100) { const el = this.toastEl; el.textContent = msg; el.classList.add('on'); clearTimeout(this._tt); clearTimeout(this._tt2); this._tt = setTimeout(() => el.classList.remove('on'), ms); this._tt2 = setTimeout(() => { if (!el.classList.contains('on')) el.textContent = ''; }, ms + 400); }      // LY1: `ms` (a long message about the town stays longer: layout_wire.js)   // UI1_R4: gone within 2.5 s (2.1 s + the .4 s fade) and the text is removed (it stayed in the element for ever)
   // c = { date, time, hour } — shown inside the settings panel only
   setClock(c) { this._clock = c; if (this.settingsOpen) this.paintClock(); }
   paintClock() {

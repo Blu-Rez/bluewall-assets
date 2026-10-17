@@ -1,6 +1,6 @@
 import asyncio, sys, os, json, time, math
 from playwright.async_api import async_playwright
-# tr2_s5_drag.py OUTDIR — the editor driven by REAL pointer events (page.mouse): tap to pick, drag to a green spot, ✓ Place; drag onto another building = swap; ↶ Undo.  Frames: drag (ghost), placed, swapped.
+# tr2_s5_drag.py OUTDIR — the editor driven by REAL pointer events (page.mouse): tap to pick, drag to a green spot, lift the finger = placed (LY1: no ✓ any more); drag onto another building = swap; ↶ Undo.  Frames: drag (ghost), placed, swapped.
 # (older header follows) tr2_s5_frames.py OUTDIR [JOBS] — TR2-S5: ONE game session (844x390, lv 30, software GL ~ 3-4 min a frame).  JOBS = comma list of:
 #   house   one home moved through world.layout (before / after, same camera)        store   one storehouse moved (overview before / after + a close frame at the new place)
 #   hud     the game's HUD with the «Arrange» button (default camera)               editor  the editor open: green ghost + dots, red ghost + the reason, swap hint
@@ -78,14 +78,12 @@ async def main():
         st = await pg.evaluate('() => { const S = __bw.layoutUI.state; return { pose: S.pose, ok: S.check && S.check.ok, why: S.check && S.check.why, drag: !!S.drag }; }'); print('mid-drag', json.dumps(st), flush=True)
         say(st['drag'] and abs(st['pose']['x'] - tgt['pose']['x']) <= 2.5 and abs(st['pose']['z'] - tgt['pose']['z']) <= 2.5, 'dragging moves the ghost to the finger (snapped to 1 m)', json.dumps(st['pose']))
         await frame('drag_ghost', 3)
-        await pg.mouse.up(); await asyncio.sleep(1)
-        say(await pg.evaluate("() => getComputedStyle(document.querySelector('[data-a=ok]')).display") != 'none', 'after the drop the ✓ Place / ✕ Cancel buttons are there')
-        await pg.click('[data-a=ok]'); await asyncio.sleep(1)
+        await pg.mouse.up(); await asyncio.sleep(1)      # LY1: a green drop is placed by lifting the finger (no ✓ Place any more; ↶ undoes)
         for _ in range(80):
             if not await pg.evaluate('() => __bw.world.layout.pending'): break
             await asyncio.sleep(1)
         rec = await pg.evaluate('(id) => { const L = __bw.world.layout, r = L.records().find((q) => q.id === id); return { count: L.count, x: r.x, z: r.z, moved: r.moved }; }', tgt['id'])
-        say(rec['count'] == 1 and rec['moved'] and abs(rec['x'] - tgt['pose']['x']) < 3, '✓ Place commits it (layout count 1, the house stands at the new place)', json.dumps(rec))
+        say(rec['count'] == 1 and rec['moved'] and abs(rec['x'] - tgt['pose']['x']) < 3, 'lifting the finger on green places it (layout count 1, the house stands at the new place)', json.dumps(rec))
         await frame('drag_placed', 3)
         # undo
         await pg.click('[data-a=undo]'); await asyncio.sleep(1)
@@ -136,8 +134,7 @@ async def main():
             st = await pg.evaluate('() => { const S = __bw.layoutUI.state; return { pose: S.pose, ok: S.check && S.check.ok, why: S.check && S.check.why, drag: !!S.drag }; }'); print('store mid-drag', json.dumps(st), flush=True)
             say(st['drag'] and st['pose'] is not None and abs(st['pose']['x'] - tx) <= 3.5 and abs(st['pose']['z'] - tz) <= 3.5, 'dragging a storehouse moves the ghost to the finger', json.dumps(st['pose']))
             await frame('drag_store_ghost', 3)
-            await pg.mouse.up(); await asyncio.sleep(1)
-            await pg.click('[data-a=ok]'); await asyncio.sleep(1)
+            await pg.mouse.up(); await asyncio.sleep(1)      # LY1: placed by lifting the finger on green
             for _ in range(120):
                 if not await pg.evaluate('() => __bw.world.layout.pending'): break
                 await asyncio.sleep(1)

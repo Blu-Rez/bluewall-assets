@@ -57,7 +57,8 @@ def pose_for(t):
         o = by[rng.choice(ids)]; return [o["x"] + rng.uniform(-2, 2), o["z"] + rng.uniform(-2, 2), o["ry"]]     # onto another thing (clash / swap)
     if m < .90: return [rng.uniform(-90, 90), rng.uniform(-90, 90), rng.uniform(-3.2, 3.2)]                       # somewhere in / near the town
     return [rng.uniform(-300, 300), rng.uniform(-300, 300), rng.uniform(-3, 3)]                                    # far away
-diff = 0; kept = dropped_n = 0; idem = 0
+diff = 0; kept = dropped_n = 0; idem = 0; rbad = 0
+CODES = ["WALL", "MOAT", "GATE", "MARKET", "VAULT", "OVERLAP", "STREET", "RIVER", "WATER", "STREAM", "DRY", "SLOPE"]
 NREC = 412   # 400 small / medium records + 8 of 30 things + 4 of ALL things (the reference needs ~1-6 s for the big ones)
 for i in range(NREC):
     k = rng.choice([1, 2, 3, 5, 8, 15]) if i < 400 else (30 if i < 408 else len(ids)); m = {}
@@ -65,6 +66,12 @@ for i in range(NREC):
     if rng.random() < .15: m["not_a_thing_%d" % i] = [1, 2, 3]
     rec = {"v": 1, "g": "x", "m": m}
     a, b = LY.canonical_load(G, rec), REF.canonical_load(GR, rec)
+    for d in a["dropped"]:                                                                                    # LY1: every dropped id says WHY (rule codes; UNKNOWN = no such id) — and a clean record carries no `reasons` at all
+        rr = (a.get("reasons") or {}).get(d)
+        if not rr or any(c not in CODES + ["UNKNOWN"] for c in rr) or (d in G["_things"] and "UNKNOWN" in rr): rbad += 1
+    if not a["dropped"] and "reasons" in a: rbad += 1
+    if sorted(a.get("reasons") or {}) != sorted(a["dropped"]): rbad += 1
+    a = {k: v for k, v in a.items() if k != "reasons"}
     if a != b:
         diff += 1
         if diff <= 3: print("FAIL differs", i, k, str(a)[:200], str(b)[:200])
@@ -73,6 +80,7 @@ for i in range(NREC):
     again = LY.canonical_load(G, {"v": 1, "m": a["effective"]})
     idem += 1 if (again["status"] == "ok" and again["effective"] == a["effective"] and again["dropped"] == []) else 0
 say(diff == 0, "same: %d random records == the reference (kept %d things, dropped %d)" % (NREC, kept, dropped_n), diff)
+say(rbad == 0, "LY1: every dropped id has its reasons (rule codes, UNKNOWN only for an id that does not exist); a clean record has none", rbad)
 say(idem == NREC - diff and kept > 100 and dropped_n > 100, "same: idempotent (effective of effective == itself) and the records were not all trivial", (idem, kept, dropped_n))
 for rec, why in (({"v": 1, "m": {"cottage_00": [10 ** 400, 0, 0]}}, "triple cottage_00"), ({"v": 1, "m": {"cottage_00": [float("nan"), 0, 0]}}, "triple cottage_00"),
                  ({"v": 1, "m": {"cottage_00": [True, 0, 0]}}, "triple cottage_00"), ({"v": 1, "m": {"cottage_00": [6000, 0, 0]}}, "range cottage_00"), ({"v": 1, "m": []}, "m"),
@@ -127,6 +135,7 @@ async def endpoints():
         clk[0] += 6
         s, j = await call("POST", 101, {"layout": clash["record"]})
         say(s == 200 and j["dropped"] == clash["expect"]["dropped"] and j["layout"]["m"] == clash["expect"]["effective"], "POST a clash -> the dropped ids are named, the rest stands", (s, j))
+        say(s == 200 and sorted(j.get("reasons") or {}) == sorted(j["dropped"]) and all(j["reasons"][d] for d in j["dropped"]), "LY1: POST a clash -> `reasons` says why each dropped id went back", (s, j.get("reasons")))
         before = (await call("GET", 101))[1]["layout"]
         s, j = await call("POST", 101, {"layout": {"v": 2, "m": {}}}); say(s == 400 and j == {"ok": False, "why": "version"}, "POST a bad record -> 400 {why: version}", (s, j))
         say((await call("GET", 101))[1]["layout"] == before, "a rejected POST stores nothing")
@@ -141,6 +150,7 @@ async def endpoints():
         clk[0] += 6
         s, j = await call("POST", 101, {"layout": {"v": 1, "m": {"cottage_00": [0, 0, 0], "no_such_id": [1, 1, 1]}}})
         say(s == 200 and "no_such_id" in j["dropped"], "an unknown id is dropped, not an error", (s, j))
+        say(s == 200 and (j.get("reasons") or {}).get("no_such_id") == ["UNKNOWN"], "LY1: an unknown id is answered with reasons {id: [UNKNOWN]}", (s, j.get("reasons")))
         # the rate limit: 5 accepted POSTs in any 5 s, a refused one is not counted
         clk[0] += 10; codes = []
         for _ in range(7): codes.append((await call("POST", 102, {"layout": {"v": 1, "m": {}}}))[0])

@@ -299,7 +299,8 @@ say(planLots0().every((l) => { const d = townPlan0().list.find((p) => p.id === l
   say(gotD.length === 1 && gotD[0].changed === true && gotD[0].dropped[0] === cot2.id && saved() === null && !pend(), '200 with everything dropped: the game goes back to the default layout');
   // the effective record is what the live layer shows (main.js: onServer -> world.layout.load(j.layout))
   const mainSrc = fs.readFileSync('/home/claude/bot/bluebot_v2/bluewall/client/src/main.js', 'utf8');
-  say(/createLayoutSync\(econ, \{ onServer: \(j\) => \{ if \(j && j\.ok && j\.changed\) \{ world\.layout\.load\(j\.layout/.test(mainSrc), 'main.js applies the server\'s layout (onServer -> world.layout.load(j.layout))');
+  const wireSrc = fs.readFileSync('/home/claude/bot/bluebot_v2/bluewall/client/src/layout_wire.js', 'utf8');      // LY1: main.js -> createLayoutWire(...) -> layout_sync.js onServer -> world.layout.loadOwn(j.layout)
+  say(/createLayoutWire\(\{ econ, world, ui/.test(mainSrc) && /layoutWire\.attach\(layoutUI\)/.test(mainSrc) && /onServer: \(j\) => \{ if \(j && j\.ok && j\.changed && !j\.stale && live\(\)\) \{ live\(\)\.loadOwn\(j\.layout/.test(wireSrc), 'main.js applies the server\'s layout (createLayoutWire -> onServer -> world.layout.loadOwn(j.layout), only when newer than the screen)');   // LY1:
   live.resetAll(); live.flush(); live.load(rec2); live.flush(); live.load(srvRec); live.flush();
   say(JSON.stringify(live.save().m) === JSON.stringify(srvRec.m), 'the live layer ends on the server\'s record, not the one that was sent', JSON.stringify(live.save().m));
   globalThis.setTimeout = realST; globalThis.clearTimeout = realCT; globalThis.fetch = srv.fetch; delete globalThis.localStorage;

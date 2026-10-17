@@ -1,27 +1,25 @@
-// layout_ui.js — TR2-S5: the editor.  The player rearranges his own town: homes, civic buildings, production buildings and the six storehouses.
+// layout_ui.js — TR2-S5 / LY1: the editor.  The player rearranges his own town: homes, civic buildings, production buildings and the six storehouses.
 //
-//   const ed = createLayoutUI({ root, world, camera, renderer, ctl, scene, blocked(), save(rec), toast(msg) })
-//   ed.update(dt)    every frame (cheap when closed)       ed.open() / ed.close()       ed.active
+//   const ed = createLayoutUI({ root, world, camera, renderer, ctl, scene, blocked(), save(rec), toast(msg, ms) })
+//   ed.update(dt)    every frame (cheap when closed)       ed.open() / ed.close()       ed.active       ed.setStatus('saving'|'saved'|…)   ed.notice(text, ms)   (layout_wire.js: what the server said)
 //
 // How it plays (landscape, 844 x 390 is the design size; everything is a 44 px+ touch target):
-//   • the «Arrange» button opens the editor.  Tap a building to pick it (a yellow outline), drag it by its body: a ghost (green = fits, red = does not, with the reason in words) follows the finger,
-//     snapped to 1 m.  ⟲ ⟳ turn it by 15°.  ✓ puts it there, ✕ drops the change.  Release the ghost on ANOTHER building and the two trade places (if both fit).
+//   • the «Arrange» button opens the editor (the camera comes in to ~270 so that a house is a thumb wide).  PUT YOUR FINGER ON A BUILDING AND DRAG: one gesture picks it and moves it.  Every building's touch target on the
+//     screen is at least 44 x 44 px, however far away it is (a cottage at the default zoom is 12 px: its target is still 44).  A tap picks it (a yellow outline).  One finger on empty ground pans, two fingers zoom / turn.
+//   • while the finger moves a ghost follows it (snapped to 1 m): GREEN = it fits, RED = it does not, and the pill at the top says WHY in plain words («On a street · Another building is in the way») before the finger is lifted.
+//   • lifting the finger on a green ghost PLACES the building at once (a toast says so; ↶ undoes, up to 30 steps).  Lifting on a red ghost: the nearest free spot within 3 m is taken if there is one (and said), else the ghost stays red with the
+//     reason on the screen: drag it on (grab the ghost itself), or ✕.  Drop it on ANOTHER building and the two trade places (if both fit).  ⟲ ⟳ turn by 15° (placed after 0.8 s if green, or ✓ at once).
 //   • green dots on the ground show where the picked building fits (a town this full has few free places: the dots are the map of them).
-//   • ↶ undoes the last move, «Default» puts the picked building back, «Reset all» puts the whole town back (asks twice).  «Done» leaves; the layout is saved after every ✓ / undo / reset.
-//   • one finger on empty ground pans, two fingers zoom / turn the camera, exactly like the rest of the game.
-// All rules live in layout_rules.js (checkPose); this file only draws and routes the pointer.
+//   • «Default» puts the picked building back, «Reset all» puts the whole town back (asks twice).  «Done» leaves; the layout is saved after every change (layout_sync.js), and the corner pill says «Saving… / Saved ✓ / Not saved».
+//   • a second finger during a drag cancels the drag (it is a pinch for the camera).
+// All rules live in layout_rules.js (checkPose); the words are layout_text.js; this file only draws and routes the pointer.
 import * as THREE from 'three';
 import { SNAP, ROT_STEP } from './layout_rules.js';
+import { nameOfId, whyText, statusText } from './layout_text.js';
 
-const WHY = {
-  WALL: 'Too close to the town wall', MOAT: 'Too close to the moat', GATE: 'Blocks the gate', MARKET: 'Too close to the market square', VAULT: 'Too close to a vault', STREET: 'On a street',
-  RIVER: 'Too close to the river', WATER: 'Needs to stand by the water', STREAM: 'On a stream bed', DRY: 'Ground too wet', SLOPE: 'Ground too steep', OVERLAP: 'Another building is in the way', GEN: 'A house is in the way', UNKNOWN: 'Cannot move this',
-};
-const NAME = { cottage: 'Cottage', craftsman: 'Craftsman house', merchant: 'Merchant house', noble: 'Noble house', tavern: 'Tavern', townhall: 'Town hall', chapel: 'Chapel', well: 'Well', sawmill: 'Sawmill', masonry: 'Masonry', smelter: 'Smelter', mint: 'Mint',
-  refinery: 'Refinery', mill: 'Mill', bakery: 'Bakery', butcher: 'Butcher', smokehouse: 'Smokehouse', jeweler: 'Jeweler', store: 'Storehouse' };
-const STORE_NAME = { wood: 'Timber', stone: 'Stone', iron: 'Iron', gold: 'Gold', oil: 'Oil', food: 'Food' };
 const HEIGHT = { cottage: 8, craftsman: 10, merchant: 12, noble: 14, tavern: 11, townhall: 16, chapel: 30, well: 4, store: 10 };
-const GREEN = 0x3dff7a, RED = 0xff4a4a, BLUE = 0x4ab4ff, GOLD = 0xffd54a;
+const GREEN = 0x3dff7a, RED = 0xff4a4a, GOLD = 0xffd54a;
+export const TOUCH = 44, SLOP = 5, MAGNET = 3, AUTO_MS = 800, ZOOM_TO = 270;           // LY1: smallest touch target (CSS px) · px a finger travels before a touch is a drag · m the release jumps to a free spot · ms a turn waits before it is placed · camera distance of the editor
 const CSS = `
 .bw-ui.bwl-hide{visibility:hidden}
 .bwl{--lt:max(env(safe-area-inset-top,0px),calc(var(--tg-safe-area-inset-top,0px) + var(--tg-content-safe-area-inset-top,0px)));--lb:max(env(safe-area-inset-bottom,0px),calc(var(--tg-safe-area-inset-bottom,0px) + var(--tg-content-safe-area-inset-bottom,0px)));--ll:max(env(safe-area-inset-left,0px),calc(var(--tg-safe-area-inset-left,0px) + var(--tg-content-safe-area-inset-left,0px)));--lr:max(env(safe-area-inset-right,0px),calc(var(--tg-safe-area-inset-right,0px) + var(--tg-content-safe-area-inset-right,0px)))}
@@ -31,22 +29,27 @@ const CSS = `
 .bwl .b i{font-style:normal;font-size:19px;line-height:19px}.bwl .b small{font:600 9px/10px system-ui,sans-serif;opacity:.85;letter-spacing:.02em}
 .bwl .b:active{transform:scale(.95)}.bwl .b[disabled]{opacity:.35;pointer-events:none}
 .bwl .b.ok{background:linear-gradient(#2c9a55,#16613a);border-color:#8dffb4}.bwl .b.no{background:linear-gradient(#a23a3a,#661e1e);border-color:#ffa0a0}
-.bwl .top{position:absolute;left:50%;top:calc(8px + var(--lt));transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;max-width:56vw}
+.bwl .b.hot{border-color:#ffd54a;box-shadow:0 0 0 3px rgba(255,213,74,.4),0 2px 8px rgba(0,0,0,.45)}
+.bwl .top{position:absolute;left:50%;top:calc(8px + var(--lt));transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;max-width:60vw}
 .bwl .pill{padding:6px 12px;border-radius:999px;background:rgba(10,20,44,.78);border:1px solid rgba(160,200,255,.35);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .bwl .pill.g{border-color:#8dffb4;color:#d7ffe5}.bwl .pill.r{border-color:#ffa0a0;color:#ffe0e0}
+.bwl .pill.n{white-space:normal;line-height:1.3;padding:7px 14px;border-radius:16px;pointer-events:auto;border-color:#ffd54a;background:rgba(40,30,8,.86)}
+.bwl .stat{position:absolute;right:calc(10px + var(--lr));top:calc(60px + var(--lt));padding:3px 9px;border-radius:999px;background:rgba(10,20,44,.78);border:1px solid rgba(160,200,255,.3);font-size:10px;opacity:0;transition:opacity .3s}
+.bwl .stat.on{opacity:1}.bwl .stat.bad{border-color:#ffa0a0;color:#ffe0e0}
 .bwl .ent{pointer-events:auto;position:fixed;left:calc(10px + var(--ll));bottom:calc(10px + var(--lb));z-index:39}
 `;
 
 export function createLayoutUI({ root = document.body, world, camera, renderer, ctl, scene, blocked = () => false, save = () => {}, toast = () => {} }) {
   const live = () => world.layout, dom = renderer.domElement, H = world.fastHeight || ((x, z) => 0);
-  const S = { on: false, sel: null, pose: null, check: null, drag: null, hover: null, spots: null, spotJob: null, undo0: 0, confirmReset: 0, saveT: 0, focus: null, lastMinD: null, lastOnTap: null };
-  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), v3 = new THREE.Vector3(), box = new THREE.Box3(), hitP = new THREE.Vector3();
+  const S = { on: false, sel: null, pose: null, check: null, drag: null, spots: null, spotJob: null, confirmReset: 0, saveT: 0, pend: false, autoT: 0, noteT: 0, statT: 0, lastMinD: null, lastOnTap: null, zoom: null, zoomBack: null };
+  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), v3 = new THREE.Vector3();
 
   // ------------------------------------------------------------------ DOM
   const st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st);
   const el = document.createElement('div'); el.className = 'bwl'; el.style.display = 'none';
   el.innerHTML = `
-    <div class="top"><div class="pill" data-k="hint">Tap a building to pick it</div><div class="pill" data-k="why" style="display:none"></div></div>
+    <div class="top"><div class="pill" data-k="hint">Touch a building and drag it</div><div class="pill" data-k="why" style="display:none"></div><div class="pill n" data-k="note" style="display:none"></div></div>
+    <div class="stat" data-k="stat"></div>
     <button class="b" data-a="done" style="right:calc(10px + var(--lr));top:calc(8px + var(--lt))" aria-label="Done"><i>✔</i><small>Done</small></button>
     <button class="b" data-a="undo" style="left:calc(10px + var(--ll));top:calc(8px + var(--lt))" aria-label="Undo"><i>↶</i><small>Undo</small></button>
     <button class="b" data-a="def" style="left:calc(10px + var(--ll));top:calc(62px + var(--lt))" aria-label="Put back"><i>⌂</i><small>Default</small></button>
@@ -56,7 +59,7 @@ export function createLayoutUI({ root = document.body, world, camera, renderer, 
     <button class="b ok" data-a="ok" style="right:calc(10px + var(--lr));bottom:calc(62px + var(--lb))" aria-label="Put here"><i>✓</i><small>Place</small></button>
     <button class="b no" data-a="cancel" style="right:calc(calc(10px + var(--lr)) + 54px);bottom:calc(62px + var(--lb))" aria-label="Cancel"><i>✕</i><small>Cancel</small></button>`;
   root.appendChild(el);
-  const q = (a) => el.querySelector(`[data-a="${a}"]`), hint = el.querySelector('[data-k="hint"]'), why = el.querySelector('[data-k="why"]');
+  const q = (a) => el.querySelector(`[data-a="${a}"]`), hint = el.querySelector('[data-k="hint"]'), why = el.querySelector('[data-k="why"]'), note = el.querySelector('[data-k="note"]'), stat = el.querySelector('[data-k="stat"]');
   const ent = document.createElement('button'); ent.className = 'bwl b ent'; ent.style.cssText = 'position:fixed;pointer-events:auto;display:none'; ent.innerHTML = '<i>✥</i><small>Arrange</small>'; ent.setAttribute('aria-label', 'Arrange your town');
   // (the entry button reuses the .b look but lives outside the editor layer)
   const entWrap = document.createElement('div'); entWrap.className = 'bwl'; entWrap.style.zIndex = 38; ent.className = 'b ent'; entWrap.appendChild(ent); root.appendChild(entWrap);
@@ -102,20 +105,30 @@ export function createLayoutUI({ root = document.body, world, camera, renderer, 
     const { pts } = corners(r.x, r.z, r.ry, r.fp), g = selLoop.geometry.attributes.position; pts.forEach(([x, z], k) => g.setXYZ(k, x, H(x, z) + 0.45, z)); g.needsUpdate = true; selLoop.visible = true;
   }
 
-  // ------------------------------------------------------------------ picking: ray vs the buildings' boxes, ray vs the ground
+  // ------------------------------------------------------------------ picking: the building's box on the SCREEN (at least TOUCH x TOUCH px), the ground under the finger
   const setRay = (x, y) => { const r = dom.getBoundingClientRect(); ndc.set(((x - r.left) / r.width) * 2 - 1, -((y - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); };
   const eventXY = (e) => (ctl && ctl.map ? ctl.map(e.clientX, e.clientY) : [e.clientX, e.clientY]);
+  // LY1: the old picking was a ray against the building's 3D box — a cottage at the default zoom is ~12 px wide on the screen, and a finger is ~40: touching "the house" missed it all the time.  Now: the screen
+  // rectangle of the box, grown to at least TOUCH x TOUCH, centred on the building.  Of the rectangles that hold the finger the one whose CENTRE is nearest wins (a tall chapel's rectangle does not swallow the cottage next to it).
+  function rectOf(r, pose = r) {
+    const { cx, cz, pts } = corners(pose.x, pose.z, pose.ry, r.fp); let gy = 1e9; for (const [px, pz] of pts) gy = Math.min(gy, H(px, pz));
+    const h = HEIGHT[r.kind] || 9, rc = dom.getBoundingClientRect(); let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    for (const [px, pz] of pts) for (const yy of [gy - 0.5, gy + h]) {
+      v3.set(px, yy, pz).project(camera); if (v3.z > 1 || v3.z < -1) return null;                 // (behind the camera / outside the depth range: not on the screen)
+      const sx = rc.left + ((v3.x + 1) / 2) * rc.width, sy = rc.top + ((1 - v3.y) / 2) * rc.height; if (sx < x0) x0 = sx; if (sx > x1) x1 = sx; if (sy < y0) y0 = sy; if (sy > y1) y1 = sy;
+    }
+    v3.set(cx, gy + h * 0.4, cz).project(camera); const mx = rc.left + ((v3.x + 1) / 2) * rc.width, my = rc.top + ((1 - v3.y) / 2) * rc.height;
+    const px = Math.max(0, (TOUCH - (x1 - x0)) / 2), py = Math.max(0, (TOUCH - (y1 - y0)) / 2);
+    return { x0: x0 - px, x1: x1 + px, y0: y0 - py, y1: y1 + py, mx, my, w: x1 - x0 + 2 * px, h: y1 - y0 + 2 * py, rw: x1 - x0, rh: y1 - y0 };      // (rw / rh = the building itself on the screen, w / h = its touch target)
+  }
+  const inRect = (t, x, y) => !!t && x >= t.x0 && x <= t.x1 && y >= t.y0 && y <= t.y1;
+  const movedPose = () => !!(S.sel && S.pose && (Math.hypot(S.pose.x - S.sel.x, S.pose.z - S.sel.z) > 0.01 || Math.abs(S.pose.ry - S.sel.ry) > 0.001));
   function recordAt(x, y, skip = null) {
-    // (the boxes are AABBs of the whole volume: a tall chapel in front of a cottage swallows the tap on the cottage.  Of the boxes the ray crosses, the one whose CENTRE is nearest to the finger on the screen wins —
-    //  a tap on a cottage is nearest its own centre, a tap on the chapel's roof is nearest the chapel's)
-    setRay(x, y); let best = null, bd = 1e9; const asp = dom.getBoundingClientRect(); const ax = asp.width / Math.max(1, asp.height);
+    let best = null, bd = 1e9;
+    if (S.sel && movedPose() && inRect(rectOf(S.sel, S.pose), x, y)) return S.sel;       // (the ghost the finger lifted: grabbing it again moves it on — it used to be only the real building's old place that answered)
     for (const r of live().visible()) {
-      if (r.id === skip) continue; const { pts } = corners(r.x, r.z, r.ry, r.fp);
-      let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9, gy = 1e9; for (const [px, pz] of pts) { x0 = Math.min(x0, px); x1 = Math.max(x1, px); z0 = Math.min(z0, pz); z1 = Math.max(z1, pz); gy = Math.min(gy, H(px, pz)); }
-      const h = HEIGHT[r.kind] || 9; box.min.set(x0, gy - 0.5, z0); box.max.set(x1, gy + h, z1);
-      if (!ray.ray.intersectBox(box, hitP)) continue;
-      v3.set(r.x, gy + h * 0.4, r.z).project(camera); const d = Math.hypot((v3.x - ndc.x) * ax, v3.y - ndc.y);
-      if (d < bd) { bd = d; best = r; }
+      if (r.id === skip) continue; const t = rectOf(r); if (!inRect(t, x, y)) continue;
+      const d = Math.hypot(x - t.mx, y - t.my); if (d < bd) { bd = d; best = r; }
     }
     return best;
   }
@@ -135,27 +148,27 @@ export function createLayoutUI({ root = document.body, world, camera, renderer, 
   }
 
   // ------------------------------------------------------------------ selection / pose
-  const titleOf = (r) => (r.kind === 'store' ? (STORE_NAME[r.res] || '') + ' storehouse' : NAME[r.kind] || r.kind);
+  const titleOf = (r) => nameOfId(r.id);
   function setWhy(msg, cls) { why.style.display = msg ? '' : 'none'; why.textContent = msg || ''; why.className = 'pill' + (cls ? ' ' + cls : ''); }
   function evaluate() {
-    if (!S.sel) return; const c = live().check(S.sel.id, S.pose); S.check = c;
-    poseGhost(S.sel, S.pose, c.ok);
-    const moved = Math.hypot(S.pose.x - S.sel.x, S.pose.z - S.sel.z) > 0.01 || Math.abs(S.pose.ry - S.sel.ry) > 0.001;
-    if (!moved) setWhy('', ''); else setWhy(c.ok ? '✓ It fits here' : c.why.map((w) => WHY[w] || w).slice(0, 2).join(' · '), c.ok ? 'g' : 'r');
-    q('ok').disabled = !moved || !c.ok; q('ok').style.display = moved ? '' : 'none'; q('cancel').style.display = moved ? '' : 'none';
+    if (!S.sel) return; const c = live().check(S.sel.id, S.pose); S.check = c; const moved = movedPose();
+    if (moved) poseGhost(S.sel, S.pose, c.ok); else ghost.visible = false;
+    if (!moved) setWhy('', ''); else setWhy(c.ok ? '✓ Fits here — let go to place it' : whyText(c.why), c.ok ? 'g' : 'r');
+    const idle = !S.drag; q('ok').disabled = !moved || !c.ok; q('ok').style.display = moved && idle ? '' : 'none'; q('cancel').style.display = moved && idle ? '' : 'none';
   }
   function select(r) {
-    S.sel = r; S.drag = null; S.spots = null; dots.count = 0;
-    if (!r) { ghost.visible = false; selLoop.visible = false; setWhy('', ''); hint.textContent = 'Tap a building to pick it'; ui_buttons(); return; }
+    clearTimeout(S.autoT); S.sel = r; S.drag = null; S.spots = null; dots.count = 0;
+    if (!r) { ghost.visible = false; selLoop.visible = false; setWhy('', ''); hint.textContent = 'Touch a building and drag it'; ui_buttons(); return; }
     S.pose = { x: r.x, z: r.z, ry: r.ry }; poseOutline(r); ghost.visible = false; setWhy('', '');
-    hint.textContent = titleOf(r) + ' — drag it, turn it, or drop it on another building to swap';
-    S.focus = { x: r.x, z: r.z, t: 0 }; startSpots(); ui_buttons();
+    hint.textContent = titleOf(r) + ' — drag it · turn it · drop it on another building to swap';
+    startSpots(); ui_buttons();
   }
   function ui_buttons() {
     const sel = !!S.sel; q('rotl').style.display = q('rotr').style.display = sel ? '' : 'none'; q('def').style.display = sel && S.sel.moved ? '' : 'none';
     q('ok').style.display = q('cancel').style.display = 'none'; q('undo').disabled = !live().canUndo();
     q('all').disabled = !live().count; q('all').querySelector('small').textContent = S.confirmReset > performance.now() ? 'Sure?' : 'Reset all';
   }
+  const hot = () => { q('undo').classList.add('hot'); clearTimeout(S.hotT); S.hotT = setTimeout(() => q('undo').classList.remove('hot'), 2600); };
   function startSpots() {                                    // green dots where the picked thing fits at its present turn (a 2 m grid within 40 m), found 90 checks per frame
     const r = S.sel; if (!r) return; S.spotJob = { id: r.id, ry: S.pose ? S.pose.ry : r.ry, cx: r.x, cz: r.z, i: 0, n: 0, list: [], N: 40, recs: live().records() };
   }
@@ -170,85 +183,138 @@ export function createLayoutUI({ root = document.body, world, camera, renderer, 
   }
 
   // ------------------------------------------------------------------ pointer routing (capture phase: before the camera controls see it)
+  // LY1: ONE gesture: finger down on a building picks it and (once the finger has moved SLOP px) drags it.  Finger down on empty ground is not ours: the camera pans.  The camera never moves by itself under the finger.
+  function cancelDrag() {                                  // a second finger came down: that is a pinch for the camera, not a second grab
+    const d = S.drag; S.drag = null; if (dots) dots.visible = true; if (!d) return;
+    try { dom.releasePointerCapture(d.id); } catch (_) { /* ignore */ }
+    if (d.moved) { S.pose = { ...d.p0 }; evaluate(); }
+  }
   function down(e) {
-    if (!S.on || e.button > 0) return; const [x, y] = eventXY(e);
-    if (!S.sel) return;
-    const r = recordAt(x, y);
-    if (r && r.id === S.sel.id) {
-      const g = groundAt(x, y); if (!g) return;
-      S.drag = { id: e.pointerId, gx: g.x - S.pose.x, gz: g.z - S.pose.z, moved: false, x0: x, y0: y, over: null }; dots.visible = false;
-      e.stopImmediatePropagation(); e.preventDefault(); try { dom.setPointerCapture(e.pointerId); } catch (_) { /* ignore */ }
-    }
+    if (!S.on || e.button > 0) return;
+    if (S.drag) { if (S.drag.id !== e.pointerId) cancelDrag(); return; }
+    const [x, y] = eventXY(e), r = recordAt(x, y); if (!r) return;
+    e.stopImmediatePropagation(); e.preventDefault(); try { dom.setPointerCapture(e.pointerId); } catch (_) { /* ignore */ }
+    const fresh = !S.sel || S.sel.id !== r.id; if (fresh) select(r);
+    clearTimeout(S.autoT); const g = groundAt(x, y);
+    S.drag = { id: e.pointerId, gx: g ? g.x - S.pose.x : 0, gz: g ? g.z - S.pose.z : 0, moved: false, x0: x, y0: y, px: x, py: y, dirty: false, last: 0, over: null, p0: { ...S.pose }, fresh }; dots.visible = false;
   }
   function move(e) {
-    const d = S.drag; if (!d || e.pointerId !== d.id) return; e.stopImmediatePropagation(); const [x, y] = eventXY(e);
-    if (!d.moved && Math.hypot(x - d.x0, y - d.y0) < 6) return; d.moved = true;
-    const g = groundAt(x, y); if (!g) return;
+    const d = S.drag; if (!d || e.pointerId !== d.id) return; e.stopImmediatePropagation(); const [x, y] = eventXY(e); d.px = x; d.py = y; d.dirty = true;
+    if (performance.now() - d.last > 28) follow();       // (at most every 28 ms from the events, the rest once per frame in update(): a 120 Hz touch screen does not cost 120 rule checks a second)
+  }
+  function follow() {
+    const d = S.drag; if (!d || !d.dirty || !S.sel) return; d.dirty = false; d.last = performance.now();
+    if (!d.moved && Math.hypot(d.px - d.x0, d.py - d.y0) < SLOP) return;
+    const g = groundAt(d.px, d.py); if (!g) return; d.moved = true;
     S.pose.x = Math.round((g.x - d.gx) / SNAP) * SNAP; S.pose.z = Math.round((g.z - d.gz) / SNAP) * SNAP;
     d.over = standingOn(S.pose.x, S.pose.z, S.sel.id);
-    if (d.over) { const c = live().swapCheck(S.sel.id, d.over.id); poseGhost(d.over, { x: S.sel.x, z: S.sel.z, ry: S.sel.ry }, c.ok); S.check = c; setWhy(c.ok ? '⇄ Release to trade places with the ' + titleOf(d.over) : c.why.map((w) => WHY[w] || w).slice(0, 2).join(' · '), c.ok ? 'g' : 'r'); q('ok').style.display = q('cancel').style.display = 'none'; }
+    if (d.over) { const c = live().swapCheck(S.sel.id, d.over.id); poseGhost(d.over, { x: S.sel.x, z: S.sel.z, ry: S.sel.ry }, c.ok); S.check = c; setWhy(c.ok ? '⇄ Let go to trade places with the ' + titleOf(d.over).toLowerCase() : whyText(c.why), c.ok ? 'g' : 'r'); q('ok').style.display = q('cancel').style.display = 'none'; }
     else evaluate();
   }
   function up(e) {
     const d = S.drag; if (!d || e.pointerId !== d.id) return; e.stopImmediatePropagation(); try { dom.releasePointerCapture(e.pointerId); } catch (_) { /* ignore */ }
+    if (e.type === 'pointercancel') { cancelDrag(); return; }
+    const [x, y] = eventXY(e); d.px = x; d.py = y; d.dirty = true; follow();           // (the last position counts: the finger may be lifted between two frames)
     S.drag = null; dots.visible = true;
-    if (d.moved && d.over) { const id = S.sel.id, o = d.over, res = live().swap(id, o.id); if (res.ok) { toast('Traded places'); persist(); S.sel = null; select(null); live().tick(); } else { S.pose = { x: S.sel.x, z: S.sel.z, ry: S.sel.ry }; ghost.visible = false; setWhy(res.why.map((w) => WHY[w] || w).slice(0, 2).join(' · '), 'r'); } return; }
-    if (d.moved) { magnet(); evaluate(); } else select(S.sel);
+    if (!d.moved) { evaluate(); return; }                                             // a tap: the building is picked (select() did it on touch-down)
+    if (d.over) {
+      const id = S.sel.id, o = d.over, res = live().swap(id, o.id);
+      if (res.ok) { toast('Traded places — ↶ undoes'); persist(); select(null); live().tick(); hot(); }
+      else { S.pose = { x: S.sel.x, z: S.sel.z, ry: S.sel.ry }; ghost.visible = false; setWhy(whyText(res.why), 'r'); }
+      return;
+    }
+    land();
   }
-  function magnet() {                                        // a finger is not a millimetre: on release a spot that breaks a rule jumps to the nearest spot within 2 m that does not (green dots are the same spots on a 2 m grid)
-    const r = S.sel, L = live(); if (!r || L.search(r.id, S.pose)) return;
-    const c = []; for (let dx = -2; dx <= 2; dx += SNAP) for (let dz = -2; dz <= 2; dz += SNAP) { const dd = Math.hypot(dx, dz); if (dd > 0 && dd <= 2.01) c.push([dd, dx, dz]); }
+  function magnet() {                                        // a finger is not a millimetre: a spot that breaks a rule jumps to the nearest spot within MAGNET m that does not (green dots are the same spots on a 2 m grid)
+    const r = S.sel, L = live(); if (!r) return false; if (L.search(r.id, S.pose)) return true;
+    const c = []; for (let dx = -MAGNET; dx <= MAGNET; dx += SNAP) for (let dz = -MAGNET; dz <= MAGNET; dz += SNAP) { const dd = Math.hypot(dx, dz); if (dd > 0 && dd <= MAGNET + 0.01) c.push([dd, dx, dz]); }
     c.sort((a, b) => a[0] - b[0]);
-    for (const [, dx, dz] of c) { const p = { x: S.pose.x + dx, z: S.pose.z + dz, ry: S.pose.ry }; if (L.search(r.id, p)) { S.pose.x = p.x; S.pose.z = p.z; return; } }
+    for (const [, dx, dz] of c) { const p = { x: S.pose.x + dx, z: S.pose.z + dz, ry: S.pose.ry }; if (L.search(r.id, p)) { S.pose.x = p.x; S.pose.z = p.z; return true; } }
+    return false;
   }
-  const onTap = (x, y) => {
+  function land() {                                          // the finger was lifted on a spot: green = placed now (↶ undoes); red = the nearest free spot within MAGNET m, else it stays red with the reason
+    if (!S.sel) return;
+    if (!movedPose()) { ghost.visible = false; setWhy('', ''); ui_buttons(); return; }
+    let jumped = false; if (!live().check(S.sel.id, S.pose).ok) jumped = magnet();
+    evaluate();
+    if (S.check && S.check.ok) { place(jumped ? 'Moved to the nearest free spot' : 'Moved'); return; }
+    hint.textContent = titleOf(S.sel) + ' — drag it to a green spot, or ✕';                // (red: the reason is in the pill; the ghost is still under the finger's last place)
+  }
+  function place(msg) {
+    const id = S.sel.id, res = live().commit(id, S.pose);
+    if (!res.ok) { setWhy(whyText(res.why), 'r'); return false; }
+    persist(); live().tick(); toast(msg + ' — ↶ undoes'); hot(); select(live().records().find((r) => r.id === id) || null); return true;
+  }
+  const onTap = (x, y) => {                                  // (only taps that did not start on a building: those are ours, in down()/up())
     if (!S.on) return; const r = recordAt(x, y);
     if (S.sel && r && r.id === S.sel.id) return;
     select(r && r.id ? r : null);
   };
 
   // ------------------------------------------------------------------ buttons
-  function persist() { clearTimeout(S.saveT); S.saveT = setTimeout(() => { try { save(live().save()); } catch (e) { console.warn('layout save', e); } }, 500); }
+  function flushSave() { clearTimeout(S.saveT); S.saveT = 0; if (!S.pend) return; S.pend = false; try { save(live().own()); } catch (e) { console.warn('layout save', e); } }
+  function persist() { S.pend = true; clearTimeout(S.saveT); S.saveT = setTimeout(flushSave, 500); }
   function act(a) {
     const L = live();
     if (a === 'done') return close();
     if (a === 'undo') { if (L.undo()) { persist(); const id = S.sel && S.sel.id; select(id ? L.records().find((r) => r.id === id) : null); toast('Undone'); } return; }
     if (a === 'all') { if (S.confirmReset > performance.now()) { S.confirmReset = 0; L.resetAll(); persist(); select(null); toast('Town put back'); } else { S.confirmReset = performance.now() + 3000; ui_buttons(); setTimeout(ui_buttons, 3100); } return; }
     if (!S.sel) return;
-    if (a === 'def') { const id = S.sel.id, res = L.reset(id); if (!res.ok) { setWhy('Its old place is taken (' + res.why.map((w) => WHY[w] || w).slice(0, 1).join('') + ')', 'r'); return; } persist(); select(L.records().find((r) => r.id === id)); toast('Put back'); return; }
-    if (a === 'rotl' || a === 'rotr') { S.pose.ry += (a === 'rotl' ? 1 : -1) * ROT_STEP; evaluate(); dots.count = 0; startSpots(); return; }
-    if (a === 'cancel') { S.pose = { x: S.sel.x, z: S.sel.z, ry: S.sel.ry }; ghost.visible = false; setWhy('', ''); q('ok').style.display = q('cancel').style.display = 'none'; startSpots(); return; }
-    if (a === 'ok') {
-      const id = S.sel.id, res = L.commit(id, S.pose);
-      if (!res.ok) { setWhy(res.why.map((w) => WHY[w] || w).slice(0, 2).join(' · '), 'r'); return; }
-      persist(); toast('Moved'); L.tick(); select(L.records().find((r) => r.id === id));
+    if (a === 'def') { const id = S.sel.id, res = L.reset(id); if (!res.ok) { setWhy('Its old place is taken (' + whyText(res.why, 1).toLowerCase() + ')', 'r'); return; } persist(); select(L.records().find((r) => r.id === id)); toast('Put back'); hot(); return; }
+    if (a === 'rotl' || a === 'rotr') {
+      S.pose.ry += (a === 'rotl' ? 1 : -1) * ROT_STEP; evaluate(); dots.count = 0; startSpots();
+      clearTimeout(S.autoT); if (S.check && S.check.ok && movedPose()) S.autoT = setTimeout(() => { if (S.on && S.sel && !S.drag && S.check && S.check.ok && movedPose()) place('Turned'); }, AUTO_MS);      // (several presses in a row = one move; a green turn is placed on its own)
+      return;
     }
+    if (a === 'cancel') { clearTimeout(S.autoT); S.pose = { x: S.sel.x, z: S.sel.z, ry: S.sel.ry }; ghost.visible = false; setWhy('', ''); q('ok').style.display = q('cancel').style.display = 'none'; hint.textContent = titleOf(S.sel) + ' — drag it · turn it · drop it on another building to swap'; startSpots(); return; }
+    if (a === 'ok') { clearTimeout(S.autoT); place('Moved'); }
   }
   el.addEventListener('click', (e) => { const b = e.target.closest('[data-a]'); if (b) act(b.dataset.a); });
+  note.addEventListener('click', () => { clearTimeout(S.noteT); note.style.display = 'none'; });
   ent.addEventListener('click', () => open());
   for (const [t, f] of [['pointerdown', down], ['pointermove', move], ['pointerup', up], ['pointercancel', up]]) dom.addEventListener(t, f, true);
+
+  // ------------------------------------------------------------------ what the server said (layout_wire.js)
+  function setStatus(s) {
+    clearTimeout(S.statT); stat.textContent = statusText[s] || ''; stat.className = 'stat' + (statusText[s] ? ' on' : '') + (s === 'rejected' || s === 'offline' ? ' bad' : '');
+    if (s === 'saved') S.statT = setTimeout(() => stat.classList.remove('on'), 2200);
+  }
+  function notice(m, ms = 6000) {                          // in the editor: a pill that stays until it is touched or `ms` is over; outside it: the game's toast
+    if (!m) return; if (!S.on) { toast(m, Math.min(ms, 9000)); return; }
+    note.textContent = m; note.style.display = ''; clearTimeout(S.noteT); S.noteT = setTimeout(() => { note.style.display = 'none'; }, ms);
+  }
 
   function open() {
     if (S.on || blocked()) return; build3d(); S.on = true; el.style.display = ''; ent.style.display = 'none'; root3.visible = true; hudHide(true);
     S.lastMinD = ctl.minD; ctl.minD = Math.min(ctl.minD, 46); S.lastOnTap = ctl.onTap; ctl.onTap = onTap; select(null);
+    if (ctl.dist > ZOOM_TO + 30) { S.zoomBack = ctl.dist; S.zoom = { to: ZOOM_TO, t: 0 }; }             // LY1: a house is a thumb wide at ~270 (it is 12 px at the default zoom)
   }
   const hudHide = (on) => { const h = document.querySelector('.bw-ui'); if (h) h.classList.toggle('bwl-hide', on); };      // the game's own HUD (badge, gems, attack button) is out of the way while arranging: the editor has the whole screen
   function close() {
-    if (!S.on) return; S.on = false; hudHide(false); el.style.display = 'none'; if (root3) { root3.visible = false; ghost.visible = false; selLoop.visible = false; dots.count = 0; } S.sel = null; S.drag = null;
-    if (S.lastMinD != null) ctl.minD = S.lastMinD; if (S.lastOnTap) ctl.onTap = S.lastOnTap; clearTimeout(S.saveT); try { save(live().save()); } catch (e) { console.warn('layout save', e); }
+    if (!S.on) return; S.on = false; hudHide(false); el.style.display = 'none'; clearTimeout(S.autoT); if (root3) { root3.visible = false; ghost.visible = false; selLoop.visible = false; dots.count = 0; } S.sel = null; if (S.drag) cancelDrag(); S.drag = null;
+    if (S.lastMinD != null) ctl.minD = S.lastMinD; if (S.lastOnTap) ctl.onTap = S.lastOnTap;
+    if (S.zoomBack && ctl.dist < S.zoomBack - 30) S.zoom = { to: S.zoomBack, t: 0 }; else S.zoom = null; S.zoomBack = null;              // (the camera goes back to where the player had it)
+    flushSave();                                             // (only when something changed: S.pend)
   }
 
   let ft = 0;
+  function zoomStep(dt) {                                    // an ease in / out of the camera distance; a second finger on the screen (a pinch) or 1.5 s ends it
+    const z = S.zoom; if (!z) return; z.t += dt;
+    if (z.t > 1.5 || ctl.intro || (ctl.ptrs && ctl.ptrs.size > 1)) { S.zoom = null; return; }
+    ctl.dist += (z.to - ctl.dist) * Math.min(1, dt * 4); if (Math.abs(ctl.dist - z.to) < 2) S.zoom = null;
+  }
   function update(dt) {
+    zoomStep(dt);
     const can = !blocked() && world.layout; ent.style.display = !S.on && can ? '' : 'none';
     if (S.on && !can) close();
     if (!S.on) return;
+    if (S.drag) follow();
     stepSpots(); if (live().pending) ui_buttons();
-    if (S.focus) {                                           // the camera drifts to the picked building (target only: the player keeps his zoom and angle)
-      S.focus.t += dt; const k = Math.min(1, dt * 5); ctl.target.x += (S.focus.x - ctl.target.x) * k; ctl.target.z += (S.focus.z - ctl.target.z) * k;
-      if (Math.hypot(S.focus.x - ctl.target.x, S.focus.z - ctl.target.z) < 0.5 || S.focus.t > 1.2) S.focus = null;
-    }
     ft += dt; const pulse = 0.82 + 0.18 * Math.sin(ft * 5); outlineMat.opacity = pulse;
   }
-  return { open, close, update, get active() { return S.on; }, get state() { return S; }, get dotCount() { return dots ? dots.count : 0; }, select: (id) => select(id ? live().records().find((r) => r.id === id) : null), setPose: (p) => { if (S.sel) { S.pose = { ...S.pose, ...p }; evaluate(); } }, act, get root3() { return root3; } };
+  return {
+    open, close, update, setStatus, notice, get active() { return S.on; }, get state() { return S; }, get dotCount() { return dots ? dots.count : 0; },
+    select: (id) => select(id ? live().records().find((r) => r.id === id) : null), setPose: (p) => { if (S.sel) { S.pose = { ...S.pose, ...p }; evaluate(); } }, act, get root3() { return root3; },
+    pick: (x, y) => { const r = recordAt(x, y); return r ? r.id : null; }, rect: (id) => { const r = live().records().find((k) => k.id === id); return r ? rectOf(r) : null; },
+  };
 }

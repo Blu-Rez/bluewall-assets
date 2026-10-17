@@ -24,7 +24,7 @@ import { CamCtl } from './controls.js';
 import { createCamBlock } from './camblock.js';
 import { createLayoutLive } from './layout_live.js';      // TR2-S5: the player's own layout
 import { createLayoutUI } from './layout_ui.js';
-import { createLayoutSync } from './layout_sync.js';
+import { createLayoutWire } from './layout_wire.js';      // LY1: (was layout_sync.js: main.js no longer talks to it directly)
 import { UI } from './ui.js';
 import { Ambience } from './audio.js';
 import { PX } from './fx.js';
@@ -450,9 +450,9 @@ async function start(opts) {
     root.appendChild(hb); setInterval(() => { hb.style.display = (hero && hero.active) || (battle && battle.active) || root.classList.contains('wel') ? 'none' : ''; }, 400);
   }
   // TR2-S5: the editor («Arrange») + where the layout is kept (server / this browser)
-  const layoutSync = createLayoutSync(econ, { onServer: (j) => { if (j && j.ok && j.changed) { world.layout.load(j.layout || { v: 1, m: {} }); if (j.dropped && j.dropped.length) ui.toast('Some buildings were put back where they fit'); } } });      // (the server's effective record is what the game shows; sync 'changed' = it is not what we sent)
-  const layoutUI = createLayoutUI({ root, world, camera, renderer, ctl, scene, blocked: () => !!((battle && battle.active) || (hero && hero.active) || root.classList.contains('wel') || ui.settingsOpen || panelUp), save: (rec) => layoutSync.save(rec), toast: (m) => ui.toast(m) });
-  econ.on((st, ev) => { if (ev === 'load' && !(battle && battle.active)) layoutSync.load().then((rec) => { if (rec && !layoutUI.active) world.layout.load(rec); }).catch((e) => console.warn('layout', e)); });
+  const layoutWire = createLayoutWire({ econ, world, ui, battleOn: () => !!(battle && battle.active) });      // LY1: where the layout lives + what the player is told (layout_wire.js; the server's record is shown only when it is newer than the screen)
+  const layoutUI = createLayoutUI({ root, world, camera, renderer, ctl, scene, blocked: () => !!((battle && battle.active) || (hero && hero.active) || root.classList.contains('wel') || ui.settingsOpen || panelUp), save: (rec) => layoutWire.sync.save(rec), toast: (m, ms) => ui.toast(m, ms) });      // LY1: save -> the wire's sender
+  layoutWire.attach(layoutUI);                                                                           // LY1: the «load» event + the editor's messages
   let coachBat = false, hdt = 0;
   let badgesHid = false;                                                                   // UI1_R4: the mines' «+43K» gem pills (3D sprites) are hidden while the hero is out
   const perf = { acc: 0, n: 0, checked: 0 }, fpsm = { n: 0, t: 0, max: 0 };
@@ -568,6 +568,7 @@ async function start(opts) {
     if (settings.bgMute) audio.pause && audio.pause(document.hidden);
   });
   if (opts.dev) window.__bw = { armyUI, DS, DU, THREE, refl, coach, scene, camera, ctl, world, renderer, ui, Q, settings, audio, econ, get battle() { return battle; }, get lateReady() { return lateReady; }, pathReady, sw, lateT, useComposer, get t() { return t; }, get frames() { return frames; }, pause(v) { running = !v; }, dynTo(v) { DYN.s = v; wantResize(); }, loseCtx(ms = 600) { const x = renderer.getContext().getExtension('WEBGL_lose_context'); if (!x) return false; x.loseContext(); setTimeout(() => x.restoreContext(), ms); return true; }, get ctxLost() { return ctxLost; }, P: () => P, bloom: () => bloom, composer: () => composer, ov: {} };
+  if (opts.dev) window.__bw.layoutWire = layoutWire;                                                      // LY1: (dev/ly1_*: the sender / the messages)
   if (opts.dev) window.__bw.layoutUI = layoutUI;                                                       // (TR2-S5: the layout editor, for dev/tr2_s5_*.py)
   if (opts.dev) window.__bw.bbox = bbox;                                                                  // (PERF2: the black box, for dev/pf_battle_gate.py)
   return { stop() { cancelAnimationFrame(raf); } };

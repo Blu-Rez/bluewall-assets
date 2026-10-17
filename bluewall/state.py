@@ -693,7 +693,7 @@ class Store:
         return new
 
     async def layout_put(self, uid: int, rec: Any) -> Dict[str, Any]:
-        """-> {"status": "off"} (no map data) | {"status": "reject", "why"} | {"status": "ok", "layout": effective record, "dropped": [ids]}.  Nothing is stored unless it is ok."""
+        """-> {"status": "off"} (no map data) | {"status": "reject", "why"} | {"status": "ok", "layout": effective record, "dropped": [ids], "reasons"?: {id: [rule codes]}}.  Nothing is stored unless it is ok."""
         G = LY.geom()
         if G is None:
             return {"status": "off"}
@@ -708,7 +708,10 @@ class Store:
             else:
                 st.pop("layout", None)                                                        # (an empty record = no layout)
             await self.save(uid, st)
-        return {"status": "ok", "layout": eff, "dropped": res["dropped"]}
+        out = {"status": "ok", "layout": eff, "dropped": res["dropped"]}
+        if res.get("reasons"):
+            out["reasons"] = res["reasons"]                                                  # LY1: WHY each dropped id went back
+        return out
 
     async def _candidates(self, uid: int, limit: int = 60) -> list:
         """(uid, state) of other kingdoms that look attackable (offline > 10 min, no shield).  Redis SCAN, bounded."""

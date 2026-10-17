@@ -290,9 +290,11 @@ def canonical_load(G, rec) -> Dict[str, Any]:
     things = G["_things"]
     ovr: Dict[str, List[float]] = {}
     dropped: List[str] = []
+    reasons: Dict[str, List[str]] = {}                                                       # LY1: WHY each dropped id went back (the rule codes of the client's checkPose; UNKNOWN = no such id) — the player is told by name
     for id_, a in rec["m"].items():
         if id_ not in things:
             dropped.append(id_)
+            reasons[id_] = ["UNKNOWN"]
             continue
         ovr[id_] = [r2(a[0]), r2(a[1]), r3(a[2])]
     # every rule but OVERLAP looks at the thing alone: one answer per override, valid for the whole load
@@ -314,9 +316,17 @@ def canonical_load(G, rec) -> Dict[str, Any]:
         if not inv:
             break
         first = sorted(inv)[0]
+        me = next(r for r in rs if r["id"] == first)
+        codes = set(check_pose(G, {"id": first, "kind": me["kind"], "fp": me["fp"]}, (me["x"], me["z"], me["ry"]), [], h_tol))        # LY1: every rule but OVERLAP, then OVERLAP (a clash with whoever stands there now)
+        if any(first != o["id"] and clash(me, o) for o in rs):
+            codes.add("OVERLAP")
+        reasons[first] = sorted(codes)
         del ovr[first]
         dropped.append(first)
-    return {"status": "ok", "effective": {k: ovr[k] for k in sorted(ovr)}, "dropped": sorted(dropped)}
+    out = {"status": "ok", "effective": {k: ovr[k] for k in sorted(ovr)}, "dropped": sorted(dropped)}
+    if dropped:
+        out["reasons"] = {k: reasons[k] for k in sorted(reasons)}                              # (LY1: only when something was dropped — the answer to a clean record is byte for byte what it was)
+    return out
 
 
 # ------------------------------------------------------------------------------------------------ the rate limit (5 accepted POSTs in any 5 s per player)

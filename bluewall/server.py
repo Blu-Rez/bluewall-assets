@@ -19,7 +19,7 @@ Routes
   POST /api/scout    next attack target (bot 10 % weaker .. 50 % stronger, or an offline player) — owner-only until battles are simulated server-side
   POST /api/battle/end  {id, rep:{sent,lost,destruction,stars,loot}} -> validated result: losses, loot, stars (owner-only for now)
   GET  /api/layout   the player's own map arrangement (TR2-S5): {ok, layout: {v,g,m} | null}
-  POST /api/layout   {layout} -> judged with the 12 placement rules (layout.py): {ok, layout (effective), dropped} | 400 {why} | 413 | 429 {why:"rate"}
+  POST /api/layout   {layout} -> judged with the 12 placement rules (layout.py): {ok, layout (effective), dropped, reasons? (LY1: {id: [rule codes]})} | 400 {why} | 413 | 429 {why:"rate"}
   POST /api/dev      owner only: {max | all:n | set:{ent:lv} | gems:n | fill | finish | reset} (preview tiers, test upgrades)
   GET  /healthz
 """
@@ -500,8 +500,11 @@ async def h_layout(req: web.Request) -> web.Response:
     if out["status"] == "reject":
         log.info("layout uid=%s rejected: %s", uid, str(out["why"])[:40])
         return _nocache(web.json_response({"ok": False, "why": out["why"]}, status=400))
-    log.info("layout uid=%s moved=%d dropped=%d", uid, len(out["layout"]["m"]), len(out["dropped"]))
-    return _nocache(web.json_response({"ok": True, "layout": out["layout"], "dropped": out["dropped"]}))
+    log.info("layout uid=%s moved=%d dropped=%d%s", uid, len(out["layout"]["m"]), len(out["dropped"]), (" " + json.dumps(out["reasons"], separators=(",", ":"))[:300]) if out.get("reasons") else "")      # LY1: the ids + the rules, for the day an owner says «my house went back»
+    res = {"ok": True, "layout": out["layout"], "dropped": out["dropped"]}
+    if out.get("reasons"):
+        res["reasons"] = out["reasons"]                                                         # LY1: {id: [rule codes]}; the client names the building and says the reason in words
+    return _nocache(web.json_response(res))
 
 
 async def h_perf(req: web.Request) -> web.Response:
