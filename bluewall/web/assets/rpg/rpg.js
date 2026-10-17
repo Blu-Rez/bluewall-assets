@@ -107,6 +107,7 @@ export function create(H) {
   };
   let hudEl = null, pickEl = null, perfEl = null, styleEl = null, joyEl = null, knobEl = null, btns = {}, diet = null, cull = null, doors = null, foot = null, marker = null, ramps = null, grid = null, goup = null;   // RP1C-R3: marker, ramps, grid (the body band of the real meshes)
   const stats = { f: [], t: 0, n: 0, fps: 0, p95: 0, calls: 0, tris: 0, progs: 0, pr: 0, txt: '', open: false, prev: false };
+  let sisters = null;   // RS1: rp_sisters.js (the strip of six cards, the stand-ins, the places) — loaded in start()
 
   // ------------------------------------------------------------------ collision data (home map)
   const gateBoxes = (t) => {                                  // a gate target is ONE box across the whole gatehouse: the arch passage is cut out of it
@@ -114,7 +115,8 @@ export function create(H) {
     if (side <= 0.2) return [];
     return [-1, 1].map((s) => { const c = s * (gh + side); return { x: t.x + cs * c, z: t.z - sn * c, hw: side, hd: t.d / 2, rot: t.rot, h: t.h, type: 'gate', id: t.id }; });
   };
-  function refreshColliders() {
+  function refreshColliders() { refreshColliders0(); if (sisters) S.discs = S.discs.concat(sisters.discs()); }   // RS1: the sisters who stand are solid bodies (discs [x, z, r]); everything else is the old function, unchanged
+  function refreshColliders0() {
     const out = [], vis = (world.rings && world.rings.state) ? world.rings.state().vis : {};
     for (const t of world.targets || []) {
       if (t.dead || t.down || t.destroyed) continue;
@@ -913,6 +915,7 @@ export function create(H) {
       if (!ramps) { const rm = await import(/* @vite-ignore */ new URL('ramps.js' + (new URL(import.meta.url).search || V), import.meta.url).href); ramps = rm.createRamps(H, S, { world, terrain: baseGround, wsurf: WSURF, topY, max: { outer: 6, town: 4 } }); api.ramps = ramps; }   // RP1C-R3: the ramps up to the wall-walk
       if (!goup) { const um = await import(/* @vite-ignore */ new URL('rp_goup.js' + (new URL(import.meta.url).search || V), import.meta.url).href); goup = um.createGoUp(H, S, { ramps: () => ramps, ground: (x, z) => baseGround(x, z), hud: () => hudEl, top: TOP, btm: BOT }); api.goup = goup; }   // RP1C-R3: the «Go up» markers + HUD arrow + prompt
       if (!grid) { const gm = await import(/* @vite-ignore */ new URL('rp_grid.js' + (new URL(import.meta.url).search || V), import.meta.url).href); grid = gm.createGrid(H, S, { deck: (x, z) => S.nav.groundY(x, z, world.fastHeight(x, z)), carve: () => (world.targets || []).filter((t) => t.type === 'gate' && !t.dead && !t.down && !t.destroyed).map((t) => { const gh = GATE_HALF[t.ringId] || 5.2; return { x: t.x, z: t.z, ux: Math.cos(t.rot), uz: -Math.sin(t.rot), vx: Math.sin(t.rot), vz: Math.cos(t.rot), hu: gh - 0.15, hv: t.d / 2 + 0.6, hv2: t.d / 2 + 4 }; }) }); api.grid = grid; }   // RP1C-R3: the body band of the real meshes (deck = a bridge deck is the ground on a bridge; carve = the gate arches stay walkable as they always were)
+      if (!sisters) { try { const sm = await import(/* @vite-ignore */ new URL('rp_sisters.js' + (new URL(import.meta.url).search || V), import.meta.url).href); sisters = sm.createSisters(H, S, sisCtx()); api.sisters = sisters; } catch (e) { console.warn('sisters', e); } }   // RS1: (a missing file never stops hero mode: no strip then)
       const m = await loadHero(key, lv);
       lv.progress(0.85, 'Warming up…'); if (!window.__rpNoWarm) await warmHero(m, lv);   // RP1C-R3: PF1 F9 (window.__rpNoWarm = dev-only switch for the before / after measurement)
       lv.progress(0.9, 'Collision…'); try { await grid.build({ progress: (f) => lv.progress(0.9 + 0.08 * f) }); gcovM.clear(); refreshColliders(); } catch (e) { console.warn('hero grid', e); }   // RP1C-R3: ~0.2 s on a desktop, in slices
@@ -938,10 +941,12 @@ export function create(H) {
     if (marker) marker.enter();   // RP1C-R3:
     if (ramps) { ramps.enter(); refreshColliders(); }   // RP1C-R3: built once per session (needs S.boxes / S.discs), then their parapets join S.boxes
     if (goup) goup.enter();   // RP1C-R3:
+    if (sisters) { for (const k of Object.keys(S.models)) if (k !== key) { sisters.free(S.models[k]); delete S.models[k]; } sisters.enter(); }   // RS1: only the sister in play stays resident; the strip + the stand-ins start
   }
   function exit() {
     if (!api.active) return;
     if (info) info.close();   // RP1C-R4:
+    if (sisters) sisters.exit();   // RS1: (her place is kept while she is still in the scene)
     if (marker) marker.exit();   // RP1C-R3:
     if (goup) goup.exit();   // RP1C-R3:
     if (ramps) ramps.exit();   // RP1C-R3:
@@ -991,6 +996,46 @@ export function create(H) {
     lv.progress(1); S.cool = 1.5; setTimeout(() => lv.hide(), 200); S.busy2 = false;
   }
 
+  // ------------------------------------------------------------------ RS1: all six sisters.  rp_sisters.js owns the strip, the stand-ins, the memory rules and the places; what touches THIS file's locals (scene, marker, S.models, the spot) is here.
+  const NOLV = { progress() { }, setTitle() { } };
+  // a full-quality model of `key` that is NOT kept in the S.models cache: the cache holds only the sister in play (every other glb is loaded when it is needed and freed when it is not)
+  async function loadFresh(key) { try { return await loadHero(key, NOLV); } finally { if (key !== S.key) delete S.models[key]; } }
+  // put the sister in play at a spot of the home map (the dev setPos reset: ground, no velocity, grounded, the camera snaps)
+  function placeHero(at) {
+    S.layer = 0; S.top = S.climb = null; S.sw = 0; S.x = at.x; S.z = at.z; S.y = homeGround(at.x, at.z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; S.stT = 0;
+    if (at.yaw != null) { S.body = at.yaw; if (!at.keepCam) S.camYaw = at.yaw; } S.snap = true; S.camD = camP().D;
+  }
+  // control goes to `key`, same camera, same HUD, no loading screen: the new model is fetched + parsed while the old one keeps playing, her textures are uploaded one frame BEFORE the swap,
+  // then ONE synchronous swap.  o.at = { x, z, yaw, keepCam } puts her elsewhere.  Returns { old, oldKey } (the caller frees the old model or lets her stand), null when nothing happened.
+  async function swapHero(key, o = {}) {
+    if (!api.active || busy || S.busy2 || S.where !== 'home' || !key || key === S.key || S.sheetOn) return null;
+    busy = true;
+    try {
+      const t0 = performance.now(), m = await loadFresh(key), t1 = performance.now(); const gone = () => !api.active || S.where !== 'home' || S.busy2;
+      if (gone()) { sisters.free(m); return null; }
+      try { m.model.traverse((x) => { if (x.isMesh) for (const mt of Array.isArray(x.material) ? x.material : [x.material]) for (const p in mt) { const t = mt[p]; if (t && t.isTexture && renderer.initTexture) renderer.initTexture(t); } }); } catch (e) { /* the first draw uploads instead */ }
+      const t2 = performance.now(); await new Promise((r) => requestAnimationFrame(r));
+      if (gone()) { sisters.free(m); return null; }
+      const t3 = performance.now(), old = S.hero, oldKey = S.key;
+      if (o.at) placeHero(o.at);
+      m.grp.position.set(S.x, S.y, S.z); m.grp.rotation.y = S.body; m.grp.visible = true; m.grp.traverse((x) => { x.userData.rpHero = true; });   // (the governor / the cull leave her alone: same as diet.markHero)
+      scene.add(m.grp); old.grp.removeFromParent();
+      if (marker && marker.st.on) { for (const e of marker.ents.slice()) if (e.node === old.grp) marker.detach(e); marker.attach(m.grp, (SIS.find((x) => x.k === key) || SIS[0]).c, { head: HERO_H, blob: m.blob, bone: m.head, self: true }); }
+      S.hero = m; S.key = key; S.models = { [key]: m }; S.act = null; if (m.head) m.head.scale.setScalar(1); m.mixer.update(0);   // (rpg_foot binds its leg IK to her on the next tick: model.ik is undefined)
+      try { localStorage.setItem('bw_rpg_hero', key); } catch (e) { /* storage blocked */ }
+      api.sisT = { load: +(t1 - t0).toFixed(1), upload: +(t2 - t1).toFixed(1), swap: +(performance.now() - t3).toFixed(2) };   // (ms: fetch + parse; the GPU upload of her textures; the ONE synchronous swap)
+      return { old, oldKey };
+    } catch (e) { console.warn('hero swap', e); return null; } finally { busy = false; }
+  }
+  function sisCtx() {
+    return {
+      SIS, base: BASE + 'rpg/', v: V, top: TOP, hud: () => hudEl, swap: swapHero, load: loadFresh, place: placeHero, refresh: refreshColliders,
+      canSwitch: () => api.active && !busy && !S.busy2 && S.where === 'home' && !S.sheetOn && !S.paused, canTick: () => api.active && S.where === 'home',
+      free: (x, z) => free(x, z, homeWorld, false) && waterDepth(x, z) < 0.3, spot: (x, z) => { const p = { x, z }; pushOut(p, R_BODY + 0.1, homeWorld); return [p.x, p.z]; },
+      ground: (x, z) => homeGround(x, z), phone: () => !!(diet && diet.PHONE), govLvl: () => (diet ? diet.st.lvl : 0),
+    };
+  }
+
   // ------------------------------------------------------------------ called by main.js every frame while active
   // RP1C-R2: per-part CPU probes of the hero's own frame (free while the profiler is off: one boolean test) — read with window.__bwProf.ms / .avg ('h:…' keys)
   let hT = 0; const hb = () => { const P = window.__bwProf; if (P && P.on) hT = performance.now(); }, he = (k) => { const P = window.__bwProf; if (P && P.on) { const n = performance.now(); P.ms['h:' + k] = (P.ms['h:' + k] || 0) + n - hT; hT = n; } };
@@ -1009,6 +1054,7 @@ export function create(H) {
     if (doors) doors.tick(now, dt0); he('doors');
     if (marker) marker.tick(now); he('marker');   // RP1C-R3:
     if (goup) goup.tick(now); he('goup');   // RP1C-R3: the «Go up» markers
+    if (sisters) sisters.tick(now); he('sis');   // RS1: the stand-ins' pose updates / loads (nothing while the strip is off or in the underworld)
     if (S.where === 'under' && S.under) { S.under.fill.position.set(S.x, S.y + 2.8, S.z); S.under.update(now / 1000, dt0, camera.position); renderer.toneMappingExposure = 1.25; }
     he('under'); if (S.where === 'home') sheetTick(dt0); else if (btns.act) btns.act.style.display = 'none'; he('sheet');
     if (btns.dodge) { btns.dodge.style.opacity = S.dodgeCool > 0 ? 0.45 : 1; btns.jump.style.opacity = S.grounded ? 1 : 0.55; }

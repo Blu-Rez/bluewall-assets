@@ -20,7 +20,7 @@ t(all.length > 40, 'table suspiciously small'); for (const s of all) t(!/ربا�
 t(I.fa(0.95) === '۰٫۹۵' && I.fa(12) === '۱۲' && I.fa(1.1) === '۱٫۱', 'fa() digits');
 for (const id of new Set(KEYS.map((k) => I.INFO[k].kit))) {
   const kit = (await import(U + 'combat/kit_' + id + '.js')).default, d = I.describeKit(kit, carry);
-  t(d.hands.length === kit.weapons.length && d.hands.every((s) => /[۰-۹]/.test(s) && s.includes('—')), id + ': hands lines');
+  t(d.hands.length === kit.weapons.length && d.hands.every((s) => s.includes('—') && !/متر/.test(s)), id + ': hands lines');   // RS1: a hands line names the weapon and where it is carried — never its length in metres (the owner's order, 16 Oct)
   t(d.skills.length === kit.skills.length && d.skills.every((s) => s.n && s.d && !/اثر /.test(s.x)), id + ': every skill needs a SKILL_FA entry + a known effect type');
   t(d.combat.length === 2, id + ': attack / block lines');
 }

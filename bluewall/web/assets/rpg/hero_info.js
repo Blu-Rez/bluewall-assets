@@ -82,7 +82,7 @@ export function describeEffect(e) {
 export function describeKit(kit, carry) {
   const ws = kit.weapons || [], hip = ws.filter((w) => carry.carryOf(w) === 'hip' && carry.weaponKind(w) !== 'quiver').length, hands = [];
   for (const w of ws) {
-    const kind = carry.weaponKind(w), car = carry.carryOf(w), hold = kind === 'bow' ? 'دست چپ' : w.slot === 'L' ? 'دست چپ' : 'دست راست', nm = `${KIND_FA[kind] || kind} (${fa(w.len)} متر)`;
+    const kind = carry.weaponKind(w), car = carry.carryOf(w), hold = kind === 'bow' ? 'دست چپ' : w.slot === 'L' ? 'دست چپ' : 'دست راست', nm = KIND_FA[kind] || kind;   // RS1: no length in metres here (the owner: «what has the sword's half metre to do with the player») — the weapon's name only
     if (car === 'hand') hands.push(`${nm} — همیشه در ${hold}`);
     else hands.push(`${nm} — ${car === 'back' ? 'روی پشت' : hip > 1 ? 'دو طرف کمر' : 'کنار کمر، سمت چپ'}؛ در نبرد در ${hold}، بعد از نبرد دوباره سر جایش`);
   }
