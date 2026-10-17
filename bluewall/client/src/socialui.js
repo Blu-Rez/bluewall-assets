@@ -8,6 +8,8 @@ import { LEAGUES, leagueBadge, leagueIdx, cupSvg } from './cups.js';
 import { crestImg, normEmblem } from './emblems.js';
 import { GEMS } from './ui.js';
 import { BWK_CSS } from './rankui.js';
+import { ico } from './ui_icons.js';                                       // UI3: the one icon set
+import { T, mix } from './ui_tokens.js';                                    // UI3: the one colour file
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const fmtN = (n) => Math.floor(n).toLocaleString('en-US');
@@ -15,7 +17,7 @@ const SEEN = 'bw_log_seen';
 const lsGet = (k) => { try { return +localStorage.getItem(k) || 0; } catch (e) { return 0; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, String(v)); } catch (e) { /* ignore */ } };
 const ago = (t, now) => { const d = Math.max(0, now - t); return d < 90 ? 'just now' : d < 3600 ? Math.round(d / 60) + ' min ago' : d < 86400 ? Math.round(d / 3600) + ' h ago' : Math.round(d / 86400) + ' d ago'; };
-const star = (on) => `<svg viewBox="0 0 24 24" width="14" height="14" style="display:block"><path d="M12 2.6l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.4 6.1 20.7l1.3-6.6L2.5 9.5l6.6-.8z" fill="${on ? '#ffcf45' : 'rgba(255,255,255,.07)'}" stroke="${on ? '#a8780a' : '#6d83a6'}" stroke-width="1.4" stroke-linejoin="round"/></svg>`;
+const star = (on) => `<svg viewBox="0 0 24 24" width="14" height="14" style="display:block"><path d="M12 2.6l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.4 6.1 20.7l1.3-6.6L2.5 9.5l6.6-.8z" fill="${on ? T.gold : 'rgba(255,255,255,.07)'}" stroke="${on ? T.goldInk : '#6d83a6'}" stroke-width="1.4" stroke-linejoin="round"/></svg>`;
 const SWORD = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19L19 5M14 5h5v5M5 5l14 14M5 10V5h5"/></svg>`;
 const SHIELD = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6z"/></svg>`;
 const CROWN = `<svg viewBox="0 0 24 24" width="13" height="13" style="display:block"><path d="M4 18L3 8l5 4 4-7 4 7 5-4-1 10z" fill="#43e0ff" stroke="#0a4a6a" stroke-width="1.2" stroke-linejoin="round"/></svg>`;
@@ -34,7 +36,7 @@ const CSS = `
 .bwc-in{display:flex;gap:8px;margin:8px 0}.bwc-in input{min-width:0;padding:11px 12px;border-radius:12px;border:1px solid rgba(140,200,255,.4);background:#020814;color:#e6f3ff;font-size:14px;font-family:inherit}.bwc-in input.n{flex:1}.bwc-in input.g{flex:0 0 76px;text-transform:uppercase;letter-spacing:2px;text-align:center}
 .bwc-btn{display:block;width:100%;padding:12px;border-radius:13px;border:1px solid #c9e3ff;background:linear-gradient(180deg,#4d9bff,#1b4fb8);color:#fff;font-weight:700;font-size:13.5px;letter-spacing:1.2px;font-family:inherit;cursor:pointer;text-transform:uppercase}
 .bwc-btn.sec{background:rgba(255,255,255,.07);border-color:rgba(160,205,255,.4);color:#cfe6ff}.bwc-btn.dng{background:rgba(255,255,255,.07);border-color:#9fb2cc;color:#d7e4f5}.bwc-btn:disabled{opacity:.45;filter:grayscale(.5)}
-.bwc-err{min-height:16px;margin:2px 4px 4px;font-size:12px;color:#ffd9a8;text-align:center}
+.bwc-err{min-height:16px;margin:2px 4px 4px;font-size:12px;color:${mix('bad','#ffffff',.5)};text-align:center}
 .bwc-row .go{flex:0 0 auto;padding:8px 12px;border-radius:11px;border:1px solid #c9e3ff;background:linear-gradient(180deg,#4d9bff,#1b4fb8);color:#fff;font-weight:700;font-size:12px;font-family:inherit;cursor:pointer;letter-spacing:.6px}.bwc-row .go:disabled{opacity:.45}
 .bwc-row .go.x{background:rgba(255,255,255,.07);border-color:rgba(160,205,255,.4);color:#cfe6ff;padding:6px 9px}
 .bwc-row .nm span i{font-style:normal;color:#43e0ff;margin-right:4px}
@@ -44,7 +46,7 @@ const CSS = `
 .bwc-lg .mid{flex:1;min-width:0}.bwc-lg .mid b{display:block;font-size:13px;color:#eaf6ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bwc-lg .mid span{display:flex;align-items:center;gap:8px;margin-top:3px;font-size:11px;color:#9db9de;font-variant-numeric:tabular-nums}
 .bwc-lg .st{display:flex;gap:1px}.bwc-lg .lt{display:flex;gap:7px;align-items:center}.bwc-lg .lt .gem3{width:13px;height:13px;vertical-align:-2px;margin-right:2px}
 .bwc-lg .rt{flex:0 0 auto;text-align:right;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;color:#eaf6ff}.bwc-lg .rt small{display:block;font-size:10px;font-weight:400;color:#8fa6c4;margin-top:2px}
-.bwc-lg .rt.up{color:#9fffd0}.bwc-lg .rt.dn{color:#ffc7a8}
+.bwc-lg .rt.up{color:#9fffd0}.bwc-lg .rt.dn{color:${mix('bad','#ffffff',.45)}}
 .bwc-inv{display:flex;align-items:center;gap:10px;margin:4px 2px 10px;padding:11px 12px;border-radius:15px;background:rgba(2,8,20,.55);border:1px solid rgba(140,225,255,.4)}
 .bwc-inv .t{flex:1;font-size:12.5px;line-height:1.5;color:#cfe6ff}.bwc-inv .t b{color:#fff}.bwc-inv .gem3{width:16px;height:16px;vertical-align:-3px}.bwc-inv .amt{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;vertical-align:-3px}.bwc-inv .amt .gem3{vertical-align:baseline}
 .bwc-inv button{flex:0 0 auto;padding:10px 14px;border-radius:12px;border:1px solid #c9e3ff;background:linear-gradient(180deg,#4d9bff,#1b4fb8);color:#fff;font-weight:700;font-size:12.5px;font-family:inherit;cursor:pointer;letter-spacing:.8px}
@@ -57,7 +59,7 @@ export function createSocialUI(mount, { econ, ui, audio, rank } = {}) {
   if (!document.getElementById('bwk-css')) { const e0 = document.createElement('style'); e0.id = 'bwk-css'; e0.textContent = BWK_CSS; document.head.appendChild(e0); }
   const stEl = document.createElement('style'); stEl.textContent = CSS; document.head.appendChild(stEl);
   const pan = document.createElement('div'); pan.className = 'bwk bwc';
-  pan.innerHTML = `<div class="bwk-pan"><div class="bwk-h"><div class="bd"></div><div class="t"><b>Community</b><span></span></div><div class="bwk-x" data-a="x">✕</div></div>
+  pan.innerHTML = `<div class="bwk-pan"><div class="bwk-h"><div class="bd"></div><div class="t"><b>Community</b><span></span></div><div class="bwk-x" data-a="x">${ico('x', 18)}</div></div>
     <div class="bwk-tabs"><button data-t="clan" class="on">Clan</button><button data-t="friends">Friends</button><button data-t="log">Log<i class="dot" hidden></i></button></div>
     <div class="bwk-body"></div></div>`;
   host.appendChild(pan);
@@ -73,7 +75,7 @@ export function createSocialUI(mount, { econ, ui, audio, rank } = {}) {
     const L = lgName(m.lg);
     return `<div class="bwk-row bwc-row${m.me ? ' me' : ''}" style="--lc:${L.color}"><div class="cr">${crestImg(normEmblem(m.e) || 'swords', 34)}</div>
       <div class="nm"><b>${m.owner ? CROWN + ' ' : ''}${esc(m.n)}</b><span>${L.name} · Castle ${m.k}</span></div><div class="tp">${cupSvg(15)}${fmtN(m.tro)}</div>
-      ${mine && mine.me_owner && !m.owner ? `<button class="go x" data-a="kick" data-id="${m.id}" aria-label="Remove">✕</button>` : ''}</div>`;
+      ${mine && mine.me_owner && !m.owner ? `<button class="go x" data-a="kick" data-id="${m.id}" aria-label="Remove">${ico('x', 16)}</button>` : ''}</div>`;
   }
   function clanTab() {
     const d = S.d.clan;
@@ -107,7 +109,7 @@ export function createSocialUI(mount, { econ, ui, audio, rank } = {}) {
     return head + list.map((f) => {
       const L = lgName(f.lg);
       return `<div class="bwk-row bwc-row" style="--lc:${L.color}"><div class="cr">${crestImg(normEmblem(f.e) || 'swords', 34)}</div>
-        <div class="nm"><b>${esc(f.n)}</b><span>${f.paid ? '<i class="bwc-ok">✓ reward earned</i>' : `<i class="bwc-wait">Castle ${f.k} of ${d.keep}</i>`}</span></div><div class="tp">${cupSvg(15)}${fmtN(f.tro)}</div></div>`;
+        <div class="nm"><b>${esc(f.n)}</b><span>${f.paid ? `<i class="bwc-ok">${ico('check', 13)} reward earned</i>` : `<i class="bwc-wait">Castle ${f.k} of ${d.keep}</i>`}</span></div><div class="tp">${cupSvg(15)}${fmtN(f.tro)}</div></div>`;
     }).join('');
   }
   function logTab() {

@@ -1,4 +1,4 @@
-// HUD overlay (English only, Libre Baskerville):
+// HUD overlay (English only; fonts + colours come from ui_tokens.js — UI3):
 //  left  — crystal hex level badge (tap = settings) + player name plate
 //  right — jewelled gem gauges: % / FULL, "count / capacity", steel bezel with a 3D gem
 //  plus the info sheet, mine sheet, settings panel and the cinematic welcome card.
@@ -6,22 +6,18 @@ import { settings, onSetting, resetSettings } from './settings.js';
 import { tr } from './i18n.js';
 import { badgeC, gearC, injectKit2 } from './ui_theme_r2.js';      // UI1-R2: look C for the HUD (badge + gear drawn here, the rest is CSS)
 import { injectHudR3 } from './ui_theme_r3.js';                    // UI1-R3: landscape-only HUD placement (3 layouts, html[data-hud])
-import { BASE } from './assets.js';
+import { T, G, A, GEM, FONT, mix } from './ui_tokens.js';      // UI3: THE colour / font file
+import { ico, gemSvg } from './ui_icons.js';                    // UI3: THE icon set (gems, badge, glyphs)
 
 const GEM_KEYS = ['ruby', 'emerald', 'turq'], PREM_KEYS = ['sap', 'onyx'];
-// the gems are real 3D cut-gem renders (client/tools: gemgeo.js + gem icon renderer), not drawings
-const gemImg = (k) => `<img class="gem3" alt="" draggable="false" decoding="async" src="${BASE}ui/gem_${k}.webp">`;
+// UI3: the gems are the one flat faceted SVG gem of ui_icons.js (same cut for all five; each keeps its own colour) — no more 3D renders next to line icons
+const gemImg = (k) => gemSvg(k, 28, 'gem3');
 export const GEMS = Object.fromEntries([...GEM_KEYS, ...PREM_KEYS].map((k) => [k, gemImg(k)]));      // (+ the special gems: sap = deep-blue sapphire, onyx = black onyx)
-const LQ = {
-  ruby: { l: '#ff9aab', m: '#ee2a4c', d: '#8e0a26', g: '#ff5a76' },
-  emerald: { l: '#9cf7c6', m: '#19c46c', d: '#05703a', g: '#3fe592' },
-  turq: { l: '#d4fbff', m: '#35d6ff', d: '#0a7fb8', g: '#6fe8ff' },
-};
-const FONT = "'Libre Baskerville','Noto Sans Tai Viet',Georgia,serif";
+const LQ = GEM;                                                         // UI3: the gem colours live in ui_tokens.js
 
 const CSS = `
-.bw-ui{position:absolute;inset:0;overflow:hidden;overflow:clip;pointer-events:none;z-index:10;direction:ltr;text-align:left;font-family:${FONT};font-weight:700;color:#e6f2ff;
-  --glass:rgba(3,8,20,.72);--line:rgba(120,190,255,.32);
+.bw-ui{position:absolute;inset:0;overflow:hidden;overflow:clip;pointer-events:none;z-index:10;direction:ltr;text-align:left;font-family:${FONT};font-weight:700;color:${T.ink};
+  --glass:${A('n0',.78)};--line:${A('line',.5)};
   --st:calc(var(--tg-safe-area-inset-top,0px) + var(--tg-content-safe-area-inset-top,0px));--sb:var(--tg-safe-area-inset-bottom,0px);--sl:calc(var(--tg-safe-area-inset-left,0px) + var(--tg-content-safe-area-inset-left,0px));--sr:calc(var(--tg-safe-area-inset-right,0px) + var(--tg-content-safe-area-inset-right,0px));--hs:.64}
 .bw-ui .num{color:#fff;white-space:nowrap;text-shadow:0 1.5px 0 #01060f,1px 0 0 #01060f,-1px 0 0 #01060f,0 -1px 0 #01060f,0 0 5px rgba(0,0,0,.7)}
 .bw-top{position:absolute;left:0;right:0;top:0;height:calc(var(--st) + 120px);background:linear-gradient(rgba(0,6,20,.5),rgba(0,6,20,0));pointer-events:none}
@@ -76,7 +72,7 @@ const CSS = `
 .bw-mine{margin-top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .bw-mine div{padding:8px 6px;border-radius:12px;background:rgba(95,182,255,.08);border:1px solid rgba(120,190,255,.2);text-align:center}
 .bw-mine b{display:block;font-size:18px;color:#fff}.bw-mine span{font-size:10.5px;font-weight:400;color:#9fc4e8}
-.bw-col{margin-top:12px;width:100%;padding:12px;border-radius:14px;border:1px solid #bfe6ff;background:linear-gradient(180deg,#5fb6ff,#1b4fb8);color:#fff;font:700 15px ${FONT};cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 18px rgba(27,79,184,.45)}
+.bw-col{margin-top:12px;width:100%;padding:12px;border-radius:14px;border:1px solid ${T.ice};background:${G.war};color:#fff;font:700 15px ${FONT};cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 18px ${A('blue3',.45)}}
 .bw-col i svg{width:24px;height:24px;display:block}.bw-col:disabled{opacity:.45;filter:grayscale(.4)}
 /* ---- settings */
 .bw-set{position:absolute;inset:0;z-index:13;pointer-events:auto;background:rgba(0,3,10,.6);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
@@ -171,11 +167,11 @@ const SCHEMA = {
   controls: [['rotSpeed', 'range', 0.5, 2, 0.1, 'x'], ['zoomSpeed', 'range', 0.5, 2, 0.1, 'x'], ['invertRotate', 'toggle'], ['haptics', 'toggle']],
   about: null,
 };
-const CUP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0z" fill="currentColor" fill-opacity=".25"/><path d="M7 6H4.5v1.6A3.2 3.2 0 0 0 7.7 10.8M17 6h2.5v1.6a3.2 3.2 0 0 1-3.2 3.2M12 14v4M8 20h8"/></svg>';
+const CUP = ico('cup', 12);                                              // UI3
 const fmt = (n) => (n = Number.isFinite(+n) ? Math.max(0, +n) : 0, n >= 1e7 ? Math.floor(n / 1e6) + 'M' : n >= 1e6 ? (Math.floor(n / 1e5) / 10).toFixed(1) + 'M' : n >= 1e5 ? Math.floor(n / 1e3) + 'K' : n >= 1e4 ? (Math.floor(n / 100) / 10).toFixed(1) + 'K' : Math.floor(n).toLocaleString('en-US'));
 
-const SHIELD_I = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6z"/></svg>';
-const starI = (on) => `<svg viewBox="0 0 24 24" width="12" height="12" style="display:block"><path d="M12 2.6l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.4 6.1 20.7l1.3-6.6L2.5 9.5l6.6-.8z" fill="${on ? '#ffcf45' : 'rgba(255,255,255,.12)'}" stroke="${on ? '#a8780a' : 'rgba(255,255,255,.18)'}" stroke-width="1"/></svg>`;
+const SHIELD_I = ico('shield', 17);                                       // UI3
+const starI = (on) => `<svg viewBox="0 0 24 24" width="12" height="12" style="display:block"><path d="M12 2.6l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.4 6.1 20.7l1.3-6.6L2.5 9.5l6.6-.8z" fill="${on ? T.gold : 'rgba(255,255,255,.12)'}" stroke="${on ? T.goldInk : 'rgba(255,255,255,.18)'}" stroke-width="1"/></svg>`;
 const escH = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
 const agoS = (s) => (s < 90 ? 'just now' : s < 3600 ? Math.round(s / 60) + ' min ago' : s < 86400 ? Math.round(s / 3600) + ' h ago' : Math.round(s / 86400) + ' d ago');
 // the "while you were away" panel of the welcome card: who attacked, what it cost in cups and gems (at most 3 raids, the rest are counted)
@@ -211,8 +207,8 @@ export class UI {
       <div class="bw-pm">${PREM_KEYS.map((k) => `<div class="bw-p" data-p="${k}" role="button" aria-label="${k === 'sap' ? 'Sapphire' : 'Onyx'}"><div class="gm">${GEMS[k]}</div><div class="ct num"><span>0</span></div></div>`).join('')}</div>
       <div class="bw-fps"></div>
       <div class="bw-toast"></div>
-      <div class="bw-sheet"><div class="bw-x" data-a="close">✕</div><div class="h"><span class="e"></span><span class="t"></span></div><div class="d"></div><div class="bw-mx"></div><span class="chip">${t.soon}</span></div>
-      <div class="bw-set"><div class="bw-panel"><div class="bw-ph"><span class="t">${t.settings}</span><div class="bw-x" style="position:static" data-a="setclose">✕</div></div>
+      <div class="bw-sheet"><div class="bw-x" data-a="close">${ico('x', 18)}</div><div class="h"><span class="e"></span><span class="t"></span></div><div class="d"></div><div class="bw-mx"></div><span class="chip">${t.soon}</span></div>
+      <div class="bw-set"><div class="bw-panel"><div class="bw-ph"><span class="t">${t.settings}</span><div class="bw-x" style="position:static" data-a="setclose">${ico('x', 18)}</div></div>
         <div class="bw-kd"><div><span>${t.kingdom.date}</span><b class="kd-d">—</b></div><div><span>${t.kingdom.time}</span><b class="kd-t">—</b></div></div>
         <div class="bw-tabs"></div><div class="bw-body"></div></div></div>`;
     const q = (s) => root.querySelector(s);
@@ -303,7 +299,7 @@ export class UI {
   // p = { name, level }
   setProfile(p) {
     this.prof = { ...this.prof, ...p };
-    this.root.querySelector('.bw-who .nm').textContent = this.prof.name || '';
+    this.root.querySelector('.bw-who .nm').textContent = String(this.prof.name || '').replace(/\uAA8A/g, 'u');   // UI3: the fancy Tai Viet letter ꪊ of a player's name is drawn as a plain u on the plate only (it was the odd mark over the U); the stored name is unchanged
     this.root.querySelector('.bw-lvl .lvn').textContent = this.prof.level || 1;
     const sub = this.root.querySelector('.bw-who .sub'), c = this.prof.cups;
     if (sub) { const h = c == null ? '' : CUP + '<span>' + Math.max(0, Math.floor(c)).toLocaleString('en-US') + '</span>'; if (sub.dataset.h !== h) { sub.innerHTML = h; sub.dataset.h = h; } sub.style.display = c == null ? 'none' : ''; }

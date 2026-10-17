@@ -4,11 +4,12 @@
 // (box-shadow 0 0 0 9999px), a pulse ring and a pointing hand mark the target, one short line says what it is. A tap anywhere moves on, "Skip" ends it.
 // The home tour runs once for a new player (castle level <= 3), the battle tour once on the first attack; both can be replayed from Settings.
 const KEY = { home: 'bw_coach_home', battle: 'bw_coach_battle' };
+import { FONT } from './ui_tokens.js';                                       // UI3: the one font stack
 const get = (k) => { try { return localStorage.getItem(k) === '1'; } catch (e) { return false; } };
 const put = (k, v) => { try { if (v) localStorage.setItem(k, '1'); else localStorage.removeItem(k); } catch (e) { /* private mode */ } };
 
 const CSS = `
-.bwch{position:absolute;inset:0;z-index:40;pointer-events:auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:'Libre Baskerville','Noto Sans Tai Viet',Georgia,serif;color:#eaf6ff;opacity:0;transition:opacity .3s}
+.bwch{position:absolute;inset:0;z-index:40;pointer-events:auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:${FONT};color:#eaf6ff;opacity:0;transition:opacity .3s}
 .bwch.on{opacity:1}
 .bwch .hole{position:absolute;border-radius:16px;box-shadow:0 0 0 9999px rgba(0,3,10,.76);transition:left .35s cubic-bezier(.2,.8,.2,1),top .35s cubic-bezier(.2,.8,.2,1),width .35s cubic-bezier(.2,.8,.2,1),height .35s cubic-bezier(.2,.8,.2,1);pointer-events:none}
 .bwch .ring{position:absolute;inset:-3px;border-radius:19px;border:2px solid #8fe8ff;box-shadow:0 0 12px rgba(110,215,255,.65);animation:bwchp 1.5s ease-in-out infinite;pointer-events:none}
@@ -21,8 +22,8 @@ const CSS = `
 .bwch .card p{margin:0;font-size:14px;line-height:1.5;color:#f2f8ff}
 .bwch .card i{display:block;margin-top:9px;font-style:normal;font-size:11px;letter-spacing:1.2px;color:#9db9de}
 .bwch .dots{display:flex;gap:5px;margin-top:8px}.bwch .dots s{width:6px;height:6px;border-radius:50%;background:rgba(150,200,255,.3);text-decoration:none}.bwch .dots s.on{background:#8fe8ff}
-.bwch .card .skip{position:absolute;right:10px;bottom:8px;padding:8px 13px;border-radius:12px;border:1px solid rgba(160,205,255,.45);background:rgba(8,20,48,.8);color:#cfe6ff;font:700 11px 'Libre Baskerville',Georgia,serif;letter-spacing:1.4px;cursor:pointer;pointer-events:auto}
-.bwch{font-family:'BW Naskh','Noto Naskh Arabic','Vazirmatn',Tahoma,serif}
+.bwch .card .skip{position:absolute;right:10px;bottom:8px;padding:8px 13px;border-radius:12px;border:1px solid rgba(160,205,255,.45);background:rgba(8,20,48,.8);color:#cfe6ff;font:700 11px ${FONT};letter-spacing:1.4px;cursor:pointer;pointer-events:auto}
+.bwch{font-family:${FONT}}   /* UI3: Vazirmatn (inside FONT) carries the Persian lines, the same family as every other menu */
 .bwch .card{direction:rtl;text-align:right}
 .bwch .card b{letter-spacing:0;text-transform:none;font-size:15px;color:#8fe0ff;margin-bottom:4px}
 .bwch .card p{font-size:16px;line-height:1.95;font-weight:400}
@@ -82,7 +83,7 @@ export function createCoach(host0, { audio, ui, econ, battleHost = null } = {}) 
   function start(steps, { key = '', onDone = null, at = null } = {}) {
     if (run) return false;
     host = at || host0;
-    try { if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('400 16px "BW Naskh"'), document.fonts.load('700 16px "BW Naskh"')]).then(() => run && place(), () => {}); } catch (e) { /* the fallback font is fine */ }
+    try { if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('400 16px Vazirmatn'), document.fonts.load('700 16px Vazirmatn')]).then(() => run && place(), () => {}); } catch (e) { /* the fallback font is fine */ }
     const list = steps.filter((s) => rectOf(s)); if (!list.length) { host = host0; return false; }
     run = { steps: list, i: 0, key, onDone };
     el = document.createElement('div'); el.className = 'bwch'; el.lang = 'fa';

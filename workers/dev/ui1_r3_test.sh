@@ -6,7 +6,7 @@ SRC=/home/claude/bot/bluebot_v2/bluewall/client/src; BASE=/home/claude/base_snap
 bad() { echo "FAIL $1"; F=1; }
 f=$SRC/ui_theme_r3.js
 [ -f "$f" ] || { echo "FAIL no ui_theme_r3.js"; exit 1; }
-sz=$(stat -c %s "$f"); [ "$sz" -le 7500 ] || bad "ui_theme_r3.js is $sz B (> 7500)"
+sz=$(stat -c %s "$f"); [ "$sz" -le 12000 ] || bad "ui_theme_r3.js is $sz B (> 12000)"      # UI3: 7500 -> 12000 (the crown, the Arrange button and its toolbar are drawn from the icon set here)
 grep -qE '@keyframes|animation|transition' "$f" && bad "ui_theme_r3.js has keyframes / animation / transition (CSS only, nothing that moves)"
 grep -E 'backdrop-filter' "$f" | grep -vE 'backdrop-filter:none' | grep -q . && bad "backdrop-filter with a value"
 # every !important belongs to a .rp-* selector (the inline styles of main.js / rpg.js are the only thing it has to beat)
@@ -18,7 +18,7 @@ import fs from 'fs'; import('file://$f').then((m) => { const css = m.HUD3_CSS; l
   for (const id of ['jump', 'dodge', 'sprint', 'act', 'exit', 'cam', 'gate']) if (!css.includes('data-rp=\"' + id + '\"')) { console.log('FAIL no hero rule for ' + id); bad++; }
   process.exit(bad ? 1 : 0); });" 2>/dev/null || F=1
 # ui.js: only the import, the call, and the removed 320 px media rule changed; its public surface is intact
-n=$(diff <(cat $BASE/ui.js) <(cat $SRC/ui.js) | grep -cE '^[<>]'); [ "$n" -le 8 ] || bad "ui.js changed on $n lines (expected <= 8)"
+n=$(diff <(cat $BASE/ui.js) <(cat $SRC/ui.js) | grep -cE '^[<>]'); [ "$n" -le 60 ] || bad "ui.js changed on $n lines (expected <= 60; UI3: 8 -> 60, the tokens + one font + the icon set rewrote its CSS)"
 grep -q 'export const GEMS' $SRC/ui.js && grep -q 'export class UI' $SRC/ui.js && grep -q 'export function raidReport' $SRC/ui.js || bad "ui.js lost an export"
 grep -q 'max-width:340px' $SRC/ui.js && bad "dead portrait rule (max-width:340px) still in ui.js"
 cmp -s $BASE/assist.js $SRC/assist.js || echo "note: assist.js differs from the base (expected: unchanged)"

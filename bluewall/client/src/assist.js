@@ -6,125 +6,81 @@
 // Navigation (p22): a panel opened from the hub gets a "‹" back button in its header that returns to the hub, and Telegram's own
 // Back button (top-left in the Mini App) is live whenever the hub or a panel is open: hub -> map, panel -> hub (or map if opened directly).
 //   createAssist(mount, { econ, ui, audio, army, upgrade, rank, social, shop, tg }) -> { update(), openHub(), closeHub(), back() }
-import { icon } from './armyui.js';
 import { crestImg } from './emblems.js';
-import { BASE } from './assets.js';
-import { leagueBadge, leagueIdx } from './cups.js';
-import { attackLogo } from './logos.js';
-import { GEMS } from './ui.js';
+import { leagueIdx } from './cups.js';
+import { ico } from './ui_icons.js';                                       // UI3: the one icon set
+import { T as TK, G as GK, A as AK, mix, FONT, fs } from './ui_tokens.js';        // UI3: the one colour / font file
 
 const fmtN = (n) => Math.floor(n).toLocaleString('en-US');
 const fmtT = (s) => { s = Math.max(0, Math.ceil(s)); const d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60), q = s % 60; return d ? d + 'd ' + h + 'h' : h ? h + 'h ' + String(m).padStart(2, '0') + 'm' : m + ':' + String(q).padStart(2, '0'); };
-const I = (d, sz = 28) => `<svg viewBox="0 0 24 24" width="${sz}" height="${sz}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
-const ICONS = {
-  grid: '<rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/>',
-  clan: '<path d="M12 3l7.5 2.6v5.6c0 4.6-3.2 8.2-7.5 9.8-4.3-1.6-7.5-5.2-7.5-9.8V5.6z"/><path d="M8.5 11.5l3.5 3 3.5-3"/>',
-  friends: '<circle cx="9" cy="8.5" r="3.4"/><path d="M2.8 20c.6-3.6 3.2-5.6 6.2-5.6s5.6 2 6.2 5.6"/><path d="M18 6.5v6M15 9.5h6"/>',
-  log: '<path d="M6 3.5h9.5l3.5 3.5v13.5H6z"/><path d="M9 11h7M9 14.5h7M9 18h4"/>',
-  set: '<circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/>',
-  flag: '<path d="M6 21V4"/><path d="M6 5h11l-2.4 3.6L17 12H6"/>',
-};
-
 const CSS = `
-/* ---- the Assist button: a forged steel bezel with a turning light, an enamelled core and the royal star seal; it breathes softly and pulses when something waits */
-.bwh-btn{pointer-events:auto;position:absolute;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;transition:opacity .6s,transform .15s}
+/* ---- UI3: the Assist button — a 48 px silver-bezel round button with the sword-and-hammer glyph; it shows a steady ring (no motion) when something waits */
+.bwh-btn{pointer-events:auto;position:absolute;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 .bw-ui.wel>.bwh-btn{opacity:0;pointer-events:none}
-.bwh-btn{right:calc(12px + var(--sr));bottom:calc(var(--sb) + 14px);width:58px;height:58px;cursor:pointer}
+.bwh-btn{right:calc(14px + var(--sr));bottom:calc(var(--sb) + 14px);width:48px;height:48px;cursor:pointer}
+.bwh-btn:before{content:"";position:absolute;left:-6px;right:-6px;top:-6px;bottom:-6px}
 .bwh-btn:active{transform:scale(.92)}
-.bwh-btn .halo{position:absolute;left:-12px;top:-12px;width:82px;height:82px;border-radius:50%;background:radial-gradient(circle,rgba(120,205,255,.42) 0,rgba(70,150,255,.16) 46%,rgba(40,110,255,0) 70%);pointer-events:none;will-change:opacity,transform;animation:bwhBr 4.2s ease-in-out infinite}
-@keyframes bwhBr{0%,100%{opacity:.35;transform:scale(.9)}50%{opacity:.9;transform:scale(1.04)}}
-.bwh-btn .bez{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 210deg,#f4f9ff,#93a9c6 16%,#33476a 34%,#dfeaf8 52%,#6b82a6 70%,#c9d8ec 86%,#f4f9ff);box-shadow:0 5px 14px rgba(0,0,0,.6),0 0 0 1.5px #01060f,inset 0 1px 1px rgba(255,255,255,.7)}
-.bwh-btn .bez:after{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(255,255,255,0) 0 64%,rgba(255,255,255,.95) 72%,rgba(190,235,255,.4) 76%,rgba(255,255,255,0) 84%);-webkit-mask:radial-gradient(circle,transparent 24.5px,#000 25.5px);mask:radial-gradient(circle,transparent 24.5px,#000 25.5px);will-change:transform;animation:bwhSp 7s linear infinite}
-@keyframes bwhSp{to{transform:rotate(360deg)}}
-.bwh-btn .core{position:absolute;inset:4px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 28%,#3d6db3,#0d2858 58%,#040d24);box-shadow:inset 0 2px 6px rgba(170,215,255,.45),inset 0 -4px 8px rgba(0,0,0,.6),0 0 0 1px #020a1c}
-.bwh-btn .core:before{content:"";position:absolute;left:8%;right:8%;top:4%;height:44%;border-radius:50% 50% 45% 45%;background:linear-gradient(rgba(255,255,255,.28),rgba(255,255,255,0));pointer-events:none}
-.bwh-btn .ico{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.7));pointer-events:none}
-.bwh-btn .seal{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.65)) drop-shadow(0 0 5px rgba(120,210,255,.45));will-change:transform;animation:bwhSl 24s linear infinite}
-@keyframes bwhSl{to{transform:rotate(45deg)}}
-.bwh-btn .gem{position:absolute;left:50%;top:50%;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;border-radius:50%;background:radial-gradient(circle at 36% 30%,#ffffff 0,#bdf0ff 22%,#47b4ff 52%,#0d4fb8 82%,#05275f);box-shadow:0 0 0 1px #02122e,0 0 7px 1px rgba(110,210,255,.6)}
-.bwh-btn .gem:after{content:"";position:absolute;left:-7px;top:-7px;right:-7px;bottom:-7px;border-radius:50%;background:radial-gradient(circle,rgba(170,235,255,.85),rgba(90,190,255,0) 70%);opacity:.3;will-change:opacity;animation:bwhGm 3.1s ease-in-out infinite}
-@keyframes bwhGm{0%,100%{opacity:.25}50%{opacity:1}}
-.bwh-btn .pulse{position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 2px rgba(150,230,255,.9);opacity:0;pointer-events:none}
-.bwh-btn.hot .pulse{will-change:transform,opacity;animation:bwhPu 2.4s ease-out infinite}
-@keyframes bwhPu{0%{opacity:.9;transform:scale(1)}80%,100%{opacity:0;transform:scale(1.55)}}
-.bwh-btn.tap .core{animation:bwhTp .45s ease-out}
-@keyframes bwhTp{0%{filter:brightness(1.9)}100%{filter:brightness(1)}}
-.bwh-btn .bd{position:absolute;right:-4px;top:-4px;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border-radius:10px;background:linear-gradient(#7dffb5,#12a85a);border:1.5px solid #01220f;color:#031a0e;font-size:10.5px;font-weight:700;line-height:17px;text-align:center;font-variant-numeric:tabular-nums;z-index:2}
+.bwh-btn .bez{position:absolute;inset:0;border-radius:50%;background:${GK.ring};box-shadow:0 4px 12px rgba(0,0,0,.6),0 0 0 1.5px ${TK.n0},inset 0 1px 1px rgba(255,255,255,.7)}
+.bwh-btn .core{position:absolute;inset:3.5px;border-radius:50%;display:grid;place-items:center;color:${TK.ice};background:${GK.core};box-shadow:inset 0 2px 5px ${AK('ice',.32)},inset 0 -4px 8px rgba(0,0,0,.5),0 0 0 1px ${TK.n0}}
+.bwh-btn .core svg{width:26px;height:26px;display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
+.bwh-btn .pulse{position:absolute;inset:-1px;border-radius:50%;box-shadow:0 0 0 2px ${AK('ice2',.95)},${GK.glow};opacity:0;pointer-events:none}
+.bwh-btn.hot .pulse{opacity:1}
+.bwh-btn .bd{position:absolute;right:-4px;top:-4px;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border-radius:10px;background:linear-gradient(${TK.ok},${mix('ok','n0',.35)});border:1.5px solid ${TK.n0};color:${TK.n0};font-size:11px;font-weight:700;line-height:17px;text-align:center;font-variant-numeric:tabular-nums;z-index:2}
 .bwh-btn .bd:empty{display:none}
-@media (prefers-reduced-motion:reduce){.bwh-btn .halo,.bwh-btn .bez:after,.bwh-btn .seal,.bwh-btn .gem,.bwh-btn.hot .pulse{animation:none}}
-/* the wide ATTACK tile at the top of the hub */
-.bwh-a{position:relative;display:flex;align-items:center;gap:12px;margin:0 0 10px;padding:7px 14px 7px 9px;border-radius:17px;cursor:pointer;color:#eaf6ff;overflow:hidden;background:linear-gradient(180deg,rgba(70,146,246,.42),rgba(8,28,70,.7));border:1px solid rgba(150,215,255,.6);box-shadow:inset 0 1px 0 rgba(200,232,255,.32),0 4px 14px rgba(0,0,0,.4);transition:transform .12s,filter .2s}
-.bwh-a:active{transform:scale(.97)}
-.bwh-a:after{content:"";position:absolute;top:0;bottom:0;left:-40%;width:34%;background:linear-gradient(100deg,rgba(255,255,255,0),rgba(210,240,255,.22),rgba(255,255,255,0));transform:skewX(-18deg) translateX(0);pointer-events:none;opacity:0}
-.bwh.on .bwh-a.hot:after{opacity:1;will-change:transform;animation:bwhSw 3.4s ease-in-out .6s infinite}
-@keyframes bwhSw{0%{transform:skewX(-18deg) translateX(0)}55%,100%{transform:skewX(-18deg) translateX(460%)}}
-.bwh-a .bz{flex:0 0 auto;width:64px;height:64px;padding:3px;box-sizing:border-box;border-radius:50%;background:conic-gradient(from 200deg,#f2f7ff,#8aa0bd 20%,#3a4d6e 40%,#d6e4f5 58%,#6d83a6 78%,#f2f7ff);box-shadow:0 3px 9px rgba(0,0,0,.5)}
-.bwh-a .ring{position:relative;width:58px;height:58px;border-radius:50%;background:conic-gradient(from 0deg,#8fe8ff calc(var(--p,0) * 1%),#0a1c3e 0);box-shadow:0 0 0 1.5px #01060f}
-.bwh-a .core{position:absolute;left:5px;top:5px;width:48px;height:48px;border-radius:50%;background:radial-gradient(circle at 50% 24%,#35609f,#0b1f4a 62%,#030a1c);box-shadow:inset 0 2px 6px rgba(170,215,255,.4);overflow:hidden}
-.bwh-a .core svg{position:absolute;left:50%;top:50%;margin:-30px 0 0 -26px;width:52px;height:52px;display:block;filter:drop-shadow(0 2px 2px rgba(0,0,0,.6));pointer-events:none}
-.bwh-a .tx{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:3px}
-.bwh-a .tx b{font-size:17px;letter-spacing:2.5px;text-transform:uppercase;color:#fff;line-height:20px;text-shadow:0 0 10px rgba(130,210,255,.55)}
-.bwh-a .tx small{font-size:12px;color:#a9d4ff;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
-.bwh-a .ch{flex:0 0 auto;width:22px;height:22px;color:#bfe6ff;opacity:.9}
-.bwh-a.hot{border-color:#8fe8ff}
-.bwh.on .bwh-a.hot .core:after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:inset 0 0 14px 1px rgba(140,225,255,.95);opacity:0;will-change:opacity;pointer-events:none;animation:bwhGl 2.6s ease-in-out infinite}
-@keyframes bwhGl{0%,100%{opacity:0}50%{opacity:1}}
-.bwh-a.off{filter:grayscale(.55) brightness(.85)}
-/* ---- the hub: a royal panel (steel-rimmed, enamel-dark, a light running along its top edge), the realm's crest in the header, medallion tiles that rise in one after another */
-.bwh{position:absolute;inset:0;pointer-events:auto;z-index:12;background:radial-gradient(ellipse at 50% 46%,rgba(4,16,44,.5),rgba(0,3,10,.78));opacity:0;visibility:hidden;transition:opacity .22s,visibility .22s;font-family:'Libre Baskerville','Noto Sans Tai Viet',Georgia,serif;color:#eaf6ff;-webkit-tap-highlight-color:transparent}
+/* ---- the hub: ONE small panel (header + a 6-column grid: the ATTACK tile takes two cells, the nine tiles follow) — about 200 px high, never more than 70 % of the screen */
+.bwh{position:absolute;inset:0;pointer-events:auto;z-index:12;background:${AK('n0',.5)};opacity:0;visibility:hidden;font-family:${FONT};color:${TK.ink};-webkit-tap-highlight-color:transparent}
 .bwh.on{opacity:1;visibility:visible}.bwh *{box-sizing:border-box}
-.bwh-pan{position:absolute;left:50%;top:50%;width:min(344px,calc(100% - 32px - var(--sl) - var(--sr)));transform:translate(-50%,-46%) scale(.96);padding:12px 12px 14px;border-radius:24px;border:1.5px solid transparent;background:linear-gradient(180deg,#0f3068,#061331 38%,#020814) padding-box,conic-gradient(from 180deg,#dfeaf8,#5b7398 18%,#22324f 34%,#a9bedb 52%,#3b5072 70%,#c7d6ea 86%,#dfeaf8) border-box;box-shadow:0 22px 60px rgba(0,0,0,.75),inset 0 1px 0 rgba(200,230,255,.28),inset 0 0 40px rgba(60,130,255,.08);transition:transform .28s cubic-bezier(.2,.9,.25,1.1)}
-.bwh-pan:before{content:"";position:absolute;left:18px;right:18px;top:-1px;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(140,220,255,0),rgba(200,240,255,.95),rgba(140,220,255,0));background-size:50% 100%;background-repeat:no-repeat;background-position:-60% 0;pointer-events:none}
-.bwh.on .bwh-pan:before{animation:bwhEd 4.5s ease-in-out .3s infinite}
-@keyframes bwhEd{0%{background-position:-60% 0}60%,100%{background-position:160% 0}}
-.bwh.on .bwh-pan{transform:translate(-50%,-50%)}
-.bwh-h{display:flex;align-items:center;gap:10px;padding:0 2px 10px}
-.bwh-h .cr{flex:0 0 auto;width:36px;height:40px;display:grid;place-items:center;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}.bwh-h .cr img{width:34px;height:auto}
+.bwh-pan{position:absolute;left:calc((var(--sl) + 100% - var(--sr)) / 2);top:calc((var(--st) + 100% - var(--sb)) / 2);transform:translate(-50%,-50%);width:min(600px,calc(74% - var(--sl) - var(--sr)));max-height:68%;overflow-y:auto;overscroll-behavior:contain;
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;padding:8px 10px 10px;border-radius:16px;background:${GK.panel};border:1px solid ${TK.line};box-shadow:${GK.plate},${GK.shadow}}
+.bwh-h{grid-column:1/-1;display:flex;align-items:center;gap:10px;min-height:40px;padding:0 0 2px}
+.bwh-h .cr{flex:0 0 auto;width:32px;height:34px;display:grid;place-items:center;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}.bwh-h .cr img{width:30px;height:auto}
 .bwh-h .tt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;line-height:1.15}
-.bwh-h .tt b{font-size:16px;letter-spacing:3px;text-transform:uppercase;color:#f2f9ff;text-shadow:0 0 12px rgba(120,200,255,.45)}
-.bwh-h .tt span{font-size:11px;letter-spacing:.6px;color:#8fb4e0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bwh-x{flex:0 0 auto;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(150,200,255,.28);font-size:13px;cursor:pointer}
+.bwh-h .tt b{font-size:16px;letter-spacing:2px;text-transform:uppercase;color:${TK.ink}}
+.bwh-h .tt span{font-size:11px;color:${TK.mute};white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bwh-x{flex:0 0 auto;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:${GK.btn};border:1px solid ${TK.line};color:${TK.ink};cursor:pointer}
+.bwh-x svg{width:18px;height:18px;display:block}
 .bwh-x:active{transform:scale(.9)}
-.bwh-sep{height:1px;margin:0 6px 10px;background:linear-gradient(90deg,rgba(140,200,255,0),rgba(160,215,255,.55),rgba(140,200,255,0))}
-.bwh-g{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.bwh-t{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;padding:8px 2px 7px;min-height:92px;border-radius:16px;cursor:pointer;color:#cfe6ff;background:linear-gradient(180deg,rgba(58,120,214,.26),rgba(8,26,64,.55));border:1px solid rgba(140,205,255,.3);box-shadow:inset 0 1px 0 rgba(190,225,255,.16);transition:transform .12s,border-color .2s}
-.bwh-t:active{transform:scale(.93);border-color:rgba(170,225,255,.75)}
-.bwh.on .bwh-t,.bwh.on .bwh-a{animation:bwhIn .34s cubic-bezier(.2,.85,.25,1.08) both;animation-delay:calc(var(--i,0) * 26ms)}
-@keyframes bwhIn{from{opacity:0;transform:translateY(10px) scale(.94)}to{opacity:1;transform:none}}
-.bwh-t .ic{position:relative;width:46px;height:46px;border-radius:50%;padding:2.5px;background:conic-gradient(from 210deg,#eef5ff,#8297b6 20%,#2c3d5d 40%,#cfdcef 58%,#5e7598 78%,#eef5ff);box-shadow:0 3px 8px rgba(0,0,0,.5)}
-.bwh-t .ic>i{position:absolute;inset:2.5px;border-radius:50%;display:grid;place-items:center;color:#c9ecff;background:radial-gradient(circle at 50% 26%,#2f5c9e,#0b2049 60%,#040c22);box-shadow:inset 0 2px 5px rgba(170,215,255,.35)}
-.bwh-t .ic svg{width:25px;height:25px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
-.bwh-t .ic img{width:34px;height:34px;display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.65))}
-.bwh-t .ic .lgb{width:26px;height:auto}.bwh-t .ic .gem3{width:30px;height:30px;filter:drop-shadow(0 0 6px rgba(110,150,255,.7))}.bwh-t .ic img{width:27px;height:auto}
-.bwh-t b{font-size:11.5px;letter-spacing:.4px;color:#eaf6ff;font-weight:700}
-.bwh-t small{font-size:10.5px;color:#8fb4e0;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
-.bwh-t .bd{position:absolute;right:-3px;top:-4px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:linear-gradient(#7dffb5,#12a85a);border:1.5px solid #01220f;color:#031a0e;font-size:10.5px;font-weight:700;line-height:17px;text-align:center}.bwh-t .bd:empty{display:none}
-@media (prefers-reduced-motion:reduce){.bwh.on .bwh-t,.bwh.on .bwh-a,.bwh.on .bwh-pan:before,.bwh.on .bwh-a.hot:after{animation:none}}
-@media (orientation:landscape) and (max-height:560px){.bwh-pan{width:min(520px,calc(100% - 40px - var(--sl) - var(--sr)));padding:9px 12px 10px}.bwh-h{padding-bottom:6px}.bwh-sep{margin-bottom:7px}.bwh-g{grid-template-columns:repeat(5,1fr);gap:7px}.bwh-t{min-height:80px;padding-top:6px}.bwh-t .ic{width:40px;height:40px}.bwh-t small{font-size:10px}.bwh-a{margin-bottom:7px;padding:4px 14px 4px 8px}.bwh-a .bz{transform:scale(.82);margin:-6px -4px -6px -6px}}
+.bwh-sep{display:none}
+.bwh-g{display:contents}
+.bwh-a{position:relative;grid-column:span 2;display:flex;align-items:center;gap:8px;min-height:64px;padding:6px 8px;border-radius:14px;cursor:pointer;overflow:hidden;color:${TK.inkOn};background:${GK.accent};border:1px solid ${TK.blue2};box-shadow:${GK.emb},0 3px 8px rgba(0,0,0,.4)}
+.bwh-a:active{transform:scale(.97)}
+.bwh-a .bz{flex:0 0 auto;width:46px;height:46px;padding:3px;border-radius:50%;background:${GK.ring};box-shadow:0 2px 6px rgba(0,0,0,.45)}
+.bwh-a .ring{position:relative;width:40px;height:40px;border-radius:50%;background:conic-gradient(from 0deg,${TK.ice} calc(var(--p,0) * 1%),${TK.n0} 0);box-shadow:0 0 0 1.5px ${TK.n0}}
+.bwh-a .core{position:absolute;left:4px;top:4px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:${TK.ice};background:${GK.core};box-shadow:inset 0 1px 4px ${AK('ice',.3)}}
+.bwh-a .core svg{width:20px;height:20px;display:block}
+.bwh-a .tx{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.bwh-a .tx b{font-size:14.5px;letter-spacing:1.6px;text-transform:uppercase;line-height:17px;color:${TK.inkOn}}
+.bwh-a .tx small{font-size:11px;color:${TK.n2};font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.bwh-a .ch{flex:0 0 auto;width:16px;height:16px;color:${TK.inkOn}}
+.bwh-a.hot{background:${GK.accent2};border-color:${TK.inkOn};box-shadow:${GK.emb},0 0 0 2px #ffffff,0 3px 10px rgba(0,0,0,.45)}
+.bwh-a.off{filter:grayscale(.55) brightness(.85)}
+.bwh-t{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;padding:6px 2px 5px;min-height:64px;border-radius:12px;cursor:pointer;color:${TK.ink};background:${GK.panel2};border:1px solid ${TK.line};box-shadow:inset 0 1px 0 ${AK('ice',.18)}}
+.bwh-t:active{transform:scale(.94);border-color:${TK.ice}}
+.bwh-t .ic{position:relative;width:32px;height:32px;border-radius:50%;padding:2px;background:${GK.ring};box-shadow:0 2px 5px rgba(0,0,0,.5)}
+.bwh-t .ic>i{position:absolute;inset:2px;border-radius:50%;display:grid;place-items:center;color:${TK.ice};background:${GK.core};font-style:normal}
+.bwh-t .ic svg{width:18px;height:18px;display:block}
+.bwh-t .ic img{width:20px;height:auto;display:block}
+.bwh-t b{font-size:${fs(12)}px;letter-spacing:.3px;color:${TK.ink};font-weight:700;line-height:14px}
+.bwh-t small{font-size:${fs(10.5)}px;line-height:15px;color:${TK.mute};white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.bwh-t .bd{position:absolute;right:-2px;top:-4px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:linear-gradient(${TK.ok},${mix('ok','n0',.35)});border:1.5px solid ${TK.n0};color:${TK.n0};font-size:10.5px;font-weight:700;line-height:15px;text-align:center}.bwh-t .bd:empty{display:none}
 /* the "‹" back button the hub puts into a panel it opened (returns to the hub) */
-.bwnav{flex:0 0 auto;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;cursor:pointer;color:#dff2ff;background:linear-gradient(180deg,rgba(90,160,255,.28),rgba(20,50,110,.35));border:1px solid rgba(150,210,255,.45);box-shadow:inset 0 1px 0 rgba(200,232,255,.25);-webkit-tap-highlight-color:transparent}
-.bwnav:active{transform:scale(.9)}.bwnav svg{width:18px;height:18px}
+.bwnav{flex:0 0 auto;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;cursor:pointer;color:${TK.ink};background:${GK.btn};border:1px solid ${TK.line};box-shadow:inset 0 1px 0 ${AK('ice',.22)};-webkit-tap-highlight-color:transparent}
+.bwnav:active{transform:scale(.9)}.bwnav svg{width:20px;height:20px}
 .bw-ui .bwa-btn,.bw-ui .bwa-chip,.bw-ui .bwu-btn,.bw-ui .bwk-chip{display:none!important}
 `;
 
-// the royal seal on the Assist button: an eight-point star (two squares) in forged steel, an inner navy star, four sparks
-const SEAL = `<svg class="seal" viewBox="0 0 40 40"><defs><linearGradient id="bwhS1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#c4dbf3"/><stop offset="1" stop-color="#6684b0"/></linearGradient>`
-  + `<linearGradient id="bwhS2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1d4a8e"/><stop offset="1" stop-color="#06173a"/></linearGradient></defs>`
-  + `<path d="M20 3.2L24.4 9.4 31.9 8.1 30.6 15.6 36.8 20 30.6 24.4 31.9 31.9 24.4 30.6 20 36.8 15.6 30.6 8.1 31.9 9.4 24.4 3.2 20 9.4 15.6 8.1 8.1 15.6 9.4Z" fill="url(#bwhS1)" stroke="#0a1a3a" stroke-width=".9" stroke-linejoin="round"/>`
-  + `<path d="M20 9.6L22.6 13.7 27.4 12.6 26.3 17.4 30.4 20 26.3 22.6 27.4 27.4 22.6 26.3 20 30.4 17.4 26.3 12.6 27.4 13.7 22.6 9.6 20 13.7 17.4 12.6 12.6 17.4 13.7Z" fill="url(#bwhS2)" stroke="#9fd0ff" stroke-width=".5" stroke-opacity=".6"/>`
-  + `<g fill="#e9f8ff"><circle cx="20" cy="5.6" r=".9"/><circle cx="34.4" cy="20" r=".9"/><circle cx="20" cy="34.4" r=".9"/><circle cx="5.6" cy="20" r=".9"/></g></svg>`;
-const BACK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
-const CHEV = '<svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+const BACK = ico('back', 20);
+const CHEV = ico('chev', 16, 'ch');
 const esc = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 export function createAssist(mount, { econ, ui, audio, army, upgrade, rank, social, shop, tg = null } = {}) {
   const host = (ui && ui.root) || mount;
   const stEl = document.createElement('style'); stEl.textContent = CSS; document.head.appendChild(stEl);
   const btn = document.createElement('div'); btn.className = 'bwh-btn'; btn.setAttribute('role', 'button'); btn.setAttribute('aria-label', 'Assist');
-  btn.innerHTML = `<i class="halo"></i><div class="bez"></div><div class="core"><img class="ico" alt="" src="${BASE}ui/assist_icon.webp?v=3"></div><i class="pulse"></i><div class="bd"></div>`;   // (owner's pick: a real sword crossed over a smith's hammer — now with hammer B)
+  btn.innerHTML = `<div class="bez"></div><div class="core">${ico('assist', 26)}</div><i class="pulse"></i><div class="bd"></div>`;   // (owner's pick: a real sword crossed over a smith's hammer — now with hammer B)
   const hub = document.createElement('div'); hub.className = 'bwh';
-  hub.innerHTML = `<div class="bwh-pan"><div class="bwh-h"><div class="cr"></div><div class="tt"><b>Assist</b><span>&nbsp;</span></div><div class="bwh-x" data-a="x" role="button" aria-label="Close">✕</div></div><div class="bwh-sep"></div>`
-    + `<div class="bwh-a" data-a="attack" role="button" aria-label="Attack"><div class="bz"><div class="ring"><div class="core">${attackLogo()}</div></div></div><div class="tx"><b>Attack</b><small>&nbsp;</small></div>${CHEV}</div>`
+  hub.innerHTML = `<div class="bwh-pan"><div class="bwh-h"><div class="cr"></div><div class="tt"><b>Assist</b><span>&nbsp;</span></div><div class="bwh-x" data-a="x" role="button" aria-label="Close">${ico('x', 18)}</div></div><div class="bwh-sep"></div>`
+    + `<div class="bwh-a" data-a="attack" role="button" aria-label="Attack"><div class="bz"><div class="ring"><div class="core">${ico('swords', 20)}</div></div></div><div class="tx"><b>Attack</b><small>&nbsp;</small></div>${CHEV}</div>`
     + `<div class="bwh-g"></div></div>`;
   host.appendChild(btn); host.appendChild(hub);
   const G = hub.querySelector('.bwh-g'), AT = hub.querySelector('.bwh-a'), ATs = AT.querySelector('small'), ATr = AT.querySelector('.ring'), CR = hub.querySelector('.bwh-h .cr'), SUB = hub.querySelector('.bwh-h .tt span');
@@ -164,15 +120,15 @@ export function createAssist(mount, { econ, ui, audio, army, upgrade, rank, soci
     }
     const tag = social && social.clanTag ? social.clanTag() : '', un = social && social.unseen ? social.unseen() : 0;
     const li = leagueIdx(t), L = [
-      ['build', `<img src="${BASE}ui/build_hammer.webp?v=2" alt="">`, 'Build', bsub, ''],
-      ['army', icon('guard', 30), 'Army', asub, ''],
-      ['shop', GEMS.sap, 'Shop', 'Gems & chests', ''],
-      ['rank', leagueBadge(li, 28), 'Rank', fmtN(t) + ' cups', ''],
-      ['clan', I(ICONS.clan, 30), 'Clan', tag ? '[' + esc(tag) + ']' : 'Join', ''],
-      ['friends', I(ICONS.friends, 30), 'Friends', 'Invite', ''],
-      ['log', I(ICONS.log, 30), 'Log', un ? un + ' new' : 'History', un ? String(un) : ''],
-      ['set', I(ICONS.set, 30), 'Settings', '', ''],
-      ['banner', crestImg((econ.st && econ.st.emblem) || 'swords', 30, 'crest', 'display:block'), 'Banner', 'Crest', ''],
+      ['build', ico('hammer', 18), 'Build', bsub, ''],
+      ['army', ico('helm', 18), 'Army', asub, ''],
+      ['shop', ico('bag', 18), 'Shop', 'Gems & chests', ''],
+      ['rank', ico('cup', 18), 'Rank', fmtN(t) + ' cups', ''],
+      ['clan', ico('clan', 18), 'Clan', tag ? '[' + esc(tag) + ']' : 'Join', ''],
+      ['friends', ico('friends', 18), 'Friends', 'Invite', ''],
+      ['log', ico('log', 18), 'Log', un ? un + ' new' : 'History', un ? String(un) : ''],
+      ['set', ico('gear', 18), 'Settings', '', ''],
+      ['banner', crestImg((econ.st && econ.st.emblem) || 'swords', 22, 'crest', 'display:block'), 'Banner', 'Crest', ''],
     ];
     L.li = li; return L;
   }
@@ -180,7 +136,7 @@ export function createAssist(mount, { econ, ui, audio, army, upgrade, rank, soci
   function paintHub() {
     paintAttack();
     const em = (econ.st && econ.st.emblem) || 'swords';
-    if (CR.dataset.e !== em) { CR.dataset.e = em; CR.innerHTML = crestImg(em, 34, 'crest', 'display:block'); }
+    if (CR.dataset.e !== em) { CR.dataset.e = em; CR.innerHTML = crestImg(em, 30, 'crest', 'display:block'); }
     const nm = (econ.st && econ.st.name) || '', lv = (econ.st && econ.st.level) || 1, sub = (nm ? nm + ' · ' : '') + 'Keep ' + lv;
     if (SUB.textContent !== sub) SUB.textContent = sub;
     const T = tiles(), sig = T.map((x) => x[0] + '\u0001' + x[2]).join('\u0002') + '\u0003' + T.li + '\u0004' + em;     // NOT the icon markup: it carries fresh ids every call

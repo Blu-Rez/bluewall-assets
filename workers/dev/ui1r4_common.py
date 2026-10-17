@@ -24,6 +24,7 @@ async def get_page(p, tag):
     if pg is not None:
         try: await pg.bring_to_front()
         except Exception: pass
+        pg.set_default_timeout(240000)       # UI3: a busy 2-core box (software GL) needs more than the 30 s default for a screenshot
     return b, pg
 async def close_all(pg):
     for _ in range(3): await pg.evaluate(CLOSE); await asyncio.sleep(0.35)

@@ -18,6 +18,7 @@ import { crestImg, normEmblem } from './emblems.js';
 import { RARITY, rarityStyle } from './rarity.js';
 import { TIER_AT, TIER_COL, TIER_NAME, PERK } from './unitlook.js';
 import { ico } from './ui_theme.js';
+import { FONT } from './ui_tokens.js';                                       // UI3: the one font stack
 import { createUnitPage, ensureCss, cardImg, facePic, lookAt, levelFor, rangesOf, hasLook, statGrid, section, MAX_LEVEL } from './unitcards.js';
 
 export const NAME = { spear: 'Spearman', sword: 'Swordsman', guard: 'Shield Guard', archer: 'Archer', cavalry: 'Knight Cavalry', axerider: 'Axe Rider', pegasus: 'Winged Horse', baby: 'Baby Dragon', dragon: 'Dragon', catapult: 'Catapult', giant: 'Troll Giant', imp: 'Frost Imp', mage: 'Bone Mage', ram: 'Battering Ram', cannon: 'Cannon', werewolf: 'Werewolf', trebuchet: 'Trebuchet', hill: 'Hill Giant', shieldmaiden: 'Shieldmaiden', lord: 'Mounted Lord', dragonling: 'Dragonling', legionary: 'Legionary', captain: 'Captain', ogre: 'Ogre', gryphon: 'Gryphon', lich: 'Lich', treant: 'Treant', gryphonknight: 'Gryphon Knight', darkrider: 'Dark Rider', baby3: 'Triple Whelp', dragon3: 'Triple Dragon' };
@@ -110,7 +111,7 @@ const CSS = `
 .bwa-chip{pointer-events:auto;position:absolute;left:calc(14px + var(--sl));bottom:calc(var(--sb) + 118px);height:44px;padding:0 15px 0 11px;display:flex;align-items:center;gap:6px;border-radius:22px;font-size:11.5px;letter-spacing:.8px;color:#cfe8ff;
   background:linear-gradient(180deg,rgba(24,52,104,.92),rgba(5,14,36,.94));border:1px solid rgba(140,200,255,.45);box-shadow:0 3px 10px rgba(0,0,0,.5);cursor:pointer;transition:opacity .6s}
 .bwa-chip svg{width:17px;height:17px}.bwa-chip i{font-style:normal;color:#7dffb5;margin-left:2px}
-.bwa{position:absolute;inset:0;pointer-events:auto;z-index:12;background:rgba(0,3,10,.66);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;font-family:'Libre Baskerville','Noto Sans Tai Viet',Georgia,serif;color:#eaf6ff;-webkit-tap-highlight-color:transparent}
+.bwa{position:absolute;inset:0;pointer-events:auto;z-index:12;background:rgba(0,3,10,.66);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;font-family:${FONT};color:#eaf6ff;-webkit-tap-highlight-color:transparent}
 .bwa.on{opacity:1;visibility:visible}
 .bwa *{box-sizing:border-box}
 .bwa-pan{position:absolute;left:max(14px,calc(var(--sl) + 10px));right:max(14px,calc(var(--sr) + 10px));top:calc(var(--st) + max(12px,2.5vh));bottom:calc(var(--sb) + max(12px,2.5vh));max-width:440px;margin:0 auto;display:flex;flex-direction:column;border-radius:22px;overflow:hidden;
@@ -118,7 +119,7 @@ const CSS = `
 .bwa.on .bwa-pan{transform:none}
 .bwa-h{display:flex;align-items:center;gap:11px;padding:12px 12px 6px 12px}
 .bwa-em{flex:0 0 auto;position:relative;width:48px;height:52px;display:grid;place-items:center;cursor:pointer;color:#fff;background:none;border:0;padding:0;font-family:inherit;filter:drop-shadow(0 3px 5px rgba(0,0,0,.55))}
-.bwa-em:after{content:"✎";position:absolute;right:-4px;bottom:-4px;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;font-size:11px;background:#1b4fb8;border:1.5px solid #cfe6ff;color:#fff}
+.bwa-em:after{content:"";position:absolute;right:-4px;bottom:-4px;width:19px;height:19px;border-radius:50%;background:#1b4fb8 center/12px 12px no-repeat;border:1.5px solid #cfe6ff}   /* UI3: the pencil is an icon-set glyph (ui_theme_r2.js sets the colours), not the "✎" letter */
 .bwa-h .t{flex:1;min-width:0}.bwa-h .t b{display:block;font-size:19px;color:#e6f6ff;letter-spacing:.5px}.bwa-h .t span{font-size:11.5px;color:#8fb4e0;letter-spacing:.6px}.bwa-h .t span b{display:inline;font-size:inherit;color:#bfe6ff}
 .bwa .bwnav{width:44px;height:44px}   /* (the hub's back chevron, put into this panel by assist.js, is 34 px there: 44 px here) */
 .bwa-x{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(150,200,255,.25);font-size:15px;cursor:pointer}
@@ -155,7 +156,7 @@ const CSS = `
 .bwa-c .pic{width:100%;aspect-ratio:1/0.92;border-radius:11px;overflow:hidden;display:grid;place-items:center;background:radial-gradient(circle at 50% 30%,#17356d,#050d20);color:#bfe6ff}
 .bwa-c .pic img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
 .bwa-c .pic svg{width:46%;height:46%}
-.bwa-c.sp .pic{background:radial-gradient(circle at 50% 35%,#162f60,#050d20)}.bwa-c .inf:before{content:"i";position:absolute;right:5px;bottom:5px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:italic 700 13px/1 Georgia,serif;color:#fff3c8;background:rgba(10,6,2,.78);border:1px solid rgba(240,200,120,.75);box-shadow:0 1px 4px rgba(0,0,0,.6)}.bwa-c.sp .pic svg{width:74%;height:74%}
+.bwa-c.sp .pic{background:radial-gradient(circle at 50% 35%,#162f60,#050d20)}.bwa-c .inf:before{content:"i";position:absolute;right:5px;bottom:5px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:italic 700 13px/1 Georgia,serif;color:#dff1ff;background:rgba(3,10,26,.82);border:1px solid rgba(150,208,255,.75);box-shadow:0 1px 4px rgba(0,0,0,.6)}.bwa-c.sp .pic svg{width:74%;height:74%}
 .bwa-c b.nm{margin-top:5px;font-size:11.5px;color:#eaf6ff;text-align:center;line-height:1.15;min-height:2.3em;display:flex;align-items:center}
 .bwa-c .cs{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;font-size:11.5px;color:#e6f2ff;margin-top:2px;min-height:17px}.bwa-c .cs span{display:inline-flex;align-items:center;gap:2px}.bwa-c .cs span.no{color:#ff9aa8}.bwa-c .cs .gem3{width:15px;height:15px}
 .bwa-c .pic{position:relative}.bwa-c .lvb{position:absolute;left:4px;bottom:4px;padding:1px 6px;border-radius:8px;font-size:10px;font-style:normal;font-weight:800;color:#06122e;background:var(--tc);box-shadow:0 1px 3px rgba(0,0,0,.6);z-index:2}
@@ -192,11 +193,11 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
   btn.innerHTML = `<div class="ring"></div><div class="core">${icon('ready', 34)}<b></b></div><div class="lb">ATTACK</div>`;
   const chip = document.createElement('div'); chip.className = 'bwa-chip'; chip.innerHTML = `${icon('guard', 17)}<span>ARMY</span><i></i>`;
   const pan = document.createElement('div'); pan.className = 'bwa';
-  pan.innerHTML = `<div class="bwa-pan"><div class="bwa-h"><button class="bwa-em" data-a="emblem" aria-label="Banner emblem"></button><div class="t"><b>Army</b><span></span></div><div class="bwa-x" data-a="x">✕</div></div>
+  pan.innerHTML = `<div class="bwa-pan"><div class="bwa-h"><button class="bwa-em" data-a="emblem" aria-label="Banner emblem"></button><div class="t"><b>Army</b><span></span></div><div class="bwa-x" data-a="x">${ico('x', 18)}</div></div>
     <div class="bwa-hs"></div>
     <div class="bwa-tabs"><button data-a="tab" data-t="troops" class="on">Troops</button><button data-a="tab" data-t="spells">Spells</button></div>
     <div class="bwa-body"></div>
-    <div class="bwa-ft"><button data-a="attack">⚔  FIND A TARGET</button></div>
+    <div class="bwa-ft"><button data-a="attack">${ico('swords', 18)}<span>FIND A TARGET</span></button></div>
     <div class="bwa-ov"></div></div>`;
   host.appendChild(btn); host.appendChild(chip); host.appendChild(pan);
   const page = createUnitPage(host);                                                                      // AR1: the full-screen info page of a soldier (unitcards.js)
@@ -276,7 +277,7 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
   function spellCard(k, a, r) {
     const d = DEFS.spells[k], row = a.spell.spells[k], lk = !row.open, p = S.pend[pk('s', k)] || 0;
     const ln = laneNow(a.spell.q), queued = ln.items.filter((b) => b.u === k).reduce((s, b) => s + b.n, 0) + p, owned = row.n + (ln.headU === k ? ln.done : 0);
-    const lock = lk ? `<div class="lock"><i>🔒</i>${a.spell.lv ? 'Forge Lv ' + d.lv : 'Build the Forge'}</div>` : '';
+    const lock = lk ? `<div class="lock"><i>${ico('lock', 14)}</i>${a.spell.lv ? 'Forge Lv ' + d.lv : 'Build the Forge'}</div>` : '';
     const full = !lk && r.sp < d.space;
     return `<div class="bwa-c sp${lk ? ' lk' : ''}${queued ? ' has' : ''}${full ? ' full' : ''}" data-k="s" data-id="${k}"><div class="pic">${spellIcon(k, 90)}</div>${lock}
       <i class="own" data-own="${k}">×${fmtN(owned)}</i><i class="qd" data-qd="${k}">+${queued}</i><b class="nm">${SPELLS[k].name}</b><div class="cs">${costHtml(d.cost, r)}</div><span class="inf" data-a="info" data-k="s" data-id="${k}">i</span></div>`;
@@ -295,7 +296,7 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
     syncLv(a); const r = room(a), pct = a.cap ? Math.min(100, (a.space / a.cap) * 100) : 0, pq = a.cap ? Math.min(100 - pct, ((a.queued + (a.cap - a.space - a.queued - r.all)) / a.cap) * 100) : 0;
     EM.innerHTML = crestImg(econ.st.emblem, 44);
     SUB.innerHTML = `${esc(econ.st.name || '')}${econ.st.name ? ' · ' : ''}Power <b>${fmtN(a.power)}</b>${a.shield > now() ? ' · Shield ' + fmtT(a.shield - now()) : ''}`;
-    const ab = econ.boosts ? econ.boosts().army : null, abl = ab ? `<div class="r" style="margin-top:4px;color:#8fe0ff"><span>⚡ Army boost +${ab.p}% — training ${ab.p}% faster</span><span>${fmtT(ab.end - now())}</span></div>` : '';
+    const ab = econ.boosts ? econ.boosts().army : null, abl = ab ? `<div class="r" style="margin-top:4px;color:#8fe0ff"><span>${ico('bolt', 12)} Army boost +${ab.p}% — training ${ab.p}% faster</span><span>${fmtT(ab.end - now())}</span></div>` : '';
     if (S.tab === 'troops') HS.innerHTML = abl + `<div class="r"><span>Housing <b>${fmtN(a.space)}</b> / ${fmtN(a.cap)}${a.queued ? ` <em>(+${a.queued} training)</em>` : ''}</span><span>Ready <b>${a.ready}%</b></span></div><div class="bwa-bar"><i style="width:${pct.toFixed(1)}%"></i><i class="q" style="left:${pct.toFixed(1)}%;width:${pq.toFixed(1)}%"></i></div>`;
     else {
       const sp = a.spell, qs = sp.q.reduce((x, b) => x + b.n * DEFS.spells[b.u].space, 0), pend = Math.max(0, sp.cap - sp.used - r.sp);
@@ -303,7 +304,7 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
       HS.innerHTML = `<div class="r"><span>Spell housing <b>${fmtN(sp.used - qs)}</b> / ${fmtN(sp.cap)}${qs ? ` <em>(+${qs} brewing)</em>` : ''}</span><span>Forge <b>Lv ${sp.lv}</b></span></div><div class="bwa-bar"><i style="width:${pp.toFixed(1)}%"></i><i class="q" style="left:${pp.toFixed(1)}%;width:${pqs.toFixed(1)}%"></i></div>`;
     }
     pan.querySelectorAll('.bwa-tabs button').forEach((b) => b.classList.toggle('on', b.dataset.t === S.tab));
-    const go = $('.bwa-ft button'); go.disabled = !a.attack || (a.space - Object.entries(a.guard || {}).reduce((q, [u, n]) => q + n * ((DEFS.units[u] && DEFS.units[u].space) || 0), 0)) <= 0; go.textContent = a.attack ? '⚔  FIND A TARGET' : 'ATTACKS ARE NOT OPEN YET';
+    const go = $('.bwa-ft button'); go.disabled = !a.attack || (a.space - Object.entries(a.guard || {}).reduce((q, [u, n]) => q + n * ((DEFS.units[u] && DEFS.units[u].space) || 0), 0)) <= 0; go.innerHTML = a.attack ? ico('swords', 18) + '<span>FIND A TARGET</span>' : '<span>ATTACKS ARE NOT OPEN YET</span>';
     let h = '';
     if (S.tab === 'troops') {
       const lanes = DEFS.families.map((f) => laneHtml(FAM[f], a.fam[f].lv, a.fam[f].q, 'u', f)).join('');
@@ -375,10 +376,10 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
   }
   function lvLine(id, a) {
     const row = a.units[id] || {}, L = row.ulv || 1, t = row.tier | 0, d = DEFS.units[id];
-    const perks = [2, 3, 4, 5].map((k) => `<span style="${t >= k ? `color:${TIER_COL[k]};border-color:${TIER_COL[k]}` : 'opacity:.45'}">${t >= k ? '★' : '☆'} ${PERK[k][0]} <em style="font-style:normal;opacity:.75">${PERK[k][1]}</em>${t >= k ? '' : ` · Lv ${TIER_AT[k]}`}</span>`).join('');
+    const perks = [2, 3, 4, 5].map((k) => `<span style="${t >= k ? `color:${TIER_COL[k]};border-color:${TIER_COL[k]}` : 'opacity:.45'}">${ico('star', 11)} ${PERK[k][0]} <em style="font-style:normal;opacity:.75">${PERK[k][1]}</em>${t >= k ? '' : ` · Lv ${TIER_AT[k]}`}</span>`).join('');
     return `<div class="st" style="margin:-2px 0 8px"><span style="color:${TIER_COL[t]};border-color:${TIER_COL[t]}">Level ${L} · ${TIER_NAME[t]}</span><span>${FAM[d.fam]} sets its level</span></div><div class="st" style="margin:0 0 8px">${perks}</div>`;
   }
-  const perkLine = (id, a) => { const t = (a.units[id] && a.units[id].tier) | 0; return `<div class="st">${[2, 3, 4, 5].map((k) => `<span style="${t >= k ? `color:${TIER_COL[k]};border-color:${TIER_COL[k]}` : 'opacity:.55'}">${t >= k ? '★' : '☆'} ${PERK[k][0]} <em>${PERK[k][1]}</em>${t >= k ? '' : ` · Lv ${TIER_AT[k]}`}</span>`).join('')}</div>`; };      // (AR1: the perks only; the level / tier chip is in the page's hero row)
+  const perkLine = (id, a) => { const t = (a.units[id] && a.units[id].tier) | 0; return `<div class="st">${[2, 3, 4, 5].map((k) => `<span style="${t >= k ? `color:${TIER_COL[k]};border-color:${TIER_COL[k]}` : 'opacity:.55'}">${ico('star', 11)} ${PERK[k][0]} <em>${PERK[k][1]}</em>${t >= k ? '' : ` · Lv ${TIER_AT[k]}`}</span>`).join('')}</div>`; };      // (AR1: the perks only; the level / tier chip is in the page's hero row)
   // ------------------------------------------------------------------ guardians (p32): a giant / hill giant / baby dragon / dragon can stand in the castle instead of going to war
   function guardRow(id, a) {
     const gd = DEFS.guardians && DEFS.guardians[id]; if (!gd) return '';
@@ -421,7 +422,7 @@ export function createArmyUI(mount, { econ, ui, audio, onAttack, onShop } = {}) 
     {
       const d = DEFS.spells[id], s = SPELLS[id];
       h = `<div class="bwa-sheet"><div class="big">${spellIcon(id, 120)}</div><h3>${s.name}</h3><p>${s.desc}</p>
-        <div class="st"><span>Space ${d.space}</span><span>⏱ ${fmtT(spellT(id, a))} each</span><span>Needs Forge Lv ${d.lv}</span></div>
+        <div class="st"><span>Space ${d.space}</span><span>${ico('clock', 12)} ${fmtT(spellT(id, a))} each</span><span>Needs Forge Lv ${d.lv}</span></div>
         <div class="st" style="margin-top:8px">${Object.keys(d.cost).map((g) => `<span>${GEMS[g]} ${d.cost[g]}</span>`).join('')}</div></div>`;
     }
     OV.innerHTML = h; OV.classList.add('on');

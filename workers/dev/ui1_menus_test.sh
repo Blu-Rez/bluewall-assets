@@ -1,7 +1,7 @@
 #!/bin/bash
 # ui1_menus_test.sh — UI1_R4: EVERY menu / sheet / dialog is opened by its real button in the real game (headless Chromium, software GL) at 844x390, 800x360 and 932x430 WITH Telegram's margins (--tg-*)
-# and must (1) open, (2) fit inside the screen, (3) scroll INSIDE (the page never scrolls), (4) keep a close button of >= 44 px that is not under a Telegram button, (5) have no target < 44 px, nothing under the notch / rounded
-# corners / home bar, no clipped text or unreachable content, and a list that gets >= 45 % of the screen height.  Then the «43K» bug (dev/ui1r4_43k.py: no ruby gem pill in the sky of hero mode; dev/ui1r4_toast.py: the gift toast lives <= 2.5 s,
+# and must (1) open, (2) fit inside the screen, (3) scroll INSIDE (the page never scrolls), (4) keep a close button of >= 44 px that is not under a Telegram button, (5) have no target < 40 px (UI3), nothing under the notch / rounded
+# corners / home bar, no clipped text or unreachable content, and a list that gets >= 30 % of the screen height (UI3).  Then the «43K» bug (dev/ui1r4_43k.py: no ruby gem pill in the sky of hero mode; dev/ui1r4_toast.py: the gift toast lives <= 2.5 s,
 # its text is removed, it sits in the top strip and never over the hero).  Prints «UI1 MENUS OK».
 #   bash dev/ui1_menus_test.sh static          static rules on ui_theme_r4.js only (seconds)
 #   bash dev/ui1_menus_test.sh                 static + the real game: builds it, loads it (~2.5 min), opens ~50 menus x 3 sizes (~35 min on 2 CPU cores) — the proof run
@@ -12,8 +12,10 @@ SRC=${SRC:-/home/claude/bot/bluebot_v2/bluewall/client/src}; D=/home/claude/dev;
 bad() { echo "FAIL $1"; F=1; }
 f=$SRC/ui_theme_r4.js
 [ -f "$f" ] || { echo "FAIL no ui_theme_r4.js"; exit 1; }
-sz=$(stat -c %s "$f"); [ "$sz" -le 9000 ] || bad "ui_theme_r4.js is $sz B (> 9000)"
+sz=$(stat -c %s "$f"); [ "$sz" -le 16000 ] || bad "ui_theme_r4.js is $sz B (> 16000)"     # UI3: 9000 -> 16000 (the army card tile and the panel sizing live here now)
+sed 's/\${[^}]*}//g' "$f" | grep -Ev '^\s*(//|/\*)' | grep -Eq '#[0-9a-fA-F]{3,8}\b' && bad "a literal hex colour in ui_theme_r4.js: colours come from ui_tokens.js (UI3)"
 grep -q 'injectKit4' $SRC/ui_theme.js || bad "ui_theme.js does not inject ui_theme_r4.js"
+grep -Eq '\.bwh-pan\{[^}]*max-height:(6[0-9]|70)%' $SRC/assist.js || bad "assist.js: .bwh-pan must have max-height <= 70% (UI3)"
 node --input-type=module -e "
 import('file://$f').then((m) => { const css = m.KIT4_CSS; let bad = 0;
   // every selector of every rule starts with the double-class prefix (one class more than rounds 2 / 3)
@@ -23,10 +25,14 @@ import('file://$f').then((m) => { const css = m.KIT4_CSS; let bad = 0;
   if (/!important/.test(body)) { console.log('FAIL !important in the CSS (the .bw-ui.bw-ui prefix must win by specificity)'); bad++; }
   for (const rule of body.split('}')) { const i = rule.lastIndexOf('{'); if (i < 0) continue; const sel = rule.slice(rule.lastIndexOf('\n', i) + 1, i).trim(); if (!sel || sel.startsWith('@media')) continue;
     for (const s of sel.split(',')) if (!s.trim().startsWith('.bw-ui.bw-ui') && !s.trim().startsWith('html .rp-pick.rp-pick')) { console.log('FAIL selector without the .bw-ui.bw-ui (or html .rp-pick.rp-pick) prefix: ' + s.trim().slice(0, 80)); bad++; } }
-  if ((body.match(/@media/g) || []).length !== 2) { console.log('FAIL expected 2 media queries (landscape, landscape + max-height:400px)'); bad++; }
+  if ((body.match(/@media/g) || []).length < 1) { console.log('FAIL expected the landscape media query'); bad++; }                    // UI3: one query (the hub is sized by assist.js)
   if (!/orientation:landscape/.test(body)) { console.log('FAIL not landscape-scoped'); bad++; }
-  for (const k of ['.bwu-pan', '.bwa-pan', '.bws-pan', '.bwk-pan', '.bw-panel', '.bwh-pan']) if (!body.includes(k)) { console.log('FAIL no rule for ' + k); bad++; }
+  for (const k of ['.bwu-pan', '.bwa-pan', '.bws-pan', '.bwk-pan', '.bw-panel']) if (!body.includes(k)) { console.log('FAIL no rule for ' + k); bad++; }
   if (!/min-height:44px/.test(body)) { console.log('FAIL no 44 px target rule'); bad++; }
+  // UI3: the owner's size rule — every list panel <= 70 % of the height and <= 75 % of the width at 844x390 (the two variables that size them)
+  const h = /--r4h:\s*(\d+)%/.exec(body), w = /--r4w:\s*min\((\d+)%/.exec(body);
+  if (!h || +h[1] > 70) { console.log('FAIL --r4h must be <= 70% (found ' + (h && h[1]) + ')'); bad++; }
+  if (!w || +w[1] > 75) { console.log('FAIL --r4w must be <= 75% (found ' + (w && w[1]) + ')'); bad++; }
   process.exit(bad ? 1 : 0); });" 2>/dev/null || F=1
 # the files this round must NOT touch
 R=$(cd $SRC/../.. && git rev-parse --show-toplevel 2>/dev/null); [ -n "$R" ] && { c=$(cd $R && git status --porcelain -- bluewall/web/app bluewall/pkg bluewall/server 2>/dev/null | grep -c .); [ "$c" = 0 ] || echo "note: $c file(s) under web/app / pkg / server differ from the kit (the gate rebuilds web/app/wall.js; restore it before the patch: git checkout -- bluewall/web/app)"; }

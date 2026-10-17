@@ -7,6 +7,8 @@
 // top-left under Telegram's Close = level badge + name;  top-right under Telegram's ⌄ ⋮ = resources.  Every margin is a safe inset: max(env(), Telegram's own --tg-* sums), so nothing sits under a notch or a rounded corner.
 // The hero buttons (rpg.js, `.rp-b[data-rp=…]`) are placed from here too: same safe insets, a thumb arc round the bottom-right corner, every target >= 44 px, no blur layer (cheaper on the phone).
 // Dev knobs: ?hud=N (preview, remembered in localStorage), window.__bwHud(N).  Nothing animated, no JS in the frame loop.
+import { T, G, A, mix, FONT } from './ui_tokens.js';                      // UI3: colours
+import { icoUrl } from './ui_icons.js';                           // UI3: the crown / Arrange glyphs come from the one icon set
 export const HUD_DEFAULT = 3;
 
 const SAFE = (side) => `max(env(safe-area-inset-${side},0px),calc(var(--tg-safe-area-inset-${side},0px) + var(--tg-content-safe-area-inset-${side},0px)))`;
@@ -16,19 +18,45 @@ export const HUD3_CSS = `
 html[data-hud]{--hl:${SAFE('left')};--hr:${SAFE('right')};--ht:${SAFE('top')};--hb:${SAFE('bottom')}}
 html[data-hud] .bw-ui{--sl:var(--hl);--sr:var(--hr);--st:var(--ht);--sb:var(--hb)}
 /* ---- the crown (hero entry, main.js \`.rp-open\`): 48 px, placed per layout (its inline left/top are overridden) */
-html[data-hud] .rp-open{width:48px!important;height:48px!important;border:2px solid #c9a05a!important;background:linear-gradient(180deg,#4a3622,#2d2014)!important;color:#f4e8cc!important;box-shadow:0 3px 9px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,236,190,.3)!important}
+/* UI3: the crown is drawn from the one icon set (main.js's own svg is hidden; its inline colours are overridden by the rules below); same family as Assist: 48 px, silver rim, dark core */
+html[data-hud] .rp-open{width:48px!important;height:48px!important;border:2px solid ${T.silver2}!important;background:${G.core}!important;color:${T.ice}!important;box-shadow:0 3px 9px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.28)!important}
 html[data-hud] .rp-open:active{transform:scale(.92)}
-html[data-hud] .rp-open svg{width:24px;height:24px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.7))}
+html[data-hud] .rp-open svg{display:none}
+html[data-hud] .rp-open:before{content:"";display:block;width:26px;height:26px;background:${icoUrl('crown', T.ice, 26)} center/contain no-repeat;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
+/* UI3: the Arrange button (layout_ui.js .bwl .ent, its own module): a 48 px round button of the same family, the glyph from the icon set instead of the "✥" letter */
+html .bwl .b.ent{width:48px;height:48px;min-width:48px;padding:0;border-radius:50%;border:2px solid ${T.silver2};background:${G.core};color:${T.ice};box-shadow:0 3px 9px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.28)}
+html .bwl .b.ent i,html .bwl .b.ent small{display:none}
+html .bwl .b.ent:before{content:"";display:block;width:26px;height:26px;background:${icoUrl('arrange', T.ice, 26)} center/contain no-repeat}
+/* UI3: the Arrange editor's own toolbar (layout_ui.js: .bwl .b, the glyph letters ✔ ↶ ⌂ ✓ ✕ ⟲ ⟳ are text): the same silver / dark-blue buttons, the glyphs drawn from the icon set (the letter is hidden), Place / Cancel keep their green / red */
+html .bwl{font-family:${FONT};color:${T.ink}}
+html .bwl .b{border:1px solid ${T.line};background:${G.btn};color:${T.ink};box-shadow:0 3px 9px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.22);font-family:${FONT}}
+html .bwl .b small{font:700 10px/10px ${FONT};opacity:1;letter-spacing:.4px;color:${T.mute}}
+html .bwl .b.ok{background:linear-gradient(${mix('ok','#000000',.38)},${mix('ok','#000000',.66)});border-color:${T.ok}}
+html .bwl .b.no{background:linear-gradient(${mix('bad','#000000',.4)},${mix('bad','#000000',.68)});border-color:${T.bad}}
+html .bwl .b.ok small,html .bwl .b.no small{color:${T.ink}}
+html .bwl .b:not(.ent) i{font-size:0;line-height:0;width:22px;height:22px;display:block}
+html .bwl .b:not(.ent) i:before{content:"";display:block;width:22px;height:22px;background:center/contain no-repeat}
+html .bwl .b[data-a="done"] i:before{background-image:${icoUrl('check', T.ice, 22)}}
+html .bwl .b[data-a="undo"] i:before{background-image:${icoUrl('undo', T.ice, 22)}}
+html .bwl .b[data-a="def"] i:before{background-image:${icoUrl('home', T.ice, 22)}}
+html .bwl .b[data-a="all"] i:before{background-image:${icoUrl('rotl', T.ice, 22)}}
+html .bwl .b[data-a="rotl"] i:before{background-image:${icoUrl('rotl', T.ice, 22)}}
+html .bwl .b[data-a="rotr"] i:before{background-image:${icoUrl('rotr', T.ice, 22)}}
+html .bwl .b[data-a="ok"] i:before{background-image:${icoUrl('check', '#ffffff', 22)}}
+html .bwl .b[data-a="cancel"] i:before{background-image:${icoUrl('x', '#ffffff', 22)}}
+html .bwl .pill{background:${A('n0', .84)};border:1px solid ${A('line', .7)};color:${T.ink};font:700 12.5px/1.2 ${FONT}}
+html .bwl .pill.g{border-color:${T.ok};color:${mix('ok', '#ffffff', .72)}}
+html .bwl .pill.r{border-color:${T.bad};color:${mix('bad', '#ffffff', .72)}}
 html[data-hud="1"] .rp-open{left:calc(var(--hl) + 10px)!important;right:auto!important;bottom:auto!important;top:min(calc(50% - 24px),calc(100% - 218px - var(--hb)))!important}
 html[data-hud="2"] .rp-open{left:calc(var(--hl) + 10px)!important;right:auto!important;bottom:auto!important;top:calc(var(--ht) + 62px)!important}
-html[data-hud="3"] .rp-open{left:auto!important;top:auto!important;right:calc(var(--hr) + 19px)!important;bottom:calc(var(--hb) + 84px)!important}
+html[data-hud="3"] .rp-open{left:auto!important;top:auto!important;right:calc(var(--hr) + 14px)!important;bottom:calc(var(--hb) + 72px)!important}
 /* ---- the resources: one compact column top-right (three mined gems; layout 1 adds the two special gems under them as a half-width pair, same column width) */
 html[data-hud="1"] .bw-ui .bw-pm{left:auto;right:calc(10px + var(--sr));top:calc(var(--st) + 10px + 105px * var(--u));justify-content:flex-end;gap:4px;transform-origin:100% 0}
 html[data-hud="1"] .bw-ui .bw-pm .bw-p{width:62px;margin:0}
 html[data-hud="1"] .bw-ui .bw-pm .bw-p .ct{left:25px;right:7px;font-size:11.5px}
 html[data-hud="2"] .bw-ui .bw-pm{left:calc(62px + var(--sl));top:calc(var(--st) + 73px)}
 /* ---- Assist stays bottom-right (primary action zone) — only its margins become safe insets */
-html[data-hud] .bw-ui .bwh-btn{right:calc(14px + var(--sr));bottom:calc(var(--sb) + 14px)}
+html[data-hud] .bw-ui .bwh-btn{right:calc(14px + var(--sr));bottom:calc(var(--sb) + 14px);width:48px;height:48px}
 /* ---- the hero buttons (rpg.js): a thumb arc round the bottom-right corner, exit / camera / gate in one row under Telegram's Close (the left column stays free for the joystick); safe insets; >= 44 px; no backdrop blur */
 html[data-hud] .rp-b{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 html[data-hud] .rp-b[data-rp="jump"]{width:78px!important;height:78px!important;right:calc(var(--hr) + 16px)!important;bottom:calc(var(--hb) + 22px)!important}

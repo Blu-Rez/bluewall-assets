@@ -2,7 +2,7 @@
 // args = { root, pan, close, W, H, safe: {t, r, b, l} }   root = the overlay element selector, pan = the visible panel inside it (default: root), close = the close button selector.
 // Returns plain JSON: opens, fits, pageScroll, closeOk, scrollers, small targets, targets under the notch / rounded corners, clipped content, cut text, columns, body height.
 (args) => {
-  const { root: rootSel, pan: panSel, close: closeSel, W, H } = args; const S = args.safe || { t: 0, r: 0, b: 0, l: 0 };
+  const { root: rootSel, pan: panSel, close: closeSel, W, H } = args; const MINT = 40; const S = args.safe || { t: 0, r: 0, b: 0, l: 0 };      // UI3: MINT = the owner's rule — buttons are 40-48 px (was 44)
   const out = { root: rootSel, opens: false, fail: [], note: [] };
   const root = document.querySelector(rootSel);
   if (!root) { out.fail.push('no root'); return out; }
@@ -15,6 +15,7 @@
   const tr = getComputedStyle(pan).transform; let settled = true; if (tr && tr !== 'none') { const m = new DOMMatrix(tr); settled = m.a > 0.99 && m.d > 0.99; }      // (a sheet that is still sliding in is not "open" yet)
   out.opens = shown(root) && shown(pan) && settled;
   out.rect = [pr.left, pr.top, pr.width, pr.height].map(Math.round);
+  out.W = W; out.H = H; out.panelFrac = [+(pr.width / W).toFixed(2), +(pr.height / H).toFixed(2)];
   out.fits = pr.left >= -0.5 && pr.top >= -0.5 && pr.right <= W + 0.5 && pr.bottom <= H + 0.5;
   const de = document.scrollingElement;
   out.pageScroll = de.scrollHeight > H + 1 || de.scrollWidth > W + 1;
@@ -36,7 +37,7 @@
     if (!shown(e)) continue; const v = vrect(e); const full = v.full; if (v.w * v.h < 0.5 * full.width * full.height) continue;       // scrolled out of its clip box: counted by the scroller, not here
     if (e.querySelector(TSEL) && !e.matches('button,[role=button],input,select')) continue;                                                  // wrappers (a card that holds its own buttons)
     const w = Math.round(full.width), h = Math.round(full.height);
-    if (Math.min(w, h) < 44 - 0.5) { const k = desc(e); if (!seen.has(k)) { seen.add(k); small.push({ d: k, w, h }); } }
+    if (Math.min(w, h) < MINT - 0.5) { const k = desc(e); if (!seen.has(k)) { seen.add(k); small.push({ d: k, w, h }); } }
     const hitPill = pills.some((q) => full.left < q.right - 3 && full.right > q.left + 3 && full.top < q.bottom - 3 && full.bottom > q.top + 3);      // Telegram's own Close / ⌄ ⋮ buttons
     let inScr = false; for (let n = e.parentElement; n && n !== pan.parentElement; n = n.parentElement) { const c2 = getComputedStyle(n); if (/(auto|scroll)/.test(c2.overflowY) && n.scrollHeight > n.clientHeight + 1) { inScr = true; break; } }      // (a row inside a scrolling list — or inside a panel that itself scrolls, like a building sheet — passes the home bar while it scrolls and is reached by scrolling)
     if (full.left < S.l - 0.5 || full.right > W - S.r + 0.5 || (full.bottom > H - S.b + 0.5 && !inScr) || hitPill) { if (v.w > 4 && v.h > 4) under.push({ d: desc(e), r: [full.left, full.top, full.right, full.bottom].map(Math.round) }); }
@@ -45,7 +46,7 @@
   // ---- close button
   let closeOk = false, closeInfo = null; const cb = closeSel ? (root.querySelector(closeSel) || document.querySelector(closeSel)) : null;
   if (cb && shown(cb)) { const r = R(cb), cx = r.left + r.width / 2, cy = r.top + r.height / 2, top = document.elementFromPoint(cx, cy); closeInfo = { w: Math.round(r.width), h: Math.round(r.height), at: [Math.round(cx), Math.round(cy)] };
-    closeOk = r.left >= S.l - 0.5 && r.right <= W - S.r + 0.5 && r.top >= 0 && r.bottom <= H - S.b + 0.5 && !pills.some((q) => r.left < q.right - 3 && r.right > q.left + 3 && r.top < q.bottom - 3 && r.bottom > q.top + 3) && r.width >= 43.5 && r.height >= 43.5 && !!top && (top === cb || cb.contains(top)); }
+    closeOk = r.left >= S.l - 0.5 && r.right <= W - S.r + 0.5 && r.top >= 0 && r.bottom <= H - S.b + 0.5 && !pills.some((q) => r.left < q.right - 3 && r.right > q.left + 3 && r.top < q.bottom - 3 && r.bottom > q.top + 3) && r.width >= MINT - 0.5 && r.height >= MINT - 0.5 && !!top && (top === cb || cb.contains(top)); }
   out.closeOk = closeOk; out.closeInfo = closeInfo; if (!cb) out.note.push('no close button element (closes by tapping outside)');
   // ---- content that is cut and can never be reached (inside an overflow:hidden box, no scroll) or lies outside the screen
   const hasTextBelow = (e) => !!e.textContent.trim();                                                                                  // an svg with text inside is content, not an icon
@@ -80,11 +81,12 @@
   if (!out.fits) out.fail.push('panel not inside the screen ' + out.rect.join(','));
   if (out.pageScroll) out.fail.push('the page scrolls');
   if (cb ? !closeOk : false) out.fail.push('close button not reachable');
-  if (small.length) out.fail.push(small.length + ' target(s) < 44 px: ' + small.slice(0, 3).map((s) => s.d + ' ' + s.w + '×' + s.h).join(', '));
+  if (small.length) out.fail.push(small.length + ' target(s) < ' + MINT + ' px: ' + small.slice(0, 3).map((s) => s.d + ' ' + s.w + '×' + s.h).join(', '));
   if (under.length) out.fail.push(under.length + ' target(s) under the notch / corner / home bar: ' + under.slice(0, 2).map((s) => s.d).join(', '));
   if (cut.length) out.fail.push(cut.length + ' element(s) cut / unreachable: ' + cut.slice(0, 2).map((s) => s.d + ' (' + s.why + ')').join(', '));
   if (txt.length) out.fail.push(txt.length + ' text(s) clipped: ' + txt.slice(0, 2).map((s) => s.d).join(', '));
-  if (main && main.ch < 0.4 * H && main.sh > 2 * main.ch) out.fail.push('cramped: the scrolling body shows only ' + main.ch + ' px of ' + H);
+  if (args.size !== false && (pr.height > 0.70 * H + 0.5 || pr.width > 0.75 * W + 0.5)) out.fail.push('panel too big: ' + Math.round(pr.width) + '×' + Math.round(pr.height) + ' = ' + Math.round(100 * pr.width / W) + '% × ' + Math.round(100 * pr.height / H) + '% (the limit is 75% × 70%)');      // UI3: the owner's size rule
+  if (main && main.ch < 0.3 * H && main.sh > 2 * main.ch) out.fail.push('cramped: the scrolling body shows only ' + main.ch + ' px of ' + H);
   out.ok = out.fail.length === 0;
   return out;
 }

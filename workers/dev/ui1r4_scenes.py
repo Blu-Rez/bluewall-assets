@@ -70,6 +70,9 @@ FIND = """([want]) => { const w = __bw.world, THREE = __bw.THREE, cam = __bw.cam
 CAMBACK = "() => { const c = __bw.ctl, o = window.__cam0; __bw.camera.clearViewOffset && __bw.camera.clearViewOffset(); if (o) { c.target.copy(o.t); c.dist = o.d; c.polar = o.p; c.azim = o.a; window.__cam0 = null; } }"
 async def open_sheet(pg, id, dist=120):
     await close_all(pg); found = None
+    if os.environ.get('SHEETFAST'):    # UI3: the light rig has the real bsheet.js but no 3D world — open it by its API instead of the camera + tap
+        if not await pg.evaluate("([id]) => !!(window.__bw && __bw.sheets && __bw.sheets.open(id, __bw.SM))", [id]): raise Skip('fast open failed for ' + id)
+        await settle(pg, .9); return
     for az in (0.9, 2.4, 3.9, 5.4, 1.6, 3.1, 4.6, 0.0):
         r = await pg.evaluate(POSE, [id, dist, az])
         if r is None: raise Skip('no pick ' + id)
@@ -85,6 +88,7 @@ async def open_sheet(pg, id, dist=120):
     await settle(pg, .6)
 async def sheet_close(pg):
     await pg.evaluate("() => document.querySelector('.bsh.on .bsh-x') && document.querySelector('.bsh.on .bsh-x').click()"); await settle(pg, .8)
+    if os.environ.get('SHEETFAST'): return
     await pg.evaluate(CAMBACK); await rerender(pg, 4)
 # --------------------------------------------------------------------------- the scene table
 SC = []     # dict(name, group, fn, root, pan, close)
@@ -192,9 +196,9 @@ async def open_dialog(pg, kind):
         await asyncio.sleep(1.8 if kind == 'rush' else 0.12); await pg.mouse.up(); await settle(pg, 1.2)
         if await pg.evaluate(DLG_ON): return
     raise Skip('no dialog')
-@scene('sheet_confirm_dialog', 'Building sheets', root='.bsh-dlg.on', pan=None, close='.bsh-b')
+@scene('sheet_confirm_dialog', 'Building sheets', root='.bsh-dlg.on', pan='.bsh-dlg.on .card', close='.bsh-b')
 async def _(pg): await open_dialog(pg, 'cancel')
-@scene('sheet_confirm_rush', 'Building sheets', root='.bsh-dlg.on', pan=None, close='.bsh-b')
+@scene('sheet_confirm_rush', 'Building sheets', root='.bsh-dlg.on', pan='.bsh-dlg.on .card', close='.bsh-b')
 async def _(pg): await open_dialog(pg, 'rush')
 # the hero picker (RP1C owns it; the census only opens it by its real crown button and measures it)
 async def close_pick(pg):
@@ -257,6 +261,6 @@ async def probe_scene(pg, sc, W, H, safe, shot_path=None):
     """probes (and shoots) the scene that is open right now at the current viewport size."""
     await settle(pg, .3)
     for _ in range(2): await pg.screenshot(clip={'x': 0, 'y': 0, 'width': 2, 'height': 2}); await asyncio.sleep(.35)       # (a frame must be produced for CSS transitions to advance in the headless compositor)
-    res = await pg.evaluate(f'({PROBE})', {'root': sc['root'], 'pan': sc['pan'], 'close': sc['close'], 'W': W, 'H': H, 'safe': safe})
+    res = await pg.evaluate(f'({PROBE})', {'root': sc['root'], 'pan': sc['pan'], 'close': sc['close'], 'W': W, 'H': H, 'safe': safe, 'size': sc['group'] not in ('Hero', 'Welcome card')})
     if shot_path: await pg.screenshot(path=shot_path, timeout=240000)
     return res

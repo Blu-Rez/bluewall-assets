@@ -1,0 +1,9 @@
+UI3 interface fonts (bundled in /pub, no CDN)
+All four families are licensed under the SIL Open Font License 1.1 (https://openfontlicense.org) — free to use, embed and redistribute.
+
+ui-barlowsc-400/700.woff2   Barlow Semi Condensed   (c) The Barlow Project Authors (Jeremy Tribby)      — Latin subset
+ui-sairasc-400/700.woff2    Saira Semi Condensed    (c) The Saira Project Authors (Omnibus-Type)         — Latin subset
+ui-inter-400/700.woff2      Inter                   (c) The Inter Project Authors (Rasmus Andersson)     — Latin subset
+Vazirmatn-*.woff2           Vazirmatn               (c) The Vazirmatn Project Authors (Saber Rastikerdar) — Persian / Arabic (already shipped before UI3)
+
+The Latin files only hold Basic Latin + Latin-1 + common punctuation; any other letter falls back to Vazirmatn / system fonts (see FONT in client/src/ui_tokens.js).

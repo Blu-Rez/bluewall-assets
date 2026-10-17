@@ -5,6 +5,7 @@
 // All rules live on the server (progress.py); this file only draws /api/state's `prog` and calls /api/upgrade/*.
 import { GEMS } from './ui.js';
 import { LEGACY_TIER_AT, legacyTier } from './tiers.js';
+import { ico } from './ui_icons.js';                                       // UI3: the one icon set
 
 const GEM_KEYS = ['ruby', 'emerald', 'turq'];
 const NAME = {
@@ -135,7 +136,7 @@ export function createUpgradeUI(mount, { econ, ui, audio } = {}) {
   const btn = document.createElement('div'); btn.className = 'bwu-btn';
   btn.innerHTML = `<div class="ring"></div><div class="core">${icon('keep', 30)}</div><div class="bd"></div><div class="lb">KINGDOM</div>`;
   const pan = document.createElement('div'); pan.className = 'bwu';
-  pan.innerHTML = `<div class="bwu-pan"><div class="bwu-h"><span class="t">Kingdom</span><div class="bwu-x" data-a="x">✕</div></div>
+  pan.innerHTML = `<div class="bwu-pan"><div class="bwu-h"><span class="t">Kingdom</span><div class="bwu-x" data-a="x">${ico('x', 18)}</div></div>
     <div class="bwu-bl"></div><div class="bwu-tabs"></div><div class="bwu-cats"></div><div class="bwu-body"></div></div>`;
   host.appendChild(btn); host.appendChild(pan);
   const $ = (s) => pan.querySelector(s), BL = $('.bwu-bl'), TABS = $('.bwu-tabs'), CATSEL = $('.bwu-cats'), BODY = $('.bwu-body');
@@ -180,7 +181,7 @@ export function createUpgradeUI(mount, { econ, ui, audio } = {}) {
       }
     } else if (r.next && r.next.cost) {
       const nx = r.next, { label, dis, cls } = nextBtn(r, p);
-      body = `<div class="bwu-cost">${costHtml(nx.cost, have)}<span class="tm">⏱ ${fmtT(nx.dur)}</span></div>
+      body = `<div class="bwu-cost">${costHtml(nx.cost, have)}<span class="tm">${ico('clock', 13)} ${fmtT(nx.dur)}</span></div>
         <div class="bwu-go"><button class="${cls}" data-a="up" data-e="${e}" ${dis ? 'disabled' : ''}>${label}</button></div>`;
     } else body = `<div class="bwu-note" style="margin:6px 0 0;text-align:left">Maximum level — ${TIERS[5][0]} tier</div>`;
     const T = TIERS[tierOf(Math.max(1, lv))];
@@ -199,7 +200,7 @@ export function createUpgradeUI(mount, { econ, ui, audio } = {}) {
     CATSEL.innerHTML = CATS.map(([k, n]) => `<div class="bwu-cat${S.cat === k ? ' on' : ''}" data-cat="${k}">${n}</div>`).join('');
     let h = '';
     const bb = econ.boosts ? econ.boosts().build : null;
-    if (S.tab === 'owned' || S.tab === 'reserve') h += `<div class="bwu-note" style="margin:6px 2px 0;display:flex;justify-content:space-between;gap:8px;text-align:left">${bb ? `<span style="color:#8fe0ff">⚡ Builder boost +${bb.p}% · ${fmtT(bb.end - now())}</span>` : '<span>Faster builders: Shop › Boosts</span>'}<span>Rush left today ${fmtH(Math.max(0, p.rush_h || 0) * 3600)}</span></div>`;
+    if (S.tab === 'owned' || S.tab === 'reserve') h += `<div class="bwu-note" style="margin:6px 2px 0;display:flex;justify-content:space-between;gap:8px;text-align:left">${bb ? `<span style="color:#8fe0ff">${ico('bolt', 12)} Builder boost +${bb.p}% · ${fmtT(bb.end - now())}</span>` : '<span>Faster builders: Shop › Boosts</span>'}<span>Rush left today ${fmtH(Math.max(0, p.rush_h || 0) * 3600)}</span></div>`;
     if (S.tab === 'owned') {
       const list = owned.filter(([, r]) => S.cat === 'all' || r.cat === S.cat);
       h += list.map(([e, r]) => row(e, r, p, 'owned')).join('') || '<div class="bwu-note">Nothing here yet.</div>';

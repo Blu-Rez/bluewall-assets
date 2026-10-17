@@ -10,10 +10,13 @@
 //   · worldIcon(T)       the glass icon over the foot of a ramp (a THREE.CanvasTexture for the Points of rp_goup.js): navy plate, silver bezel, ice arrow
 // Look switch: ?ui2=1|2|3 in the page (dev), ui.setLook(n) in the tests.   Budget: +0 shader programs (CSS / one canvas texture), 0 per-frame work (the chip is moved by rp_goup.js as before).
 export const LOOKS = { 1: 'plaque: arrow + «33 m» in one navy plate with a silver bezel', 2: 'neon tag: ice neon chevron + number, no plate', 3: 'medallion: round silver-bezel arrow button + number plate' };
+// MOTHER4 (UI3 merged, 18 Oct): the palette comes from the UI3 tokens — ui_tokens.js writes `--ui-*` on :root at start-up (workers/docs/UI3_TOKENS.md), before the hero loads.  Node tests / dev pages without the tokens use the old values (second argument).
+const _cs = (typeof document !== 'undefined' && document.documentElement && typeof getComputedStyle === 'function') ? getComputedStyle(document.documentElement) : null;
+const U = (n, d) => { const v = _cs ? String(_cs.getPropertyValue('--ui-' + n) || '').trim() : ''; return /^#[0-9a-f]{6}$/i.test(v) ? v : d; };
 export const PAL = {
-  navy: ['#2c5aa0', '#0e2350', '#050c1e'],                                    // the plate: radial, light at the top (bhud.js .bwb-loot)
-  silver: [[0, '#f6faff'], [0.18, '#8aa0c0'], [0.36, '#e9f1ff'], [0.58, '#586f90'], [0.78, '#cfdcf0'], [1, '#f6faff']],   // the bezel: conic stops (bhud.js)
-  ice: '#8fe8ff', iceHot: '#d9f6ff', edge: '#01060f', ink: '#eef6ff',
+  navy: [U('n3', '#2c5aa0'), U('n1', '#0e2350'), U('n0', '#050c1e')],        // the plate: radial, light at the top (UI3 n3 / n1 / n0)
+  silver: [[0, U('silver', '#f6faff')], [0.18, U('silver2', '#8aa0c0')], [0.36, U('silver', '#e9f1ff')], [0.58, U('silver3', '#586f90')], [0.78, U('silver2', '#cfdcf0')], [1, U('silver', '#f6faff')]],   // the bezel: conic stops (UI3 silver / silver2 / silver3)
+  ice: U('ice2', '#8fe8ff'), iceHot: U('ice', '#d9f6ff'), edge: U('n0', '#01060f'), ink: U('ink', '#eef6ff'),
 };
 export const ARROW = 'M12 19V5M5.5 11.5L12 5l6.5 6.5';
 const hex2 = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];

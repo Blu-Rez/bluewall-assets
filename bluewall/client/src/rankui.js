@@ -7,6 +7,8 @@
 import { LEAGUES, leagueBadge, leagueIdx, cupSvg } from './cups.js';
 import { crestImg, normEmblem } from './emblems.js';
 import { GEMS } from './ui.js';
+import { ico } from './ui_icons.js';                                       // UI3: the one icon set
+import { FONT } from './ui_tokens.js';                                       // UI3: the one font stack
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const fmtN = (n) => Math.floor(n).toLocaleString('en-US');
@@ -17,7 +19,7 @@ export const BWK_CSS = `
   background:linear-gradient(180deg,rgba(24,52,104,.92),rgba(5,14,36,.94));border:1px solid rgba(140,200,255,.45);box-shadow:0 3px 10px rgba(0,0,0,.5);cursor:pointer;transition:opacity .6s,transform .15s;-webkit-tap-highlight-color:transparent;font-variant-numeric:tabular-nums}
 .bwk-chip:active{transform:scale(.94)}.bwk-chip .lgb{width:24px;height:auto}.bwk-chip b{font-weight:700}
 .bw-ui.wel>.bwk-chip{opacity:0;pointer-events:none}
-.bwk{position:absolute;inset:0;pointer-events:auto;z-index:12;background:rgba(0,3,10,.66);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;font-family:'Libre Baskerville','Noto Sans Tai Viet',Georgia,serif;color:#eaf6ff;-webkit-tap-highlight-color:transparent}
+.bwk{position:absolute;inset:0;pointer-events:auto;z-index:12;background:rgba(0,3,10,.66);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;font-family:${FONT};color:#eaf6ff;-webkit-tap-highlight-color:transparent}
 .bwk.on{opacity:1;visibility:visible}.bwk *{box-sizing:border-box}
 .bwk-pan{position:absolute;left:max(22px,calc(var(--sl) + 16px));right:max(22px,calc(var(--sr) + 16px));top:calc(var(--st) + max(64px,12vh));bottom:calc(var(--sb) + max(64px,12vh));max-width:440px;margin:0 auto;display:flex;flex-direction:column;border-radius:22px;overflow:hidden;
   background:linear-gradient(180deg,#0d2a5c,#050f26 38%,#020712);border:1.5px solid rgba(150,200,255,.4);box-shadow:0 20px 60px rgba(0,0,0,.7),inset 0 1px 0 rgba(200,230,255,.25);transform:translateY(18px) scale(.98);transition:transform .3s}
@@ -60,7 +62,7 @@ export function createRankUI(mount, { econ, ui, audio } = {}) {
   if (!document.getElementById('bwk-css')) { const stEl = document.createElement('style'); stEl.id = 'bwk-css'; stEl.textContent = BWK_CSS; document.head.appendChild(stEl); }
   const chip = document.createElement('div'); chip.className = 'bwk-chip';
   const pan = document.createElement('div'); pan.className = 'bwk';
-  pan.innerHTML = `<div class="bwk-pan"><div class="bwk-h"><div class="bd"></div><div class="t"><b></b><span></span></div><div class="bwk-x" data-a="x">✕</div></div>
+  pan.innerHTML = `<div class="bwk-pan"><div class="bwk-h"><div class="bd"></div><div class="t"><b></b><span></span></div><div class="bwk-x" data-a="x">${ico('x', 18)}</div></div>
     <div class="bwk-pg"></div>
     <div class="bwk-tabs"><button data-t="lb" class="on">Leaderboard</button><button data-t="lg">Leagues</button><button data-t="inv">Invite</button></div>
     <div class="bwk-body"></div></div>`;
@@ -132,7 +134,7 @@ export function createRankUI(mount, { econ, ui, audio } = {}) {
   function close() { S.open = false; pan.classList.remove('on'); }
   async function copy(link, btn) {
     try { await navigator.clipboard.writeText(link); } catch (e) { const i = pan.querySelector('.bwk-lk input'); if (i) { i.select(); try { document.execCommand('copy'); } catch (e2) { /* ignore */ } } }
-    if (btn) { btn.textContent = 'Copied ✓'; setTimeout(() => { btn.textContent = 'Copy'; }, 1600); }
+    if (btn) { btn.innerHTML = 'Copied ' + ico('check', 14); setTimeout(() => { btn.textContent = 'Copy'; }, 1600); }
     toast('Link copied');
   }
   function share(link) {

@@ -7,11 +7,12 @@ import DEFS from './unitdefs.json';
 import { crestImg } from './emblems.js';
 import { BASE } from './assets.js';
 import { abilOrb, heroNeon } from './spellart.js';
+import { FONT } from './ui_tokens.js';                                       // UI3: the same font as every menu (battle HUD: font only; its golds are the game's own stars / loot / damage colours)
 // the winner's cup: a real 3D golden chalice render (client/tools: cup icon renderer), the same size and light as the gems
 const CUP = (c = 'gem3 cupg') => `<img class="${c}" alt="" draggable="false" decoding="async" src="${BASE}ui/cup_gold.webp">`;
 
 const CSS = `
-.bwb{position:absolute;inset:0;z-index:30;overflow:hidden;user-select:none;-webkit-user-select:none;font-family:'Libre Baskerville','Noto Sans Tai Viet',Georgia,serif;color:#eaf6ff;
+.bwb{position:absolute;inset:0;z-index:30;overflow:hidden;user-select:none;-webkit-user-select:none;font-family:${FONT};color:#eaf6ff;
   --st:calc(var(--tg-safe-area-inset-top,0px) + var(--tg-content-safe-area-inset-top,0px));--sb:var(--tg-safe-area-inset-bottom,0px);--sl:var(--tg-safe-area-inset-left,0px);--sr:var(--tg-safe-area-inset-right,0px);-webkit-tap-highlight-color:transparent}
 .bwb *{box-sizing:border-box}
 .bwb-pad{position:absolute;inset:0;touch-action:none;pointer-events:auto}
