@@ -3,8 +3,8 @@
 //   3rd-person camera behind the shoulder (pulled in by walls) or 1st person with the body visible; a glowing door at the foot of the keep -> the underworld test area (rpg_under.js) -> a portal back.
 // It uses the game's own data: world.targets (castle / wall / tower / house boxes), nav (water), staticSolids (cottages, mill ...), world.fastHeight.  No game file other than main.js (3 small hooks) is touched.
 const SIS = [   // the element is shown by the emblem from the owner's character sheet (e_<key>.png), not by a word; c = its accent colour
-  { k: 'elina', n: 'ELINA', c: '#ff6a3a' }, { k: 'elika', n: 'ELIKA', c: '#9fe8ff' }, { k: 'melika', n: 'MELIKA', c: '#7fe06a' },
-  { k: 'mobina', n: 'MOBINA', c: '#f0a666' }, { k: 'aylin', n: 'AYLIN', c: '#4fb0ff' }, { k: 'aylar', n: 'AYLAR', c: '#cfeeff' },
+  { k: 'elina', n: 'ELINA', fa: 'الینا', c: '#ff6a3a' }, { k: 'elika', n: 'ELIKA', fa: 'الیکا', c: '#9fe8ff' }, { k: 'melika', n: 'MELIKA', fa: 'ملیکا', c: '#7fe06a' },   // RS2: fa = the name the «loading <name>» chip shows
+  { k: 'mobina', n: 'MOBINA', fa: 'مبینا', c: '#f0a666' }, { k: 'aylin', n: 'AYLIN', fa: 'آیلین', c: '#4fb0ff' }, { k: 'aylar', n: 'AYLAR', fa: 'آیلار', c: '#cfeeff' },
 ];
 const CAM_FAR = 1.25;   // RP1C_R5: the default third-person distance x 1.25 (look B in CAMS)
 const CAM_MIN = 3.0, CAM_RISE = 3.2;   // RP1C-R4: the closest the third-person camera may get to her (m, 3-D) and the most it may rise to keep that
@@ -90,6 +90,13 @@ html[data-hud] .rp-b[data-rp="info"]{width:46px!important;height:46px!important;
 .rp-i i{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(205,214,224,.75);background:radial-gradient(circle at 50% 35%,rgba(66,74,84,.88),rgba(22,26,32,.92));box-shadow:0 0 9px var(--ac),0 2px 6px rgba(0,0,0,.6);color:#e6ecf2}
 .rp-i svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;filter:drop-shadow(0 0 3px rgba(61,245,224,.6))}
 .rp-i:active i{transform:scale(.9);border-color:#3df5e0}
+/* RS2: the small «loading <name>» chip — it replaces the full loading card (the page the player is on stays visible) */
+.rs-chip{position:absolute;z-index:300;left:50%;bottom:calc(${BOT} + 24px);transform:translate(-50%,8px);display:flex;align-items:center;gap:8px;padding:6px 14px 8px 11px;border-radius:999px;background:rgba(8,16,26,.8);border:1px solid rgba(205,214,224,.38);box-shadow:0 2px 12px rgba(0,0,0,.55);color:#e8f4ff;font:700 12px/1.4 Vazirmatn,system-ui,sans-serif;direction:rtl;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .18s,transform .18s;overflow:hidden}
+.rs-chip.on{opacity:1;transform:translate(-50%,0)}
+.rs-chip i{flex:none;width:14px;height:14px;border-radius:50%;border:2.5px solid rgba(255,255,255,.25);border-top-color:var(--ac,#3df5e0);animation:rsChipSpin .8s linear infinite}
+.rs-chip b{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.12)}
+.rs-chip u{display:block;height:100%;width:0;background:var(--ac,#3df5e0);transition:width .25s}
+@keyframes rsChipSpin{to{transform:rotate(360deg)}}
 
 `;
 
@@ -901,10 +908,17 @@ export function create(H) {
   }
   // ------------------------------------------------------------------ enter / exit / scene switching
   let busy = false;
+  // RS2: the small «loading <name>» chip instead of the full blue loading card.  Same calls as createLoadView's (progress / setTitle / hide) so start() below is unchanged; the text of progress() is ignored (the chip keeps its name).
+  function mkChip(text, hex) {
+    ensureStyle(); const e = el('div', 'rs-chip rp-k', '<i></i><span></span><b><u></u></b>'); const sp = e.querySelector('span'), bar = e.querySelector('u'); sp.textContent = text; if (hex) e.style.setProperty('--ac', hex); root.appendChild(e);
+    let gone = false; requestAnimationFrame(() => { if (!gone) e.classList.add('on'); });
+    const c = { el: e, show() { return c; }, progress(f) { if (!gone) bar.style.width = (Math.max(0, Math.min(1, f)) * 100).toFixed(0) + '%'; return c; }, setTitle(t) { sp.textContent = t; return c; }, hide() { if (gone) return; gone = true; e.classList.remove('on'); setTimeout(() => e.remove(), 260); } };
+    return c;
+  }
   async function start(key) {
     if (busy) return; busy = true;
     try { localStorage.setItem('bw_rpg_hero', key); } catch (e) { /* storage blocked */ }
-    const sis = SIS.find((s) => s.k === key), lv = H.createLoadView(root, { title: sis.n, sub: 'Loading…', z: 300 }); lv.el.classList.add('rp-k'); lv.show(); lv.progress(0.02);
+    const sis = SIS.find((s) => s.k === key), lv = mkChip('بارگذاری ' + sis.fa, sis.c); closePick(); lv.progress(0.02);   // RS2: (the pick page closes at once: the player is back on the page he came from — the strategic map — with the chip on it; no blue card)
     try {
       ensureHome(); lv.progress(0.05);
       if (!diet) { const dm = await import(/* @vite-ignore */ new URL('rpg_diet.js' + (new URL(import.meta.url).search || V), import.meta.url).href); diet = dm.createDiet(H, S); api.diet = diet; }   // RP1B: the frame-time diet + governor
@@ -920,7 +934,7 @@ export function create(H) {
       lv.progress(0.85, 'Warming up…'); if (!window.__rpNoWarm) await warmHero(m, lv);   // RP1C-R3: PF1 F9 (window.__rpNoWarm = dev-only switch for the before / after measurement)
       lv.progress(0.9, 'Collision…'); try { await grid.build({ progress: (f) => lv.progress(0.9 + 0.08 * f) }); gcovM.clear(); refreshColliders(); } catch (e) { console.warn('hero grid', e); }   // RP1C-R3: ~0.2 s on a desktop, in slices
       closePick(); enter(m, key); try { if (H.warmAfter) await H.warmAfter((f) => lv.progress(0.98 + 0.02 * f, 'Warming up…')); } catch (e) { /* PF3 */ } lv.progress(1); setTimeout(() => lv.hide(), 250);   // PF3: warmAfter = the door / tufts / hero depth programs, compiled behind the card (main.js heroAfter)
-    } catch (e) { console.warn('hero start', e); lv.setTitle('Error'); lv.progress(1, String(e && e.message || e)); setTimeout(() => lv.hide(), 1800); }
+    } catch (e) { console.warn('hero start', e); lv.setTitle('خطا در بارگذاری'); lv.progress(1); setTimeout(() => lv.hide(), 1800); }   // RS2:
     busy = false;
   }
   function enter(m, key) {
@@ -1029,7 +1043,7 @@ export function create(H) {
   }
   function sisCtx() {
     return {
-      SIS, base: BASE + 'rpg/', v: V, top: TOP, hud: () => hudEl, swap: swapHero, load: loadFresh, place: placeHero, refresh: refreshColliders,
+      SIS, base: BASE + 'rpg/', v: V, top: TOP, hud: () => hudEl, swap: swapHero, load: loadFresh, place: placeHero, refresh: refreshColliders, chip: mkChip,   // RS2: chip
       canSwitch: () => api.active && !busy && !S.busy2 && S.where === 'home' && !S.sheetOn && !S.paused, canTick: () => api.active && S.where === 'home',
       free: (x, z) => free(x, z, homeWorld, false) && waterDepth(x, z) < 0.3, spot: (x, z) => { const p = { x, z }; pushOut(p, R_BODY + 0.1, homeWorld); return [p.x, p.z]; },
       ground: (x, z) => homeGround(x, z), phone: () => !!(diet && diet.PHONE), govLvl: () => (diet ? diet.st.lvl : 0),
@@ -1054,7 +1068,7 @@ export function create(H) {
     if (doors) doors.tick(now, dt0); he('doors');
     if (marker) marker.tick(now); he('marker');   // RP1C-R3:
     if (goup) goup.tick(now); he('goup');   // RP1C-R3: the «Go up» markers
-    if (sisters) sisters.tick(now); he('sis');   // RS1: the stand-ins' pose updates / loads (nothing while the strip is off or in the underworld)
+    if (sisters) sisters.tick(now, dt); he('sis');   // RS2: (+ the sim's own dt: the entrance light runs on the game clock, so it stays in step with her drop on a slow frame) RS1: the stand-ins' pose updates / loads (nothing while the strip is off or in the underworld)
     if (S.where === 'under' && S.under) { S.under.fill.position.set(S.x, S.y + 2.8, S.z); S.under.update(now / 1000, dt0, camera.position); renderer.toneMappingExposure = 1.25; }
     he('under'); if (S.where === 'home') sheetTick(dt0); else if (btns.act) btns.act.style.display = 'none'; he('sheet');
     if (btns.dodge) { btns.dodge.style.opacity = S.dodgeCool > 0 ? 0.45 : 1; btns.jump.style.opacity = S.grounded ? 1 : 0.55; }

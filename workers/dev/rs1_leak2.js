@@ -5,7 +5,7 @@
   window.__rpPhone = true; const h = await window.__rpLoad('?v=' + Date.now()); const B = window.__bw, R = B.renderer, rp = window.__rp, S = rp.S;
   localStorage.removeItem('bw_rs_v1'); await h.start('elina'); await sl(1500); for (let i = 0; i < 3; i++) await raf(); h.exit(); await sl(500); await h.start('elina'); h.diet.CFG.down_ms = 1e9; await sl(1200); for (let i = 0; i < 3; i++) await raf(); const sis = h.sisters;
   const tap = (el) => { el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 21, pointerType: 'touch' })); el.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 21, pointerType: 'touch' })); };
-  const swapTo = async (k) => { tap(document.querySelector('.rs-c[data-k=' + k + ']')); const ok = await until(() => S.key === k, 120000); await sl(300); await raf(); return ok; };
+  const swapTo = async (k) => { tap(document.querySelector('.rs-f[data-k=' + k + ']')); const ok = await until(() => S.key === k, 120000); await sl(300); await raf(); return ok; };
   let tx = null; B.scene.traverse((o) => { if (!tx && o.material) { const m = Array.isArray(o.material) ? o.material[0] : o.material; if (m && m.map) tx = m.map; } });
   let tp = Object.getPrototypeOf(tx); while (tp && !Object.prototype.hasOwnProperty.call(tp, 'updateMatrix')) tp = Object.getPrototypeOf(tp);
   const alive = new Map(), orig = tp.addEventListener; let on = true;

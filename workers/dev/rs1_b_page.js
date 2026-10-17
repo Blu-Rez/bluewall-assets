@@ -6,7 +6,7 @@
   window.__rpPhone = true; const h = await window.__rpLoad('?v=' + Date.now()); window.__h = h; const B = window.__bw, R = B.renderer, rp = window.__rp, S = rp.S;
   localStorage.removeItem('bw_rs_v1'); await h.start('elina'); await sl(1500); for (let i = 0; i < 3; i++) await raf(); h.exit(); await sl(500); await h.start('elina'); h.diet.CFG.down_ms = 1e9; await sl(1200); for (let i = 0; i < 3; i++) await raf(); const sis = h.sisters;   // (warm-up: the first session uploads the world's own textures / builds the hero modules; the baseline is taken in the second)
   const tap = (el) => { el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 21, pointerType: 'touch' })); el.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 21, pointerType: 'touch' })); };
-  const card = (k) => document.querySelector('.rs-c[data-k=' + k + ']');
+  const card = (k) => document.querySelector('.rs-f[data-k=' + k + ']');       // RS2: the sisters are the fan's items now (the DOM events work with the fan closed too)
   const mem = () => ({ tex: R.info.memory.textures, geo: R.info.memory.geometries });
   const heroMeshes = () => { const a = []; B.scene.traverse((o) => { if (o.isSkinnedMesh && o.userData.rpHero) { const m = Array.isArray(o.material) ? o.material[0] : o.material; const im = m && m.map && m.map.image; a.push({ w: im ? im.width : 0, vis: (() => { for (let p = o; p; p = p.parent) if (!p.visible) return false; return true; })(), x: o.parent.parent ? 0 : 0 }); } }); return a; };
   const frame = () => { const p = rp.perf(); return [p.calls, p.tris]; };
@@ -22,7 +22,7 @@
   t(dA > 1.4 && dA < 2.6, 'aylar is ' + dA.toFixed(2) + ' m from elina'); t(S.y > -50, 'bad y');
   t(!!sis.ents.elina && !!sis.ents.elina.m && sis.ents.elina.m.rsStand, 'elina is not a stand-in'); t(Math.hypot(sis.ents.elina.x - P0[0], sis.ents.elina.z - P0[1]) < 0.01, 'elina moved');
   t(sis.st.places.elina && Math.abs(sis.st.places.elina[0] - P0[0]) < 0.01, 'elina place not stored'); t(JSON.parse(localStorage.getItem('bw_rs_v1')).p.elina[0] !== undefined, 'places not in storage');
-  t(S.discs.some((d) => Math.hypot(d[0] - P0[0], d[1] - P0[1]) < 0.01 && d[2] === 0.4), 'no collision disc for elina'); t(card('elina').classList.contains('st'), 'no «stands» dot on elina card');
+  t(S.discs.some((d) => Math.hypot(d[0] - P0[0], d[1] - P0[1]) < 0.01 && d[2] === 0.4), 'no collision disc for elina'); t(card('elina').classList.contains('st'), 'no «stands» dot on elina in the fan');
   for (let i = 0; i < 4; i++) await raf(); const hm = heroMeshes(); out.heroes2 = hm; t(hm.length === 2, 'skinned hero meshes: ' + hm.length); t(hm.filter((x) => x.w === 1024).length === 1 && hm.filter((x) => x.w === 2048).length === 1, 'texture sizes: ' + JSON.stringify(hm.map((x) => x.w)));
   t(sis.ents.elina.m.grp.parent === B.scene, 'elina not in the scene');
   // ---- 3. a far spot: aylar stays there, elika steps out beside her; then elina's card: control goes to HER place, aylar and elika keep theirs
@@ -45,7 +45,7 @@
   const c = card('aylar'); c.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 22 })); await sl(800); c.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 22 })); await sl(300);
   const b = sis.st.places.aylar; const dB = Math.hypot(b[0] - S.x, b[1] - S.z); t(dB > 1.4 && dB < 2.6, 'bring: she is ' + dB.toFixed(2) + ' from me'); t(S.key === 'elina', 'a hold switched the control'); t(Math.hypot(sis.ents.aylar.x - b[0], sis.ents.aylar.z - b[1]) < 0.01, 'her stand-in did not move');
   // ---- 6. persistence + start at the place: leave hero mode, enter as aylar: she begins where she was left (not at the gate); elina and elika stand
-  const saved = JSON.parse(localStorage.getItem('bw_rs_v1')); h.exit(); await sl(300); const sv2 = JSON.parse(localStorage.getItem('bw_rs_v1')); t(Object.keys(sv2.p).sort().join() === 'aylar,elika,elina', 'saved at exit: ' + Object.keys(sv2.p)); t(!document.querySelector('.rs-strip') && !heroMeshes().length, 'strip / stand-ins left behind after exit');
+  const saved = JSON.parse(localStorage.getItem('bw_rs_v1')); h.exit(); await sl(300); const sv2 = JSON.parse(localStorage.getItem('bw_rs_v1')); t(Object.keys(sv2.p).sort().join() === 'aylar,elika,elina', 'saved at exit: ' + Object.keys(sv2.p)); t(!document.querySelector('.rs-wrap') && !heroMeshes().length, 'fan / stand-ins left behind after exit');
   const mx = mem(); out.memExit = mx; const want = sv2.p.aylar; await h.start('aylar'); await sl(800); t(Math.hypot(S.x - want[0], S.z - want[1]) < 1.0, 'did not start at her place: ' + Math.hypot(S.x - want[0], S.z - want[1]).toFixed(1));
   await until(() => Object.values(sis.ents).some((e) => e.m), 60000); await sl(500); out.ents6 = sis.info().ents;
   // ---- 7. LOD: the others are near (<= 70 m): resident; go 300 m away: freed; come back: loaded again
@@ -94,7 +94,7 @@
   sis.setStand(true); for (const k of ['elika']) if (!sis.st.places[k]) sis.st.places[k] = [S.x + 3, S.z, 0]; await sl(200); t(sis.st.stand, 'ON again before the last step'); tap(document.querySelector('.rs-t')); await sl(400); t(sis.st.stand === false && Object.keys(sis.ents).length === 0 && sis.discs().length === 0, 'OFF left stand-ins / discs'); for (let i = 0; i < 3; i++) await raf(); t(heroMeshes().length === 1, 'OFF: hero meshes ' + heroMeshes().length);
   const mEnd = mem(); out.memEnd = mEnd; /* (the far trips / the spots above show the world's own first uploads: the leak proof is 9b) */
   // ---- 9. underworld: the strip is gone and a tap does nothing; stand-ins are not drawn there
-  await rp.goUnder(); await until(() => S.where === 'under', 120000); await until(() => getComputedStyle(document.querySelector('.rs-strip')).display === 'none', 120000); const stripHidden = getComputedStyle(document.querySelector('.rs-strip')).display === 'none'; t(stripHidden, 'strip still shown in the underworld'); const kU = S.key; tap(card(kU === 'aylar' ? 'elika' : 'aylar')); await sl(1500); t(S.key === kU, 'switched in the underworld'); t(sis.canSwitch() === false, 'canSwitch true below');
-  await rp.goHome(); await until(() => S.where === 'home', 120000); await until(() => getComputedStyle(document.querySelector('.rs-strip')).display !== 'none', 120000); t(getComputedStyle(document.querySelector('.rs-strip')).display !== 'none', 'strip not back at home');
+  await rp.goUnder(); await until(() => S.where === 'under', 120000); await until(() => getComputedStyle(document.querySelector('.rs-wrap')).display === 'none', 120000); const fanHidden = getComputedStyle(document.querySelector('.rs-wrap')).display === 'none'; t(fanHidden, 'fan still shown in the underworld'); const kU = S.key; tap(card(kU === 'aylar' ? 'elika' : 'aylar')); await sl(1500); t(S.key === kU, 'switched in the underworld'); t(sis.canSwitch() === false, 'canSwitch true below');
+  await rp.goHome(); await until(() => S.where === 'home', 120000); await until(() => getComputedStyle(document.querySelector('.rs-wrap')).display !== 'none', 120000); t(getComputedStyle(document.querySelector('.rs-wrap')).display !== 'none', 'fan not back at home');
   out.fails = F; out.ok = F.length === 0; return JSON.stringify(out);
 })()

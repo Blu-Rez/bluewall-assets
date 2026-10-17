@@ -6,7 +6,7 @@
   window.__rpPhone = true; const h = await window.__rpLoad('?v=' + Date.now()); const B = window.__bw, R = B.renderer, rp = window.__rp, S = rp.S, T = B.THREE || null;
   localStorage.removeItem('bw_rs_v1'); await h.start('elina'); await sl(1500); for (let i = 0; i < 3; i++) await raf(); h.exit(); await sl(500); await h.start('elina'); h.diet.CFG.down_ms = 1e9; await sl(1200); for (let i = 0; i < 3; i++) await raf(); const sis = h.sisters;
   const tap = (el) => { el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 21, pointerType: 'touch' })); el.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 21, pointerType: 'touch' })); };
-  const card = (k) => document.querySelector('.rs-c[data-k=' + k + ']');
+  const card = (k) => document.querySelector('.rs-f[data-k=' + k + ']');
   const mem = () => ({ tex: R.info.memory.textures, geo: R.info.memory.geometries });
   const swapTo = async (k) => { tap(card(k)); const ok = await until(() => S.key === k, 120000); await sl(300); await raf(); return ok; };
   // find the BufferGeometry prototype from a live geometry
