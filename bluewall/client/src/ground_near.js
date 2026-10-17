@@ -356,10 +356,27 @@ function createScatter(scene, kind) {
   };
   const mesh = new THREE.InstancedMesh(geo, mat, N);
   mesh.userData.rpKeep = 1;                       // the hero diet / pack culling (rpg_diet.js, cull.js) must leave this alone: the mesh follows the camera, a bounding sphere computed once is stale after the first steps
-  mesh.name = 'gr1-' + kind; mesh.frustumCulled = false; mesh.castShadow = false; mesh.receiveShadow = true; mesh.count = N;
+  mesh.name = 'gr1-' + kind; mesh.frustumCulled = false; mesh.castShadow = false; mesh.receiveShadow = true;   // (PF3: mesh.count is set by pack())
   mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-  const colA = new Float32Array(N * 3); mesh.instanceColor = new THREE.InstancedBufferAttribute(colA, 3); mesh.instanceColor.setUsage(THREE.DynamicDrawUsage);
-  const M = mesh.instanceMatrix.array; M.fill(0);
+  // PF3: M / colA are the SLOT store (a toroidal window of cells, one fixed slot per cell candidate); what the GPU draws is the PACKED copy of the slots that really hold a clump (mesh.count = how many): at the castle gate 7 % of the
+  // 9680 slots do (water, paving, steep ground, the density roll), in the town 57 %, in a field 33 % — the rest were zero-scale triangles that the vertex shader still processed and renderer.info still counted (145 k tris -> ~10 k at the gate).
+  // Identical picture: the same clumps, in the same order.
+  const colA = new Float32Array(N * 3), colP = new Float32Array(N * 3); mesh.instanceColor = new THREE.InstancedBufferAttribute(colP, 3); mesh.instanceColor.setUsage(THREE.DynamicDrawUsage);
+  const M = new Float32Array(N * 16), MP = mesh.instanceMatrix.array; MP.fill(0); mesh.count = 0;
+  const trisPer = (geo.index ? geo.index.count : geo.attributes.position.count) / 3;
+  const pack = () => {
+    let m = 0;
+    const all = typeof window !== 'undefined' && window.__gnPack === false;             // (dev-only A/B switch: every slot is drawn, as before PF3 — the pixel proof)
+    for (let i = 0; i < N; i++) {
+      const o = i * 16; if (!all && !(M[o + 5] > 0)) continue;                          // (sy = the clump's height scale: > 0 exactly when the slot holds one)
+      const q = m * 16; for (let k = 0; k < 16; k++) MP[q + k] = M[o + k];
+      const c = i * 3, d = m * 3; colP[d] = colA[c]; colP[d + 1] = colA[c + 1]; colP[d + 2] = colA[c + 2]; m++;
+    }
+    mesh.count = m;
+    mesh.instanceMatrix.clearUpdateRanges(); mesh.instanceColor.clearUpdateRanges();
+    if (m) { mesh.instanceMatrix.addUpdateRange(0, m * 16); mesh.instanceColor.addUpdateRange(0, m * 3); }
+    mesh.instanceMatrix.needsUpdate = true; mesh.instanceColor.needsUpdate = true;
+  };
   const held = new Int32Array(SG * SG * 2).fill(-999999);
   let palette = [[0.35, 0.55, 0.16], [0.52, 0.56, 0.22]], dens = 1, hgt = 1;
   const fill = (slot, wx, wz) => {
@@ -383,7 +400,7 @@ function createScatter(scene, kind) {
   };
   let cx = -99999, cz = -99999;
   const api = {
-    mesh, instances: N, tris: N * (geo.index ? geo.index.count / 3 : geo.attributes.position.count / 3),
+    mesh, instances: N, get drawn() { return mesh.count; }, get tris() { return mesh.count * trisPer; },   // PF3: instances stays the slot pool (N, as before: the gate test reads it as 'the mesh exists'); drawn / tris = the packed count really drawn (tris was N * triangles)
     setStyle(st) { dens = st.dens; hgt = st.h; if (st.palette) palette = st.palette; held.fill(-999999); cx = cz = -99999; },
     update(cam, t) {
       TU.uTufT.value = t;
@@ -396,7 +413,7 @@ function createScatter(scene, kind) {
         if (held[slot * 2] === wx && held[slot * 2 + 1] === wz) continue;
         held[slot * 2] = wx; held[slot * 2 + 1] = wz; fill(slot, wx, wz);
       }
-      mesh.instanceMatrix.needsUpdate = true; mesh.instanceColor.needsUpdate = true;
+      pack();   // PF3: (was: both buffers flagged for upload as they were)
     },
     dispose() { scene.remove(mesh); geo.dispose(); mat.dispose(); mesh.dispose(); },
   };
@@ -416,7 +433,7 @@ export function createGround({ renderer, T, quality, scene }) {
   };
   { const ph = new THREE.DataTexture(new Uint8Array([0, 0, 0, 0]), 1, 1, THREE.RGBAFormat); ph.needsUpdate = true; U.uGrMap.value = ph;
     const pa = new THREE.DataArrayTexture(new Uint8Array([128, 128, 128, 255]), 1, 1, 1); pa.needsUpdate = true; U.uGrA.value = pa; U.uGrN.value = pa; }
-  let built = false, ready = false, look = (() => { try { const v = parseInt(new URLSearchParams(location.search).get('look'), 10); return v >= 1 && v <= 3 ? v : DEFAULT_LOOK; } catch (e) { return DEFAULT_LOOK; } })(), detail = quality === 'low' ? 0 : quality === 'medium' ? 2 : 3, tufts = null, pebbles = null, attached = false, farFrames = 0, sw = [0, 1, 0, 0], fp = [], aoX = 1e9, aoZ = 1e9;
+  let built = false, ready = false, look = (() => { try { const v = parseInt(new URLSearchParams(location.search).get('look'), 10); return v >= 1 && v <= 3 ? v : DEFAULT_LOOK; } catch (e) { return DEFAULT_LOOK; } })(), detail = quality === 'low' ? 0 : quality === 'medium' ? 2 : 3, tufts = null, pebbles = null, attached = false, farFrames = 0, kept = false /* PF3 */, sw = [0, 1, 0, 0], fp = [], aoX = 1e9, aoZ = 1e9;
   const aoI = new Int32Array(16), aoD = new Float32Array(16);
   const api = {
     U, look: () => look, detail: () => detail,
@@ -497,6 +514,11 @@ export function createGround({ renderer, T, quality, scene }) {
       for (let k = 0; k < n; k++) { const q = fp[aoI[k]], c = Math.cos(q.ry || 0), s = Math.sin(q.ry || 0); U.uGrAO.value[2 * k].set(q.x, q.z, q.w / 2, q.d / 2); U.uGrAO.value[2 * k + 1].set(c, s, 1, 0); }
       U.uGrAOn.value = n;
     },
+    // PF3: the hero's loading card builds the scatter meshes now (hidden) so that their programs are compiled behind the card, not by the first hero frame; update() shows / hides them from then on
+    warm() {
+      if (!(detail >= 3 && ready && !!scene)) return;
+      kept = true; if (look !== 2 && !tufts) { tufts = createScatter(scene, 'tuft'); tufts.mesh.visible = false; } if (look === 3 && !pebbles) { pebbles = createScatter(scene, 'pebble'); pebbles.mesh.visible = false; }
+    },
     update(cam, dt, t) {
       if (fp.length && U.uGrP5.value.x > 0.01 && Math.hypot(cam.position.x - aoX, cam.position.z - aoZ) > 8) api.refreshAO(cam.position.x, cam.position.z);
       const hh = cam.position.y - groundH(cam.position.x, cam.position.z);
@@ -506,10 +528,10 @@ export function createGround({ renderer, T, quality, scene }) {
       if (wantT && !tufts) { tufts = createScatter(scene, 'tuft'); api.styleTufts(); }
       if (wantP && !pebbles) { pebbles = createScatter(scene, 'pebble'); api.styleTufts(); }
       if (!ok) farFrames++; else farFrames = 0;
-      if (tufts && !wantT && (farFrames > 120 || ok || detail < 3)) { tufts.dispose(); tufts = null; }
-      if (pebbles && !wantP && (farFrames > 120 || ok || detail < 3)) { pebbles.dispose(); pebbles = null; }
-      if (tufts && wantT) tufts.update(cam.position, t);
-      if (pebbles && wantP) pebbles.update(cam.position, t);
+      if (tufts && !wantT && (farFrames > 120 || ok || detail < 3)) { if (kept && detail >= 3) tufts.mesh.visible = false; else { tufts.dispose(); tufts = null; } }   // PF3: kept = warm() made them: hidden, not disposed (a dispose releases the program = a compile at the next hero entry)
+      if (pebbles && !wantP && (farFrames > 120 || ok || detail < 3)) { if (kept && detail >= 3) pebbles.mesh.visible = false; else { pebbles.dispose(); pebbles = null; } }   // PF3
+      if (tufts && wantT) { if (!tufts.mesh.visible) { tufts.mesh.visible = true; api.styleTufts(); } tufts.update(cam.position, t); }   // PF3: shown again: styleTufts() refills every cell
+      if (pebbles && wantP) { if (!pebbles.mesh.visible) { pebbles.mesh.visible = true; api.styleTufts(); } pebbles.update(cam.position, t); }   // PF3
     },
     styleTufts() {
       const dry = look === 3, pal = [0, 1].map((tone) => {
@@ -520,7 +542,7 @@ export function createGround({ renderer, T, quality, scene }) {
       if (tufts) tufts.setStyle({ dens: dry ? 0.35 : 1.0, h: dry ? 0.75 : 1.0, palette: pal });
       if (pebbles) pebbles.setStyle({ dens: 0.5, h: 1 });
     },
-    stats() { return { tufts: tufts ? tufts.instances : 0, pebbles: pebbles ? pebbles.instances : 0, tris: (tufts ? tufts.tris : 0) + (pebbles ? pebbles.tris : 0), calls: (tufts ? 1 : 0) + (pebbles ? 1 : 0) }; },
+    stats() { return { tufts: tufts ? tufts.instances : 0, pebbles: pebbles ? pebbles.instances : 0, drawn: (tufts ? tufts.drawn : 0) + (pebbles ? pebbles.drawn : 0) /* PF3 */, tris: (tufts ? tufts.tris : 0) + (pebbles ? pebbles.tris : 0), calls: (tufts ? 1 : 0) + (pebbles ? 1 : 0) }; },
     isReady: () => ready,
     dispose() { if (tufts) { tufts.dispose(); tufts = null; } if (pebbles) { pebbles.dispose(); pebbles = null; } for (const t of [U.uGrMap.value, ...(api.arrays || [])]) t && t.dispose(); _map = null; _fastH = null; },
   };

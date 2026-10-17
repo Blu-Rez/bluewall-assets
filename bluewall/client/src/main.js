@@ -256,7 +256,7 @@ async function start(opts) {
     if (k === 'resScale') resize();
     if (k === 'coolMode') { refl.off = !!v; resize(); GOV.lvl = 0; GOV.active = 0; }
     if (k === 'perfInfo') hud.set(!!v);
-    if (k === 'bloom') { if (v && Q.bloom !== false && !composer) { makeComposer(); resize(); if (lateReady && !pathReady.rt) warmOther(); } if (!v) dropComposer(); }   // PF2: warmOther (bloom switched on: build the night path only when dusk is near)
+    if (k === 'bloom') { if (v && Q.bloom !== false && !composer) { makeComposer(); resize(); if (lateReady && !pathReady.rt) warmOther(); else if (lateReady) warmLoose(true); } if (!v) dropComposer(); }   // PF2: warmOther (bloom switched on: build the night path only when dusk is near)   // PF3: else warmLoose (the chain of a composer that was off)
     if (k === 'shadows') { renderer.shadowMap.enabled = v && Q.shadows !== false; world.setShadows && world.setShadows(v); scene.traverse((o) => { if (o.material) o.material.needsUpdate = true; }); }
     if (['rotSpeed', 'zoomSpeed', 'invertRotate'].includes(k)) applyCtl();
     if (k === 'previewLevel' && world.setLevel) { world.setLevel(v || econ.st.level); setThemeLevel(v || (econ.st.prog && econ.st.prog.b && econ.st.prog.b.keep) || econ.st.level); }   // owner-only preview of the castle at any level
@@ -343,6 +343,9 @@ async function start(opts) {
         const on = useComposer() ? 'rt' : 'screen';
         await sw.compile(() => (on === 'rt' ? (composer ? composer.readBuffer : undefined) : null), { path: on, progress: (f) => step(0.45 + 0.30 * f, 'Forging shaders…') });
         pathReady[on] = true; lateT.compiled = performance.now() - T0; mark('late-compile', tm);
+        // PF3: three things the scene walk cannot see, each one a compile INSIDE a frame before: the PMREM sky scene's night-only dome (first built at dusk), the bloom chain's full-screen materials (night boot), the depth programs
+        try { if (world.envScene) await sw.compile(() => sw.looseRT(), { path: 'env', root: world.envScene, lightsFrom: world.envScene, target: 60 }); } catch (e) { /* ignore */ }   // PF3
+        try { if (useComposer()) await warmLoose(); } catch (e) { /* ignore */ }   // PF3
         tm = performance.now();
         const total = Math.max(1, world.revealLate(0)); let left = total;
         while ((left = world.revealLate(1)) > 0) { step(0.75 + 0.13 * (1 - left / total), 'Placing the garrison…'); await nextFrame(); }
@@ -352,6 +355,7 @@ async function start(opts) {
         const renderOnce = () => { if (renderer.shadowMap.enabled) renderer.shadowMap.needsUpdate = true; if (useComposer()) composer.render(); else renderer.render(scene, camera); };
         const nw = await sw.warmDraw(renderOnce, { progress: (f) => step(0.88 + 0.10 * f, 'Warming up…') });
         mark('warm-draw', tm); lateT.warmN = nw;
+        tm = performance.now(); try { await sw.warmShadow({ rt: () => (useComposer() && composer ? composer.readBuffer : null), progress: (f) => step(0.98 + 0.01 * f, 'Warming up…') }); } catch (e) { /* ignore */ } mark('warm-shadow', tm);   // PF3: the depth (shadow) programs of every caster variant, sliced, behind the card
         for (let i = 0; i < 2; i++) await nextFrame();
       }
     } catch (e) { console.warn('late', e); try { while (world.revealLate(8) > 0); } catch (e2) { /* ignore */ } }
@@ -361,20 +365,29 @@ async function start(opts) {
   // `useComposer` does not switch to a path before it is ready.  (Before: all of it ran at load = a second 10+ s stall.)
   let bgRunning = false;
   const bgOk = () => !document.hidden && !(battle && battle.active) && !!composer && !composerParked && (P.night > 0.15 || (!ctl.intro && performance.now() - lastInput > 3000));      // (PERF2: not while the intro / welcome card plays, not within 3 s of a touch)
+  // PF3: the bloom chain (high-pass, 5 blurs, composite, blend, output) lives in no scene, so no scene walk compiled it: the first night frame did, 8-9 programs in one task.  Sliced here; also again whenever the
+  // composer is rebuilt (an attack parks it, dispose() releases those programs).  Never two at once.
+  let looseP = null;
+  const warmLoose = (idle) => {
+    if (OLD || !composer) return Promise.resolve(0); if (looseP) return looseP;
+    const c = composer, list = sw.passLoose(c).map((e) => ({ ...e, skip: () => composer !== c }));
+    return (looseP = sw.compileLoose(list, idle ? { gap: 30, duty: 0.25, canRun: () => composer !== c || bgOk() } : {}).catch(() => 0).then((n) => { looseP = null; return n; }));
+  };
   async function bgCompile() {
     if (OLD || bgRunning || !composer) return; bgRunning = true;
     const key = useComposer() ? 'screen' : 'rt', t0 = performance.now();
     try {
       if (!pathReady[key]) {
         await sw.compile(() => (key === 'rt' ? (composer ? composer.readBuffer : undefined) : null), { path: key, target: 60, gap: 30, duty: 0.25, maxNew: 1, k0: 1, canRun: bgOk });      // (PERF2: after a slice of d ms wait 3 d: the main thread is busy at most a quarter of the time; a slice links one unit's programs, never more)
-        if (key === 'rt') { while (!bgOk()) await new Promise((r) => setTimeout(r, 400)); try { composer.render(); renderer.render(scene, camera); } catch (e) { /* ignore */ } }   // (its targets + the bloom chain once, now; the last draw is the one that is shown)
+        if (key === 'rt') { await warmLoose(true); while (!bgOk()) await new Promise((r) => setTimeout(r, 400)); try { composer.render(); renderer.render(scene, camera); } catch (e) { /* ignore */ } }   // (its targets + the bloom chain once, now; the last draw is the one that is shown)   (PF3: warmLoose first: the chain's programs are made in slices, the draw below meets none)
         pathReady[key] = true; mark('bg-' + key, t0);
       }
     } catch (e) { console.warn('bgCompile', e); }
     bgRunning = false;
   }
   // PF2 F2: the night path (bloom composer: +82..90 programs) is not built by day until dusk is near (perf.js nightPathWanted: ≈ 4 real minutes before night > 0.25); the plain path, when the session starts at night, is still built at once
-  const warmOther = () => { if (OLD || bgRunning || !composer || pathReady.rt && pathReady.screen) return; if (useComposer() || nightPathWanted(hourNow())) bgCompile(); };   // PF2
+  const warmOther = () => { if (OLD || bgRunning || !composer || pathReady.rt && pathReady.screen) return; if (useComposer() || EAGER || nightPathWanted(hourNow())) bgCompile(); };   // PF2   (PF3: EAGER = the owner / dev build builds the other path at idle right after the start: nothing is compiled while he plays or measures)
+  const EAGER = !!(opts.owner || opts.dev || opts.rpg) && !/[?&]eager=0/.test(location.search);   // PF3: (?eager=0 = off, for the A/B in the rig)
   const startWelcome = async () => {
     ui.root.classList.add('wel');                                                            // (the HUD stays hidden while the report loads)
     let raids = [];
@@ -422,7 +435,15 @@ async function start(opts) {
     const hb = document.createElement('button'); hb.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l4.6 4.2L12 5.5l3.9 7.2 4.6-4.2-1.8 10H5.3z"/><path d="M5.8 21h12.4"/></svg>'; hb.className = 'rp-open';
     hb.style.cssText = 'position:absolute;z-index:6;left:10px;top:' + (opts.rpgTop || 'calc(env(safe-area-inset-top,0px) + 150px)') + ';width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1.5px solid rgba(205,214,224,.5);background:radial-gradient(circle at 50% 35%,rgba(66,74,84,.62),rgba(22,26,32,.72));box-shadow:0 0 12px rgba(61,245,224,.25);color:#e6ecf2';
     const heroWarm = async (progress) => { try { if (OLD || !composer || pathReady.screen) return 0; const t0 = performance.now(); await sw.compile(null, { path: 'screen', progress, target: 60 }); pathReady.screen = true; mark('hero-screen', t0); return 1; } catch (e) { return 0; } };   // RP1C-R3: PF1 F9 — booted at night, the plain (screen) path is built only at idle; hero mode on a phone switches the bloom off = draws that path: build it (sliced, behind the loading card) before the first hero frame
-    const mkHero = async (q) => { hero = (await import(/* @vite-ignore */ new URL(heroKit.base + 'rpg/rpg.js' + (q || heroKit.v), document.baseURI).href)).create({ THREE, renderer, scene, camera, root, ctl, world, L, buildNav, bridgesFromLayout, staticSolids, createLoadView, base: new URL(heroKit.base, document.baseURI).href, v: heroKit.v, parseGLB: heroKit.parse, reach: REACH, warm: heroWarm, resize: wantResize, sheets, SM: SHEET_MAP, dev: !!opts.dev }); if (opts.dev) window.__rp = hero.dev; return hero; };   // RP1C-R3: warm: heroWarm
+    // PF3: AFTER enter(): what the first hero frames would otherwise compile / build inside a frame — the portal door (made by enter), the ground tufts (made when the camera comes down), the hero's own depth (shadow) programs.
+    // One synchronous batch behind the loading card (k0 24 = the whole list in the first slice, before the first hero frame); the other render path gets the same units at idle when it is built.
+    const heroAfter = async (progress) => { try { if (OLD) return 0; const t0 = performance.now(), on = useComposer() ? 'rt' : 'screen', rtf = () => (on === 'rt' ? (composer ? composer.readBuffer : undefined) : null);
+      try { if (world.ground && world.ground.warm) world.ground.warm(); } catch (e) { /* ignore */ }
+      await sw.compile(rtf, { path: on, k0: 24, target: 400, progress: (f) => progress && progress(0.5 * f) });
+      const n = await sw.warmShadow({ rt: rtf, k0: 24, target: 400, progress: (f) => progress && progress(0.5 + 0.5 * f) });
+      if (pathReady.rt && pathReady.screen && !bgRunning) { bgRunning = true; const o = on === 'rt' ? 'screen' : 'rt'; sw.compile(() => (o === 'rt' ? (composer ? composer.readBuffer : undefined) : null), { path: o, target: 60, gap: 30, duty: 0.25, maxNew: 1, k0: 1, canRun: bgOk }).catch(() => 0).then(() => { bgRunning = false; }); }
+      mark('hero-after', t0); return n + 1; } catch (e) { return 0; } };
+    const mkHero = async (q) => { hero = (await import(/* @vite-ignore */ new URL(heroKit.base + 'rpg/rpg.js' + (q || heroKit.v), document.baseURI).href)).create({ THREE, renderer, scene, camera, root, ctl, world, L, buildNav, bridgesFromLayout, staticSolids, createLoadView, base: new URL(heroKit.base, document.baseURI).href, v: heroKit.v, parseGLB: heroKit.parse, reach: REACH, warm: heroWarm, warmAfter: heroAfter, resize: wantResize, sheets, SM: SHEET_MAP, dev: !!opts.dev }); if (opts.dev) window.__rp = hero.dev; return hero; };   // RP1C-R3: warm: heroWarm   // PF3: warmAfter: heroAfter
     PFH.make = async () => hero || mkHero();                        // PF1
     hb.onclick = async () => { if (hero) return hero.openPick(); hb.disabled = true; try { (await mkHero()).openPick(); } catch (e) { console.warn('hero', e); } hb.disabled = false; };
     if (opts.dev) window.__rpLoad = async (q) => { if (hero) { hero.exit(); hero.closePick(); } return mkHero(q); };
@@ -445,7 +466,7 @@ async function start(opts) {
     // p37: an attack is drawn by day, straight to the screen: the bloom composer (a half-float multisampled target + the blur chain = the biggest idle block of GPU memory) is parked for its duration and
     // built again when the home map is back — one more thing less to run out of on a phone that is short of GPU memory (a lost context was the one way the picture could go half as bright / the ground black)
     if (inBattle && composer && !composerParked && P && P.night <= 0.25) { composerParked = true; dropComposer(); }
-    else if (!inBattle && composerParked) { composerParked = false; if (Q.bloom && settings.bloom) makeComposer(); }
+    else if (!inBattle && composerParked) { composerParked = false; if (Q.bloom && settings.bloom) { makeComposer(); if (lateReady) warmLoose(true); } }   // PF3: warmLoose: the new composer's chain is compiled at idle, not by the first night frame
     const slow = settings.fps === 30 || cool() || (!inBattle && (!!(ctl.intro && ctl.intro.hold) || (settings.idleEco && !ctl.intro && !inHero && ctl.ptrs.size === 0 && now - lastInput > 3500)));   // (the held scene behind the welcome card: 30 fps is plenty)
     bbox.phase(inBattle ? (battle.loading ? 'battle:load' : 'battle') : (ctl.intro ? 'home:intro' : 'home')); bbox.frame(now);
     if (now - panelChk > 450) { panelChk = now; panelUp = !inBattle && !!root.querySelector(PANELS); }

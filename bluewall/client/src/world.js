@@ -704,6 +704,7 @@ export async function buildWorld(renderer, scene, Q, progress) {
   // the green Dragonlings at the Lair (dragonling_home.js): an egg until the shop's egg is bought, then two of them
   const setDragonlings = (owned) => { if (!dlings) { try { dlings = createHomeDragonlings({ scene, height: terrain.fastHeight || height }); ctx.levelHooks.push(() => dlings.refresh()); } catch (e) { console.warn('dragonlings', e); return; } } dlings.set(owned); };
   return {
+    envScene: E.scene,   // PF3: the PMREM sky scene (its night-only dome was first compiled at dusk: shaderwarm compiles it at load)
     ground: terrain.ground, backdrop, // GR1: near ground (setLook / setDetail / groundH); GR1_R2: the far ranges (setLook / stats)
     rings: ctx.rings, tr2c: ctx.tr2c, update, setTime, picks, water, get keptClear() { return world_keepClear; }, get lod() { return forest.ez ? forest.ez.lod : null; }, fastHeight: terrain.fastHeight, setBattle, targetDown, clearZones, key, stage, get ballistas() { return extras.ballistas || null; }, get dragon() { return dragon; }, giants: units.giants, shake: shakeReq, creatures, setOption, startLate, revealLate, lateProgress, setLateBudget, patrols, events, get late() { return extras; },
     setWeather: (m, snap) => weather.setMode(m, snap), weatherIcon: (base) => weather.icon() || base, weather,

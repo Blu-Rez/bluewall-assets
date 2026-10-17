@@ -916,7 +916,7 @@ export function create(H) {
       const m = await loadHero(key, lv);
       lv.progress(0.85, 'Warming up…'); if (!window.__rpNoWarm) await warmHero(m, lv);   // RP1C-R3: PF1 F9 (window.__rpNoWarm = dev-only switch for the before / after measurement)
       lv.progress(0.9, 'Collision…'); try { await grid.build({ progress: (f) => lv.progress(0.9 + 0.08 * f) }); gcovM.clear(); refreshColliders(); } catch (e) { console.warn('hero grid', e); }   // RP1C-R3: ~0.2 s on a desktop, in slices
-      closePick(); enter(m, key); lv.progress(1); setTimeout(() => lv.hide(), 250);
+      closePick(); enter(m, key); try { if (H.warmAfter) await H.warmAfter((f) => lv.progress(0.98 + 0.02 * f, 'Warming up…')); } catch (e) { /* PF3 */ } lv.progress(1); setTimeout(() => lv.hide(), 250);   // PF3: warmAfter = the door / tufts / hero depth programs, compiled behind the card (main.js heroAfter)
     } catch (e) { console.warn('hero start', e); lv.setTitle('Error'); lv.progress(1, String(e && e.message || e)); setTimeout(() => lv.hide(), 1800); }
     busy = false;
   }
