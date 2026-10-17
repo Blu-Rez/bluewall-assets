@@ -150,6 +150,7 @@ export function createDiet(H, S) {
     if (!st.on) return;
     if (S.where === 'home') { if (now - st.passAt > 400) { st.passAt = now; pass(now); } enforce(); }              // (RP1C-R2: the hiding is the HOME scene's business; the governor itself runs in the underworld too)
     if (paused || document.hidden) { gov.last = null; return; }                                   // (a dev-paused or hidden page says nothing about the phone)
+    CFG.down_ms = Math.max(GOV_CFG.down_ms, 1.12 * (R.capMs || 0));   // PF4: under the frame cap (30 fps) every window reads 29.x fps = "bad" (knife-edge): it called the picture too slow and stepped it down 6 times in 2 min (each step = a canvas re-allocation = a hitch). Bad now means: clearly below what the cap asks for
     const d = govFrame(gov, now, CFG);
     if (d) {
       if (d > 0) { st.stepsDown++; if (STEPS[gov.lvl - 1].abs > 1.001 && STEPS[gov.lvl].abs <= 1.001) gov.lockUp = Infinity; } else st.stepsUp++;       // (Job 9: a PHONE may climb to a sharper picture (<= 1.5) only after 8 s at >= 50 fps; if it ever falls back from it, it never tries again this session: a resize is a hitch)

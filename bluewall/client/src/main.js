@@ -503,6 +503,7 @@ async function start(opts) {
     // behind the loading screen nobody sees the frames: draw a third of them (the explicit warm-up renders still draw everything)
     if (!(inBattle && battle.loading) && (lateReady || frames % 3 === 0)) { if (hud.on) gpu.begin(renderer.shadowMap.needsUpdate ? 's' : 'p'); pb(); if (uw) renderer.render(hero.scene, camera); else { refl.update(dt, { battle: inBattle || REACH.norefl }); pe('refl'); if (useComposer()) composer.render(); else renderer.render(scene, camera); } if (opts.dev && window.__bwLumOn) lumSample(); pe('render(submit)'); if (hud.on) gpu.end(); }
     CAP.frame(gapReal, performance.now() - w0, dyn.rmin < 90 ? dyn.rmin : 0, now, slow || panelUp || !!ctl.intro || document.hidden || !!(inBattle && battle.loading));   // PF1: adaptive cap (perf.js)
+    REACH.capMs = CAP.rf * Math.ceil(gapMs / CAP.rf);   // PF4: the frame interval the cap itself asks for (33.3 ms at 30 fps on a 60 Hz screen): the hero governor (rpg_diet.js) must not call a frame stream that sits ON the cap "too slow"
     // dynamic resolution: keep up with the frame cap (60, or 30 when slow). A resize re-allocates the render targets (a hitch of its own), so:
     // change only after two bad windows in a row, in steps of 0.1, ignore the window that contains the resize, and after a drop stay down for a minute.
     dyn.acc += dt; dyn.n++;

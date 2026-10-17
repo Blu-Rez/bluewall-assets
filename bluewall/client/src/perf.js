@@ -95,13 +95,13 @@ export function createCap(off) {
     if (C.off) return;
     if (rf > 3 && rf < 40) C.rf = rf;
     if (skip || real > 250) { C.reset(); return; }
-    C.t += real; C.n++; C.js += work;
+    C.t += Math.min(real, 3 * exp(G[C.lvl])); C.n++; C.js += work;   // PF4: one hitch (a shader slice, a GC, a resize) counts at most 3 frames: it is not a trend (the idle compile's 60-300 ms slices kept pushing the window average over the line and the step up never came)
     if (C.t < 3000) return;
     const avg = C.t / C.n, js = C.js / C.n; C.cpuBound = js >= 0.8 * avg; C.jsm = js; C.reset();
     if (C.lvl < 2 && avg > Math.max(20, exp(G[C.lvl]) * 1.15)) {
       if (now - C.upAt < 40000) C.wait = Math.min(80000, C.wait * 2);
       C.lvl++; C.hold = 0; if (C.log.length < 12) C.log.push([Math.round(now / 1000), C.lvl, Math.round(avg), Math.round(js)]);
-    } else if (C.lvl > 0 && avg <= exp(G[C.lvl]) * 1.1 && js < exp(G[C.lvl - 1]) * 0.7) {
+    } else if (C.lvl > 0 && avg <= exp(G[C.lvl]) * 1.1 && js < exp(G[C.lvl - 1]) * 0.92) {   // PF4: was 0.7 = JS under 11.7 ms for 60 fps, which ~600 draw calls never meet on a phone: the step up never happened (the cap sat at 30 for good).  The JS time only says "it cannot fit"; whether it DOES is tried: the next window judges it (step down + doubled wait, above)
       C.hold += 3000;
       if (C.hold >= C.wait) { C.lvl--; C.hold = 0; C.upAt = now; if (C.log.length < 12) C.log.push([Math.round(now / 1000), C.lvl, Math.round(avg), Math.round(js)]); }
     } else C.hold = 0;

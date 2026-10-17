@@ -16,7 +16,7 @@ function makeRecorder(ctx) {
   const R = ctx.renderer, SM = R.shadowMap, raf0 = window.requestAnimationFrame.bind(window);
   const A = { js: 0, rn: 0, sh: 0, calls: 0, shc: 0, tris: 0, fsq: 0, rc: 0 };                          // the frame being built
   const F = { n: 0, on: false, t: new Float64Array(NF), js: new Float32Array(NF), rn: new Float32Array(NF), sh: new Float32Array(NF), calls: new Uint16Array(NF), shc: new Uint16Array(NF),
-    tris: new Uint32Array(NF), fsq: new Uint8Array(NF), rc: new Uint8Array(NF), heap: new Float32Array(NF), pr: new Float32Array(NF), dyn: new Float32Array(NF), gov: new Uint8Array(NF) };
+    tris: new Uint32Array(NF), fsq: new Uint8Array(NF), rc: new Uint8Array(NF), heap: new Float32Array(NF), pr: new Float32Array(NF), dyn: new Float32Array(NF), gov: new Uint8Array(NF), prog: new Uint16Array(NF) };   // PF4: prog = programs alive at this frame
   let profWas = false, tick = -1, vis = { n: 0, ms: 0, t: 0 }, keys = [], ps = Object.create(null), pn = 0, kAt = 0, t0 = 0, lt = [], loaf = [];
   const hasMem = !!(performance && performance.memory);
   const heroScene = () => { const h = ctx.getHero && ctx.getHero(); return h && h.scene; };
@@ -24,7 +24,7 @@ function makeRecorder(ctx) {
     if (F.on && A.rn > 0 && F.n < NF && tick > 0) {              // (PF2: tick > 0 — the recorder of a player without ?pf=1 is installed in the middle of the running loop: its first 'frame' carried tick = -1, i.e. the whole page age as the first interval = the owner's «worst 605660 ms · 0.6 fps · drift blank»)
       const i = F.n++;
       F.t[i] = tick; F.js[i] = A.js; F.rn[i] = A.rn; F.sh[i] = A.sh; F.calls[i] = A.calls > 65535 ? 65535 : A.calls; F.shc[i] = A.shc; F.tris[i] = A.tris; F.fsq[i] = A.fsq; F.rc[i] = A.rc;
-      F.heap[i] = hasMem ? performance.memory.usedJSHeapSize / 1048576 : 0; F.pr[i] = R.getPixelRatio(); F.dyn[i] = ctx.DYN ? ctx.DYN.s : 1; F.gov[i] = ctx.GOV ? ctx.GOV.lvl : 0;
+      F.heap[i] = hasMem ? performance.memory.usedJSHeapSize / 1048576 : 0; F.pr[i] = R.getPixelRatio(); F.dyn[i] = ctx.DYN ? ctx.DYN.s : 1; F.gov[i] = ctx.GOV ? ctx.GOV.lvl : 0; F.prog[i] = (R.info.programs || []).length;   // PF4:
       if (i - kAt > 90 || !keys.length) { keys = Object.keys(PROF.avg); kAt = i; }
       for (let k = 0; k < keys.length; k++) ps[keys[k]] = (ps[keys[k]] || 0) + PROF.avg[keys[k]]; pn++;
     }
@@ -69,11 +69,11 @@ function makeRecorder(ctx) {
     a = a || 0; if (b == null) b = F.n; const n = b - a, o = { n, secs: 0 };
     if (n < 3) return o;
     // PF2: the interval between two drawn frames = the difference of their requestAnimationFrame timestamps (nothing else); an interval above STALL ms is a stall: counted (stalls / stallMs / stallMax), left out of avg / p50 / p95 / p99 / max / fps
-    const dtv = []; let sum = 0, o33 = 0, o50 = 0, st = 0, stMs = 0, stMax = 0;
+    const dtv = []; let sum = 0, o33 = 0, o50 = 0, st = 0, stMs = 0, stMax = 0, wd = 0, wi = -1;   // PF4: wd / wi = the longest valid interval and the frame that ends it
     for (let i = a + 1; i < b; i++) {
       const d = F.t[i] - F.t[i - 1]; if (!(d > 0)) continue;
       if (d > STALL) { st++; stMs += d; if (d > stMax) stMax = d; continue; }
-      dtv.push(d); sum += d; if (d > 34) o33++; if (d > 50) o50++;
+      dtv.push(d); sum += d; if (d > 34) o33++; if (d > 50) o50++; if (d > wd) { wd = d; wi = i; }   // PF4:
     }
     o.stalls = st; o.stallMs = Math.round(stMs); o.stallMax = Math.round(stMax);
     if (dtv.length < 2) return o;
@@ -84,6 +84,7 @@ function makeRecorder(ctx) {
     o.js = r2(mean(F.js)); o.jsP95 = r2(pc(sj, 0.95)); o.render = r2(mean(F.rn)); o.shadow = r2(mean(F.sh)); o.calls = Math.round(mean(F.calls)); o.shCalls = Math.round(mean(F.shc)); o.tris = Math.round(mean(F.tris));
     o.fsq = r1(mean(F.fsq)); o.renders = r1(mean(F.rc)); let pmin = 9, pmax = 0, prc = 0, dc = 0, gc2 = 0; for (let i = a; i < b; i++) { const v = F.pr[i]; if (v < pmin) pmin = v; if (v > pmax) pmax = v; if (i > a) { if (Math.abs(v - F.pr[i - 1]) > 0.001) prc++; if (F.dyn[i] !== F.dyn[i - 1]) dc++; if (F.gov[i] !== F.gov[i - 1]) gc2++; } }
     o.pr = [r2(pmin), r2(pmax)]; o.prChanges = prc; o.dynChanges = dc; o.govChanges = gc2;
+    if (wi > a) { const j = wi - 1, ch = (x, k) => (k > a && Math.abs(x[k] - x[k - 1]) > 0.001 ? 1 : 0), e = (x) => ch(x, j) || ch(x, wi), j0 = j > a ? j - 1 : j; o.wf = { ms: r1(wd), at: wi - a, js: [r1(F.js[j]), r1(F.js[wi])], rn: [r1(F.rn[j]), r1(F.rn[wi])], ev: (e(F.pr) ? 'p' : '') + (e(F.dyn) ? 'd' : '') + (e(F.gov) ? 'g' : ''), np: F.prog[wi] - F.prog[j0], gc: hasMem && F.heap[wi] - F.heap[j0] < -0.3 ? 1 : 0 }; }   // PF4: WHAT the longest interval of the phase was: JS + render ms of the two frames around it, whether the pixel ratio (p) / dynamic resolution (d) / hero governor (g) changed there, programs built there (np), a GC (gc)
     let up = 0, gc = 0, big = 0; for (let i = a + 1; i < b; i++) { const d = F.heap[i] - F.heap[i - 1]; if (d > 0) up += d; else if (d < -0.3) { gc++; big = Math.max(big, -d); } }
     o.allocMBs = hasMem ? r2(up / span) : null; o.gc = hasMem ? gc : null; o.gcMaxMB = hasMem ? r1(big) : null; o.heapMB = hasMem ? r1(F.heap[b - 1]) : null;
     if (a === 0 && b === F.n) { const pr = {}; if (pn) for (const k of Object.keys(ps)) pr[k] = r2(ps[k] / pn); o.prof = pr; o.longTasks = lt.length; o.longTaskMs = lt.reduce((x, y) => x + y, 0); o.loaf = loaf.sort((x, y) => y.ms - x.ms).slice(0, 6); }
@@ -249,9 +250,11 @@ function makeBench(ctx, rec) {
       if (n - w0 > secs * 3000 + 4000) break;
     }
     rec.hold(true); const b = rec.idx();
-    const s = rec.summary(a, b); s.name = name; s.a = a; s.b = b; s.prog = nProg(); s.px = buf(); s.dr = rec.drift(a, b); return s;
+    const s = rec.summary(a, b); s.name = name; s.a = a; s.b = b; s.prog = nProg(); s.px = buf(); s.dr = rec.drift(a, b);
+    try { const C = ctx.CAP; if (C) s.cp = [C.off ? -1 : C.lvl, r1(C.rf), C.cpuBound ? 1 : 0]; const hh = ctx.getHero && ctx.getHero(), dd = hh && hh.active && hh.dev && hh.dev.diet && hh.dev.diet(); if (dd && dd.st) s.dt = [dd.st.lvl, dd.st.stepsDown, dd.st.stepsUp]; } catch (e) { /* ignore */ }   // PF4: the frame cap at the end of the phase [level (-1 = off), display ms, cpuBound] and the hero governor [level, steps down, steps up]
+    return s;
   };
-  const brief = (s) => (s && s.fps != null ? { n: s.n, fps: s.fps, avg: s.avg, p95: s.p95, max: s.max, o33: s.o33, o50: s.o50, cpu: s.js, calls: s.calls, k: Math.round(s.tris / 1000), pr: s.pr, px: s.px, prog: s.prog, st: s.stalls, stMs: s.stallMs, d: s.dr }
+  const brief = (s) => (s && s.fps != null ? { n: s.n, fps: s.fps, avg: s.avg, p95: s.p95, max: s.max, o33: s.o33, o50: s.o50, cpu: s.js, calls: s.calls, k: Math.round(s.tris / 1000), pr: s.pr, px: s.px, prog: s.prog, st: s.stalls, stMs: s.stallMs, d: s.dr, cp: s.cp, dt: s.dt, pc: [s.prChanges, s.dynChanges, s.govChanges], wf: s.wf }   // PF4: cp / dt / pc / wf
     : s ? { n: s.n, st: s.stalls, stMs: s.stallMs, px: s.px, prog: s.prog } : null);
   const PH = [['md', 'MAP DAY      '], ['mn', 'MAP NIGHT    '], ['hd', 'HERO DAY     '], ['hn', 'HERO NIGHT   '], ['mu', 'MAP UNCAPPED ']];
   async function run(opt) {
@@ -310,13 +313,14 @@ function makeBench(ctx, rec) {
     res.stalls = stalls; res.stallMs = stallMs;
     if (ph.hn == null && ph.hd == null) res.hero = 'skipped';
     let posted = false, txt = JSON.stringify(res);
+    if (txt.length > 3400) { for (const [k] of PH) { const p = res.ph[k]; if (p) { delete p.pc; delete p.dt; } } txt = JSON.stringify(res); }   // PF4: the new fields never push the report over the POST limit
     if (txt.length > 3400 && res.dev) { res.dev.ua = String(res.dev.ua).slice(0, 50); txt = JSON.stringify(res); }
     try { const tk = typeof ctx.token === 'function' ? ctx.token() : ctx.token; if (tk && txt.length < 3500) { const r = await fetch('/api/perf', { method: 'POST', keepalive: true, headers: { Authorization: 'Bearer ' + tk, 'Content-Type': 'application/json' }, body: txt }); posted = r.ok; } } catch (e) { /* offline */ }
     res.posted = posted; res.bytes = txt.length;
     const f = (k) => { const p = res.ph[k]; return p && p.fps != null ? p.fps : '-'; };
     res.text = `BENCH day ${f('md')} · night ${f('mn')} · hero ${f('hd')} / ${f('hn')} · uncapped ${f('mu')} fps`;
     busy = false;
-    const line = (k, nm) => { const p = res.ph[k]; if (!p) return nm + 'n/a'; if (p.fps == null) return nm + 'no frames (' + (p.st || 0) + ' stalls)'; return `${nm}${p.fps} fps · p95 ${p.p95} · worst ${p.max} ms · ${p.calls} calls · ${p.k}K tris · ${p.px} · q ${ctx.Q.level}`; };
+    const line = (k, nm) => { const p = res.ph[k]; if (!p) return nm + 'n/a'; if (p.fps == null) return nm + 'no frames (' + (p.st || 0) + ' stalls)'; const w = p.wf; return `${nm}${p.fps} fps · p95 ${p.p95} · worst ${p.max} ms${w ? ' [' + (w.ev || '-') + (w.np ? ' +' + w.np + 'prog' : '') + (w.gc ? ' gc' : '') + ' js ' + w.js.join('/') + ']' : ''} · ${p.calls} calls · ${p.k}K tris · ${p.px} · q ${ctx.Q.level}${p.cp ? ' · cap ' + p.cp[0] + (p.dt ? ' · gov ' + p.dt[0] + ' (' + p.dt[1] + 'v)' : '') : ''}`; };   // PF4: worst [p = pixel ratio changed · d = dyn res · g = hero governor · +N prog = shader programs built · gc · js ms of the two frames] · cap level · governor level (steps down)
     const dr = res.ph.md && res.ph.md.d;
     show(res.text + '\n' + PH.map(([k, nm]) => line(k, nm)).join('\n') + `\nprograms ${prog0}→${nProg()} · stalls ${stalls} (${stallMs} ms) · hidden ${vis.n}\ndrift ${dr ? dr[0] + '→' + dr[1] : '-'}${night && night.comp ? ' · night path ' + (night.rt ? 'ok' : 'NOT BUILT') : ' · no bloom path'} · ${posted ? 'sent' : 'not sent'}`, true);
     window.__benchLast = res; return res;
