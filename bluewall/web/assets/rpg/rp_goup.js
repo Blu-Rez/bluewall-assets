@@ -28,6 +28,7 @@ export function createGoUp(H, S, G = {}) {
     g.fillStyle = rg; g.fillRect(0, 0, 64, 64); const t = new T.CanvasTexture(c); t.colorSpace = T.SRGBColorSpace; return t;
   }
   function makeIcon() {                                                                                   // the door icons' look: dark glass disc, coloured rim, glass highlight, a white glyph
+    if (G.ui) return G.ui.worldIcon(T);                                                                   // UI2: the blue / silver icon of rp_ui2.js (navy plate, silver bezel, ice arrow); same Points, same program
     const C = 128, cv = document.createElement('canvas'); cv.width = cv.height = C; const g = cv.getContext('2d'), cx = C / 2, cy = C / 2, R = C * 0.43;
     const rg = g.createRadialGradient(cx - R * 0.3, cy - R * 0.38, R * 0.08, cx, cy, R); rg.addColorStop(0, 'rgba(70,104,138,0.93)'); rg.addColorStop(1, 'rgba(9,20,38,0.94)');
     g.beginPath(); g.arc(cx, cy, R, 0, 6.2832); g.fillStyle = rg; g.fill(); g.lineWidth = C * 0.055; g.strokeStyle = '#8ff0ff'; g.stroke();
@@ -42,8 +43,8 @@ export function createGoUp(H, S, G = {}) {
   }
   function dom() {
     const hud = G.hud && G.hud(); if (!hud) return;
-    if (!styleEl) { styleEl = document.createElement('style'); styleEl.textContent = STYLE(G.top || '0px', G.btm || '0px'); document.head.appendChild(styleEl); }
-    chip = document.createElement('div'); chip.className = 'rp-gu rp-gu-chip rp-k'; chip.innerHTML = `<svg viewBox="0 0 24 24"><path d="${ARROW}"/></svg><i></i>`; chipSvg = chip.firstChild; chipTxt = chip.lastChild; hud.appendChild(chip);
+    if (!styleEl) { styleEl = document.createElement('style'); styleEl.textContent = G.ui ? G.ui.css(G.top || '0px', G.btm || '0px') : STYLE(G.top || '0px', G.btm || '0px'); document.head.appendChild(styleEl); }   // UI2: G.ui.css = the blue / silver chip + pill
+    chip = document.createElement('div'); chip.className = 'rp-gu rp-gu-chip rp-k'; if (G.ui) chip.dataset.l = G.ui.look; chip.innerHTML = G.ui ? G.ui.chipHtml() : `<svg viewBox="0 0 24 24"><path d="${ARROW}"/></svg><i></i>`; chipSvg = chip.firstChild; chipTxt = chip.lastChild; hud.appendChild(chip);   // UI2: the look number + markup of the chip come from rp_ui2.js (G.ui)
     pill = document.createElement('div'); pill.className = 'rp-gu rp-gu-pill rp-k'; pill.innerHTML = `<svg viewBox="0 0 24 24"><path d="${ARROW}"/></svg><span>Go up</span>`; hud.appendChild(pill);
   }
   function enter() {

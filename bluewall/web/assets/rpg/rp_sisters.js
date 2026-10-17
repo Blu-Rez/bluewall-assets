@@ -139,6 +139,7 @@ export function createSisters(H, S, G) {
     tog.style.setProperty('--dx', fanX(i) + 'px'); tog.style.setProperty('--dl', i * STAG + 'ms');
     main.classList.toggle('ld', !!st.ld); tog.classList.toggle('on', st.stand); tog.setAttribute('aria-pressed', st.stand ? 'true' : 'false'); main.setAttribute('aria-expanded', st.open ? 'true' : 'false');
     wrap.classList.toggle('open', st.open);
+    { const hd = G.hud && G.hud(); if (hd) hd.classList.toggle('rs-open', !!st.open); }   // MOTHER4 (RS2 x UI2 merge): the open fan and the distance chip share the HUD's top row (800x360: they overlap by ~43 px) — the chip steps aside while the fan is open (rp_ui2.js: .rs-open .rp-gu-chip)
   }
   const capText = () => (st.stand ? TXT.on + ' — ' + TXT.hint : TXT.off + ' — ' + TXT.offHint);
   function say(t, ms = 5200) { if (!hint) return; hint.textContent = t; hint.classList.add('on'); clearTimeout(st.hintT); st.hintT = setTimeout(() => hint && !st.open && hint.classList.remove('on'), ms); }

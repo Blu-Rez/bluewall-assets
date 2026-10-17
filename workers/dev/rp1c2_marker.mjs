@@ -1,4 +1,4 @@
-// rp1c2_marker.mjs — RP1C_R3: the marker over every character (rp_marker.js): the sign (a faceted gem, NOT a crown) exactly above the head bone with a clear gap, a same-colour halo (the light) and a small
+// rp1c2_marker.mjs — RP1C_R3: the marker over every character (rp_marker.js): the sign (UI2: a small neon crown again — the owner's own word of 17 Oct; RP1C_R3 had a gem because he said «no crown» on 15 Oct) exactly above the head bone with a clear gap, a same-colour halo (the light) and a small
 // same-colour ring on the ground, 3 draw calls per character, nothing leaks after exit().   run: cd client && node /home/claude/dev/rp1c2_marker.mjs  -> «MARKER OK»
 import { createRequire } from 'module'; import fs from 'fs'; const require = createRequire('/home/claude/bot/bluebot_v2/bluewall/client/package.json'); const THREE = require('three');
 const ctxStub = new Proxy({}, { get: (t, k) => (k in t ? t[k] : (k === 'createRadialGradient' || k === 'createLinearGradient') ? () => ({ addColorStop() {} }) : (k === 'measureText') ? () => ({ width: 10 }) : () => {}), set: (t, k, v) => { t[k] = v; return true; } });
@@ -21,7 +21,7 @@ for (const key of Object.keys(SIS)) {
   ok(mk.info().markers === 1 && mk.info().colours[0] === SIS[key], key + ': one marker, its own colour ' + SIS[key]);
   const hc = new THREE.Color(SIS[key]); allColour = allColour && Math.abs(e.mHalo.color.r - hc.r) + Math.abs(e.mHalo.color.g - hc.g) + Math.abs(e.mHalo.color.b - hc.b) < 1e-6 && Math.abs(e.mRing.color.r - hc.r) + Math.abs(e.mRing.color.g - hc.g) + Math.abs(e.mRing.color.b - hc.b) < 1e-6;
   hero.grp.updateMatrixWorld(true); const hw = new THREE.Vector3(); hero.head.getWorldPosition(hw); const sw = new THREE.Vector3(); e.sign.getWorldPosition(sw);
-  gaps.push(sw.y - hw.y); allUp = allUp && sw.y - hw.y > 0.2 + 0.5 * e.sign.scale.y - 0.12; allVert = allVert && Math.abs(sw.x - hw.x) < 1e-6 && Math.abs(sw.z - hw.z) < 1e-6;
+  gaps.push(sw.y - hw.y); allUp = allUp && sw.y - hw.y - 0.27 * e.sign.scale.y > 0.10 && sw.y - hw.y - 0.27 * e.sign.scale.y < 0.30; allVert = allVert && Math.abs(sw.x - hw.x) < 1e-6 && Math.abs(sw.z - hw.z) < 1e-6;   // UI2: the lowest point of the crown (look 1: its base is 0.27 of the sprite below the sprite's centre) rests 10..30 cm above the top of the head
   // the head sways (cape / lean): the sign follows exactly, in x and z
   hero.head.position.x = 0.12; hero.head.position.z = -0.07; hero.grp.updateMatrixWorld(true); mk.tick(1100); hero.head.getWorldPosition(hw); e.sign.getWorldPosition(sw); allVert = allVert && Math.abs(sw.x - hw.x) < 1e-6 && Math.abs(sw.z - hw.z) < 1e-6;
   ok(e.sign.visible && e.halo.visible && e.ring.visible && calls(mk) === 3, key + ': sign + halo + ring visible, 3 draw calls');
