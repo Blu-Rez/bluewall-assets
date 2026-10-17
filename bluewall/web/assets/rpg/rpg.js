@@ -6,8 +6,12 @@ const SIS = [   // the element is shown by the emblem from the owner's character
   { k: 'elina', n: 'ELINA', fa: 'الینا', c: '#ff6a3a' }, { k: 'elika', n: 'ELIKA', fa: 'الیکا', c: '#9fe8ff' }, { k: 'melika', n: 'MELIKA', fa: 'ملیکا', c: '#7fe06a' },   // RS2: fa = the name the «loading <name>» chip shows
   { k: 'mobina', n: 'MOBINA', fa: 'مبینا', c: '#f0a666' }, { k: 'aylin', n: 'AYLIN', fa: 'آیلین', c: '#4fb0ff' }, { k: 'aylar', n: 'AYLAR', fa: 'آیلار', c: '#cfeeff' },
 ];
-const CAM_FAR = 1.25;   // RP1C_R5: the default third-person distance x 1.25 (look B in CAMS)
-const CAM_MIN = 3.0, CAM_RISE = 3.2;   // RP1C-R4: the closest the third-person camera may get to her (m, 3-D) and the most it may rise to keep that
+const CAM_B = { far: 5.6, pit: 0.28 };   // RP1C_R6: the default third-person look (B): 5.6 x HC = 6.3 m behind her (R5: 3.4 x 1.25 = 4.25 x HC = 4.8 m) at 0.28 rad = 16° down (was 5.6°)
+const CAM_MIN = 3.0, CAM_RISE = 3.2;   // RP1C-R4: the kit's camera (still used on the wall-walk / the climb / the underworld): the closest it may get to her (m, 3-D) and the most it may rise to keep that
+const PIT3_MIN = -0.32, PIT3_MAX = 0.80, CAM_SQ_MAX = 0.72, CAM_SQ_MIN = 2.4, CAM_FIT = 2.3;   // RP1C_R6: CAM_FIT = closer than this (m) her head leaves the 844x390 picture (2.195 m tall, fov 52°): the camera there costs extra, so the raised / pocket look wins over a 2.0 m camera right behind her   // RP1C_R6: third-person pitch range (dragged), the most the camera rises in a squeeze (41°), the farthest-wanted clear distance
+const UNDER_D = 3.4, BANK_LIFT = 1.0;   // RP1C_R6: BANK_LIFT = how far (m) the floor clamp may lift the camera over a bank behind her before the ray is shortened instead   // RP1C_R6: the camera's distance to her under a bridge deck
+const DISC_H = 3.4;   // RP1C_R6: a pole / tree (a 2-D disc in the collision data) is 3.4 m tall for the camera
+const PK_EL0 = 0.9, PK_ELS = [0.95, 1.05, 1.15, 1.25, 1.35, 1.5, 1.57], PK_D = 2.6;   // RP1C_R6: the pocket camera (a wall right behind her): elevation 54°..90°, 2.6 m from her (-18°..46°; the kit: -43°..72° = straight down at her head), the highest a camera in a tight spot may rise (41°), the nearest it likes to be (m)
 const GATE_HALF = { outer: 7.5, inner: 4.5, town: 5.2 };
 const EDGE_SOFT = 16, EDGE_R = 420;                                        // RP1B: the soft edge of the walkable map (was a hard 335 m circle that shut out the outer mills, mines and hamlets)
 const HS = 1.12 * 1.12, HC = 1.06 * 1.06;   // RP1C-R3 (ROUND4 A1/8): +12 % over R2's 1.12 (the owner: «a bit small»; AN1_R3's SCALE.md / lineup decides the final pick: THIS line is the one constant);                                                                                 // RP1C-R2 Job 9: the owner's «a bit bigger»: everything that depends on her size follows ONE factor (the model, the body radius, the camera pivot, the speeds + strides = the same cadence; the camera's DISTANCE follows with HC = 1.06 only: with the full 1.12 the picture on the screen would be exactly the old one — she would only be bigger next to the houses)
@@ -15,7 +19,7 @@ const HERO_H = 1.75 * HS, MODEL_H = 0.98, SC = HERO_H / MODEL_H, CAM_D = 3.6 * H
 const R_BODY = 0.45 * HS, WALK = 1.18 * HS, RUN = 4.39 * HS, SPRINT_K = 1.28, STRIDE_W = 2.75 * HS, STRIDE_R = 5.49 * HS;      // (STRIDE_R = the run clip's stride before RP1C-R2 Job 5; GAIT.sr below is the measured one)
 const GAIT = { sw: STRIDE_W, sr: 5.36 * HS, off: -0.12, acc: 12, dec: 15 };   // RP1C-R3: ramps 12 / 15 m/s² (were 16 / 16: run reached in 0.23 s, walk in 0.07 s = instant; now ~0.45 s / ~0.1 s, stop ~0.37 s)
 // RP1C-R2 Job 5: the cycle's stride per clip (m of ground per cycle), the run clip's phase offset against the walk clip (cycles), (dev: window.__rp.gait({...}) while measuring)
-const GRAV = 9.4, JUMP_V = 3.29, JUMP_T = 0.70, LAND_K = 2.8, LAND_DOWN = 0.10, LAND_STAND = 0.40;   // RP1C-R3 (ROUND4 A1/4): apex JUMP_V²/2g = 0.575 m, air 2·JUMP_V/g = 0.70 s (a body-sized g of 9.4 — the R2 numbers g = 22 / v = 5 gave the same 0.57 m in only 0.45 s: a toy hop; the clip stretch JUMP_T is now the WHOLE flight); landing: the crouch's bottom at 100 ms (LAND_DOWN), standing again at 400 ms
+const GRAV = 9.4, JUMP_V = 3.29, JUMP_T = 0.70, LAND_K = 2.8, LAND_DOWN = 0.10, LAND_STAND = 0.34;   // RP1C-R3 (ROUND4 A1/4): apex JUMP_V²/2g = 0.575 m, air 2·JUMP_V/g = 0.70 s (a body-sized g of 9.4 — the R2 numbers g = 22 / v = 5 gave the same 0.57 m in only 0.45 s: a toy hop; the clip stretch JUMP_T is now the WHOLE flight); landing: the crouch's bottom at 100 ms (LAND_DOWN), standing again at 400 ms
 //                                    // RP1C-R2 Job 7: a hop of 0.57 m that is 0.45 s in the air (was JUMP_V 7 = 1.11 m, 0.64 s); the jump clip is stretched over JUMP_T = the rise + the start of the fall, then fall (a few frames), then land
 // HOTFIX47: Telegram's fullscreen header sits ABOVE env(safe-area-inset-top): the game's own UI adds --tg-content-safe-area-inset-top, the hero HUD did not -> the exit button was under the header.
 const TOP = 'max(env(safe-area-inset-top,0px),calc(var(--tg-safe-area-inset-top,0px) + var(--tg-content-safe-area-inset-top,0px)))', BOT = 'max(env(safe-area-inset-bottom,0px),calc(var(--tg-safe-area-inset-bottom,0px) + var(--tg-content-safe-area-inset-bottom,0px)))';
@@ -408,9 +412,9 @@ export function create(H) {
       A.idle.a.time = (A.idle.a.time + dt) % A.idle.d;
     } else if (S.st === 'jump') { if (A.jump) { A.jump.tw = 1; A.jump.a.time = Math.min(A.jump.d - 0.001, S.stT * (A.jump.d / JUMP_T)); } }       // (the clip is stretched over the whole flight: its peak at 48 % = the physics apex at 50 %)
     else if (S.st === 'fall') { if (A.fall) { A.fall.tw = 1; A.fall.a.time = (S.stT % A.fall.d); } }
-    else if (S.st === 'land') { if (A.land) { A.land.tw = S.landW || 0.6; A.land.a.time = Math.min(A.land.d - 0.001, S.stT * LAND_K); A.idle.tw = 1 - A.land.tw; A.idle.a.time = (A.idle.a.time + dt) % A.idle.d; } }       // (RP1C-R3: the crouch bottom (clip 0.28 s) at 100 ms; the depth follows the impact speed: S.landW)
+    else if (S.st === 'land') { if (A.land) { const lt = S.stT, le = lt < 0.07 ? lt / 0.07 : lt < 0.15 ? 1 : Math.max(0, 1 - (lt - 0.15) / 0.17), ls = le * le * (3 - 2 * le); A.land.tw = (S.landW || 0.3) * ls; A.land.a.time = Math.min(A.land.d - 0.001, S.stT * LAND_K); A.idle.tw = 1 - A.land.tw; A.idle.a.time = (A.idle.a.time + dt) % A.idle.d; } }       // RP1C_R6: the crouch is a DIP, not a hold: in over 70 ms, bottom 70-150 ms, out by 320 ms (the kit held its depth 0.6 for 0.4 s: thighs flat for a 0.57 m hop, frames j_before_*)       // (RP1C-R3: the crouch bottom (clip 0.28 s) at 100 ms; the depth follows the impact speed: S.landW)
     else if (S.st === 'dodge') { if (A.dodge) { A.dodge.tw = 1; const ct = Math.min(A.dodge.d - 0.001, S.stT * 1.9); A.dodge.a.time = S.bk ? Math.max(0, Math.min(A.dodge.d - 0.001, 1.7) - ct) : ct; } }
-    let sum = 0; const k = kExp(S.st === 'land' && S.stT < 0.25 ? 24 : 9.09, dt);   // (RP1C-R3: at touch-down the poses blend in 40 ms, so the crouch is at its bottom after ~100 ms and no jump pose is left under the landing)
+    let sum = 0; const k = kExp(S.st === 'land' && S.stT < 0.25 ? 24 : (A.land && A.land.w > 0.02 ? 16 : 9.09), dt);   // RP1C_R6: the crouch pose also LEAVES quickly (16 /s: 0.2 s) once the state is over   // (RP1C-R3: at touch-down the poses blend in 40 ms, so the crouch is at its bottom after ~100 ms and no jump pose is left under the landing)
     for (const n in A) { const o = A[n]; o.w += (o.tw - o.w) * k; sum += o.w; }
     for (const n in A) { const o = A[n]; o.a.setEffectiveWeight(sum > 1e-4 ? o.w / sum : (n === 'idle' ? 1 : 0)); }
     const leanT = S.sw === 2 && !A.swim ? (Math.hypot(S.vx, S.vz) > 0.3 ? 1.3 : 0.18) : 0;   // RP1C-R3: (the real `swim` clip lies in the water itself — leaning it on top turned her head-down, legs out of the water)
@@ -662,7 +666,7 @@ export function create(H) {
     const gy = (S.where === 'home' && !S.grounded && waterDepth(S.x, S.z) > SWIM_DEEP) ? WSURF - 0.15 : wd.ground(S.x, S.z);
     if (!S.grounded) {
       S.y += S.vy * dt - 0.5 * GRAV * dt * dt; S.vy -= GRAV * dt;                                       // RP1C-R2 Job 7: exact for a constant g (the old Euler step made the hop 0.53 / 0.49 / 0.45 m at 60 / 30 / 20 fps; now 0.57 m at every frame rate)
-      if (S.y <= gy && S.vy <= 0) { S.landW = clamp(-S.vy / 5.5, 0.45, 1); S.y = gy; S.vy = 0; S.grounded = true; if (S.st === 'jump' || S.st === 'fall') { S.st = 'land'; S.stT = 0; } }
+      if (S.y <= gy && S.vy <= 0) { S.landW = clamp((-S.vy - 1.8) / 5.0, 0.2, 1);   /* RP1C_R6: the depth follows the impact: a 0.57 m hop (3.3 m/s) 0.30 (was 0.60), a 1.5 m drop 0.70, 2.8 m+ full */ S.y = gy; S.vy = 0; S.grounded = true; if (S.st === 'jump' || S.st === 'fall') { S.st = 'land'; S.stT = 0; } }
       else if (S.st === 'jump' && S.stT > JUMP_T + 0.08 || (S.st === 'loco' && S.y > gy + 0.6)) { if (S.st !== 'fall') { S.st = 'fall'; S.stT = 0; } }
     } else {
       if (S.y - gy > 0.35) { S.grounded = false; S.vy = 0; if (S.st === 'loco') { S.st = 'fall'; S.stT = 0; } }   // walked off an edge
@@ -706,27 +710,160 @@ export function create(H) {
         if (!ok) break;
       }
       if (ok && t0 > 0 && t0 < best) { const yy = ay + (by - ay) * t0; if (yy < wd.ground(ax + (bx - ax) * t0, az + (bz - az) * t0) + b.h && !(b.y0 > yy + 0.3 && S.sw > 0)) best = t0; }   // RP1C_R5: (the camera of a swimmer under a bridge passes under the parapet too)
+      else if (ok && t0 <= 0 && S.layer === 0) {                         // RP1C_R6: the segment STARTS inside the margin (she stands at a wall's end / foot): the margin cannot stop it any more, the real box still must — the camera went 1.2 m INTO the wall (scan: -162,-30)
+        let r0 = 0, r1 = 1, ok2 = true;
+        for (const [p, d, h] of [[a0x, d0x, b.hw - 0.03], [a0z, d0z, b.hd - 0.03]]) {                                       // (3 cm inside the face: she stands AT the face, the hero's collision stops her there)
+          if (Math.abs(d) < 1e-7) { if (Math.abs(p) > h) ok2 = false; }
+          else { let ta = (-h - p) / d, tb = (h - p) / d; if (ta > tb) { const q = ta; ta = tb; tb = q; } r0 = Math.max(r0, ta); r1 = Math.min(r1, tb); if (r0 > r1) ok2 = false; }
+          if (!ok2) break;
+        }
+        if (ok2 && r0 > 0 && r0 < best) { const yy = ay + (by - ay) * r0; if (yy < wd.ground(ax + (bx - ax) * r0, az + (bz - az) * r0) + b.h && !(b.y0 > yy + 0.3 && S.sw > 0)) best = Math.max(0, r0 - 0.03); }
+        else if (ok2 && r0 <= 0 && r1 > 0 && r1 * Math.hypot(bx - ax, bz - az) > 0.5 && ay < wd.ground(ax, az) + b.h && !(b.y0 > ay + 0.3 && S.sw > 0)) best = 0;   // (she is pressed against the wall: her pivot is 1 cm INSIDE its face; a segment that goes on through the wall is blocked, one that only leaves the face is not)
+      }
     }
-    if (!hi) for (const [sx, sz, sr] of wd.discs()) {
+    for (const [sx, sz, sr] of wd.discs()) {
       const dx = bx - ax, dz = bz - az, fx = ax - sx, fz = az - sz, a = dx * dx + dz * dz, b2 = 2 * (fx * dx + fz * dz), c = fx * fx + fz * fz - (sr + mgD) ** 2, disc = b2 * b2 - 4 * a * c;
-      if (a < 1e-8 || disc < 0 || c < 0) continue; const t = (-b2 - Math.sqrt(disc)) / (2 * a); if (t > 0 && t < best) best = t;
+      if (a < 1e-8 || disc < 0 || c < 0) continue; const t = (-b2 - Math.sqrt(disc)) / (2 * a); if (t > 0 && t < best) { if (hi && ay + (by - ay) * t > wd.ground(sx, sz) + DISC_H) continue; best = t; }   // RP1C_R6: a RAISED camera passes over a pole / tree only above its top (DISC_H: the scan's check counts 3 m) — it ended 0.1 m inside one
     }
     if (!hi && grid && wd === homeWorld && S.layer === 0 && CONTACT.grid && grid.st.ready) {   // RP1C-R3: the camera meets the same solids as the body (the real meshes: a house wall, a fence, a tent) — not through them
       const dx = bx - ax, dz = bz - az, L = Math.hypot(dx, dz);
       if (L > 0.05) { const t = grid.ray(ax, az, dx, dz, L); if (t >= 0) { const f = Math.max(0, (t - 0.12) / L); if (f < best && ay + (by - ay) * f < wd.ground(ax + dx * f, az + dz * f) + 2.0) best = f; } }
     }
-    if (!(S.layer === 0 && (S.sw > 0 || wd.ground(bx, bz) > S.y + 0.5))) for (let i = 1; i <= 10; i++) { const t = i / 10; if (t >= best) break; if (ay + (by - ay) * t < wd.ground(ax + (bx - ax) * t, az + (bz - az) * t) + 0.35) { best = Math.max(0, t - 0.1); break; } }       // RP1C-R3: in the water, or standing below a bank that rises behind her (the camera end is > 0.5 m above her feet), the bank no longer pulls the camera onto her back (frame 'swim_b_wade': 0.55 m behind a cloak): the floor clamp in placeCamera0 lifts it over the bank instead
+    const bankLift = S.layer === 0 && S.sw <= 0 && wd.ground(bx, bz) > S.y + 0.5 ? BANK_LIFT : 0;   // RP1C_R6: a bank behind her lifts the camera by the floor clamp, but only so far (a 67° mountain slope at the map's edge lifted it 13 m over her: 24 px tall)
+    if (!(S.layer === 0 && S.sw > 0)) for (let i = 1; i <= 10; i++) { const t = i / 10; if (t >= best) break; if (ay + (by - ay) * t < wd.ground(ax + (bx - ax) * t, az + (bz - az) * t) + 0.35 - bankLift) { best = Math.max(0, t - 0.1); break; } }       // RP1C-R3: in the water, or standing below a bank that rises behind her (the camera end is > 0.5 m above her feet), the bank no longer pulls the camera onto her back (frame 'swim_b_wade': 0.55 m behind a cloak): the floor clamp in placeCamera0 lifts it over the bank instead
     return best;
   }
-  // RP1C-R3 (ROUND4 A1/3): the camera framing, 3 looks (S.camLook: 1 = A today, 2 = B lower + closer over-shoulder: she stands at ~0.35 of the screen width, the horizon at ~40 % from the top, the ground ahead in view, 3 = C higher + wider); default B.  The pitch is only the DEFAULT of a look (she can still drag it: the clamp is unchanged)
-  const CAMS = [null, { D: 3.6, sh: 0.55, py: 1.45, pit: 0.2 }, { D: 3.4 * CAM_FAR, ndc: 0.30, py: 0.95, pit: -1 }, { D: 4.8, ndc: 0.12, py: 1.62, pit: 0.4 }];   // RP1C_R5: B (the default look) 25 % farther (the owner: «a bit close» on his phone): D 3.4 -> 4.25 m (x HC = 4.78 m); the shoulder offset follows (ndc 0.30 stays), pitch / pivot height / CAM_MIN / CAM_RISE are unchanged
+  // RP1C-R3 (ROUND4 A1/3): the camera framing, 3 looks (S.camLook: 1 = A today, 2 = B over-shoulder: she stands at ~0.35 of the screen width, the ground ahead in view, 3 = C higher + wider); default B.  The pitch is only the DEFAULT of a look (she can still drag it, within PIT3_MIN..PIT3_MAX)
+  // RP1C_R6: B is now 5.6 x HC (6.3 m, was 4.78 m) behind her at a pitch of 0.28 rad (16°, was 5.6°): the camera is 3.0 m above her feet (was 1.73 m), she is 34 % of the screen height (was 48 %), the horizon at 23 % (was 40 %) = the ground AHEAD of her is in the picture.
+  const CAMS = [null, { D: 3.6, sh: 0.55, py: 1.45, pit: 0.2 }, { get D() { return CAM_B.far; }, ndc: 0.30, py: 0.95, get pit() { return CAM_B.pit; } }, { D: 4.8, ndc: 0.12, py: 1.62, pit: 0.4 }];   // (getters: dev.camKit(true) puts the kit's look B back for the before / after numbers)
   function camP() {
     const c = CAMS[S.camLook || 2], fov = camera.fov * Math.PI / 180, asp = camera.aspect || 1.7, D = c.D * HC;
-    return { D, sh: c.ndc ? clamp(c.ndc * D * asp * Math.tan(fov / 2), 0.3 * HS, 1.4 * HS) : c.sh * HS, py: c.py * HS, pit: c.pit < 0 ? Math.atan(0.2 * Math.tan(fov / 2)) : c.pit };   // (B: the lateral offset that puts her at ndc -0.30 whatever the aspect; the horizon at 0.40 of the height = a pitch of atan(0.2 tan(fov/2)))
+    return { D, sh: c.ndc ? clamp(c.ndc * D * asp * Math.tan(fov / 2), 0.3 * HS, 1.4 * HS) : c.sh * HS, py: c.py * HS, pit: c.pit < 0 ? Math.atan(0.2 * Math.tan(fov / 2)) : c.pit };   // (B: the lateral offset that puts her at ndc -0.30 whatever the aspect, clamped at 1.4 x HS)
   }
   const tmpV = new T.Vector3();
   function placeCamera(dt) { placeCamera0(dt); if (S.tap) S.tap(); }                                                    // (RP1C-R2: S.tap = a dev probe called after every camera placement, whoever drove the frame)
+  // RP1C_R6: a hop moves the camera's pivot only part of the way (0.6 of the height over the ground is not followed, at most 0.48 m): the camera no longer bobs ±0.2 m round her at every jump (the kit's pivot lagged 0.1 s behind the body: up at take-off, down + up at touch-down)
+  const hopLag = () => (S.camKit || S.grounded || S.layer !== 0 || S.sw === 2 ? 0 : 0.6 * clamp(S.y - W().ground(S.x, S.z), 0, 0.8));
+  function pivotStep(dt, cpr) {
+    const kc = S.kc = Math.min(S.st === 'dodge' ? 6.5 : 16, (S.kc || 16) + (16 - (S.kc || 16)) * kExp(9, dt)), k = kExp(kc, dt); /* RP4: while she rolls the camera follows more softly (6.5 /s, eased in and out: no jerk) so the throw is SEEN on the screen */
+    S.pivot.x += (S.x - S.pivot.x) * k; S.pivot.z += (S.z - S.pivot.z) * k; S.pivot.y += (S.y + cpr.py - hopLag() - S.pivot.y) * kExp(10, dt);
+    const snap = dt === 0 || !!S.snap; if (snap) { S.pivot.set(S.x, S.y + cpr.py, S.z); S.snap = false; } return snap;
+  }
   function placeCamera0(dt) {
+    if (S.mode !== 'first' && !S.camKit) S.pitch = clamp(S.pitch, PIT3_MIN, PIT3_MAX);                                      // RP1C_R6: third person never looks down steeper than 46° (the kit allowed 72° = straight down at her head)
+    if (S.mode !== 'first' && S.camFix !== false && !S.camKit && S.where === 'home' && S.layer === 0) placeCameraR6(dt); else placeCameraOld(dt);
+  }
+  // ---- RP1C_R6: the third-person camera on the open map.  What the kit did (frames before_*.png): in the open it was level (5.6°, 4.8 m); with a wall / parapet / house BEHIND or BESIDE her the segment pivot -> camera was cut to ~1 m and the CAM_RISE rule lifted
+  //   the camera to 56-61° = «from above her head, near, the ground fills the screen, the ground ahead out of the frame».  Now, only when the full camera is blocked (one ray in the open), in this order of preference:
+  //   (1) the shoulder offset is taken back (f = 1 -> 0.4 -> 0: the camera comes straight behind her: a parapet / wall at her side costs nothing);  (2) the camera rises a little (up to CAM_SQ_MAX = 41° in all) where that gives a farther, clear spot;  (3) it comes closer (never nearer than ~2 m unless the room is smaller).
+  //   The choice is smoothed (the shoulder in 70 ms / back in 0.45 s, the rise in 80 ms / back in 0.4 s); the final spot is ALWAYS re-tested with the ray (closer at once, away slowly): never inside a solid.  The higher the camera is lifted the farther AHEAD of her it aims: she sits in the lower part of the frame, the ground in front is seen.
+  function placeCameraR6(dt) {
+    const wd = W(), cpr = camP(), cy = Math.cos(S.camYaw), sy = Math.sin(S.camYaw), rx = -cy, rz = sy;
+    const du = deckUnder(S.x, S.z), under = S.sw > 0 && du < 1e8 && S.y < du - 0.2;                                  // RP1C_R6: she SWIMS / wades in the water UNDER a bridge deck (on the bank at a bridge's end the deck's footprint is over her feet too: that is not «under»)
+    const th0 = under ? Math.min(S.pitch, 0.1) : S.pitch;                                                             // (under it the camera is nearly level: a rising ray hit the deck's underside 1.9 m from her)
+    if (under) cpr.py -= 0.7;                                                                                         // (she lies low in the water: the camera looks at her, not at the deck above her)
+    const snap = pivotStep(dt, cpr), px = S.pivot.x, py = S.pivot.y, pz = S.pivot.z;
+    const D0 = cpr.D * (1 + 0.30 * clamp((th0 - cpr.pit) / 0.45, 0, 1)), sh = cpr.sh;                                  // RP1C_R6: the harder she looks down, the farther the camera (+30 % at the steepest) — she stays the same size, the ground ahead stays in view
+    const ray = (el, f, dy = 0) => { const ce = Math.cos(el), se = Math.sin(el), s2 = dy ? Math.sin(S.camYaw + dy) : sy, c2 = dy ? Math.cos(S.camYaw + dy) : cy; return [px - s2 * ce * D0 + (-c2) * sh * f, py + se * D0 + 0.1, pz - c2 * ce * D0 + s2 * sh * f]; };   // (dy: the same ray turned about her by dy radians: the whiskers)
+    const clr = (el, f, dy = 0) => { const q = ray(el, f, dy), t = segHit(px, py, pz, q[0], q[2], q[1], wd, el > th0 + 1e-3), d = Math.max(0.15, t * D0 - 0.25); return el > PK_EL0 ? Math.min(d, PK_D) : d; };   // (a pocket camera — nearly straight up — stays PK_D from her)   // (the clear distance along the segment, the kit's formula; a camera raised over low props ignores the poles / trees / low meshes: `hi`)
+    const LG = 0.9 * D0, XMAX = Math.max(0, Math.min(0.5, CAM_SQ_MAX - th0));
+    const f0 = S.camF == null ? 1 : S.camF, FS0 = [1, 0.4, 0, -0.4, -1], FS1 = [1, 0, -1];                                // (f: the shoulder the camera sits on, 1 = the default (her at the left of the screen), -1 = the mirror (her at the right): a wall on the right of her costs nothing from the left)
+    const cost = (d, xe, f) => { let c = d >= LG ? 0 : (LG - d) / LG; if (d < CAM_SQ_MIN) c += (CAM_SQ_MIN - d) / CAM_SQ_MIN; if (d < CAM_FIT) c += 1.5 * (CAM_FIT - d) / CAM_FIT; return c + (xe > XMAX + 1e-3 ? 0.15 : 0.45 * (XMAX > 0 ? xe / XMAX : 0)) + 0.2 * Math.abs(1 - f) + 0.12 * Math.abs(f - f0) / 2; };   // (the last term: a small hysteresis, the shoulder does not flip for a tie)   // (a pocket rise costs the same whatever its steepness: 0.15 (+ the elevation term) — it wins where the other spots give less than ~1.7 m)
+    let txe = 0, tf = 1, td = clr(th0, 1); if (S.r6log) S.r6log = [[0, 1, td, 0]];
+    if (under) {                                                                                                         // (under a deck: her pivot -> the camera spot is tested against the real piers / walls)
+      tf = 0; td = Math.min(clr(th0, 0), UNDER_D);
+      const q = ray(th0, 0), L = Math.hypot(q[0] - px, q[1] - py, q[2] - pz), bi = underBridgeIdx(S.x, S.z);
+      if (bi >= 0 && L > 0.01) { const t = triRay(underTrisOf(bi), px, py, pz, (q[0] - px) / L, (q[1] - py) / L, (q[2] - pz) / L, L); td = Math.max(0.35, Math.min(td, t - 0.3)); if (S.r6log) S.r6log.push(['under', t, td]); }
+    }                                                        // under a deck she is between two walls ~3 m apart: the camera comes straight behind her, not far (the shoulder put it on the OTHER side of a wall: her hidden behind the wall's face)
+    else if (td < LG) {                                                                                                     // blocked: look for a better (rise, shoulder)
+      let bc = cost(td, 0, 1);
+      for (const xe of XMAX > 0 ? [0, XMAX * 0.3, XMAX * 0.6, XMAX] : [0]) for (const f of xe === 0 ? FS0 : FS1) {
+        if (xe === 0 && f === 1) continue; const d = clr(th0 + xe, f), c = cost(d, xe, f); if (S.r6log) S.r6log.push([xe, f, d, c]);
+        if (c < bc - 1e-6) { bc = c; txe = xe; tf = f; td = d; }
+      }
+      if (td < CAM_SQ_MIN) for (const elp of PK_ELS) for (const f of [0.4, 0]) {                                      // the POCKET: a wall / a house right behind her (< 1 m): nothing behind her at any shoulder or small rise — the camera goes (nearly) straight up and looks down at her, 3 m over her back (the kit: 3.2 m, 87°) — and it is tested, not trusted
+        const xe = elp - th0; if (xe <= XMAX + 1e-3) continue; const d = clr(elp, f), c = cost(d, xe, f) + 0.6 * (elp - 0.95) / 0.62; if (S.r6log) S.r6log.push([xe + th0, f, d, c]);   // (the lowest pocket elevation that still gives room: 54° before 90°)
+        if (c < bc - 1e-6) { bc = c; txe = xe; tf = f; td = d; }
+      }
+    }
+    const first = snap || S.camXe == null;
+    S.camXe = first ? txe : S.camXe + (txe - S.camXe) * kExp(txe > S.camXe ? 12 : 2.5, dt);
+    S.camF = first ? tf : S.camF + (tf - S.camF) * kExp(tf < S.camF ? 14 : 2.2, dt);
+    if (Math.abs(S.camXe - txe) < (txe > XMAX + 1e-3 ? 0.12 : 1e-3)) S.camXe = txe; if (Math.abs(S.camF - tf) < 1e-3) S.camF = tf;   // (a POCKET ray is clear only when it is steep enough: the last 0.12 rad (7°) are taken at once, not approached for ever)
+    const el = th0 + S.camXe, want = S.camXe === txe && S.camF === tf ? td : clr(el, S.camF);                          // (the spot actually used: re-tested, never trusted from the choice)
+    // RP1C_R6: the look-ahead.  Something that slides into the ray (a house corner, a pole, the camera turning past a wall) used to cut the camera from 5 m to 1.2 m IN ONE FRAME (a 3.9 m pop in the scan of a walk along a wall).  Now one more ray is tested: the same ray as it will be
+    //   0.15 s from now (her pivot moved on by her velocity, the camera turned on by its turning rate): the camera starts to come in as the thing approaches (it moves at 12 /s, at most 14 m/s), and the ray of THIS frame is still the last word (never inside: blocked at once = closer at once).
+    const yr = snap || dt <= 0 || S.yawP == null ? 0 : clamp(wrapPi(S.camYaw - S.yawP) / dt, -2.5, 2.5); S.yawP = S.camYaw; S.yawRate = (S.yawRate || 0) + (yr - (S.yawRate || 0)) * kExp(10, dt);
+    let wantS = want;
+    if (!under && !snap && want > 0.8 && (Math.hypot(S.vx, S.vz) > 0.3 || Math.abs(S.yawRate) > 0.15)) {
+      const T = 0.15, fwd = free(px + S.vx * T, pz + S.vz * T, wd, true), qx = fwd ? px + S.vx * T : px, qz = fwd ? pz + S.vz * T : pz, ya = S.camYaw + S.yawRate * T, s3 = Math.sin(ya), c3 = Math.cos(ya), ce = Math.cos(el), se = Math.sin(el);
+      const t3 = segHit(qx, py, qz, qx - s3 * ce * D0 - c3 * sh * S.camF, qz - c3 * ce * D0 + s3 * sh * S.camF, py + se * D0 + 0.1, wd, S.camXe > 0.002);
+      wantS = Math.min(want, Math.max(0.15, t3 * D0 - 0.25));
+    }
+    if (snap) S.camD = want; else { const dn = (wantS - S.camD) * kExp(wantS < S.camD ? 12 : 3.5, dt); S.camD += wantS < S.camD ? Math.max(dn, -14 * dt) : dn; if (want < S.camD) S.camD = want; }       // (closer: smoothly at first, but never inside; away from it slowly)
+    const dd = Math.min(S.camD, D0), kk = dd / D0, q = ray(el, S.camF);
+    let cx = px + (q[0] - px) * kk, cyy = py + (q[1] - py) * kk, cz = pz + (q[2] - pz) * kk;
+    S.camR = S.camXe > 0.002 ? dd * (Math.sin(el) - Math.sin(th0)) : 0;
+    const ceil = under ? du - 0.3 : 1e9;                                                                               // RP1C_R6: the camera stays under the deck too (it sat ON the deck: the deck hid her) — and its floor is the water / the river bed there, not the deck's top
+    let fl = ceil < 1e8 ? world.fastHeight(cx, cz) : wd.ground(cx, cz), mgFl = 0;
+    if (cyy > 6) {                                                                                                     // RP1C-R3: up on / beside a wall: the camera stays above any parapet it is over
+      if (wallsSrc !== S.boxes) { wallsSrc = S.boxes; wallsHi = S.boxes.filter(wallOf); }
+      for (let i = 0; i < wallsHi.length; i++) { const b = wallsHi[i], dx = cx - b.x, dz = cz - b.z, u = dx * b.ux + dz * b.uz, v = dx * b.vx + dz * b.vz; if (Math.abs(u) <= b.hw && Math.abs(v) <= b.hd) mgFl = Math.max(mgFl, Math.abs(v) > b.hd - 0.7 ? b.h + 1.7 + 0.08 : topY(b) + 0.08); }
+    }
+    if (world.fastHeight(cx, cz) < WSURF) fl = Math.max(fl, WSURF);                                                    // never under the water
+    const camY = Math.max(Math.min(cyy, ceil), fl + 0.3, mgFl);
+    camera.position.set(cx, camY, cz);
+    const ahead = 2.2 * kk * clamp((S.camXe - 0.06) / 0.4, 0, 1), hzb = (px - cx) * sy + (pz - cz) * cy;               // (how far behind the pivot the camera is along her forward; `ahead` = where the aim point is in front of her)
+    const psi = Math.max(Math.atan2(camY - py, Math.max(0.3, hzb + ahead)), Math.atan2(camY - py, Math.max(0.3, hzb)) - 0.2), cp = Math.cos(psi);   // (the aim never lets her sink more than 11° below the axis: she stays in the picture when the camera is steep)                                 // the view pitch that puts the aim point on the optical axis: with no lift and no rise it is the dragged pitch (+1°), and it tips down by exactly as much as a floor / the water lifted the camera
+    camera.lookAt(cx + sy * cp, camY - Math.sin(psi), cz + cy * cp);
+    if (S.hero && S.hero.head) S.hero.head.scale.setScalar(camera.position.distanceTo(S.pivot) < 1.2 ? 0.001 : 1);   // RP1C_R6 (R4 rule): where even the raised camera cannot get away from her (a roof right above), her head is hidden like in first person: never the back of her hair
+  }
+  // RP1C_R6: the lowest underside of a bridge deck over (x, z) (the deck's top y minus its thickness), 1e9 = none.  nav.bridges: x, z, nx, nz (along the bridge), tx, tz, len, wid, y (= the deck's top).
+  function deckUnder(x, z) {
+    const br = S.nav && S.nav.bridges; if (!br) return 1e9;
+    for (let i = 0; i < br.length; i++) { const b = br[i], dx = x - b.x, dz = z - b.z, u = dx * b.nx + dz * b.nz, v = dx * b.tx + dz * b.tz; if (Math.abs(u) <= b.len / 2 && Math.abs(v) <= b.wid / 2 && b.y != null) return b.y - 0.35; }
+    return 1e9;
+  }
+  // RP1C_R6: UNDER a bridge deck the colliders know nothing of the piers / abutments (the grid's body band is measured from the deck's top, the boxes are the rails): the camera went through a pier and she was hidden behind its face.  So the camera there is ray-tested against the REAL triangles of the static meshes
+  //   around that bridge (cut out once per bridge: ~26 m round its middle, from the river bed to the deck's top; a scene raycast costs ~40 ms a ray, this ~0.05 ms).  Double-sided Möller–Trumbore; returns the first hit distance (m) along (dx,dy,dz) from (x,y,z), or `max`.
+  const underTris = new Map();
+  function underTrisOf(i) {
+    if (underTris.has(i)) return underTris.get(i);
+    const b = S.nav.bridges[i], out = [], R2 = 26 * 26, y0 = b.y - 6, y1 = b.y + 0.2;
+    H.scene.updateMatrixWorld(true);
+    H.scene.traverse((o) => {
+      if (!o.isMesh || o.name !== 'static' || !o.visible || !o.geometry || !o.geometry.attributes.position) return;
+      const g = o.geometry, P = g.attributes.position, pa = P.array, I = g.index, ia = I ? I.array : null, nT = I ? (I.count / 3) | 0 : (P.count / 3) | 0, m = o.matrixWorld.elements, st = P.itemSize || 3;
+      if (P.isInterleavedBufferAttribute) return;
+      const w = (k, out3) => { const x = pa[k * st], y = pa[k * st + 1], z = pa[k * st + 2]; out3[0] = m[0] * x + m[4] * y + m[8] * z + m[12]; out3[1] = m[1] * x + m[5] * y + m[9] * z + m[13]; out3[2] = m[2] * x + m[6] * y + m[10] * z + m[14]; };
+      const A = [0, 0, 0], B2 = [0, 0, 0], C = [0, 0, 0];
+      for (let t = 0; t < nT; t++) {
+        const i0 = ia ? ia[t * 3] : t * 3, i1 = ia ? ia[t * 3 + 1] : t * 3 + 1, i2 = ia ? ia[t * 3 + 2] : t * 3 + 2; w(i0, A);
+        let dx = A[0] - b.x, dz = A[2] - b.z; if (dx * dx + dz * dz > R2 || A[1] > y1 + 3 || A[1] < y0 - 2) continue;
+        w(i1, B2); w(i2, C); const lo = Math.min(A[1], B2[1], C[1]), hi = Math.max(A[1], B2[1], C[1]); if (hi < y0 || lo > y1) continue;
+        out.push(A[0], A[1], A[2], B2[0], B2[1], B2[2], C[0], C[1], C[2]);
+      }
+    });
+    const f = new Float32Array(out); underTris.set(i, f); return f;
+  }
+  function triRay(F, x, y, z, dx, dy, dz, max) {
+    let best = max;
+    for (let k = 0; k < F.length; k += 9) {
+      const ax = F[k], ay = F[k + 1], az = F[k + 2], e1x = F[k + 3] - ax, e1y = F[k + 4] - ay, e1z = F[k + 5] - az, e2x = F[k + 6] - ax, e2y = F[k + 7] - ay, e2z = F[k + 8] - az;
+      const px = dy * e2z - dz * e2y, py = dz * e2x - dx * e2z, pz = dx * e2y - dy * e2x, det = e1x * px + e1y * py + e1z * pz; if (det > -1e-9 && det < 1e-9) continue;
+      const inv = 1 / det, tx = x - ax, ty = y - ay, tz = z - az, u = (tx * px + ty * py + tz * pz) * inv; if (u < 0 || u > 1) continue;
+      const qx = ty * e1z - tz * e1y, qy = tz * e1x - tx * e1z, qz = tx * e1y - ty * e1x, v = (dx * qx + dy * qy + dz * qz) * inv; if (v < 0 || u + v > 1) continue;
+      const t = (e2x * qx + e2y * qy + e2z * qz) * inv; if (t > 1e-4 && t < best) best = t;
+    }
+    return best;
+  }
+  function underBridgeIdx(x, z) {
+    const br = S.nav && S.nav.bridges; if (!br) return -1;
+    for (let i = 0; i < br.length; i++) { const b = br[i], dx = x - b.x, dz = z - b.z, u = dx * b.nx + dz * b.nz, v = dx * b.tx + dz * b.tz; if (Math.abs(u) <= b.len / 2 && Math.abs(v) <= b.wid / 2 && b.y != null) return i; }
+    return -1;
+  }
+  // the kit's camera (R4), kept for the wall-walk / the climb / the underworld / camFix(false): only the pivot (pivotStep) and the far, higher default (camP) are new
+  function placeCameraOld(dt) {
     const wd = W(), cy = Math.cos(S.camYaw), sy = Math.sin(S.camYaw), cp = Math.cos(S.pitch), sp = Math.sin(S.pitch);
     const vx = sy * cp, vy = -sp, vz = cy * cp, rx = -cy, rz = sy;
     if (S.mode === 'first') {
@@ -734,12 +871,11 @@ export function create(H) {
       camera.position.set(ex, ey, ez); camera.lookAt(ex + vx, ey + vy, ez + vz);
       S.pivot.set(S.x, S.y + 1.45 * HS, S.z); return;
     }
-    const cpr = camP(), kc = S.kc = Math.min(S.st === 'dodge' ? 6.5 : 16, (S.kc || 16) + (16 - (S.kc || 16)) * kExp(9, dt)), k = kExp(kc, dt); /* RP4: while she rolls the camera follows more softly (6.5 /s, eased in and out: no jerk) so the throw is SEEN on the screen */ S.pivot.x += (S.x - S.pivot.x) * k; S.pivot.z += (S.z - S.pivot.z) * k; S.pivot.y += (S.y + cpr.py - S.pivot.y) * kExp(10, dt);
-    if (dt === 0 || S.snap) { S.pivot.set(S.x, S.y + cpr.py, S.z); S.snap = false; }
+    const cpr = camP(); pivotStep(dt, cpr);
     const D = cpr.D, sh = S.layer === 'top' ? 0 : cpr.sh, px = S.pivot.x, py = S.pivot.y, pz = S.pivot.z;      // (on the wall-walk the camera is straight behind her: the walkway is 1.8 m wide)
     const tx = px - vx * D + rx * sh, ty = py - vy * D + 0.1, tz = pz - vz * D + rz * sh;           // wanted camera spot (behind, a little to the right)
     const t = segHit(px, py, pz, tx, tz, ty, wd), want = Math.max(S.camFix !== false ? 0.15 : 0.55, t * D - 0.25);   // RP1C-R4: the old floor of 0.55 m put the camera INSIDE a wall that stood closer than that (head hidden below 1.2 m, see the end of this function)
-    
+
     if (want < S.camD) S.camD = want; else S.camD += (want - S.camD) * kExp(3.5, dt); if (dt === 0) S.camD = want;      // (closer at once when something is in the way — a smoothed approach left the camera 1 m inside a tower for a frame; away from it slowly)
     const dd = Math.min(S.camD, D), kk = dd / D;
     let cx = px + (tx - px) * kk, cyy = py + (ty - py) * kk, cz = pz + (tz - pz) * kk;
@@ -818,7 +954,7 @@ export function create(H) {
     });
     touch.addEventListener('pointermove', (e) => {
       if (joy && e.pointerId === joy.id) { let dx = e.clientX - joy.x0, dy = e.clientY - joy.y0; const l = Math.hypot(dx, dy), c = Math.min(1, l / R); if (l > 0) { dx /= l; dy /= l; } if (l > 10) S.joyOn = true; S.inp.x = dx * c; S.inp.y = -dy * c; knobEl.style.transform = `translate(${dx * c * R * 0.8}px,${dy * c * R * 0.8}px)`; }
-      else if (lk && e.pointerId === lk.id) { S.camYaw -= (e.clientX - lk.x) * 0.006; S.pitch = clamp(S.pitch + (e.clientY - lk.y) * 0.005, -0.75, 1.25); lk.x = e.clientX; lk.y = e.clientY; }
+      else if (lk && e.pointerId === lk.id) { S.camYaw -= (e.clientX - lk.x) * 0.006; S.pitch = S.mode === 'first' ? clamp(S.pitch + (e.clientY - lk.y) * 0.005, -0.75, 1.25) : clamp(S.pitch + (e.clientY - lk.y) * 0.005, PIT3_MIN, PIT3_MAX); lk.x = e.clientX; lk.y = e.clientY; }   // RP1C_R6: third person: -18°..46°
     });
     const end = (e) => {
       if (joy && e.pointerId === joy.id) { joy = null; S.inp.x = S.inp.y = 0; S.joyOn = false; joyEl.style.display = 'none'; } else if (lk && e.pointerId === lk.id) lk = null;
@@ -1085,12 +1221,13 @@ export function create(H) {
   Object.assign(api, { openPick, closePick, exit, frame, start, SIS, openInfo });   // RP1C-R4: openInfo
   // ------------------------------------------------------------------ dev / proof API (only reachable through window.__rp in the dev page)
   api.dev = {
-    S, setInput: (x, y) => { S.inp.x = x; S.inp.y = y; }, look: (dyaw, dp) => { S.camYaw += dyaw; S.pitch = clamp(S.pitch + dp, -0.75, 1.25); },
+    S, setInput: (x, y) => { S.inp.x = x; S.inp.y = y; }, look: (dyaw, dp) => { S.camYaw += dyaw; S.pitch = S.mode === 'first' ? clamp(S.pitch + dp, -0.75, 1.25) : clamp(S.pitch + dp, PIT3_MIN, PIT3_MAX); },
     setLook: (yaw, pitch) => { S.camYaw = yaw; if (pitch != null) S.pitch = pitch; },
     jump: () => { S.reqJump = true; }, dodge: () => { S.reqDodge = true; }, sprint: (b) => { S.sprint = !!b; }, cam: (m) => setMode(m),
     camLook: (n) => { if (n) { S.camLook = n; S.pitch = camP().pit; S.snap = true; S.camD = camP().D; } return { look: S.camLook || 2, ...camP() }; },   // RP1C-R3
     shadowLook: (n) => { if (n) S.shLook = n; return S.shLook || 2; },   // RP1C-R3
-    camFix: (on) => { S.camFix = !!on; S.camR = 0; }, camInfo: () => ({ d3: camera.position.distanceTo(S.pivot), camD: S.camD, camR: S.camR || 0, y: camera.position.y }),   // RP1C-R4: dev — the fix on / off (before / after) + the camera's distance to her
+    camKit: (on) => { S.camKit = !!on; CAM_B.far = on ? 4.25 : 5.6; CAM_B.pit = on ? -1 : 0.28; S.snap = true; S.camD = camP().D; return { kit: !!on, ...camP() }; },   // RP1C_R6 dev: the kit's camera (R5: 4.25 x HC, pitch 5.6°, the CAM_RISE rule, no hop lag) back on, for the before / after numbers
+    segHit: (ax, ay, az, bx, bz, by, hi) => segHit(ax, ay, az, bx, bz, by, W(), hi), camFix: (on) => { S.camFix = !!on; S.camR = 0; }, camInfo: () => ({ d3: camera.position.distanceTo(S.pivot), camD: S.camD, camR: S.camR || 0, y: camera.position.y, xe: S.camXe || 0, f: S.camF == null ? 1 : S.camF }),   // RP1C-R4: dev — the fix on / off (before / after) + the camera's distance to her
     setPos: (x, z, yaw) => { S.layer = 0; S.top = S.climb = null; S.sw = 0; S.rIn = false; S.x = x; S.z = z; S.y = W().ground(x, z); S.vx = S.vz = S.vy = 0; S.grounded = true; S.st = 'loco'; if (yaw != null) { S.camYaw = yaw; S.body = yaw; } S.snap = true; S.camD = camP().D; },
     gait: (o) => (o ? Object.assign(GAIT, o) : { ...GAIT }),
     jumpInfo: () => ({ JUMP_V, GRAV, JUMP_T, apex: +(JUMP_V * JUMP_V / (2 * GRAV)).toFixed(3), air: +(2 * JUMP_V / GRAV).toFixed(3) }),
@@ -1103,6 +1240,13 @@ export function create(H) {
     useGrid: (b) => { CONTACT.grid = !!b; gcovM.clear(); refreshColliders(); if (doors) { doors.st.items = []; doors.build(); } return { grid: CONTACT.grid, boxes: S.boxes.length, discs: S.discs.length }; }, grid: () => grid, clear: () => clear, rbody: R_BODY, phys: (sec, step = 1 / 30) => { S.phys = true; const n = Math.round(sec / step); for (let i = 0; i < n; i++) update(step); S.phys = false; },   // RP1C-R3: physics only (no model / camera)
     sim: (sec, step = 1 / 60) => { const n = Math.round(sec / step); for (let i = 0; i < n; i++) { update(step); placeCamera(step); } },
     // is the camera inside any solid right now?  (walls: body + merlons, towers / keep / gates up to their height, cottage discs; the water surface counts as a floor)
+    camPen: () => {   // RP1C_R6 dev: how deep (m) the camera is INSIDE a solid (a box under its top, a 3 m pole / tree disc, the ground): 0 = in the clear.  camCheck counts a camera that touches a face (0.4 mm inside) — this says how much.
+      const c = camera.position; let pen = 0;
+      for (const b of S.boxes) { const [u, v] = loc(b, c.x, c.z); if (Math.abs(u) > b.hw || Math.abs(v) > b.hd) continue; const top = wallOf(b) ? topY(b) : world.fastHeight(c.x, c.z) + b.h; if (c.y < top - 0.01) pen = Math.max(pen, Math.min(b.hw - Math.abs(u), b.hd - Math.abs(v))); }
+      for (const [x, z, r] of S.discs) { const d = Math.hypot(c.x - x, c.z - z); if (d < r && c.y < world.fastHeight(c.x, c.z) + 3) pen = Math.max(pen, r - d); }
+      const g = world.fastHeight(c.x, c.z); if (c.y < g + 0.05) pen = Math.max(pen, g + 0.05 - c.y);
+      return +pen.toFixed(3);
+    },
     camCheck: (detail) => {
       const c = camera.position; let bad = [];
       for (const b of S.boxes) { const [u, v] = loc(b, c.x, c.z); if (Math.abs(u) > b.hw || Math.abs(v) > b.hd) continue;
